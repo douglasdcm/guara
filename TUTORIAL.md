@@ -47,7 +47,7 @@ class Search(AbstractTransaction):
 ```
 - `class Search`: is a concret transation. Notice that the name of the class is an action and not a noun as usually saw in OOP. It is intentional to make the statments in the test more natural.
 - `def __init__`: is the same for all transactions. It passes the `driver` to the `AbstractTransaction`.
-- `def do`: is the *ugly* implementation of the memthod. It uses the private attribute `self._driver` inherited from `AbstractTransaction` to call `find_element`, `send_keys`, `click` and `text` from Selenium Webdriver. Notice the parameter `text`. It is received from the automation via `kwargs`. More details in further sessions.
+- `def do`: is the *ugly* implementation of the method. It uses the private attribute `self._driver` inherited from `AbstractTransaction` to call `find_element`, `send_keys`, `click` and `text` from Selenium Webdriver. Notice the parameter `text`. It is received from the automation via `kwargs`. More details in further sessions.
 
 ```python
 # test_tutorial.py

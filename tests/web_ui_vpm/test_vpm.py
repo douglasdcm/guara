@@ -7,7 +7,9 @@ from guara import it, setup
 
 class TestVpmTransaction:
     def setup_method(self, method):
-        self._app = Application(webdriver.Chrome())
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless=new")
+        self._app = Application(webdriver.Chrome(options=options))
         self._app.at(
             setup.OpenApp,
             url="https://vagaspramim.onrender.com/",
@@ -58,7 +60,9 @@ def setup_application():
         "window_hight": 765,
         "implicitly_wait": 0.5,
     }
-    app = Application(webdriver.Chrome())
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless=new")
+    app = Application(webdriver.Chrome(options=options))
     app.at(setup.OpenApp, **configuration)
     yield app
     app.at(setup.CloseApp)

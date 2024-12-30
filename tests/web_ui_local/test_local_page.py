@@ -10,8 +10,9 @@ from guara import setup
 class TestLocalTransaction:
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.resolve()
-
-        self._app = Application(webdriver.Chrome())
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless=new")
+        self._app = Application(webdriver.Chrome(options=options))
         self._app.at(
             setup.OpenApp,
             url=f"file:///{file_path}/sample.html",
