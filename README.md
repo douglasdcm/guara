@@ -1,6 +1,6 @@
 # Guará
 
-![](https://github.com/douglasdcm/guara/raw/main/image.jpg)
+![](https://github.com/douglasdcm/guara/blob/main/image.jpg)
 
 Photo by <a href="https://unsplash.com/@matcfelipe?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Mateus Campos Felipe</a> on <a href="https://unsplash.com/photos/red-flamingo-svdE4f0K4bs?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
       
