@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.setuptools.packages.find]
+include = ["guara*"]
+exclude = ["tests*", ".vscode", ".git*", "dist", "*pytest*"]
+
+[project]
+name = "guara"
+version = "0.0.4"
+authors = [
+  { name="Douglas Cardoso", email="noemail@noemail.com" },
+]
+description = "Framework to build UI test automation in Page Transactions pattern"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+  "selenium",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/douglasdcm/guara"
+"Bug Tracker" = "https://github.com/douglasdcm/guara/issues"
