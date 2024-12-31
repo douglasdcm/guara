@@ -15,7 +15,7 @@ ________
 
 **Syntax**
 
-<code>Application.at(APage, do_something, with_parameter=avalue).asserts(it.Matches, ACondition)</code>
+<code>Application.at(APage, do_something, with_a_parameter=a_value).asserts(it.Matches, ACondition)</code>
 
 Guará is an implementation of the `Page Transactions` pattern. The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms. The idea is to group blocks of interactions into classes. These classes inherit from `AbstractTransaction` and override the `do` method.
 
