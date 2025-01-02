@@ -9,12 +9,12 @@ from guara.transaction import Application
 
 
 def test_canonical():
-    app = Application(webdriver.Chrome())
-    app.at(
+    google = Application(webdriver.Chrome())
+    google.at(
         setup.OpenApp,
         url="http://www.google.com",
     ).asserts(it.IsEqualTo, "Google")
-    app.at(setup.CloseApp)
+    google.at(setup.CloseApp)
 ```
 
 # Basic pratical example
@@ -96,18 +96,18 @@ def setup_app():
 
 
 def test_google_search(setup_app):
-    app = setup_app
+    google = setup_app
 
     # With the `app` received from the fixture the similar things
     # explaned previouslly in the fixture happens.
     # The transaction `home.Search` with the parameter `text`
     # is passed to `at` and the result is asserted by `asserts` with
     # the strategy `it.IsEqualTo`
-    app.at(home.Search, text="guara").asserts(it.IsEqualTo, "All")
+    google.at(home.Search, text="guara").asserts(it.IsEqualTo, "All")
 
 ```
 - `class Application`: is the runner of the automation. It receives the `driver` and passes it hand by hand to transactions.
-- `def at`: receives the transaction created on `home.py` and its parameters. Notice the usage of the module name `home` to make the readability of the statement as plain English. The parameters are passed explictly for the same purpose. So the `at(home.Search, text="guara")` is read `At home [page] search [for] text "guara"`. The terms `page` and `for` could be added to the implementation to make it more explict, like `at(homePage.Search, for_text="guara")`. This is a decision the tester may make while developing the transactions. 
+- `def at`: receives the transaction created on `home.py` and its parameters. Notice the usage of the module name `home` to make the readability of the statement as plain English. The parameters are passed explictly for the same purpose. So the `google.at(home.Search, text="guara")` is read `Google at home [page] search [for] text "guara"`. The terms `page` and `for` could be added to the implementation to make it more explict, like `google.at(homePage.Search, for_text="guara")`. This is a decision the tester may make while developing the transactions. 
 - `def asserts`: receives a strategy to compare the result against an expected value. Again, the focous on readability is kept. So, `asserts(it.IsEqualTo, "All")` can be read `asserts it is equal to 'All'`
 - `it.IsEqualTo`: is one of the strategies to compare the actual and the expected result. Other example is the `it.Contains` which checks if the value is present in the page. Notice that the assertion is very simple: it validates just one value. The intention here is keep the framework simple, but robust. The tester is able to extend the strategies inheriting from `IAssertion`.
 
