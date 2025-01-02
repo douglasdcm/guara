@@ -79,7 +79,7 @@ def test_sample_web_page():
     assert app.at(home.ChangeToEnglish).result == content_in_english
     
     # At Info page asserts the text is present
-    app.at(info.Navgigate).asserts(
+    app.at(info.NavigateTo).asserts(
         it.Contains, "This project was born"
     )
 

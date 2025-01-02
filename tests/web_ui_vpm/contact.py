@@ -2,7 +2,14 @@ from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction
 
 
-class Navigate(AbstractTransaction):
+class NavigateTo(AbstractTransaction):
+    """
+    Navigates to Contact page
+
+    Returns:
+        str: Paragraph informing the contacts
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 

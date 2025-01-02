@@ -2,7 +2,14 @@ from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction
 
 
-class Navgigate(AbstractTransaction):
+class NavigateTo(AbstractTransaction):
+    """
+    Navigates to Info page
+
+    Returns:
+        str: Paragraph with information of app (About)
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 

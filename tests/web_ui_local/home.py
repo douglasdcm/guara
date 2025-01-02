@@ -3,6 +3,13 @@ from guara.transaction import AbstractTransaction
 
 
 class Navigate(AbstractTransaction):
+    """
+    Navigates to Home page
+
+    Returns:
+        str: the label 'It works! {code}!'
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -13,6 +20,16 @@ class Navigate(AbstractTransaction):
 
 
 class SubmitText(AbstractTransaction):
+    """
+    Submits the text
+
+    Args:
+        text (str): The text to be submited
+
+    Returns:
+        str: the label 'It works! {code}!'
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 

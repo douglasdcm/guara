@@ -4,7 +4,14 @@ from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction
 
 
-class Navigate(AbstractTransaction):
+class NavigateTo(AbstractTransaction):
+    """
+    Navigates to Home page
+
+    Returns:
+        str: The label of the page
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -15,6 +22,13 @@ class Navigate(AbstractTransaction):
 
 
 class ChangeToEnglish(AbstractTransaction):
+    """
+    Changes the content of the Home page to English
+
+    Returns:
+        str: The label of the page in English
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -25,6 +39,13 @@ class ChangeToEnglish(AbstractTransaction):
 
 
 class ChangeToPortuguese(AbstractTransaction):
+    """
+    Changes the content of the Home page to Portuguese
+
+    Returns:
+        str: The label of the page in Portuguese
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -37,6 +58,16 @@ class ChangeToPortuguese(AbstractTransaction):
 
 
 class Search(AbstractTransaction):
+    """
+    Searches for a given text
+
+    Args:
+        text (str): the text to be searched for
+        wait_for (str): the text to present after the search
+    Returns:
+        str: The result with the first similarity of the search
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -66,6 +97,16 @@ class Search(AbstractTransaction):
 
 
 class DoRestrictedSearch(Search):
+    """
+    Searches for a given text in restricted mode
+
+    Args:
+        text (str): the text to be searched for
+        wait_for (str): the text to present after the search
+    Returns:
+        str: The result with the first similarity of the search
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -74,6 +115,16 @@ class DoRestrictedSearch(Search):
 
 
 class DoExpandedSearch(Search):
+    """
+    Searches for a given text in expanded mode
+
+    Args:
+        text (str): the text to be searched for
+        wait_for (str): the text to present after the search
+    Returns:
+        str: The result with the first similarity of the search
+    """
+
     def __init__(self, driver):
         super().__init__(driver)
 

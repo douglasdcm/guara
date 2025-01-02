@@ -30,26 +30,26 @@ class TestVpmTransaction:
         )
         # uses native assertion
         assert self._app.at(home.ChangeToEnglish).result == content_in_english
-        self._app.at(info.Navgigate).asserts(
+        self._app.at(info.NavigateTo).asserts(
             it.Contains,
             (
                 "This project was born from the will of its collaborators to help"
                 " people to find jobs more easily."
             ),
         )
-        self._app.at(home.Navigate).asserts(it.IsEqualTo, content_in_english)
-        self._app.at(contact.Navigate).asserts(
+        self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
+        self._app.at(contact.NavigateTo).asserts(
             it.IsEqualTo, "Contact us. We would be happy to answer your questions."
         )
-        self._app.at(home.Navigate).asserts(it.IsEqualTo, content_in_english)
+        self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
         self._app.at(
             home.DoRestrictedSearch, text=text, wait_for=restricted_similariy
         ).asserts(it.IsEqualTo, restricted_similariy)
-        self._app.at(home.Navigate).asserts(it.IsEqualTo, content_in_english)
+        self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
         self._app.at(
             home.DoExpandedSearch, text=text, wait_for=expanded_similarity
         ).asserts(it.IsEqualTo, expanded_similarity)
-        self._app.at(home.Navigate).asserts(it.IsEqualTo, content_in_english)
+        self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
 
 
 @pytest.fixture
@@ -78,22 +78,22 @@ def test_vpm_transaction_builder(setup_application):
 
     app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese).at(
         home.ChangeToEnglish
-    ).asserts(it.IsEqualTo, content_in_english).at(info.Navgigate).asserts(
+    ).asserts(it.IsEqualTo, content_in_english).at(info.NavigateTo).asserts(
         it.Contains,
         (
             "This project was born from the will of its collaborators to"
             " help people to find jobs more easily."
         ),
     ).at(
-        home.Navigate
+        home.NavigateTo
     ).asserts(
         it.IsEqualTo, content_in_english
     ).at(
-        contact.Navigate
+        contact.NavigateTo
     ).asserts(
         it.IsEqualTo, "Contact us. We would be happy to answer your questions."
     ).at(
-        home.Navigate
+        home.NavigateTo
     ).asserts(
         it.IsEqualTo, content_in_english
     ).at(
@@ -101,7 +101,7 @@ def test_vpm_transaction_builder(setup_application):
     ).asserts(
         it.IsEqualTo, restricted_similariy
     ).at(
-        home.Navigate
+        home.NavigateTo
     ).asserts(
         it.IsEqualTo, content_in_english
     ).at(
@@ -109,7 +109,7 @@ def test_vpm_transaction_builder(setup_application):
     ).asserts(
         it.IsEqualTo, expanded_similarity
     ).at(
-        home.Navigate
+        home.NavigateTo
     ).asserts(
         it.IsEqualTo, content_in_english
     )
