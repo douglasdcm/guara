@@ -40,7 +40,7 @@ class CloseApp(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
 
-    def do(self, screenshot_filename=f"guara-capture"):
+    def do(self, screenshot_filename="guara-capture"):
         self._driver.get_screenshot_as_file(
             f"{screenshot_filename}-{datetime.now()}.png"
         )
