@@ -22,7 +22,7 @@ class TestLocalTransaction:
         )
 
     def teardown_method(self, method):
-        self._app.at(setup.CloseApp, screenshot_filename="./guara-1.png")
+        self._app.at(setup.CloseApp)
 
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
