@@ -28,16 +28,20 @@ class OpenApp(AbstractTransaction):
 
 class CloseApp(AbstractTransaction):
     """
-    Closes the app and saves its screenshot
+    Closes the app and saves its screenshot (PNG)
 
     Args:
         screenshot_filename (str): the path where the screenshot is saved.
-        Defaults to '/tmp/guara-{datetime.now()}.png'
+        Examples: './myfile', '/path/to/myfile'
+        Defaults to 'guara-{datetime.now()}.png'.
+
     """
 
     def __init__(self, driver):
         super().__init__(driver)
 
-    def do(self, screenshot_filename=f"/tmp/guara-{datetime.now()}.png"):
-        self._driver.get_screenshot_as_file(screenshot_filename)
+    def do(self, screenshot_filename="guara-capture"):
+        self._driver.get_screenshot_as_file(
+            f"{screenshot_filename}-{datetime.now()}.png"
+        )
         self._driver.quit()

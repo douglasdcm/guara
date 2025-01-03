@@ -122,6 +122,38 @@ This framework can be installed by
 ```
 pip install guara
 ```
+
+# Execution
+It is recommended to use `pytest`
+
+```
+# Executes reporting the complete log
+python -m pytest -o log_cli=1 --log-cli-level=INFO
+```
+**Outputs**
+```
+tests/web_ui_local/test_local_page.py::TestLocalTransaction::test_local_page 
+--------------------------------------------------------------- live log setup ---------------------------------------------------------------
+INFO     guara.transaction:transaction.py:26 Transaction 'OpenApp'
+INFO     guara.transaction:transaction.py:28  url: file:////sample.html
+INFO     guara.transaction:transaction.py:28  window_width: 1094
+INFO     guara.transaction:transaction.py:28  window_hight: 765
+INFO     guara.transaction:transaction.py:28  implicitly_wait: 0.5
+--------------------------------------------------------------- live log call ----------------------------------------------------------------
+INFO     guara.transaction:transaction.py:26 Transaction 'SubmitText'
+INFO     guara.transaction:transaction.py:28  text: bla
+INFO     guara.transaction:transaction.py:34 Assertion 'IsEqualTo'
+INFO     guara.transaction:transaction.py:35  actual:   'It works! bla!'
+INFO     guara.transaction:transaction.py:36  expected: 'It works! bla!'
+INFO     guara.transaction:transaction.py:37 ---
+INFO     guara.transaction:transaction.py:26 Transaction 'SubmitText'
+INFO     guara.transaction:transaction.py:28  text: bla
+INFO     guara.transaction:transaction.py:34 Assertion 'IsNotEqualTo'
+INFO     guara.transaction:transaction.py:35  actual:   'It works! blabla!'
+INFO     guara.transaction:transaction.py:36  expected: 'Any'
+INFO     guara.transaction:transaction.py:37 ---
+PASSED
+```
 ________
 
 # Tutorial
