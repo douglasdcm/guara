@@ -24,7 +24,7 @@ class TestLocalTransaction:
     def teardown_method(self, method):
         self._app.at(setup.CloseApp, screenshot_filename="./guara-1.png")
 
-    def test_vpm_transaction_chain(self):
+    def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[random.randrange(len(text))]
         self._app.at(home.SubmitText, text=text).asserts(
