@@ -11,67 +11,40 @@ ________
 
 The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of ibis in the bird family Threskiornithidae. It inhabits tropical South America and part of the Caribbean. In form, it resembles most of the other twenty-seven extant species of ibis, but its remarkably brilliant scarlet coloration makes it unmistakable. It is one of the two national birds of Trinidad and Tobago, and its Tupi–Guarani name, guará, is part of the name of several municipalities along the coast of Brazil.
 
-________
-
 # Syntax
 
 <code>Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matches, a_condition)</code>
-________
 
 # Introduction
 > [!IMPORTANT]
 > Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium.. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/tests)
 
-The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms. The idea is to group blocks of interactions into classes. These classes inherit from `AbstractTransaction` and override the `do` method.
+The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
-Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs and unit tests, for example (check the `tests` folder).
+# The pattern
 
-Here is the base implementation of the pattern:
+![alt text](uml_abstract_transaction.png)
 
-```python
+- `AbstractTransaction`: This is the class from which all transactions inherit. The `do` method is implemented by each transaction. In this method, calls to WebDriver are placed. If the method returns something, like a string, the automation can use it for assertions.
 
-from typing import Any, NoReturn
-from selenium.webdriver.remote.webdriver import WebDriver
-from guara.it import IAssertion
+![alt text](uml_iassertion.png)
+- `IAssertion`: This is the interface implemented by all assertion classes.
+- The `asserts` method of each subclass contains the logic to perform validations. For example, the `IsEqualTo` subclass compares the `result` with the expected value provided by the tester.
+- Testers can inherit from this interface to add new subclasses of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/TUTORIAL.md#extending-assertions).
 
+![alt text](<uml_application.png>)
+- `Application`: This is the runner of the automation. It executes the `do` method of each transaction and validates the result using the `asserts` method.
+- The `asserts` method receives a reference to an `IAssertion` instance. It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
+- Another important component of the `Application` is the `result` property. It holds the result of the transaction, which can be used by `asserts` or inspected by the test using the native built-in `assert` method.
 
-class AbstractTransaction:
-    def __init__(self, driver: WebDriver):
-        self._driver = driver
-
-    def do(self, **kwargs) -> Any | NoReturn:
-        raise NotImplementedError
-
-
-class Application:
-    def __init__(self, driver):
-        self._driver = driver
-
-    @property
-    def result(self):
-        return self._result
-
-    def at(self, transaction: AbstractTransaction, **kwargs):
-        self._result = transaction(self._driver).do(**kwargs)
-        return self
-
-    def asserts(self, it: IAssertion, expected):
-        it().asserts(self._result, expected)
-        return self
-```
-
-- `AbstractTransaction`: This is the class from which all transactions inherit. The `do` method is implemented by each transaction. In this method, calls to WebDriver are placed. If the method returns something, like a string, the automation can use it for assertions.  
-
-- `Application`: This is the runner of the automation. It executes the `do` method of each transaction and validates the result using the `asserts` method.  
-  - The `asserts` method receives a reference to an `IAssertion` instance. It implements the `Strategy Pattern` to allow its behavior to change at runtime.  
-  - Another important component of the `Application` is the `result` property. It holds the result of the transaction, which can be used by `asserts` or inspected by the test using the native built-in `assert` method.  
-
-- `IAssertion`: This is the interface implemented by all assertion classes.  
-  - The `asserts` method of each subclass contains the logic to perform validations. For example, the `IsEqualTo` subclass compares the `result` with the expected value provided by the tester.  
-  - Testers can extend this interface to add new validations that the framework does not natively support.  
 
 ## Framework in action
-When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is describe in plain English improving the comprehention of the code.
+
+The idea is to group blocks of interactions into classes. These classes inherit from `AbstractTransaction` and override the `do` method.
+
+Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`tests`](https://github.com/douglasdcm/guara/tree/main/tests) folder).
+
+When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is described in plain English improving the comprehention of the code.
 
 ```python
 def test_sample_web_page():
@@ -174,8 +147,6 @@ Outputs
 ============================================================= 2 passed in 3.56s ==============================================================
 
 ```
-
-________
 
 # Tutorial
 Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/TUTORIAL.md) to build your first automation with this framework.
