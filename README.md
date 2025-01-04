@@ -22,17 +22,24 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
 # The pattern
-
-![alt text](uml_abstract_transaction.png)
+<p align="center">
+    <img src="https://github.com/douglasdcm/guara/blob/main/uml_abstract_transaction.png?raw=true" width="800" height="300" />
+</p>
 
 - `AbstractTransaction`: This is the class from which all transactions inherit. The `do` method is implemented by each transaction. In this method, calls to WebDriver are placed. If the method returns something, like a string, the automation can use it for assertions.
 
-![alt text](uml_iassertion.png)
+<p align="center">
+    <img src="https://github.com/douglasdcm/guara/blob/main/uml_iassertion.png?raw=true" width="800" height="300" />
+</p>
+
 - `IAssertion`: This is the interface implemented by all assertion classes.
 - The `asserts` method of each subclass contains the logic to perform validations. For example, the `IsEqualTo` subclass compares the `result` with the expected value provided by the tester.
 - Testers can inherit from this interface to add new subclasses of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/TUTORIAL.md#extending-assertions).
 
-![alt text](<uml_application.png>)
+<p align="center">
+    <img src="https://github.com/douglasdcm/guara/blob/main/uml_application.png?raw=true" width="600" height="200" />
+</p>
+
 - `Application`: This is the runner of the automation. It executes the `do` method of each transaction and validates the result using the `asserts` method.
 - The `asserts` method receives a reference to an `IAssertion` instance. It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
 - Another important component of the `Application` is the `result` property. It holds the result of the transaction, which can be used by `asserts` or inspected by the test using the native built-in `assert` method.
