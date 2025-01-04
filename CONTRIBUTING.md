@@ -20,3 +20,9 @@ python -m pytest
 flake8 --exclude venv --max-line-length 100
 ```
 
+# Tox
+Use tox to run the unit tests and linter
+```
+tox
+```
+

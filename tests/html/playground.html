@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <script>
+        function setCookie() {
+            document.cookie = "username=John Doe";
+        }
+    </script>
+
+    <title>Sample page</title>
+</head>
+
+<body onload="setCookie()">
+    <h1>Basic page</h1>
+    <p> This is a sample page to be used to sanity check </p>
+    <input id="input">
+    <button id="button" onclick="myFunction(this, 'red')" class="my-class">test</button>
+    <br>
+    <a href="http://any1.com" id="a1">any1.com</a><br>
+    <a href="http://any2.com" id="a2">any2.com</a><br>
+    <a href="http://any3.com" id="a3">any3.com</a><br>
+    <a href="http://any4.com" id="a4">any4.com</a><br>
+    <br>
+    <button id="alert-button" onclick="openAlert()" any="any">alert</button>
+    <br>
+    <button id="alert-button-prompt" onclick="openAlertPrompt()">alert promt</button>
+    <br>
+    <p id="demo"></p>
+    <button hidden id="hidden-button" style="display: none;" onclick="openAlert()">hidden</button>
+    <br>
+    <p id="end">end</p>
+    <div class="parent">
+        any0
+        <div class="child1">any1</div>
+        <div class="child2">any2</div>
+        <div class="child3">any3</div>
+        <div class="child4">any4</div>
+    </div>
+    <br>
+    <form name="my-form" action="#">
+        <label for="fname">First name:</label><br>
+        <input type="text" id="fname" name="fname" value="John"><br>
+        <label for="lname">Last name:</label><br>
+        <input type="text" id="lname" name="lname" value="Doe"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- shadow element -->
+    <div id="app">
+        <button type="button">Click</button>
+        <p>Paragraph</p>
+    </div>
+    <div id="shadow-root"></div>
+    <!---->
+    <iframe id="my-iframe" src="iframe.html" height="200" width="300" title="Iframe Example"></iframe>
+
+    <!--  -->
+    <script>
+        // shdow element
+        let shadowTarget = document.getElementById("shadow-root");
+        let shadow = shadowTarget.attachShadow({ mode: "open" });
+
+        let shadowButton = document.createElement("button");
+        shadowButton.setAttribute("id", "shadow-button");
+        let shadowParagraph = document.createElement("p");
+        shadowButton.type = "button";
+        shadowButton.innerHTML = "Click Shadow";
+        shadowParagraph.innerHTML = "Shadow Paragraph";
+        shadow.appendChild(shadowButton);
+        shadow.appendChild(shadowParagraph);
+        //
+
+        function myFunction(element, color) {
+            element.style.color = color;
+        }
+
+        function openAlert() {
+            alert("any warn");
+        }
+
+        function openAlertPrompt() {
+            let person = prompt("Please enter your name", "Harry Potter");
+            if (person != null) {
+                document.getElementById("demo").innerHTML =
+                    "Hello " + person + "! How are you today?";
+            }
+        }
+    </script>
+</body>
+
+</html>

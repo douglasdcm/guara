@@ -65,7 +65,7 @@ def setup_application():
     app = Application(webdriver.Chrome(options=options))
     app.at(setup.OpenApp, **configuration)
     yield app
-    app.at(setup.CloseApp, screenshot_filename="./guara-my-picture")
+    app.at(setup.CloseApp, screenshot_filename="./captures/guara-my-picture")
 
 
 def test_vpm_transaction_builder(setup_application):

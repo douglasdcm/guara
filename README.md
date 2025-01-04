@@ -123,7 +123,7 @@ This framework can be installed by
 pip install guara
 ```
 
-# Execution
+# Execution with Selenium
 It is recommended to use `pytest`
 
 ```
@@ -154,6 +154,21 @@ INFO     guara.transaction:transaction.py:36  expected: 'Any'
 INFO     guara.transaction:transaction.py:37 ---
 PASSED
 ```
+
+# Execution with [Caqui](https://github.com/douglasdcm/caqui) (async)
+```
+# runs the example TestAsyncTransaction.
+# Go to test_async.py to check requisites to start Caqui
+python -m pytest -n auto -k TestAsyncTransaction -s
+```
+Outputs
+```
+4 workers [2 items]
+..
+============================================================= 2 passed in 3.56s ==============================================================
+
+```
+
 ________
 
 # Tutorial
