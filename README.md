@@ -54,6 +54,11 @@ Each transaction is passed to the `Application` instance, which provides the met
 When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is described in plain English improving the comprehention of the code.
 
 ```python
+from selenium import webdriver
+from pages import home, contact, info
+from guara.transaction import Application
+from guara import it, setup
+
 def test_sample_web_page():
     # Instantiates the Application with a driver
     app = Application(webdriver.Chrome())
@@ -77,6 +82,7 @@ def test_sample_web_page():
     app.at(setup.CloseApp)
 ```
 - `setup.OpenApp` and `setup.CloseApp` are part of the framework and provide basic implementation to open and close the web application using Selenium Webdriver.
+- `it` is the module which contains the concret assertions.
 
 The *ugly* code which calls the webdriver is like this:
 
