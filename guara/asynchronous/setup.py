@@ -12,7 +12,7 @@ class OpenApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs):
-        super().__init__()
+        super().__init__(kwargs)
 
 
 class CloseApp(AbstractTransaction):
@@ -26,4 +26,4 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs):
-        super().__init__()
+        super().__init__(kwargs)
