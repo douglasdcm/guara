@@ -16,10 +16,15 @@
     <input id="input">
     <button id="button" onclick="myFunction(this, 'red')" class="my-class">test</button>
     <br>
-    <a href="http://any1.com" id="a1">any1.com</a><br>
-    <a href="http://any2.com" id="a2">any2.com</a><br>
-    <a href="http://any3.com" id="a3">any3.com</a><br>
-    <a href="http://any4.com" id="a4">any4.com</a><br>
+    <div id="links"></p>
+    <script>
+        let text = "";
+        for (let i = 0; i < 100000; i++) {
+        text += '<a href="http://any'+ i +'.com" id=a'+ i +'>any'+i+'.com</a><br>';
+        }
+
+        document.getElementById("links").innerHTML = text;
+    </script>
     <br>
     <button id="alert-button" onclick="openAlert()" any="any">alert</button>
     <br>
