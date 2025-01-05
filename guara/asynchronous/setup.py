@@ -3,7 +3,7 @@ from guara.asynchronous.transaction import AbstractTransaction
 
 class OpenApp(AbstractTransaction):
     """
-    Not Implemented as Selenium not is executed asynchronously.
+    Not Implemented as Selenium is not executed asynchronously.
     Use your preferable asynchronous Web Driver.
     For example: https://github.com/douglasdcm/caqui
     """
