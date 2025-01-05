@@ -12,7 +12,11 @@ class OpenApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs):
-        super().__init__(kwargs)
+        raise NotImplementedError(
+            "Selenium does not support asynchronous execution."
+            " Use your preferable async WebDriver. "
+            " For example https://github.com/douglasdcm/caqui"
+        )
 
 
 class CloseApp(AbstractTransaction):
@@ -26,4 +30,8 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs):
-        super().__init__(kwargs)
+        raise NotImplementedError(
+            "Selenium does not support asynchronous execution."
+            " Use your preferable async WebDriver. "
+            " For example https://github.com/douglasdcm/caqui"
+        )
