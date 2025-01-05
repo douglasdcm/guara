@@ -12,6 +12,7 @@ from tests.constants import PAGE_URL
 
 # `setup``is not the built-in transaction
 from tests.web_ui_async.asynchronouos import setup, home
+from tests.web_ui_async.constants import MAX_INDEX
 
 
 # comment it to execute
@@ -54,9 +55,14 @@ class TestAsyncTransaction:
         ).perform()
 
     async def _run_it(self):
+        """Get all MAX_INDEX links from page and validates its text"""
         # arrange
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[random.randrange(len(text))]
+        expected = []
+        max_index = MAX_INDEX - 1
+        for i in range(max_index):
+            expected.append(f"any{i+1}.com")
 
         # act and assert
         # the method `perform` runs the coroutine related to GetAllLinks first and saves the
@@ -66,14 +72,11 @@ class TestAsyncTransaction:
             home.GetAllLinks,
             with_session=self._session,
             connect_to_driver=self._driver_url,
-        ).asserts(
-            it.IsEqualTo, ["any1.com", "any2.com", "any3.com", "any4.com"]
-        ).perform()
+        ).asserts(it.IsEqualTo, expected).perform()
 
         # Does the same think as above, but asserts the items using the built-in method `assert`
         # arrange
-        MAX_INDEX = 4
-        for i in range(MAX_INDEX):
+        for i in range(max_index):
 
             # act
             actual = await self._app.at(

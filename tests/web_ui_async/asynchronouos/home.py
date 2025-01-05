@@ -1,5 +1,6 @@
-from caqui import synchronous
+from caqui import asynchronous
 from guara.transaction import AbstractTransaction
+from tests.web_ui_async.constants import MAX_INDEX
 
 
 class GetNthLink(AbstractTransaction):
@@ -26,10 +27,10 @@ class GetNthLink(AbstractTransaction):
     ):
         locator_type = "xpath"
         locator_value = f"//a[@id='a{link_index}']"
-        anchor = synchronous.find_element(
+        anchor = await asynchronous.find_element(
             connect_to_driver, with_session, locator_type, locator_value
         )
-        return synchronous.get_text(connect_to_driver, with_session, anchor)
+        return await asynchronous.get_text(connect_to_driver, with_session, anchor)
 
 
 class GetAllLinks(AbstractTransaction):
@@ -49,9 +50,9 @@ class GetAllLinks(AbstractTransaction):
 
     async def do(self, with_session, connect_to_driver):
         links = []
-        MAX_INDEX = 4
+        max_index = MAX_INDEX - 1
 
-        for i in range(MAX_INDEX):
+        for i in range(max_index):
             i += 1
             links.append(
                 # Instead of duplicate the code it is possible to call transactions directly

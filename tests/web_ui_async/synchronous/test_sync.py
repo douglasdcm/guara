@@ -6,6 +6,7 @@ from guara.transaction import Application
 from guara import it, setup
 
 from tests.constants import PAGE_URL
+from tests.web_ui_async.constants import MAX_INDEX
 
 # `setup` is not the built-in transaction
 from tests.web_ui_async.synchronous import home
@@ -34,19 +35,23 @@ class TestSyncTransaction:
         )
 
     def _run_it(self):
+        """Get all MAX_INDEX links from page and validates its text"""
         # arrange
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[random.randrange(len(text))]
+        expected = []
+        max_index = MAX_INDEX - 1
+        for i in range(max_index):
+            expected.append(f"any{i+1}.com")
 
         # act and assert
         self._app.at(
             home.GetAllLinks,
-        ).asserts(it.IsEqualTo, ["any1.com", "any2.com", "any3.com", "any4.com"])
+        ).asserts(it.IsEqualTo, expected)
 
         # Does the same think as above, but asserts the items using the built-in method `assert`
         # arrange
-        MAX_INDEX = 4
-        for i in range(MAX_INDEX):
+        for i in range(max_index):
 
             # act
             actual = self._app.at(

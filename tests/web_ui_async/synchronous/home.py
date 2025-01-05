@@ -1,5 +1,5 @@
-from caqui import synchronous
 from guara.transaction import AbstractTransaction
+from tests.web_ui_async.constants import MAX_INDEX
 
 
 class GetNthLink(AbstractTransaction):
@@ -39,9 +39,9 @@ class GetAllLinks(AbstractTransaction):
 
     def do(self):
         links = []
-        MAX_INDEX = 4
+        max_index = MAX_INDEX - 1
 
-        for i in range(MAX_INDEX):
+        for i in range(max_index):
             i += 1
             links.append(
                 # Instead of duplicate the code it is possible to call transactions directly
