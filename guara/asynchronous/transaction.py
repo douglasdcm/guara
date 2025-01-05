@@ -32,31 +32,35 @@ class Application:
 
     def at(self, transaction: AbstractTransaction, **kwargs):
         """It executes the `do` method of each transaction"""
-        coroutine = transaction(self._driver).do(**kwargs)
-        self._coroutines.append({self._TRANSACTION: coroutine})
 
         LOGGER.info(f"Transaction '{transaction.__name__}'")
         for k, v in kwargs.items():
             LOGGER.info(f" {k}: {v}")
+
+        coroutine = transaction(self._driver).do(**kwargs)
+        self._coroutines.append({self._TRANSACTION: coroutine})
+
         return self
 
     def asserts(self, it: IAssertion, expected):
         """The `asserts` method receives a reference to an `IAssertion` instance.
         It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
         It validates the result using the `asserts` method."""
-        coroutine = it().asserts(self, expected)
-        self._coroutines.append({self._ASSERTION: coroutine})
 
         LOGGER.info(f"Assertion '{it.__name__}'")
         LOGGER.info(f" actual:   '{self._result}'")
         LOGGER.info(f" expected: '{expected}'")
         LOGGER.info("---")
 
+        coroutine = it().asserts(self, expected)
+        self._coroutines.append({self._ASSERTION: coroutine})
+
         return self
 
     async def perform(self) -> "Application":
         """Executes the coroutines in order and saves the result of the transaction
         in `result`"""
+
         for coroutine in self._coroutines:
             if coroutine.get(self._TRANSACTION):
                 self._result = await coroutine.get(self._TRANSACTION)
