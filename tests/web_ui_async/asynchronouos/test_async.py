@@ -16,10 +16,10 @@ from tests.web_ui_async.constants import MAX_INDEX
 
 
 # comment it to execute
-# @pytest.mark.skip(
-#     reason="before execute it start the driver as a service"
-#     "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
-# )
+@pytest.mark.skip(
+    reason="before execute it start the driver as a service"
+    "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
+)
 class TestAsyncTransaction:
     # Set the fixtures as asynchronous
     @pytest_asyncio.fixture(loop_scope="function")
@@ -31,7 +31,7 @@ class TestAsyncTransaction:
             CapabilitiesBuilder()
             .browser_name("chrome")
             .accept_insecure_certs(True)
-            ## comment it to see the UI of the browser
+            # comment it to see the UI of the browser
             .additional_capability(
                 {"goog:chromeOptions": {"extensions": [], "args": ["--headless"]}}
             )

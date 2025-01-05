@@ -12,11 +12,6 @@ from tests.web_ui_async.constants import MAX_INDEX
 from tests.web_ui_async.synchronous import home
 
 
-# comment it to execute
-# @pytest.mark.skip(
-#     reason="before execute it start the driver as a service"
-#     "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
-# )
 class TestSyncTransaction:
     # Set the fixtures as asynchronous
     @pytest.fixture(scope="function")

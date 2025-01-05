@@ -17,7 +17,7 @@ python -m pytest
 
 ## Linter
 ```
-flake8 --exclude venv --max-line-length 100
+flake8 --exclude venv,.tox --max-line-length 100
 ```
 
 # Tox
