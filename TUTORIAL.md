@@ -17,7 +17,7 @@ def test_canonical():
     google.at(setup.CloseApp)
 ```
 
-# Basic pratical example
+# Basic practical example
 
 This is a basic search of the term "guara" on Google. To follow the steps create the files `home.py` and `test_tutorial.py` at the same folder.
 
@@ -59,7 +59,7 @@ import home
 
 from selenium import webdriver
 
-# Imports the Application to buld and run the automation
+# Imports the Application to build and run the automation
 from guara.transaction import Application
 
 # Imports the module with the strategies to asset the result
@@ -99,7 +99,7 @@ def test_google_search(setup_app):
     google = setup_app
 
     # With the `app` received from the fixture the similar things
-    # explaned previouslly in the fixture happens.
+    # explained previouslly in the fixture happens.
     # The transaction `home.Search` with the parameter `text`
     # is passed to `at` and the result is asserted by `asserts` with
     # the strategy `it.IsEqualTo`
@@ -108,7 +108,7 @@ def test_google_search(setup_app):
 ```
 - `class Application`: is the runner of the automation. It receives the `driver` and passes it hand by hand to transactions.
 - `def at`: receives the transaction created on `home.py` and its parameters. Notice the usage of the module name `home` to make the readability of the statement as plain English. The parameters are passed explictly for the same purpose. So the `google.at(home.Search, text="guara")` is read `Google at home [page] search [for] text "guara"`. The terms `page` and `for` could be added to the implementation to make it more explict, like `google.at(homePage.Search, for_text="guara")`. This is a decision the tester may make while developing the transactions. 
-- `def asserts`: receives a strategy to compare the result against an expected value. Again, the focous on readability is kept. So, `asserts(it.IsEqualTo, "All")` can be read `asserts it is equal to 'All'`
+- `def asserts`: receives a strategy to compare the result against an expected value. Again, the focus on readability is kept. So, `asserts(it.IsEqualTo, "All")` can be read `asserts it is equal to 'All'`
 - `it.IsEqualTo`: is one of the strategies to compare the actual and the expected result. Other example is the `it.Contains` which checks if the value is present in the page. Notice that the assertion is very simple: it validates just one value. The intention here is keep the framework simple, but robust. The tester is able to extend the strategies inheriting from `IAssertion`.
 
 # Extending assertions

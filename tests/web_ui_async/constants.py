@@ -1,0 +1,1 @@
+MAX_INDEX = 20

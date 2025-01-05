@@ -18,7 +18,7 @@ class OpenApp(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
 
-    def do(self, with_session, connect_to_driver, access_url):
+    async def do(self, with_session, connect_to_driver, access_url):
         synchronous.go_to_page(
             connect_to_driver,
             with_session,
@@ -43,6 +43,6 @@ class CloseApp(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
 
-    def do(self, with_session, connect_to_driver):
-        synchronous.take_screenshot(connect_to_driver, with_session, "./captures/")
+    async def do(self, with_session, connect_to_driver):
+        synchronous.take_screenshot(connect_to_driver, with_session, "/tmp")
         synchronous.close_session(connect_to_driver, with_session)
