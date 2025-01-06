@@ -1,7 +1,7 @@
 import pathlib
 import random
 from selenium import webdriver
-from tests.web_ui_local import home
+from tests.web_ui_selenium.test_local_page import home
 from guara.transaction import Application
 from guara import it
 from guara import setup

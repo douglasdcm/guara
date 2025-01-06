@@ -1,6 +1,6 @@
 import pytest
 from selenium import webdriver
-from tests.web_ui_vpm import home, contact, info
+from tests.web_ui_selenium.test_web_page import home, contact, info
 from guara.transaction import Application
 from guara import it, setup
 

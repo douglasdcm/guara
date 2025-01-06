@@ -8,11 +8,11 @@ from caqui.easy.capabilities import CapabilitiesBuilder
 from guara.asynchronous.transaction import Application
 from guara.asynchronous import it
 
-from tests.constants import PAGE_URL
+from tests.web_ui_caqui_async.constants import PAGE_URL
 
 # `setup``is not the built-in transaction
-from tests.web_ui_async.asynchronouos import setup, home
-from tests.web_ui_async.constants import MAX_INDEX
+from tests.web_ui_caqui_async.asynchronouos import setup, home
+from tests.web_ui_caqui_async.constants import MAX_INDEX
 
 
 # comment it to execute
