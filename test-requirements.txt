@@ -6,3 +6,4 @@ black
 requests
 caqui
 tox
+pytest-playwright
