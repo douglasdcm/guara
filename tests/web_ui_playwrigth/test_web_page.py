@@ -15,10 +15,10 @@ def setup_method(page: Page):
     yield app
 
 
-# @pytest.mark.skip(
-#     "Check the requirements to run Playwright in"
-#     "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
-# )
+@pytest.mark.skip(
+    "Check the requirements to run Playwright in"
+    "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
+)
 def test_local_page_playwright(setup_method):
     dev_page: Application = setup_method
     dev_page.at(home.NavigateToGettingStarted).asserts(it.IsEqualTo, "Installation")
