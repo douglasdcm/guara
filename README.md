@@ -17,7 +17,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 
 # Introduction
 > [!IMPORTANT]
-> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium.. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/tests)
+> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/tests)
 
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
@@ -126,30 +126,35 @@ python -m pytest -o log_cli=1 --log-cli-level=INFO
 ```
 tests/web_ui_local/test_local_page.py::TestLocalTransaction::test_local_page 
 --------------------------------------------------------------- live log setup ---------------------------------------------------------------
-INFO     guara.transaction:transaction.py:26 Transaction 'OpenApp'
+INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.654542 Transaction 'OpenApp'
 INFO     guara.transaction:transaction.py:28  url: file:////sample.html
 INFO     guara.transaction:transaction.py:28  window_width: 1094
 INFO     guara.transaction:transaction.py:28  window_hight: 765
 INFO     guara.transaction:transaction.py:28  implicitly_wait: 0.5
 --------------------------------------------------------------- live log call ----------------------------------------------------------------
-INFO     guara.transaction:transaction.py:26 Transaction 'SubmitText'
+INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.788494 Transaction 'SubmitText'
 INFO     guara.transaction:transaction.py:28  text: bla
-INFO     guara.transaction:transaction.py:34 Assertion 'IsEqualTo'
+INFO     guara.transaction:transaction.py:34 2025-01-06 01:51:41.848480 Assertion 'IsEqualTo'
 INFO     guara.transaction:transaction.py:35  actual:   'It works! bla!'
 INFO     guara.transaction:transaction.py:36  expected: 'It works! bla!'
-INFO     guara.transaction:transaction.py:37 ---
-INFO     guara.transaction:transaction.py:26 Transaction 'SubmitText'
+INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.856462 Transaction 'SubmitText'
 INFO     guara.transaction:transaction.py:28  text: bla
-INFO     guara.transaction:transaction.py:34 Assertion 'IsNotEqualTo'
+INFO     guara.transaction:transaction.py:34 2025-01-06 01:51:41.865452 Assertion 'IsNotEqualTo'
 INFO     guara.transaction:transaction.py:35  actual:   'It works! blabla!'
 INFO     guara.transaction:transaction.py:36  expected: 'Any'
-INFO     guara.transaction:transaction.py:37 ---
 PASSED
 ```
 
 # Tutorial
 Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/TUTORIAL.md) to build your first automation with this framework.
 
+# Using other Web Drivers
+
+It is possible to run Guara using other Web Drivers like [Caqui](https://github.com/douglasdcm/caqui) and [Playwright](https://playwright.dev/python/docs/intro). Check the requirements of each Web Driver before execute it. For example, Playwright requires the installation of browsers separetly.
+
+# Asynchronous execution
+The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/guara/asynchronous)
+
 # Contributing
-Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/CODE_OF_CONDUCT.md) before push new Merge Requests.
+Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/CODE_OF_CONDUCT.md) before push new Merge Requests.<br>
 Now, follow the steps in [Contributing](https://github.com/douglasdcm/guara/blob/main/CONTRIBUTING.md) session.

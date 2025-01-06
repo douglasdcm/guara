@@ -5,11 +5,11 @@ from selenium import webdriver
 from guara.transaction import Application
 from guara import it, setup
 
-from tests.constants import PAGE_URL
-from tests.web_ui_async.constants import MAX_INDEX
+from tests.web_ui_caqui_async.constants import PAGE_URL
+from tests.web_ui_caqui_async.constants import MAX_INDEX
 
 # `setup` is not the built-in transaction
-from tests.web_ui_async.synchronous import home
+from tests.web_ui_caqui_async.synchronous import home
 
 
 class TestSyncTransaction:
@@ -60,13 +60,13 @@ class TestSyncTransaction:
     # both tests run in paralell
     # it is necessary to mark the test as async
     @pytest.mark.asyncio
-    def test_async_page_1(self, setup_test):
+    def test_sync_page_1(self, setup_test):
         self._run_it()
 
     @pytest.mark.asyncio
-    def test_async_page_2(self, setup_test):
+    def test_sync_page_2(self, setup_test):
         self._run_it()
 
     @pytest.mark.asyncio
-    def test_async_page_3(self, setup_test):
+    def test_sync_page_3(self, setup_test):
         self._run_it()
