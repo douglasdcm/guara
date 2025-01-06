@@ -1,5 +1,6 @@
 from tests.rest_api import echo_api
 from guara.transaction import Application
+from guara import it
 
 
 class TestEchoApi:
@@ -8,10 +9,8 @@ class TestEchoApi:
 
     def test_get(self):
         expected = {"foo1": "bar1", "foo2": "bar2"}
-        actual = self._app.at(echo_api.Get, path=expected).result
-        assert actual["args"] == expected
+        self._app.at(echo_api.Get, path=expected).asserts(it.IsEqualTo, expected)
 
     def test_post(self):
         expected = "This is expected to be sent back as part of response body."
-        actual = self._app.at(echo_api.Post, data=expected).result
-        assert actual["data"] == expected
+        self._app.at(echo_api.Post, data=expected).asserts(it.IsEqualTo, expected)

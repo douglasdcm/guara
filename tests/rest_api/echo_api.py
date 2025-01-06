@@ -13,7 +13,7 @@ class Get(AbstractTransaction):
         for k, v in path.items():
             result = f"{result}{k}={v}&"
         result = result[:-1]
-        return requests.get(f"{BASE_URL}/get?{result}").json()
+        return requests.get(f"{BASE_URL}/get?{result}").json()["args"]
 
 
 class Post(AbstractTransaction):
@@ -21,4 +21,4 @@ class Post(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, data):
-        return requests.post(url=f"{BASE_URL}/post", data=data).json()
+        return requests.post(url=f"{BASE_URL}/post", data=data).json()["data"]
