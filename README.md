@@ -11,17 +11,17 @@ ________
 
 The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of ibis in the bird family Threskiornithidae. It inhabits tropical South America and part of the Caribbean. In form, it resembles most of the other twenty-seven extant species of ibis, but its remarkably brilliant scarlet coloration makes it unmistakable. It is one of the two national birds of Trinidad and Tobago, and its Tupi–Guarani name, guará, is part of the name of several municipalities along the coast of Brazil.
 
-# Table of Contents
-[Syntax](#Syntax)  
-[Introduction](#Introduction)  
-[The pattern](#The-pattern)  
-[Framework in actionction](#Framework-in-action)  
-[Installation](#Installation)  
-[Execution](#Execution)  
-[Tutorial](#Tutorial)  
-[Using other Web Drivers](#Using-other-WebDrivers)  
-[Asynchronous execution](#Asynchronous-execution)  
-[Contributing](#Contributing)  
+# Contents
+- [Syntax](#Syntax)<br>
+- [Introduction](#Introduction)<br>
+- [The pattern](#The-pattern)<br>
+- [Framework in action](#Framework-in-action)<br>
+- [Installation](#Installation)<br>
+- [Execution](#Execution)<br>
+- [Tutorial](#Tutorial)<br>
+- [Using other Web Drivers](#Using-other-Web-Drivers)<br>
+- [Asynchronous execution](#Asynchronous-execution)<br>
+- [Contributing](#Contributing)<br>
 
 # Syntax
 
