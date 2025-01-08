@@ -1,4 +1,5 @@
 from datetime import datetime
+from browserist import Browser
 from guara.transaction import AbstractTransaction
 
 
@@ -18,12 +19,14 @@ class OpenApp(AbstractTransaction):
 
     def __init__(self, driver):
         super().__init__(driver)
+        self._driver: Browser
 
     def do(self, url, window_width=1094, window_height=765, implicitly_wait=10):
-        self._driver.set_window_size(window_width, window_height)
-        self._driver.get(url)
-        self._driver.implicitly_wait(implicitly_wait)
-        return self._driver.title
+        self._driver.window.set.width(window_width)
+        self._driver.window.set.height(window_height)
+        self._driver.open.url(url)
+        self._driver.wait.seconds(implicitly_wait)
+        return self._driver.get.page_title()
 
 
 class CloseApp(AbstractTransaction):
@@ -31,17 +34,24 @@ class CloseApp(AbstractTransaction):
     Closes the app and saves its screenshot (PNG)
 
     Args:
-        screenshot_filename (str): the path where the screenshot is saved.
-        Examples: './myfile', '/path/to/myfile'
+        screenshot_filename (str): the name of the screenshot file.
         Defaults to 'guara-{datetime.now()}.png'.
+
+        screenshot_destination (str): the path where the screenshot is saved.
+        Defaults to './captures'.
 
     """
 
     def __init__(self, driver):
         super().__init__(driver)
+        self._driver: Browser
 
-    def do(self, screenshot_filename="./captures/guara-capture"):
-        self._driver.get_screenshot_as_file(
-            f"{screenshot_filename}-{datetime.now()}.png"
+    def do(
+        self,
+        screenshot_destination="./captures",
+        screenshot_filename="guara-capture",
+    ):
+        self._driver.screenshot.complete_page(
+            f"{screenshot_filename}-{datetime.now()}.png", screenshot_destination
         )
         self._driver.quit()
