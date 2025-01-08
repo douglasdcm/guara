@@ -7,3 +7,4 @@ requests
 caqui
 tox
 pytest-playwright
+browserist

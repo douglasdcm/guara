@@ -57,7 +57,7 @@ def setup_application():
     configuration = {
         "url": "https://vagaspramim.onrender.com/",
         "window_width": 1094,
-        "window_hight": 765,
+        "window_height": 765,
         "implicitly_wait": 0.5,
     }
     options = webdriver.ChromeOptions()

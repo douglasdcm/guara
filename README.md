@@ -143,7 +143,7 @@ tests/web_ui_local/test_local_page.py::TestLocalTransaction::test_local_page
 INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.654542 Transaction 'OpenApp'
 INFO     guara.transaction:transaction.py:28  url: file:////sample.html
 INFO     guara.transaction:transaction.py:28  window_width: 1094
-INFO     guara.transaction:transaction.py:28  window_hight: 765
+INFO     guara.transaction:transaction.py:28  window_height: 765
 INFO     guara.transaction:transaction.py:28  implicitly_wait: 0.5
 --------------------------------------------------------------- live log call ----------------------------------------------------------------
 INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.788494 Transaction 'SubmitText'

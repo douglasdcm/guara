@@ -1,18 +1,17 @@
 import pathlib
 import random
-from selenium import webdriver
-from tests.web_ui_selenium.test_local_page import home
 from guara.transaction import Application
 from guara import it
-from guara import setup
+from tests.web_ui_selenium.test_browserist import setup
+from tests.web_ui_selenium.test_browserist import home
+from browserist import Browser, BrowserSettings
 
 
-class TestLocalTransaction:
+class TestIntegrateBrowserist:
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.parent.resolve()
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
-        self._app = Application(webdriver.Chrome(options=options))
+
+        self._app = Application(Browser(BrowserSettings(headless=True)))
         self._app.at(
             setup.OpenApp,
             url=f"file:///{file_path}/sample.html",
