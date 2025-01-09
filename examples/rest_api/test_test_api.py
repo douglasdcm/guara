@@ -1,4 +1,4 @@
-from tests.rest_api import echo_api
+from examples.rest_api import echo_api
 from guara.transaction import Application
 from guara import it
 

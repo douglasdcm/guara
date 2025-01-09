@@ -2,8 +2,8 @@ import pathlib
 import random
 from guara.transaction import Application
 from guara import it
-from tests.web_ui_selenium.test_browserist import setup
-from tests.web_ui_selenium.test_browserist import home
+from examples.web_ui.selenium.browserist import setup
+from examples.web_ui.selenium.browserist import home
 from browserist import Browser, BrowserSettings
 
 

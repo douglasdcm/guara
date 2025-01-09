@@ -8,18 +8,18 @@ from caqui.easy.capabilities import CapabilitiesBuilder
 from guara.asynchronous.transaction import Application
 from guara.asynchronous import it
 
-from tests.web_ui_caqui_async.constants import PAGE_URL
+from examples.web_ui.caqui_async.constants import PAGE_URL
 
 # `setup``is not the built-in transaction
-from tests.web_ui_caqui_async.asynchronouos import setup, home
-from tests.web_ui_caqui_async.constants import MAX_INDEX
+from examples.web_ui.caqui_async.asynchronouos import setup, home
+from examples.web_ui.caqui_async.constants import MAX_INDEX
 
 
 # comment it to execute
-@pytest.mark.skip(
-    reason="before execute it start the driver as a service"
-    "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
-)
+# @pytest.mark.skip(
+#     reason="before execute it start the driver as a service"
+#     "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
+# )
 class TestAsyncTransaction:
     # Set the fixtures as asynchronous
     @pytest_asyncio.fixture(loop_scope="function")

@@ -1,28 +1,30 @@
 import random
+import pathlib
 import pytest
 from selenium import webdriver
 
 from guara.transaction import Application
 from guara import it, setup
 
-from tests.web_ui_caqui_async.constants import PAGE_URL
-from tests.web_ui_caqui_async.constants import MAX_INDEX
+from examples.web_ui.caqui_async.constants import PAGE_URL
+from examples.web_ui.caqui_async.constants import MAX_INDEX
 
 # `setup` is not the built-in transaction
-from tests.web_ui_caqui_async.synchronous import home
+from examples.web_ui.caqui_async.synchronous import home
 
 
 class TestSyncTransaction:
     # Set the fixtures as asynchronous
     @pytest.fixture(scope="function")
     def setup_test(self):
+        file_path = pathlib.Path(__file__).parent.parent.resolve()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         self._app = Application(webdriver.Chrome(options=options))
 
         self._app.at(
             setup.OpenApp,
-            url=PAGE_URL,
+            url=f"file:///{file_path}/sample.html",
         ).asserts(it.IsEqualTo, "Sample page")
         yield
         self._app.at(
