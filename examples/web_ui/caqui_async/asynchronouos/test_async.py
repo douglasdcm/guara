@@ -1,4 +1,5 @@
 import random
+import pathlib
 import pytest
 import pytest_asyncio
 from caqui import synchronous
@@ -8,11 +9,9 @@ from caqui.easy.capabilities import CapabilitiesBuilder
 from guara.asynchronous.transaction import Application
 from guara.asynchronous import it
 
-from tests.web_ui_caqui_async.constants import PAGE_URL
-
 # `setup``is not the built-in transaction
-from tests.web_ui_caqui_async.asynchronouos import setup, home
-from tests.web_ui_caqui_async.constants import MAX_INDEX
+from examples.web_ui.caqui_async.asynchronouos import setup, home
+from examples.web_ui.caqui_async.constants import MAX_INDEX
 
 
 # comment it to execute
@@ -24,6 +23,7 @@ class TestAsyncTransaction:
     # Set the fixtures as asynchronous
     @pytest_asyncio.fixture(loop_scope="function")
     async def setup_test(self):
+        file_path = pathlib.Path(__file__).parent.parent.resolve()
         # This is how Caqui works
         # https://github.com/douglasdcm/caqui?tab=readme-ov-file#simple-start
         self._driver_url = "http://127.0.0.1:9999"
@@ -45,7 +45,7 @@ class TestAsyncTransaction:
             setup.OpenApp,
             with_session=self._session,
             connect_to_driver=self._driver_url,
-            access_url=PAGE_URL,
+            access_url=f"file:///{file_path}/sample.html",
         ).asserts(it.IsEqualTo, "Sample page").perform()
         yield
         await self._app.at(

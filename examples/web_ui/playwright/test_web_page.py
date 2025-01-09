@@ -1,6 +1,6 @@
 import pytest
 from playwright.sync_api import Page
-from tests.web_ui_playwrigth.pages import home, setup, getting_started
+from examples.web_ui.playwright.pages import home, setup, getting_started
 from guara.transaction import Application
 from guara import it
 

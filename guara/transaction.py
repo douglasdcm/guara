@@ -2,6 +2,7 @@ import logging
 from typing import Any, NoReturn
 from selenium.webdriver.remote.webdriver import WebDriver
 from guara.it import IAssertion
+from guara.utils import get_transaction_info
 
 LOGGER = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class Application:
     def at(self, transaction: AbstractTransaction, **kwargs):
         """It executes the `do` method of each transaction"""
 
-        LOGGER.info(f"Transaction '{transaction.__name__}'")
+        LOGGER.info(f"Transaction '{get_transaction_info(transaction)}'")
         for k, v in kwargs.items():
             LOGGER.info(f" {k}: {v}")
 

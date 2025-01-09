@@ -1,5 +1,5 @@
 from guara.transaction import AbstractTransaction
-from tests.web_ui_caqui_async.constants import MAX_INDEX
+from examples.web_ui.caqui_async.constants import MAX_INDEX
 
 
 class GetNthLink(AbstractTransaction):

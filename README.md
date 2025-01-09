@@ -2,7 +2,7 @@
 
 [![PyPI Downloads](https://static.pepy.tech/badge/guara)](https://pepy.tech/projects/guara)
 
-<img src=https://github.com/douglasdcm/guara/raw/main/images/guara.jpg width="300" height="300" />
+<img src=https://github.com/douglasdcm/guara/raw/main/docs/images/guara.jpg width="300" height="300" />
 
 Photo by <a href="https://unsplash.com/@matcfelipe?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Mateus Campos Felipe</a> on <a href="https://unsplash.com/photos/red-flamingo-svdE4f0K4bs?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
       
@@ -31,27 +31,27 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 
 # Introduction
 > [!IMPORTANT]
-> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/tests)
+> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/examples)
 
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
 # The pattern
 <p align="center">
-    <img src="https://github.com/douglasdcm/guara/blob/main/images/uml_abstract_transaction.png?raw=true" width="800" height="300" />
+    <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/uml_abstract_transaction.png?raw=true" width="800" height="300" />
 </p>
 
 - `AbstractTransaction`: This is the class from which all transactions inherit. The `do` method is implemented by each transaction. In this method, calls to WebDriver are placed. If the method returns something, like a string, the automation can use it for assertions.
 
 <p align="center">
-    <img src="https://github.com/douglasdcm/guara/blob/main/images/uml_iassertion.png?raw=true" width="800" height="300" />
+    <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/uml_iassertion.png?raw=true" width="800" height="300" />
 </p>
 
 - `IAssertion`: This is the interface implemented by all assertion classes.
 - The `asserts` method of each subclass contains the logic to perform validations. For example, the `IsEqualTo` subclass compares the `result` with the expected value provided by the tester.
-- Testers can inherit from this interface to add new subclasses of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/documents/TUTORIAL.md#extending-assertions).
+- Testers can inherit from this interface to add new subclasses of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md#extending-assertions).
 
 <p align="center">
-    <img src="https://github.com/douglasdcm/guara/blob/main/images/uml_application.png?raw=true" width="600" height="200" />
+    <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/uml_application.png?raw=true" width="600" height="200" />
 </p>
 
 - `Application`: This is the runner of the automation. It executes the `do` method of each transaction and validates the result using the `asserts` method.
@@ -63,7 +63,7 @@ The intent of this pattern is to simplify UI test automation. It was inspired by
 
 The idea is to group blocks of interactions into classes. These classes inherit from `AbstractTransaction` and override the `do` method.
 
-Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`tests`](https://github.com/douglasdcm/guara/tree/main/tests) folder).
+Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`examples`](https://github.com/douglasdcm/guara/tree/main/examples) folder).
 
 When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is described in plain English improving the comprehention of the code.
 
@@ -141,7 +141,7 @@ python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(l
 
 **Outputs**
 ```
-tests/web_ui_selenium/test_local_page/test_local_page.py::TestLocalTransaction::test_local_page 
+examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_local_page
 --------------------------------------------------------------- live log setup ---------------------------------------------------------------
 2025-01-09 06:39:41 INFO Transaction 'OpenApp'
 2025-01-09 06:39:41 INFO  url: file:////...sample.html
@@ -169,7 +169,7 @@ PASSED                                                                          
 ```
 
 # Tutorial
-Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/documents/TUTORIAL.md) to build your first automation with this framework.
+Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md) to build your first automation with this framework.
 
 # Using other Web Drivers
 
@@ -179,5 +179,5 @@ It is possible to run Guara using other Web Drivers like [Caqui](https://github.
 The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/guara/asynchronous)
 
 # Contributing
-Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/documents/CODE_OF_CONDUCT.md) before push new Merge Requests.<br>
-Now, follow the steps in [Contributing](https://github.com/douglasdcm/guara/blob/main/documents/CONTRIBUTING.md) session.
+Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/docs/CODE_OF_CONDUCT.md) before push new Merge Requests.<br>
+Now, follow the steps in [Contributing](https://github.com/douglasdcm/guara/blob/main/docs/CONTRIBUTING.md) session.

@@ -1,6 +1,6 @@
 import random
 from calculator import Calculator
-from tests.unit_test import calculator_transactions
+from examples.unit_test import calculator_transactions
 from guara.transaction import Application
 from guara import it
 
