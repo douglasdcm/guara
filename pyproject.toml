@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [tool.setuptools.packages.find]
 include = ["guara*"]
-exclude = ["tests*", ".vscode", ".git*", "dist", "*pytest*"]
+exclude = ["examples*", ".vscode", ".git*", "dist", "*pytest*", "docs"]
 
 [project]
 name = "guara"

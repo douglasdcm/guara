@@ -6,7 +6,6 @@ from selenium import webdriver
 from guara.transaction import Application
 from guara import it, setup
 
-from examples.web_ui.caqui_async.constants import PAGE_URL
 from examples.web_ui.caqui_async.constants import MAX_INDEX
 
 # `setup` is not the built-in transaction

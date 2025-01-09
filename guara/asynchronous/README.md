@@ -26,4 +26,4 @@ There is a subtle change in `asserts` method. In this design the `actual` is an 
 
 # Examples
 
-Check more details [here](https://github.com/douglasdcm/guara/blob/main/tests/web_ui_caqui_async/asynchronouos/test_async.py) 
+Check more details [here](https://github.com/douglasdcm/guara/blob/main/examples/web_ui_caqui_async/asynchronouos/test_async.py)

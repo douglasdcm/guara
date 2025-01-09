@@ -31,7 +31,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 
 # Introduction
 > [!IMPORTANT]
-> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/tests)
+> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/examples)
 
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
@@ -63,7 +63,7 @@ The intent of this pattern is to simplify UI test automation. It was inspired by
 
 The idea is to group blocks of interactions into classes. These classes inherit from `AbstractTransaction` and override the `do` method.
 
-Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`tests`](https://github.com/douglasdcm/guara/tree/main/tests) folder).
+Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`examples`](https://github.com/douglasdcm/guara/tree/main/examples) folder).
 
 When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is described in plain English improving the comprehention of the code.
 
@@ -141,7 +141,7 @@ python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(l
 
 **Outputs**
 ```
-examples/web_ui/selenium/test_simple/test_simple.py::TestLocalTransaction::test_local_page
+examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_local_page
 --------------------------------------------------------------- live log setup ---------------------------------------------------------------
 2025-01-09 06:39:41 INFO Transaction 'OpenApp'
 2025-01-09 06:39:41 INFO  url: file:////...sample.html

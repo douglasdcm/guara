@@ -168,4 +168,4 @@ E         + all
 ```
 
 # Advanced
-For more examples of implentations check the [`tests`](https://github.com/douglasdcm/guara/blob/main/tests) folder.
+For more examples of implentations check the [`examples`](https://github.com/douglasdcm/guara/blob/main/examples) folder.
