@@ -136,7 +136,7 @@ It is recommended to use `pytest`
 # Executes reporting the complete log
 python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S"
 ```
-> [!INFO]
+> [!TIP]
 > These options can also be customized through your `pytest.ini` file. Refer to [Pytest documentaion](https://docs.pytest.org/en/stable/how-to/logging.html).
 
 **Outputs**
