@@ -134,29 +134,38 @@ It is recommended to use `pytest`
 
 ```
 # Executes reporting the complete log
-python -m pytest -o log_cli=1 --log-cli-level=INFO
+python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S"
 ```
+> [!INFO]
+> These options can also be customized through your `pytest.ini` file. Refer to [Pytest documentaion](https://docs.pytest.org/en/stable/how-to/logging.html).
+
 **Outputs**
 ```
-tests/web_ui_local/test_local_page.py::TestLocalTransaction::test_local_page 
+tests/web_ui_selenium/test_local_page/test_local_page.py::TestLocalTransaction::test_local_page 
 --------------------------------------------------------------- live log setup ---------------------------------------------------------------
-INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.654542 Transaction 'OpenApp'
-INFO     guara.transaction:transaction.py:28  url: file:////sample.html
-INFO     guara.transaction:transaction.py:28  window_width: 1094
-INFO     guara.transaction:transaction.py:28  window_height: 765
-INFO     guara.transaction:transaction.py:28  implicitly_wait: 0.5
+2025-01-09 06:39:41 INFO Transaction 'OpenApp'
+2025-01-09 06:39:41 INFO  url: file:////...sample.html
+2025-01-09 06:39:41 INFO  window_width: 1094
+2025-01-09 06:39:41 INFO  window_height: 765
+2025-01-09 06:39:41 INFO  implicitly_wait: 0.5
+2025-01-09 06:39:41 INFO Assertion 'IsEqualTo'
+2025-01-09 06:39:41 INFO  actual:   'Sample page'
+2025-01-09 06:39:41 INFO  expected: 'Sample page'
 --------------------------------------------------------------- live log call ----------------------------------------------------------------
-INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.788494 Transaction 'SubmitText'
-INFO     guara.transaction:transaction.py:28  text: bla
-INFO     guara.transaction:transaction.py:34 2025-01-06 01:51:41.848480 Assertion 'IsEqualTo'
-INFO     guara.transaction:transaction.py:35  actual:   'It works! bla!'
-INFO     guara.transaction:transaction.py:36  expected: 'It works! bla!'
-INFO     guara.transaction:transaction.py:26 2025-01-06 01:51:41.856462 Transaction 'SubmitText'
-INFO     guara.transaction:transaction.py:28  text: bla
-INFO     guara.transaction:transaction.py:34 2025-01-06 01:51:41.865452 Assertion 'IsNotEqualTo'
-INFO     guara.transaction:transaction.py:35  actual:   'It works! blabla!'
-INFO     guara.transaction:transaction.py:36  expected: 'Any'
-PASSED
+2025-01-09 06:39:41 INFO Transaction 'SubmitText'
+2025-01-09 06:39:41 INFO  text: cheese
+2025-01-09 06:39:41 INFO Assertion 'IsEqualTo'
+2025-01-09 06:39:41 INFO  actual:   'It works! cheese!'
+2025-01-09 06:39:41 INFO  expected: 'It works! cheese!'
+2025-01-09 06:39:41 INFO Transaction 'SubmitText'
+2025-01-09 06:39:41 INFO  text: cheese
+2025-01-09 06:39:41 INFO Assertion 'IsNotEqualTo'
+2025-01-09 06:39:41 INFO  actual:   'It works! cheesecheese!'
+2025-01-09 06:39:41 INFO  expected: 'Any'
+PASSED                                                                                                                                 [100%]
+------------------------------------------------------------- live log teardown --------------------------------------------------------------
+2025-01-09 06:39:41 INFO Transaction 'CloseApp'
+
 ```
 
 # Tutorial

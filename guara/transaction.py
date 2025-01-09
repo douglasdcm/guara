@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from typing import Any, NoReturn
 from selenium.webdriver.remote.webdriver import WebDriver
 from guara.it import IAssertion
@@ -29,7 +28,7 @@ class Application:
     def at(self, transaction: AbstractTransaction, **kwargs):
         """It executes the `do` method of each transaction"""
 
-        LOGGER.info(f"{datetime.now()} Transaction '{transaction.__name__}'")
+        LOGGER.info(f"Transaction '{transaction.__name__}'")
         for k, v in kwargs.items():
             LOGGER.info(f" {k}: {v}")
 
@@ -40,7 +39,7 @@ class Application:
         """The `asserts` method receives a reference to an `IAssertion` instance.
         It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
         It validates the result using the `asserts` method."""
-        LOGGER.info(f"{datetime.now()} Assertion '{it.__name__}'")
+        LOGGER.info(f"Assertion '{it.__name__}'")
         LOGGER.info(f" actual:   '{self._result}'")
         LOGGER.info(f" expected: '{expected}'")
 
