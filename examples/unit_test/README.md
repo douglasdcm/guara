@@ -1,3 +1,3 @@
 # Introduction
 
-Even being possible to use this framweork to unit tests it is overkill. 
+Even being possible to use this framework with unit tests it is overkill.
