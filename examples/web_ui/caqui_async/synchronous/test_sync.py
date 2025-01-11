@@ -60,14 +60,11 @@ class TestSyncTransaction:
 
     # both tests run in paralell
     # it is necessary to mark the test as async
-    @pytest.mark.asyncio
     def test_sync_page_1(self, setup_test):
         self._run_it()
 
-    @pytest.mark.asyncio
     def test_sync_page_2(self, setup_test):
         self._run_it()
 
-    @pytest.mark.asyncio
     def test_sync_page_3(self, setup_test):
         self._run_it()

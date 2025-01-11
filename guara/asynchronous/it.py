@@ -1,12 +1,24 @@
+import logging
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from guara.asynchronous.transaction import AbstractTransaction
 
+LOGGER = logging.getLogger(__name__)
+
 
 class IAssertion:
+
     async def asserts(self, actual: "AbstractTransaction", expected: Any) -> None:
         raise NotImplementedError
+
+    async def validates(self, actual, expected):
+        try:
+            await self.asserts(actual, expected)
+        except Exception:
+            LOGGER.error(f"actual:   '{actual.result}'")
+            LOGGER.error(f"expected: '{expected}'")
+            raise
 
 
 class IsEqualTo(IAssertion):

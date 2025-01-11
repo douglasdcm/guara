@@ -26,6 +26,10 @@ class Application:
         self._coroutines = []
         self._TRANSACTION = "transaction"
         self._ASSERTION = "assertion"
+        self._kwargs = None
+        self._transaction_name = None
+        self._it = None
+        self._expected = None
 
     @property
     def result(self):
@@ -34,10 +38,8 @@ class Application:
     def at(self, transaction: AbstractTransaction, **kwargs):
         """It executes the `do` method of each transaction"""
 
-        LOGGER.info(f"Transaction '{get_transaction_info(transaction)}'")
-        for k, v in kwargs.items():
-            LOGGER.info(f" {k}: {v}")
-
+        self._kwargs = kwargs
+        self._transaction_name = get_transaction_info(transaction)
         coroutine = transaction(self._driver).do(**kwargs)
         self._coroutines.append({self._TRANSACTION: coroutine})
 
@@ -48,11 +50,9 @@ class Application:
         It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
         It validates the result using the `asserts` method."""
 
-        LOGGER.info(f"Assertion '{it.__name__}'")
-        LOGGER.info(f" actual:   '{self._result}'")
-        LOGGER.info(f" expected: '{expected}'")
-
-        coroutine = it().asserts(self, expected)
+        self._it = it
+        self._expected = expected
+        coroutine = it().validates(self, expected)
         self._coroutines.append({self._ASSERTION: coroutine})
 
         return self
@@ -60,11 +60,17 @@ class Application:
     async def perform(self) -> "Application":
         """Executes the coroutines in order and saves the result of the transaction
         in `result`"""
-
         for coroutine in self._coroutines:
             if coroutine.get(self._TRANSACTION):
+                LOGGER.info(f"Transaction '{self._transaction_name}'")
+                for k, v in self._kwargs.items():
+                    LOGGER.info(f" {k}: {v}")
                 self._result = await coroutine.get(self._TRANSACTION)
                 continue
+
+            LOGGER.info(f"Assertion '{self._it.__name__}'")
+            LOGGER.info(f" actual:   '{self._result}'")
+            LOGGER.info(f" expected: '{self._expected}'")
             await coroutine.get(self._ASSERTION)
         self._coroutines.clear()
         return self
