@@ -4,7 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from guara.asynchronous.it import IAssertion
 from guara.utils import get_transaction_info
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("guara")
 
 
 class AbstractTransaction:
