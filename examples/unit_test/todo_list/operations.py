@@ -20,7 +20,7 @@ class Remove(AbstractTransaction):
         return self._driver.remove_task(task)
 
 
-class Listtasks(AbstractTransaction):
+class ListTasks(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
         self._driver: ToDo

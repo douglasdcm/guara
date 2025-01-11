@@ -146,7 +146,7 @@ def test_assert_is_sorted_list():
         "you",
         "type",
     ]
-    assert it.IsSorted().asserts(actual, expected) is None
+    assert it.IsSortedAs().asserts(actual, expected) is None
 
 
 def test_assert_is_sorted_list_raises_exception():
@@ -179,4 +179,4 @@ def test_assert_is_sorted_list_raises_exception():
         "An",
     ]
     with pytest.raises(AssertionError):
-        assert it.IsSorted().asserts(actual, expected) is None
+        assert it.IsSortedAs().asserts(actual, expected) is None

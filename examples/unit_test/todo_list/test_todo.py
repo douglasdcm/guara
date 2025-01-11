@@ -23,7 +23,7 @@ class TestToDo:
         task = []
         expected = [task]
         self._todo.at(operations.Add, task=task)
-        self._todo.at(operations.Listtasks).asserts(it.IsEqualTo, expected)
+        self._todo.at(operations.ListTasks).asserts(it.IsEqualTo, expected)
 
     def test_list_tasks_many_assertions(self):
         task = "buy cheese"
@@ -33,10 +33,10 @@ class TestToDo:
         self._todo.at(operations.Add, task=task)
         self._todo.at(operations.Add, task=task_2)
         self._todo.at(operations.Add, task=task_3)
-        self._todo.at(operations.Listtasks).asserts(it.IsSorted, expected)
+        self._todo.at(operations.ListTasks).asserts(it.IsSortedAs, expected)
 
         sub_set = [task, task_3]
-        self._todo.at(operations.Listtasks).asserts(it.HasSubset, sub_set)
+        self._todo.at(operations.ListTasks).asserts(it.HasSubset, sub_set)
 
         key_value = {"1": task}
         self._todo.at(operations.PrintDict).asserts(it.HasKeyValue, key_value)

@@ -71,12 +71,12 @@ class HasSubset(IAssertion):
             raise AssertionError
 
 
-class IsSorted(IAssertion):
+class IsSortedAs(IAssertion):
     """Checks whether the `actual` list is as `expected`
 
     Args:
         actual (list): the list to be inspected
-        expected (list): the ordenized list to compare againts `actual`.
+        expected (list): the ordered list to compare againts `actual`.
     """
 
     def asserts(self, actual, expected):
