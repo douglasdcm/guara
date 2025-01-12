@@ -7,6 +7,11 @@ class TestEchoApi:
     def setup_method(self, method):
         self._app = Application(None)
 
+    def test_get_asserts_has_key_value(self):
+        path = {"any": "any", "foo1": "bar1s"}
+        expected = {"foo1": "bar1s"}
+        self._app.at(echo_api.Get, path=path).asserts(it.HasKeyValue, expected)
+
     def test_get(self):
         expected = {"foo1": "bar1", "foo2": "bar2"}
         self._app.at(echo_api.Get, path=expected).asserts(it.IsEqualTo, expected)
