@@ -18,5 +18,5 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN }}
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          openai-model: 'gpt-4' # Optional, you can use 'gpt-3.5-turbo' or 'gpt-4-32k' as well.
+          openai-model: 'gpt-3.5-turbo' # Optional, you can use 'gpt-3.5-turbo' or 'gpt-4-32k' as well.
           github-api-base-url: 'https://api.github.com' # Optional, defaults to 'https://api.github.com'
