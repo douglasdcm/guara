@@ -85,8 +85,9 @@ def test_sample_web_page():
     
     # Still at Home page changes the language
     # to English and uses native assertion to validate the `result`
-    assert app.at(home.ChangeToEnglish).result == content_in_english
-    
+    result = app.at(home.ChangeToEnglish).result
+    assert it.IsEqualto().asserts(result, content_in_english)
+
     # At Info page asserts the text is present
     app.at(info.NavigateTo).asserts(
         it.Contains, "This project was born"

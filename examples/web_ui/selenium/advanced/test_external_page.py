@@ -29,7 +29,8 @@ class TestVpmTransaction:
             it.IsEqualTo, content_in_portuguese
         )
         # uses native assertion
-        assert self._app.at(home.ChangeToEnglish).result == content_in_english
+        result = self._app.at(home.ChangeToEnglish).result
+        it.IsEqualTo().asserts(result, content_in_english)
         self._app.at(info.NavigateTo).asserts(
             it.Contains,
             (

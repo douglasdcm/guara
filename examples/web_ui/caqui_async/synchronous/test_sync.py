@@ -50,13 +50,13 @@ class TestSyncTransaction:
         for i in range(max_index):
 
             # act
-            actual = self._app.at(
+            result = self._app.at(
                 home.GetNthLink,
                 link_index=i + 1,
-            )
+            ).result
 
             # assert
-            assert actual.result == f"any{i+1}.com"
+            assert it.IsEqualTo().asserts(result, f"any{i+1}.com")
 
     # both tests run in paralell
     # it is necessary to mark the test as async
