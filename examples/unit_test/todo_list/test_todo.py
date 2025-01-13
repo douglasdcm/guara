@@ -36,8 +36,8 @@ class TestToDo:
 
         sub_set = [task, task_3]
         result = self._todo.at(operations.ListTasks).result
-        assert it.HasSubset().validates(result, sub_set)
-        assert it.IsSortedAs().validates(result, expected)
+        it.HasSubset().validates(result, sub_set)
+        it.IsSortedAs().validates(result, expected)
 
         key_value = {"1": task}
         self._todo.at(operations.PrintDict).asserts(it.HasKeyValue, key_value)

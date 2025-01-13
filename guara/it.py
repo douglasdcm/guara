@@ -5,7 +5,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class IAssertion:
-    def asserts(self, actual: Any, expected: Any) -> bool | AssertionError:
+    def asserts(self, actual: Any, expected: Any) -> None:
         raise NotImplementedError
 
     def validates(self, actual, expected):
@@ -23,30 +23,22 @@ class IAssertion:
 
 class IsEqualTo(IAssertion):
     def asserts(self, actual, expected):
-        if actual == expected:
-            return True
-        raise AssertionError
+        assert actual == expected
 
 
 class IsNotEqualTo(IAssertion):
     def asserts(self, actual, expected):
-        if actual != expected:
-            return True
-        raise AssertionError
+        assert actual != expected
 
 
 class Contains(IAssertion):
     def asserts(self, actual, expected):
-        if expected in actual:
-            return True
-        raise AssertionError
+        assert expected in actual
 
 
 class DoesNotContain(IAssertion):
     def asserts(self, actual, expected):
-        if expected not in actual:
-            return True
-        raise AssertionError
+        assert expected not in actual
 
 
 class HasKeyValue(IAssertion):
@@ -62,7 +54,7 @@ class HasKeyValue(IAssertion):
     def asserts(self, actual, expected):
         for k, v in actual.items():
             if list(expected.keys())[0] in k and list(expected.values())[0] in v:
-                return True
+                return
         raise AssertionError
 
 
@@ -78,7 +70,7 @@ class MatchesRegex(IAssertion):
         import re
 
         if re.match(expected, actual):
-            return True
+            return
         raise AssertionError
 
 
@@ -92,7 +84,7 @@ class HasSubset(IAssertion):
 
     def asserts(self, actual, expected):
         if set(expected).intersection(actual) == set(expected):
-            return True
+            return
         raise AssertionError
 
 
@@ -105,4 +97,4 @@ class IsSortedAs(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        return IsEqualTo().asserts(actual, expected)
+        IsEqualTo().asserts(actual, expected)

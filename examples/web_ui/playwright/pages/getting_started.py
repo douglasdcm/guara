@@ -18,5 +18,5 @@ class NavigateToWritingTests(AbstractTransaction):
         self._driver.get_by_role("link", name="Writing tests", exact=True).click()
         return self._driver.get_by_role(
             "heading",
-            name="Writing                                                                                                                                                                                                                                                                                                                                                                                                ",
+            name="Writing",
         ).text_content()
