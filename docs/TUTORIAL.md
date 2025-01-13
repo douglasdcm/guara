@@ -126,7 +126,9 @@ class IsEqualToVariationsOf(IAssertion):
         super().__init__()
 
     def asserts(self, actual, expected):
-        return actual.lower() == expected.lower()
+        if actual.lower() == expected.lower():
+            return True
+        raises AssertionError
 
 def test_google_search(setup_app):
     app = setup_app
