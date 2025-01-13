@@ -178,7 +178,7 @@ Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/docs/TUTOR
 It is possible to run Guara using other Web Drivers like [Caqui](https://github.com/douglasdcm/caqui) and [Playwright](https://playwright.dev/python/docs/intro). Check the requirements of each Web Driver before execute it. For example, Playwright requires the installation of browsers separetly.
 
 # Asynchronous execution
-The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/guara/asynchronous)
+The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/docs/ASYNC.md)
 
 
 # How you can help?
