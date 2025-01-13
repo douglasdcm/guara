@@ -3,7 +3,7 @@ from guara import it
 
 
 def test_assert_is_equal():
-    assert it.IsEqualTo().asserts("any", "any") is None
+    assert it.IsEqualTo().asserts("any", "any") is True
 
 
 def test_assert_is_equal_raises_exception():
@@ -12,7 +12,7 @@ def test_assert_is_equal_raises_exception():
 
 
 def test_assert_is_not_equal():
-    assert it.IsNotEqualTo().asserts("any", "other") is None
+    assert it.IsNotEqualTo().asserts("any", "other") is True
 
 
 def test_assert_is_not_equal_raises_exception():
@@ -21,7 +21,7 @@ def test_assert_is_not_equal_raises_exception():
 
 
 def test_assert_contains():
-    assert it.Contains().asserts("any other", "any") is None
+    assert it.Contains().asserts("any other", "any") is True
 
 
 def test_assert_contains_raises_exception():
@@ -30,7 +30,7 @@ def test_assert_contains_raises_exception():
 
 
 def test_assert_does_not_contain():
-    assert it.DoesNotContain().asserts("any other", "foo") is None
+    assert it.DoesNotContain().asserts("any other", "foo") is True
 
 
 def test_assert_does_not_contains_raises_exception():
@@ -41,27 +41,27 @@ def test_assert_does_not_contains_raises_exception():
 def test_assert_has_key_value():
     actual = {"any-key": "any-value", "other-key": "other-value"}
     expected = {"any-key": "any-value"}
-    assert it.HasKeyValue().asserts(actual, expected) is None
+    assert it.HasKeyValue().asserts(actual, expected) is True
 
 
 def test_assert_has_key_value_raises_exception():
     actual = {"any-key": "any-value", "other-key": "other-value"}
     expected = {"no-key": "no-value"}
     with pytest.raises(AssertionError):
-        assert it.HasKeyValue().asserts(actual, expected) is None
+        assert it.HasKeyValue().asserts(actual, expected) is True
 
 
 def test_assert_matches_regex():
     actual = "An explanation of your regex will be automatically generated as you type"
     expected = "An explanation of your regex will (.*)"
-    assert it.MatchesRegex().asserts(actual, expected) is None
+    assert it.MatchesRegex().asserts(actual, expected) is True
 
 
 def test_assert_matches_regex_raises_exception():
     actual = "An explanation of your regex will be automatically generated as you type"
     expected = "do not match anything"
     with pytest.raises(AssertionError):
-        assert it.MatchesRegex().asserts(actual, expected) is None
+        assert it.MatchesRegex().asserts(actual, expected) is True
 
 
 def test_assert_is_subset_list():
@@ -86,7 +86,7 @@ def test_assert_is_subset_list():
         "be",
         "automatically",
     ]
-    assert it.HasSubset().asserts(actual, expected) is None
+    assert it.HasSubset().asserts(actual, expected) is True
 
 
 def test_assert_is_subset_list_raises_exception():
@@ -114,7 +114,7 @@ def test_assert_is_subset_list_raises_exception():
         "automatically",
     ]
     with pytest.raises(AssertionError):
-        assert it.HasSubset().asserts(actual, expected) is None
+        assert it.HasSubset().asserts(actual, expected) is True
 
 
 def test_assert_is_sorted_list():
@@ -146,7 +146,7 @@ def test_assert_is_sorted_list():
         "you",
         "type",
     ]
-    assert it.IsSortedAs().asserts(actual, expected) is None
+    assert it.IsSortedAs().asserts(actual, expected) is True
 
 
 def test_assert_is_sorted_list_raises_exception():
@@ -179,4 +179,4 @@ def test_assert_is_sorted_list_raises_exception():
         "An",
     ]
     with pytest.raises(AssertionError):
-        assert it.IsSortedAs().asserts(actual, expected) is None
+        assert it.IsSortedAs().asserts(actual, expected) is True

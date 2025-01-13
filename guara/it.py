@@ -1,29 +1,52 @@
+import logging
 from typing import Any
+
+LOGGER = logging.getLogger(__name__)
 
 
 class IAssertion:
-    def asserts(self, actual: Any, expected: Any) -> None:
+    def asserts(self, actual: Any, expected: Any) -> bool | AssertionError:
         raise NotImplementedError
+
+    def validates(self, actual, expected):
+        LOGGER.info(f"Assertion '{self.__class__.__name__}'")
+        try:
+            result = self.asserts(actual, expected)
+            LOGGER.info(f" actual:   '{actual}'")
+            LOGGER.info(f" expected: '{expected}'")
+            return result
+        except Exception:
+            LOGGER.error(f" actual:   '{actual}'")
+            LOGGER.error(f" expected: '{expected}'")
+            raise
 
 
 class IsEqualTo(IAssertion):
     def asserts(self, actual, expected):
-        assert actual == expected
+        if actual == expected:
+            return True
+        raise AssertionError
 
 
 class IsNotEqualTo(IAssertion):
     def asserts(self, actual, expected):
-        assert actual != expected
+        if actual != expected:
+            return True
+        raise AssertionError
 
 
 class Contains(IAssertion):
     def asserts(self, actual, expected):
-        assert expected in actual
+        if expected in actual:
+            return True
+        raise AssertionError
 
 
 class DoesNotContain(IAssertion):
     def asserts(self, actual, expected):
-        assert expected not in actual
+        if expected not in actual:
+            return True
+        raise AssertionError
 
 
 class HasKeyValue(IAssertion):
@@ -39,7 +62,7 @@ class HasKeyValue(IAssertion):
     def asserts(self, actual, expected):
         for k, v in actual.items():
             if list(expected.keys())[0] in k and list(expected.values())[0] in v:
-                return
+                return True
         raise AssertionError
 
 
@@ -54,8 +77,9 @@ class MatchesRegex(IAssertion):
     def asserts(self, actual, expected):
         import re
 
-        if not re.match(expected, actual):
-            raise AssertionError
+        if re.match(expected, actual):
+            return True
+        raise AssertionError
 
 
 class HasSubset(IAssertion):
@@ -67,8 +91,9 @@ class HasSubset(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        if not set(expected).intersection(actual) == set(expected):
-            raise AssertionError
+        if set(expected).intersection(actual) == set(expected):
+            return True
+        raise AssertionError
 
 
 class IsSortedAs(IAssertion):
@@ -80,4 +105,4 @@ class IsSortedAs(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        IsEqualTo().asserts(actual, expected)
+        return IsEqualTo().asserts(actual, expected)
