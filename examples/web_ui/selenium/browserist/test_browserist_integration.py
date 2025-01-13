@@ -7,7 +7,7 @@ from examples.web_ui.selenium.browserist import home
 from browserist import Browser, BrowserSettings
 
 
-class TestIntegrateBrowserist:
+class TestBrowseristIntegration:
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.parent.resolve()
 

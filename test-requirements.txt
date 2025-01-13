@@ -8,3 +8,4 @@ caqui
 tox
 pytest-playwright
 browserist
+helium

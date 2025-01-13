@@ -169,5 +169,29 @@ E         + all
 
 ```
 
+# Best practices
+For a better readabilty of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete impletation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
+
+```
+from browserist import Browser
+from guara.transaction import AbstractTransaction
+
+
+class SubmitText(AbstractTransaction):
+    def __init__(self, driver):
+        super().__init__(driver)
+        self._driver: Browser
+
+    def do(self, text):
+        TEXT = '//*[@id="input"]'
+        BUTTON_TEST = '//*[@id="button"]'
+        RESULT = '//*[@id="result"]'
+        self._driver.input.value(TEXT, text)
+        self._driver.click.button(BUTTON_TEST)
+        return self._driver.get.text(RESULT)
+```
+
+Other interesting tool is [Helium](https://github.com/mherrmann/helium)
+
 # Advanced
 For more examples of implentations check the [`examples`](https://github.com/douglasdcm/guara/blob/main/examples) folder.
