@@ -84,9 +84,10 @@ def test_sample_web_page():
     app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
     
     # Still at Home page changes the language
-    # to English and uses native assertion to validate the `result`
+    # to English and uses many assertions to validate the `result`
     result = app.at(home.ChangeToEnglish).result
-    assert it.IsEqualto().asserts(result, content_in_english)
+    it.IsEqualto().asserts(result, content_in_english)
+    it.Contains().asserts(result, content_in_english)
 
     # At Info page asserts the text is present
     app.at(info.NavigateTo).asserts(
@@ -177,7 +178,16 @@ Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/docs/TUTOR
 It is possible to run Guara using other Web Drivers like [Caqui](https://github.com/douglasdcm/caqui) and [Playwright](https://playwright.dev/python/docs/intro). Check the requirements of each Web Driver before execute it. For example, Playwright requires the installation of browsers separetly.
 
 # Asynchronous execution
-The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/guara/asynchronous)
+The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/docs/ASYNC.md)
+
+
+# How you can help?
+
+Here's how you can help with this:
+- Star this project on GitHub.
+- Tell your friends and colleagues about it.
+- Share it on social media
+- Write a blog post about Guara.
 
 # Contributing
 Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/docs/CODE_OF_CONDUCT.md) before push new Merge Requests.<br>

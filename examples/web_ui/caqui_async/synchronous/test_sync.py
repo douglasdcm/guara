@@ -56,7 +56,7 @@ class TestSyncTransaction:
             ).result
 
             # assert
-            assert it.IsEqualTo().asserts(result, f"any{i+1}.com")
+            it.IsEqualTo().asserts(result, f"any{i+1}.com")
 
     # both tests run in paralell
     # it is necessary to mark the test as async
