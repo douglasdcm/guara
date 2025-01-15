@@ -109,11 +109,11 @@ class ChangeToPortuguese(AbstractTransaction):
 
     # Implements the `do` method and returns the `result`
     def do(self, **kwargs):
-        self._baton_.find_element(
+        self._driver.find_element(
             By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img"
         ).click()
-        self._baton_.find_element(By.CSS_SELECTOR, ".col-md-10").click()
-        return self._baton_.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
+        self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
+        return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
 ```
 
 Again, it is a very repetivite activity:
