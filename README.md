@@ -125,8 +125,11 @@ Again, it is a very repetivite activity:
 Read more in [Tutorial](#tutorial)
 
 # Installation
-This framework can be installed by
+## Dependencies
+- Python 3.11
+- Selenium
 
+This framework can be installed by
 ```
 pip install guara
 ```
