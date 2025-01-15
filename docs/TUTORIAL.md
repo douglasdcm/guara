@@ -72,7 +72,7 @@ from guara import setup
 @pytest.fixture
 def setup_app():
     # Instantiates the Application to run the automation
-    app = Application(webdriver.Chrome())
+    google = Application(webdriver.Chrome())
 
     # Some intersting things happen here.
     # The framework is used to setup the web application.
@@ -85,19 +85,17 @@ def setup_app():
     # The `url` is passed to the `at` method by `kwargs`.
     # The result returned by `at` is asseted by `asserts`
     # using the strategy `it.IsEqualTo`.
-    app.at(
+    google.at(
         setup.OpenApp,
         url="http://www.google.com",
     ).asserts(it.IsEqualTo, "Google")
-    yield app
+    yield google
 
     # Uses the built-in `setup.CloseApp` to close the web application
-    app.at(setup.CloseApp)
+    google.at(setup.CloseApp)
 
 
-def test_google_search(setup_app):
-    google = setup_app
-
+def test_google_search(setup_app: Application):
     # With the `app` received from the fixture the similar things
     # explained previouslly in the fixture happens.
     # The transaction `home.Search` with the parameter `text`
@@ -172,7 +170,7 @@ E         + all
 # Best practices
 For a better readabilty of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete impletation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
 
-```
+```python
 from browserist import Browser
 from guara.transaction import AbstractTransaction
 
