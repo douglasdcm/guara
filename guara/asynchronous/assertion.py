@@ -16,7 +16,7 @@ class IAssertion:
     It is the base class for implementing assertion logic which
     is used for validation and testing.
     """
-    async def asserts(self, actual: Any, expected: Any) -> Coroutine[None, None, None]:
+    async def asserts(self, actual: Any, expected: Any) -> None:
         """
         It defines the assertion logic by comparing the actual data
         against the expected data.
