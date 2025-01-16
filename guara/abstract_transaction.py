@@ -7,7 +7,6 @@ Authors:
     douglasdcm
     Darkness4869
 """
-
 from selenium.webdriver.remote.webdriver import WebDriver
 from typing import Any, NoReturn, Union, Dict
 
