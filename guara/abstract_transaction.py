@@ -9,7 +9,7 @@ Authors:
 """
 
 from selenium.webdriver.remote.webdriver import WebDriver
-from typing import Any, NoReturn, Union
+from typing import Any, NoReturn, Union, Dict
 
 
 class AbstractTransaction:
@@ -27,7 +27,7 @@ class AbstractTransaction:
         """
         self._driver: WebDriver = driver
 
-    def do(self, **kwargs) -> Union[Any, NoReturn]:
+    def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
         """
         It performs a specific transaction
 
