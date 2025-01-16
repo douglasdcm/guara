@@ -7,5 +7,4 @@ basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
     force=True,
 )
-
 LOGGER: Logger = getLogger("guara")
