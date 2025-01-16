@@ -30,7 +30,7 @@ class IAssertion:
         """
         raise NotImplementedError
 
-    async def validates(self, actual: Any, expected: Any) -> Coroutine[None, None, None]:
+    async def validates(self, actual: Any, expected: Any) -> None:
         """
         Executing the assertion logic.
 
