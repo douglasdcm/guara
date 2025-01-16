@@ -51,7 +51,7 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]):
+    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Performing a transaction.
         
@@ -70,7 +70,7 @@ class Application:
         self._result = self._transaction.do(**kwargs)
         return self
 
-    def asserts(self, assertion: IAssertion, expected: Any):
+    def asserts(self, assertion: IAssertion, expected: Any) -> "Application":
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
