@@ -173,6 +173,8 @@ PASSED                                                                          
 
 ```
 
+It also works well with other test frameworks. Check more details [here](https://github.com/douglasdcm/guara/blob/main/docs/TEST_FRAMEWORKS.md)
+
 # Tutorial
 Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md) to build your first automation with this framework.
 
