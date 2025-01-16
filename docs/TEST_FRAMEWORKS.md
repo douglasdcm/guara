@@ -229,4 +229,4 @@ Output
 ```
 Wrote HTML report to htmlcov/index.html
 ```
-![alt text](calculator_coverage.png)
+![alt text](images/calculator_coverage.png)
