@@ -8,7 +8,7 @@ Authors:
     Darkness4869
 """
 from selenium.webdriver.remote.webdriver import WebDriver
-from typing import Any, NoReturn, Union, Dict
+from typing import Any, NoReturn, Union, Dict, Coroutine
 
 
 class AbstractTransaction:
@@ -26,7 +26,7 @@ class AbstractTransaction:
         """
         self._driver: WebDriver = driver
 
-    async def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
+    async def do(self, **kwargs: Dict[str, Any]) -> Coroutine[Union[Any, NoReturn]]:
         """
         It performs a specific transaction
 
