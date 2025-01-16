@@ -4,7 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("guara")
 
 
 class AbstractTransaction:
@@ -16,9 +16,14 @@ class AbstractTransaction:
 
 
 class Application:
-    """This is the runner of the automation."""
+    """This is the runner of the automation.
 
-    def __init__(self, driver):
+    Args:
+        driver (Any): This can be a Web Driver, the Syste Under Test object, or any
+        other object you need to pass transaction by transaction
+    """
+
+    def __init__(self, driver=None):
         self._driver = driver
         self._result = None
 

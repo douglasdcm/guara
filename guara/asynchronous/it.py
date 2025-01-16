@@ -4,7 +4,7 @@ from typing import Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from guara.asynchronous.transaction import AbstractTransaction
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("guara")
 
 
 class IAssertion:

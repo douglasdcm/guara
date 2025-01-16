@@ -70,7 +70,7 @@ from guara import it
 from guara import setup
 
 @pytest.fixture
-def setup_app():
+def google():
     # Instantiates the Application to run the automation
     google = Application(webdriver.Chrome())
 
@@ -95,7 +95,7 @@ def setup_app():
     google.at(setup.CloseApp)
 
 
-def test_google_search(setup_app: Application):
+def test_google_search(google: Application):
     # With the `app` received from the fixture the similar things
     # explained previouslly in the fixture happens.
     # The transaction `home.Search` with the parameter `text`
