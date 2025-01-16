@@ -6,8 +6,7 @@ Authors:
     RonaldTheodoro
 """
 
-from typing import Any, NoReturn, Union, Self, Dict
-from selenium.webdriver.remote.webdriver import WebDriver
+from typing import Any, Dict
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
 from logging import getLogger, Logger
