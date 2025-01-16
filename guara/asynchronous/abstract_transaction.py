@@ -26,7 +26,7 @@ class AbstractTransaction:
         """
         self._driver: WebDriver = driver
 
-    async def do(self, **kwargs: Dict[str, Any]) -> Coroutine[None, None, Union[Any, NoReturn]]:
+    async def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
         """
         It performs a specific transaction
 
