@@ -9,3 +9,6 @@ tox
 pytest-playwright
 browserist
 helium
+testify
+stestr
+green
