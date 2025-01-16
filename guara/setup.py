@@ -1,6 +1,10 @@
 """
 The module that is reponsible for the opening and closing
 transactions.
+
+Authors:
+    douglasdcm
+    RonaldTheodoro
 """
 from datetime import datetime
 from guara.transaction import AbstractTransaction, WebDriver
