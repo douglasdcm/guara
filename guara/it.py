@@ -1,100 +1,163 @@
-import logging
-from typing import Any
+"""
+The module that deals with the assertion and validation of a
+transaction at the runtime.
 
-LOGGER = logging.getLogger(__name__)
-
-
-class IAssertion:
-    def asserts(self, actual: Any, expected: Any) -> None:
-        raise NotImplementedError
-
-    def validates(self, actual, expected):
-        LOGGER.info(f"Assertion '{self.__class__.__name__}'")
-        try:
-            result = self.asserts(actual, expected)
-            LOGGER.info(f" actual:   '{actual}'")
-            LOGGER.info(f" expected: '{expected}'")
-            return result
-        except Exception:
-            LOGGER.error(f" actual:   '{actual}'")
-            LOGGER.error(f" expected: '{expected}'")
-            raise
+Authors:
+    douglasdcm
+    RonaldTheodoro
+"""
+from typing import Any, List
+from guara.assertion import IAssertion
+from logging import getLogger, Logger
+from re import match
 
 
+LOGGER: Logger = getLogger(__name__)
 class IsEqualTo(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Equality Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
+        """
+        Asserting and validating the data for equality.
+
+        Parameters:
+            actual: Any: The actual data to be validated.
+            expected: Any: The expected data.
+
+        Returns:
+            void
+        """
         assert actual == expected
 
-
 class IsNotEqualTo(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Not Equality Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
+        """
+        Asserting and validating the data for not equality.
+
+        Parameters:
+            actual: Any: The actual data to be validated.
+            expected: Any: The expected data.
+
+        Returns:
+            void
+        """
         assert actual != expected
 
-
 class Contains(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Containing Assertion class
+    """
+    def asserts(self, actual, expected) -> None:
+        """
+        Asserting and validating the data where the expected data is
+        in the actual data.
+
+        Parameters:
+            actual: Any: The actual data to be validated.
+            expected: Any: The expected data.
+
+        Returns:
+            void
+        """
         assert expected in actual
 
-
 class DoesNotContain(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Not Containing Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
+        """
+        Asserting and validating the data where the expected data is
+        not in the actual data.
+
+        Parameters:
+            actual: Any: The actual data to be validated.
+            expected: Any: The expected data.
+
+        Returns:
+            void
+        """
         assert expected not in actual
 
-
 class HasKeyValue(IAssertion):
-    """Checks whether the `actual` dictionary has the key and value
-    set in `expected`. Returns when the first key-value pair is found and ignores
-    the remaining ones.
-
-    Args:
-        actual (dict): the dictionary to be inspected
-        expected (dict): the key-value pair to be found in `actual`
     """
+    Key-Value Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
+        """
+        Asserting and validating the data where the expected data is
+        in the object of the actual data.
 
-    def asserts(self, actual, expected):
-        for k, v in actual.items():
-            if list(expected.keys())[0] in k and list(expected.values())[0] in v:
+        Parameters:
+            actual: Any: The actual data to be validated.
+            expected: Any: The expected data.
+
+        Returns:
+            void
+        """
+        for key, value in actual.items():
+            if list(expected.keys())[0] in key and list(expected.values())[0] in value:
                 return
         raise AssertionError
 
-
 class MatchesRegex(IAssertion):
-    """Checks whether the `expected` pattern matches the `actual` string
-
-    Args:
-        actual (str): the string to be inspected
-        expected (str): the pattern to be found in `actual`. For example '(?:anoother){d}'
     """
+    Regular Expression Matches Assertion class
+    """
+    def asserts(self, actual: str, expected: str) -> None:
+        """
+        Asserting and validating the data where the expected data is
+        not in the actual data.
 
-    def asserts(self, actual, expected):
-        import re
+        Parameters:
+            actual: string: The actual data to be validated.
+            expected: string: The regex pattern
 
-        if re.match(expected, actual):
+        Returns:
+            void
+        """
+        if match(expected, actual):
             return
         raise AssertionError
 
-
 class HasSubset(IAssertion):
-    """Checks whether the `expected` list is a subset of `actual`
-
-    Args:
-        actual (list): the list to be inspected
-        expected (list): the list to be found in `actual`.
     """
+    Has Subset Assertion class
+    """
+    def asserts(self, actual: List[Any], expected: List[Any]) -> None:
+        """
+        Asserting and validating the data where the expected data is
+        a subset of the actual data.
 
-    def asserts(self, actual, expected):
+        Parameters:
+            actual: [Any]: The actual data to be validated.
+            expected: [Any]: The expected data to be found in the actual data.
+
+        Returns:
+            void
+        """
         if set(expected).intersection(actual) == set(expected):
             return
         raise AssertionError
 
-
 class IsSortedAs(IAssertion):
-    """Checks whether the `actual` list is as `expected`
-
-    Args:
-        actual (list): the list to be inspected
-        expected (list): the ordered list to compare againts `actual`.
     """
+    Sorted As Assertion class
+    """
+    def asserts(self, actual: List[Any], expected: List[Any]):
+        """
+        Asserting and validating the data where the expected data is
+        a subset of the actual data.
 
-    def asserts(self, actual, expected):
+        Parameters:
+            actual: [Any]: The actual data to be validated.
+            expected: [Any]: The expected data to be found in the actual data.
+
+        Returns:
+            void
+        """
         IsEqualTo().asserts(actual, expected)
