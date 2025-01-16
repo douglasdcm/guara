@@ -1,20 +1,19 @@
-import logging
+"""
+The module that has all of the transactions.
+
+Authors:
+    douglasdcm
+    RonaldTheodoro
+"""
+
 from typing import Any, NoReturn
 from selenium.webdriver.remote.webdriver import WebDriver
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
+from logging import getLogger, Logger
+from guara.transaction import AbstractTransaction
 
-LOGGER = logging.getLogger("guara")
-
-
-class AbstractTransaction:
-    def __init__(self, driver: WebDriver):
-        self._driver = driver
-
-    def do(self, **kwargs) -> Any | NoReturn:
-        raise NotImplementedError
-
-
+LOGGER: Logger = getLogger("guara")
 class Application:
     """This is the runner of the automation.
 
