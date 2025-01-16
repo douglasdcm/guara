@@ -6,44 +6,84 @@ Authors:
     RonaldTheodoro
 """
 
-from typing import Any, NoReturn
+from typing import Any, NoReturn, Union, Self, Dict
 from selenium.webdriver.remote.webdriver import WebDriver
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
 from logging import getLogger, Logger
-from guara.transaction import AbstractTransaction
+from guara.abstract_transaction import AbstractTransaction
+
 
 LOGGER: Logger = getLogger("guara")
 class Application:
-    """This is the runner of the automation.
-
-    Args:
-        driver (Any): This can be a Web Driver, the Syste Under Test object, or any
-        other object you need to pass transaction by transaction
     """
+    This is the runner of the automation.
+    """
+    def __init__(self, driver: Any = None):
+        """
+        Initializing the application with a driver.
 
-    def __init__(self, driver=None):
-        self._driver = driver
-        self._result = None
+        Parameters:
+            driver: Any: This can be a web driver, the an object of the system being under test or any object where a transaction is needed.
+        """
+        self._driver: Any = driver
+        """
+        It is the driver that has a transaction.
+        """
+        self._result: Any = None
+        """
+        It is the result data of the transaction.
+        """
+        self._transaction: AbstractTransaction
+        """
+        The web transaction handler.
+        """
+        self._assertion: IAssertion
+        """
+        The assertion logic to be used for validation.
+        """
 
     @property
-    def result(self):
+    def result(self) -> Any:
+        """
+        It is the result data of the transaction.
+
+        Returns:
+            Any
+        """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs):
-        """It executes the `do` method of each transaction"""
+    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]):
+        """
+        Performing a transaction.
+        
+        Parameters:
+            transaction: AbstractTransaction: The web transaction handler.
+            kwargs: dict: It contains all the necessary data and parameters for the transaction.
 
-        LOGGER.info(f"Transaction '{get_transaction_info(transaction)}'")
-        for k, v in kwargs.items():
-            LOGGER.info(f" {k}: {v}")
-
-        self._result = transaction(self._driver).do(**kwargs)
+        Returns:
+            Application
+        """
+        self._transaction = transaction(self._driver)
+        transaction_info: str = get_transaction_info(self._transaction)
+        LOGGER.info(f"Transaction: {transaction_info}")
+        for key, value in kwargs.items():
+            LOGGER.info(f"{key}: {value}")
+        self._result = self._transaction.do(**kwargs)
         return self
 
-    def asserts(self, it: IAssertion, expected):
-        """The `asserts` method receives a reference to an `IAssertion` instance.
-        It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
-        It validates the result using the `asserts` method."""
+    def asserts(self, assertion: IAssertion, expected: Any):
+        """
+        Asserting and validating the data by implementing the
+        Strategy Pattern from the Gang of Four.
+        
+        Parameters:
+            assertion: IAssertion: The assertion logic to be used for validation.
+            expected: Any: The expected data.
 
-        it().validates(self._result, expected)
+        Returns:
+            Application
+        """
+        self._assertion = assertion()
+        self._assertion.validates(self._result, expected)
         return self
