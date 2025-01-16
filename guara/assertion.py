@@ -18,7 +18,8 @@ class IAssertion:
     """
     def asserts(self, actual: Any, expected: Any) -> None:
         """
-        It defines the assertion logic by comparing the actual data against the expected data.
+        It defines the assertion logic by comparing the actual data
+        against the expected data.
 
         Parameters:
             actual: Any: The actual data
