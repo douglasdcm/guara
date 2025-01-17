@@ -20,8 +20,10 @@ class OpenAppiumApp(AbstractTransaction):
             'platformName': 'Android',
             'deviceName': 'emulator-5554',
             'browserName': 'Chrome',
-            "app": "/path/to/sample.apk",
+            "app": "/absolute/path/to/sample.apk",
             "automationName": "UiAutomator2",
+            "noReset": True,
+            "appWaitActivity": "*",
             'chromeOptions': {'args': ['--headless']} if headless else {}
         }
         self.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
