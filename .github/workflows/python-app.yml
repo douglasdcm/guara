@@ -41,3 +41,4 @@ jobs:
         pip install -e .
         pip install -r test-requirements.txt
         python -m pytest
+        flake8 --exclude venv,.tox --max-line-length 100

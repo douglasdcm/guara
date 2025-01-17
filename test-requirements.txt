@@ -13,3 +13,4 @@ testify
 stestr
 green
 appium-python-client
+pyautogui
