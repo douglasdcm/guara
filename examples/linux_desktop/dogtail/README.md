@@ -8,7 +8,7 @@ source env/bin/activate
 pip install dogtail
 ```
 
-While testing with Python3.11 lots of errors happened in special this one that I couldn't find a solution. I some one knows how to solve it, please, let me know. I tried all tips from Stack Overflow and other sources.
+While testing with Python3.11 lots of errors happened in special this one that I couldn't find a solution. If some one knows how to solve it, please, let me know. I tried all tips from Stack Overflow and other sources.
 
 ```shell
 ______________________________________ ERROR collecting examples/linux_desktop/test_linux_calculator.py ______________________________________
@@ -53,16 +53,16 @@ class AbstractTransaction:
     def do(self, **kwargs):
         raise NotImplementedError
 ```
-With these adaptations it was possible to organiza the automtion to open the Linux calculator, sum two numbers and assert it. I'll paste the static code here just as inspiration, but `it is possible that you will not be able to use it in Python 3.11 and Guara without fixing the issues of dogtails installation`.
+With these adaptations it was possible to organize the automation to open the Linux calculator, sum two numbers and assert it. I'll paste the static code here just as inspiration, but `it is possible that you will not be able to use it in Python 3.11 and Guara without fixing the issues of dogtail's installation`.
 
 ## Folder structure
 ```
 examples
   linux_desktop
-    screens # contains the transactions to intraction with the calculator
+    screens # contains the transactions to intwract with the calculator
       calculator.py # has transactions to add, subtract,...
       setup.py # has transactions to open and close the calculator
-  test_page_transactions.py # has the test cases
+    test_page_transactions.py # has the test cases
 ```
 
 calculator.py
