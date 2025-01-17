@@ -130,14 +130,14 @@ Read more in [Tutorial](#tutorial)
 - Selenium
 
 This framework can be installed by
-```
+```shell
 pip install guara
 ```
 
 # Execution
 It is recommended to use `pytest`
 
-```
+```shell
 # Executes reporting the complete log
 python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S"
 ```
@@ -145,7 +145,7 @@ python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(l
 > These options can also be customized through your `pytest.ini` file. Refer to [Pytest documentaion](https://docs.pytest.org/en/stable/how-to/logging.html).
 
 **Outputs**
-```
+```shell
 examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_local_page
 --------------------------------------------------------------- live log setup ---------------------------------------------------------------
 2025-01-09 06:39:41 INFO Transaction 'OpenApp'
