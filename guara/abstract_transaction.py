@@ -26,6 +26,16 @@ class AbstractTransaction:
         """
         self._driver: WebDriver = driver
 
+    @property
+    def __name__(self) -> property:
+        """
+        The name of the transaction
+
+        Returns:
+            str
+        """
+        return self.__class__.__name__
+
     def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
         """
         It performs a specific transaction
