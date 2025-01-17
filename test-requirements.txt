@@ -12,3 +12,4 @@ helium
 testify
 stestr
 green
+appium-python-client
