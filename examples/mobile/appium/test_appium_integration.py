@@ -1,10 +1,13 @@
 import pathlib
 import random
+import pytest
 from appium import webdriver
 from guara.transaction import Application
 from guara import it
 from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium
+
+@pytest.mark.skip(reason="Complex setup in CI environment")
 class TestAppiumIntegration:
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.resolve()
