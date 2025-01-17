@@ -34,10 +34,6 @@ class CloseApp(AbstractTransaction):
     Args:
         with_session (object): The session of the Web Driver
         connect_to_driver (str): The URL to connect the Web Driver server
-        page_url (str): The URL of the App
-
-    Returns:
-        str: the title of the App
     """
 
     def __init__(self, driver):
