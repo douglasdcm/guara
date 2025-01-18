@@ -16,7 +16,7 @@ class AbstractTransaction:
         with the web driver.
 
         Args:
-            driver: Any: It is the web driver that controls a browser by sending commands to a remote server.
+            driver: (Any): It is the web driver that controls a browser by sending commands to a remote server.
         """
         self._driver: Any = driver
 
