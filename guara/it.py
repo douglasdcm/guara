@@ -145,15 +145,4 @@ class IsSortedAs(IAssertion):
     Sorted As Assertion class
     """
     def asserts(self, actual: List[Any], expected: List[Any]):
-        """
-        Asserting and validating the data where the expected data is
-        a subset of the actual data.
-
-        Parameters:
-            actual: [Any]: The actual data to be validated.
-            expected: [Any]: The expected data to be found in the actual data.
-
-        Returns:
-            void
-        """
         IsEqualTo().asserts(actual, expected)
