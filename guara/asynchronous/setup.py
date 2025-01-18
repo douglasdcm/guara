@@ -40,12 +40,12 @@ class CloseApp(AbstractTransaction):
         https://github.com/douglasdcm/caqui
     """
 
-    def __init__(self, driver: WebDriver):
+    def __init__(self, driver: (Any)):
         """
         Initializing the transaction
 
         Parameters:
-            driver: WebDriver: The web driver
+            driver: (Any): The web driver
         """
         super().__init__(driver)
 
