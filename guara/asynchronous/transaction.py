@@ -120,11 +120,11 @@ class Application:
         """
         Retrieving the transaction from the coroutine.
 
-        Parameters:
-            index: int: The index of the current coroutine.
+        Args:
+            index: (int): The index of the current coroutine.
 
         Returns:
-            boolean
+            (Coroutine[None, None, bool])
         """
         transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
