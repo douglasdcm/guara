@@ -28,7 +28,7 @@ class OpenApp(AbstractTransaction):
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
         raise NotImplementedError(
-            f"""Selenium does not support asynchronous execution.\n
+            """Selenium does not support asynchronous execution.\n
             Use your preferable async WebDriver.\n
             For example https://github.com/douglasdcm/caqui"""
         )
@@ -56,7 +56,7 @@ class CloseApp(AbstractTransaction):
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
         raise NotImplementedError(
-            f"""Selenium does not support asynchronous execution.\n
+            """Selenium does not support asynchronous execution.\n
             Use your preferable async WebDriver.\n
             For example https://github.com/douglasdcm/caqui"""
         )
