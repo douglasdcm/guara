@@ -1,7 +1,6 @@
 """
 It is the module where the AbstractTransaction will handle
-web transactions in an automated browser context using
-Selenium.
+web transactions in an automated browser context.
 
 Authors:
     douglasdcm
