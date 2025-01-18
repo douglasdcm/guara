@@ -9,6 +9,8 @@ from guara.abstract_transaction import AbstractTransaction
 
 
 LOGGER: Logger = getLogger("guara")
+
+
 class Application:
     """
     This is the runner of the automation.
