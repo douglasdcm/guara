@@ -40,7 +40,7 @@ class CloseApp(AbstractTransaction):
 
     Not Implemented as Selenium is not executed asynchronously.
     Use your preferable asynchronous Web Driver.
-    
+
     Link:
         https://github.com/douglasdcm/caqui
     """
