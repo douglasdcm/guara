@@ -4,8 +4,8 @@ import pytest
 from splinter import Browser
 from guara.transaction import Application
 from guara import it
-from setup import OpenSplinterApp, CloseSplinterApp
-from home import SubmitTextSplinter
+from .setup import OpenSplinterApp, CloseSplinterApp
+from .home import SubmitTextSplinter
 
 # @pytest.mark.skip(reason="Complex setup in CI environment")
 class TestSplinterIntegration:
