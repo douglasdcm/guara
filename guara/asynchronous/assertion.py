@@ -23,6 +23,9 @@ class IAssertion:
 
         Returns:
             (None)
+
+        Raises:
+            NotImplementedError: The method is not implemented in the subclass.
         """
         raise NotImplementedError
 
