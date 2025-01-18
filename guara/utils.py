@@ -1,10 +1,6 @@
 """
 The module to be used to retrieve the information of the
 transaction.
-
-Authors:
-    douglasdcm
-    RonaldTheodoro
 """
 from typing import Any
 
