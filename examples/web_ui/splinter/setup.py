@@ -1,7 +1,7 @@
 from datetime import datetime
 from splinter import Browser
 from guara.transaction import AbstractTransaction
-
+import os
 
 class OpenSplinterApp(AbstractTransaction):
     """
@@ -34,5 +34,6 @@ class CloseSplinterApp(AbstractTransaction):
         self.browser = driver
 
     def do(self, screenshot_filename="./captures/guara-capture"):
+        os.makedirs(os.path.dirname(screenshot_filename), exist_ok=True)
         self.browser.screenshot(f"{screenshot_filename}-{datetime.now()}.png")
         self.browser.quit()
