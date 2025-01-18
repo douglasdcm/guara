@@ -1,6 +1,6 @@
 """
 It is the module where the AbstractTransaction will handle
-web transactions in an automated browser context.
+web transactions in an automated browser.
 """
 from selenium.webdriver.remote.webdriver import WebDriver
 from typing import Any, NoReturn, Union, Dict
@@ -8,8 +8,7 @@ from typing import Any, NoReturn, Union, Dict
 
 class AbstractTransaction:
     """
-    It will handle web transactions in an automated browser
-    context using Selenium.
+    It will handle web transactions in an automated browser.
     """
     def __init__(self, driver: WebDriver):
         """
