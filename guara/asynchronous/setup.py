@@ -2,7 +2,7 @@
 The module that is reponsible for the opening and closing
 transactions.
 """
-from guara.asynchronous.transaction import AbstractTransaction, WebDriver
+from guara.asynchronous.transaction import AbstractTransaction
 from typing import Dict, Any
 
 
