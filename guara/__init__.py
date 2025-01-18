@@ -2,10 +2,6 @@
 The entry point of the package.  The main function is
 responsible for initializing the logger and handling command
 line arguments.
-
-Authors:
-    douglasdcm
-    RonaldTheodoro
 """
 from logging import basicConfig, getLogger, Logger, INFO
 
