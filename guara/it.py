@@ -84,21 +84,10 @@ class HasKeyValue(IAssertion):
     Key-Value Assertion class
     """
     def asserts(self, actual: Any, expected: Any) -> None:
-        """
-        Asserting and validating the data where the expected data is
-        in the object of the actual data.
-
-        Parameters:
-            actual: Any: The actual data to be validated.
-            expected: Any: The expected data.
-
-        Returns:
-            void
-        """
         for key, value in actual.items():
             if list(expected.keys())[0] in key and list(expected.values())[0] in value:
                 return
-        raise AssertionError
+        raise AssertionError("The expected key and value is not in the actual data.")
 
 class MatchesRegex(IAssertion):
     """
