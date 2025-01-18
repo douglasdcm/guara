@@ -14,16 +14,6 @@ class IsEqualTo(IAssertion):
     Equality Assertion class
     """
     def asserts(self, actual: Any, expected: Any) -> None:
-        """
-        Asserting and validating the data for equality.
-
-        Parameters:
-            actual: Any: The actual data to be validated.
-            expected: Any: The expected data.
-
-        Returns:
-            void
-        """
         assert actual == expected
 
 class IsNotEqualTo(IAssertion):
