@@ -30,16 +30,6 @@ class IsNotEqualTo(IAssertion):
     Not Equality Assertion class
     """
     async def asserts(self, actual: Any, expected: Any) -> None:
-        """
-        Asserting and validating the data for not equality.
-
-        Parameters:
-            actual: Any: The actual data to be validated.
-            expected: Any: The expected data.
-
-        Returns:
-            void
-        """
         assert actual.result != expected
 
 class Contains(IAssertion):
