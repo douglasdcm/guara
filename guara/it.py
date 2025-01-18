@@ -125,20 +125,9 @@ class HasSubset(IAssertion):
     Has Subset Assertion class
     """
     def asserts(self, actual: List[Any], expected: List[Any]) -> None:
-        """
-        Asserting and validating the data where the expected data is
-        a subset of the actual data.
-
-        Parameters:
-            actual: [Any]: The actual data to be validated.
-            expected: [Any]: The expected data to be found in the actual data.
-
-        Returns:
-            void
-        """
         if set(expected).intersection(actual) == set(expected):
             return
-        raise AssertionError
+        raise AssertionError("The expected data is not a subset of the actual data.")
 
 class IsSortedAs(IAssertion):
     """
