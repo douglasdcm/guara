@@ -1,14 +1,13 @@
 """
-It is the module where the AbstractTransaction will handle
-web transactions in an automated browser.
+It is the module where the interface of the transaction will
+handle web transactions in an automated browser.
 """
 from typing import Any, NoReturn, Union, Dict
 
 
 class AbstractTransaction:
     """
-    It will handle web transactions in an automated browser
-    context using Selenium.
+    It will handle web transactions in an automated browser.
     """
     def __init__(self, driver: Any):
         """
@@ -29,5 +28,8 @@ class AbstractTransaction:
 
         Returns:
             (Any | NoReturn)
+
+        Raises:
+            NotImplementedError: The method is not implemented in the subclass.
         """
         raise NotImplementedError
