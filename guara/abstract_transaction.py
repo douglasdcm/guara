@@ -1,10 +1,6 @@
 """
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser context.
-
-Authors:
-    douglasdcm
-    Darkness4869
 """
 from selenium.webdriver.remote.webdriver import WebDriver
 from typing import Any, NoReturn, Union, Dict
