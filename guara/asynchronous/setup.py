@@ -44,7 +44,7 @@ class CloseApp(AbstractTransaction):
         """
         Initializing the transaction
 
-        Parameters:
+        Args:
             driver: (Any): The web driver
         """
         super().__init__(driver)
