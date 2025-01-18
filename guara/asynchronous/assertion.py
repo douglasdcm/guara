@@ -7,6 +7,8 @@ from logging import getLogger, Logger
 
 
 LOGGER: Logger = getLogger(__name__)
+
+
 class IAssertion:
     """
     It is the base class for implementing assertion logic which
