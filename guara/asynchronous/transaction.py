@@ -112,7 +112,7 @@ class Application:
             Application
         """
         for index in range(0, len(self._coroutines), 1):
-            await self.getAssertion(index) if not await self.getTransaction(index) == False else None
+            await self.get_assertion(index) if not await self.getTransaction(index) == False else None
         self._coroutines.clear()
         return self
 
@@ -135,7 +135,7 @@ class Application:
             return True
         return False
 
-    async def getAssertion(self, index: int) -> Coroutine[None, None, None]:
+    async def get_assertion(self, index: int) -> Coroutine[None, None, None]:
         """
         Retrieving the assertion from the coroutine.
 
