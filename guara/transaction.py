@@ -1,9 +1,5 @@
 """
 The module that has all of the transactions.
-
-Authors:
-    douglasdcm
-    RonaldTheodoro
 """
 from typing import Any, Dict
 from guara.it import IAssertion
