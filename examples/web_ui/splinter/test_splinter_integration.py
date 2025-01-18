@@ -4,8 +4,8 @@ import pytest
 from splinter import Browser
 from guara.transaction import Application
 from guara import it
-from .setup import OpenSplinterApp, CloseSplinterApp
-from .home import SubmitTextSplinter
+from examples.web_ui.splinter import setup
+from examples.web_ui.splinter import home
 
 # @pytest.mark.skip(reason="Complex setup in CI environment")
 class TestSplinterIntegration:
@@ -23,16 +23,16 @@ class TestSplinterIntegration:
         file_path = pathlib.Path(__file__).parent.resolve()
         self.browser = Browser('chrome', headless=True)
         self._app = Application(self.browser)
-        self._app.at(OpenSplinterApp, url=f"file:///{file_path}/sample.html")
+        self._app.at(setup.OpenSplinterApp, url=f"file:///{file_path}/sample.html")
 
 
     def teardown_method(self, method):
-        self._app.at(CloseSplinterApp)
+        self._app.at(setup.CloseSplinterApp)
 
     def test_local_page(self):
         text = ["cheese", "splinter", "test", "bla", "foo"]
         text = text[random.randrange(len(text))]
-        self._app.at(SubmitTextSplinter, text=text).asserts(
+        self._app.at(home.SubmitTextSplinter, text=text).asserts(
             it.IsEqualTo, f"It works! {text}!"
         )
-        self._app.at(SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")
+        self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")
