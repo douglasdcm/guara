@@ -26,7 +26,7 @@ class AbstractTransaction:
         The name of the transaction
 
         Returns:
-            str
+            (str) The name of the transaction being implemented.
         """
         return self.__class__.__name__
 
