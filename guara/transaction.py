@@ -71,12 +71,12 @@ class Application:
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
         
-        Parameters:
-            assertion: IAssertion: The assertion logic to be used for validation.
-            expected: Any: The expected data.
+        Args:
+            assertion: (IAssertion): The assertion logic to be used for validation.
+            expected: (Any): The expected data.
 
         Returns:
-            Application
+            (Application)
         """
         self._assertion = assertion()
         self._assertion.validates(self._result, expected)
