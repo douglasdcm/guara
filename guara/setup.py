@@ -20,7 +20,12 @@ class OpenApp(AbstractTransaction):
         """
         super().__init__(driver)
 
-    def do(self, url: str, window_width: int = 1094, window_height: int = 765, implicitly_wait: int = 10) -> str:
+    def do(self,
+        url: str,
+        window_width: int = 1094,
+        window_height: int = 765,
+        implicitly_wait: int = 10
+    ) -> str:
         self._driver.set_window_size(window_width, window_height)
         self._driver.get(url)
         self._driver.implicitly_wait(implicitly_wait)
