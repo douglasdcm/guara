@@ -10,15 +10,15 @@ class AbstractTransaction:
     """
     It will handle web transactions in an automated browser.
     """
-    def __init__(self, driver: WebDriver):
+    def __init__(self, driver: Any):
         """
         Initializing the transaction which will allow it to interact
         with the web driver.
 
-        Parameters:
-            driver: WebDriver: It is the web driver that controls a browser by sending commands to a remote server.
+        Args:
+            driver: Any: It is the web driver that controls a browser by sending commands to a remote server.
         """
-        self._driver: WebDriver = driver
+        self._driver: Any = driver
 
     @property
     def __name__(self) -> property:
