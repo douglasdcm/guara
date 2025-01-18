@@ -5,7 +5,7 @@ from typing import Any, Dict
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
 from logging import getLogger, Logger
-from guara.abstract_transaction import AbstractTransaction, WebDriver
+from guara.abstract_transaction import AbstractTransaction
 
 
 LOGGER: Logger = getLogger("guara")
