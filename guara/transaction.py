@@ -50,19 +50,19 @@ class Application:
     def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Performing a transaction.
-        
-        Parameters:
-            transaction: AbstractTransaction: The web transaction handler.
-            kwargs: dict: It contains all the necessary data and parameters for the transaction.
+
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
 
         Returns:
-            Application
+            (Application)
         """
         self._transaction = transaction(self._driver)
         transaction_info: str = get_transaction_info(self._transaction)
         LOGGER.info(f"Transaction: {transaction_info}")
         for key, value in kwargs.items():
-            LOGGER.info(f"{key}: {value}")
+            LOGGER.info(f" {key}: {value}")
         self._result = self._transaction.do(**kwargs)
         return self
 
