@@ -17,12 +17,15 @@ class IAssertion:
         It defines the assertion logic by comparing the actual data
         against the expected data.
 
-        Parameters:
-            actual: Any: The actual data
-            expected: Any: The expected data
+        Args:
+            actual: (Any): The actual data
+            expected: (Any): The expected data
 
         Returns:
-            void
+            (None)
+
+        Raises:
+            NotImplementedError: The method is not implemented in the subclass.
         """
         raise NotImplementedError
 
