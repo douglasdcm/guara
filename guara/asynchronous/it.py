@@ -8,12 +8,15 @@ from logging import getLogger, Logger
 
 
 LOGGER: Logger = getLogger("guara")
+
+
 class IsEqualTo(IAssertion):
     """
     Equality Assertion class
     """
     async def asserts(self, actual: Any, expected: Any) -> None:
         assert actual.result == expected
+
 
 class IsNotEqualTo(IAssertion):
     """
@@ -22,12 +25,14 @@ class IsNotEqualTo(IAssertion):
     async def asserts(self, actual: Any, expected: Any) -> None:
         assert actual.result != expected
 
+
 class Contains(IAssertion):
     """
     Containing Assertion class
     """
     async def asserts(self, actual: Any, expected: Any) -> None:
         assert expected in actual.result
+
 
 class DoesNotContain(IAssertion):
     """
