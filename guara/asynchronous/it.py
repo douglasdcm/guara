@@ -47,17 +47,6 @@ class Contains(IAssertion):
     Containing Assertion class
     """
     async def asserts(self, actual: Any, expected: Any) -> None:
-        """
-        Asserting and validating the data where the expected data is
-        in the actual data.
-
-        Args:
-            actual: (Any): The actual data to be validated.
-            expected: (Any): The expected data.
-
-        Returns:
-            (None)
-        """
         assert expected in actual.result
 
 class DoesNotContain(IAssertion):
