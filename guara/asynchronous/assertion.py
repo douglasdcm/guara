@@ -30,7 +30,7 @@ class IAssertion:
         """
         Executing the assertion logic.
 
-        Parameters:
+        Args:
             actual: (Any): The actual data
             expected: (Any): The expected data
 
@@ -40,6 +40,6 @@ class IAssertion:
         try:
             await self.asserts(actual, expected)
         except Exception:
-            LOGGER.error(f" actual: {actual.result}")
-            LOGGER.error(f" expected: {expected}")
+            LOGGER.error(f" Actual Data: {actual.result}")
+            LOGGER.error(f" Expected Data: {expected}")
             raise
