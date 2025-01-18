@@ -16,8 +16,8 @@ class Application:
         """
         Initializing the application with a driver.
 
-        Parameters:
-            driver: Any: This can be a web driver, the an object of the system being under test or any object where a transaction is needed.
+        Args:
+            driver: (Any): This can be a web driver, the an object of the system being under test or any object where a transaction is needed.
         """
         self._driver: Any = driver
         """
