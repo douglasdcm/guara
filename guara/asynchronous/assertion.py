@@ -31,15 +31,15 @@ class IAssertion:
         Executing the assertion logic.
 
         Parameters:
-            actual: Any: The actual data
-            expected: Any: The expected data
+            actual: (Any): The actual data
+            expected: (Any): The expected data
 
         Returns:
-            void
+            (None)
         """
         try:
             await self.asserts(actual, expected)
         except Exception:
-            LOGGER.error(f"actual: {actual.result}")
-            LOGGER.error(f"expected: {expected}")
+            LOGGER.error(f" actual: {actual.result}")
+            LOGGER.error(f" expected: {expected}")
             raise
