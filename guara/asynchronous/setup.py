@@ -12,7 +12,7 @@ class OpenApp(AbstractTransaction):
 
     Not Implemented as Selenium is not executed asynchronously.
     Use your preferable asynchronous Web Driver.
-    
+
     Link:
         https://github.com/douglasdcm/caqui
     """
@@ -27,7 +27,12 @@ class OpenApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
-        raise NotImplementedError("Selenium does not support asynchronous execution.\nUse your preferable async WebDriver.\nFor example https://github.com/douglasdcm/caqui")
+        raise NotImplementedError(
+            f"""Selenium does not support asynchronous execution.\n
+            Use your preferable async WebDriver.\n
+            For example https://github.com/douglasdcm/caqui"""
+        )
+
 
 class CloseApp(AbstractTransaction):
     """
@@ -50,4 +55,8 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
-        raise NotImplementedError("Selenium does not support asynchronous execution.\nUse your preferable async WebDriver.\nFor example https://github.com/douglasdcm/caqui")
+        raise NotImplementedError(
+            f"""Selenium does not support asynchronous execution.\n
+            Use your preferable async WebDriver.\n
+            For example https://github.com/douglasdcm/caqui"""
+        )
