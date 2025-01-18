@@ -1,10 +1,6 @@
 """
 The module that deals with the assertion and validation of a
 transaction at the runtime.
-
-Authors:
-    douglasdcm
-    RonaldTheodoro
 """
 from typing import Any, List
 from guara.assertion import IAssertion
