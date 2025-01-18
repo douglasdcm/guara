@@ -8,6 +8,8 @@ from logging import getLogger, Logger
 from guara.asynchronous.abstract_transaction import AbstractTransaction
 
 LOGGER: Logger = getLogger("guara")
+
+
 class Application:
     """
     The runner of the automation.
@@ -17,7 +19,7 @@ class Application:
         Initializing the application with a driver.
 
         Args:
-            driver: (Any): This can be a web driver, the an object of the system being under test or any object where a transaction is needed.
+            driver: (Any): It is a driver that is used to interact with the system being under test.
         """
         self._driver: Any = driver
         """
