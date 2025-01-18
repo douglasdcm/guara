@@ -1,10 +1,5 @@
 """
 The module that has all of the transactions.
-
-Authors:
-    douglasdcm
-    RonaldTheodoro
-    Darkness4869
 """
 from typing import Any, List, Dict, Coroutine, Union
 from guara.asynchronous.it import IAssertion
