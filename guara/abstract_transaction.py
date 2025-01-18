@@ -34,8 +34,8 @@ class AbstractTransaction:
         """
         It performs a specific transaction
 
-        Parameters:
-            kwargs: dict: It contains all the necessary data and parameters for the transaction.
+        Args:
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
 
         Returns:
             Any | NoReturn
