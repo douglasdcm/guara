@@ -12,10 +12,10 @@ class AbstractTransaction:
     def __init__(self, driver: Any):
         """
         Initializing the transaction which will allow it to interact
-        with the web driver.
+        with the driver.
 
         Args:
-            driver: (Any): It is the web driver that controls a browser by sending commands to a remote server.
+            driver: (Any): It is the driver that controls a user-interface.
         """
         self._driver: Any = driver
 
