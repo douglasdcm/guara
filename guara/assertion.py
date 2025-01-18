@@ -36,6 +36,9 @@ class IAssertion:
 
         Returns:
             (None)
+
+        Raises:
+            Exception: An assertion exception
         """
         LOGGER.info(f"Assertion: {self.__class__.__name__}")
         try:
