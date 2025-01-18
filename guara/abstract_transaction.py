@@ -39,5 +39,8 @@ class AbstractTransaction:
 
         Returns:
             Any | NoReturn
+
+        Raises:
+            NotImplementedError: The method is not implemented in the subclass.
         """
         raise NotImplementedError
