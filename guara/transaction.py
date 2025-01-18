@@ -41,9 +41,6 @@ class Application:
     def result(self) -> Any:
         """
         It is the result data of the transaction.
-
-        Returns:
-            Any
         """
         return self._result
 
