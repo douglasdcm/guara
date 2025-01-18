@@ -7,6 +7,8 @@ from logging import getLogger, Logger
 
 
 LOGGER: Logger = getLogger(__name__)
+
+
 class IAssertion:
     """
     It is the base class for implementing assertion logic which
@@ -51,4 +53,6 @@ class IAssertion:
         except Exception:
             LOGGER.error(f" Actual Data: {actual}")
             LOGGER.error(f" Expected: {expected}")
-            raise Exception(f"The data failed the validation!\nActual Data: {actual}\nExpected Data: {expected}")
+            raise Exception(
+                f"The data failed the validation!\nActual Data: {actual}\nExpected Data: {expected}"
+            )
