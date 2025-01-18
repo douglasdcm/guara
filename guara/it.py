@@ -48,17 +48,6 @@ class Contains(IAssertion):
     Containing Assertion class
     """
     def asserts(self, actual: Any, expected: Any) -> None:
-        """
-        Asserting and validating the data where the expected data is
-        in the actual data.
-
-        Parameters:
-            actual: Any: The actual data to be validated.
-            expected: Any: The expected data.
-
-        Returns:
-            void
-        """
         assert expected in actual
 
 class DoesNotContain(IAssertion):
