@@ -69,7 +69,7 @@ class Application:
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
-        
+
         Args:
             assertion: (IAssertion): The assertion logic to be used for validation.
             expected: (Any): The expected data.
