@@ -9,12 +9,15 @@ from re import match
 
 
 LOGGER: Logger = getLogger(__name__)
+
+
 class IsEqualTo(IAssertion):
     """
     Equality Assertion class
     """
     def asserts(self, actual: Any, expected: Any) -> None:
         assert actual == expected
+
 
 class IsNotEqualTo(IAssertion):
     """
@@ -23,6 +26,7 @@ class IsNotEqualTo(IAssertion):
     def asserts(self, actual: Any, expected: Any) -> None:
         assert actual != expected
 
+
 class Contains(IAssertion):
     """
     Containing Assertion class
@@ -30,12 +34,14 @@ class Contains(IAssertion):
     def asserts(self, actual: Any, expected: Any) -> None:
         assert expected in actual
 
+
 class DoesNotContain(IAssertion):
     """
     Not Containing Assertion class
     """
     def asserts(self, actual: Any, expected: Any) -> None:
         assert expected not in actual
+
 
 class HasKeyValue(IAssertion):
     """
@@ -47,6 +53,7 @@ class HasKeyValue(IAssertion):
                 return
         raise AssertionError("The expected key and value is not in the actual data.")
 
+
 class MatchesRegex(IAssertion):
     """
     Regular Expression Matches Assertion class
@@ -56,6 +63,7 @@ class MatchesRegex(IAssertion):
             return
         raise AssertionError("The actual data does not match the expected regular expression.")
 
+
 class HasSubset(IAssertion):
     """
     Has Subset Assertion class
@@ -64,6 +72,7 @@ class HasSubset(IAssertion):
         if set(expected).intersection(actual) == set(expected):
             return
         raise AssertionError("The expected data is not a subset of the actual data.")
+
 
 class IsSortedAs(IAssertion):
     """
