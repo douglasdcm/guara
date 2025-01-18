@@ -29,7 +29,7 @@ class Application:
         """
         It is the result data of the transaction.
         """
-        self._coroutines: List[Dict[str, Union[Coroutine[None, None, Any], Coroutine[None, None, None]]]] = []
+        self._coroutines: List[Dict[str, Coroutine[None, None, Union[Any, None]]]] = []
         """
         The list of transactions that are performed.
         """
@@ -114,7 +114,7 @@ class Application:
             (Application)
         """
         for index in range(0, len(self._coroutines), 1):
-            await self.get_assertion(index) if not await self.get_transaction(index) == False else None
+            await self.get_assertion(index) if not await self.get_transaction(index) else None
         self._coroutines.clear()
         return self
 
