@@ -51,12 +51,12 @@ class Contains(IAssertion):
         Asserting and validating the data where the expected data is
         in the actual data.
 
-        Parameters:
-            actual: Any: The actual data to be validated.
-            expected: Any: The expected data.
+        Args:
+            actual: (Any): The actual data to be validated.
+            expected: (Any): The expected data.
 
         Returns:
-            void
+            (None)
         """
         assert expected in actual.result
 
@@ -65,15 +65,4 @@ class DoesNotContain(IAssertion):
     Not Containing Assertion class
     """
     async def asserts(self, actual: Any, expected: Any) -> None:
-        """
-        Asserting and validating the data where the expected data is
-        not in the actual data.
-
-        Args:
-            actual: (Any): The actual data to be validated.
-            expected: (Any): The expected data.
-
-        Returns:
-            (None)
-        """
         assert expected not in actual.result
