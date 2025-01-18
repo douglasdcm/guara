@@ -105,20 +105,9 @@ class MatchesRegex(IAssertion):
     Regular Expression Matches Assertion class
     """
     def asserts(self, actual: str, expected: str) -> None:
-        """
-        Asserting and validating the data where the expected data is
-        not in the actual data.
-
-        Parameters:
-            actual: string: The actual data to be validated.
-            expected: string: The regex pattern
-
-        Returns:
-            void
-        """
         if match(expected, actual):
             return
-        raise AssertionError
+        raise AssertionError("The actual data does not match the expected regular expression.")
 
 class HasSubset(IAssertion):
     """
