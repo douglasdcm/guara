@@ -38,7 +38,7 @@ class AbstractTransaction:
             kwargs: (dict): It contains all the necessary data and parameters for the transaction.
 
         Returns:
-            Any | NoReturn
+            (Any | NoReturn)
 
         Raises:
             NotImplementedError: The method is not implemented in the subclass.
