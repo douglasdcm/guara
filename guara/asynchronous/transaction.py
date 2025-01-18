@@ -72,12 +72,12 @@ class Application:
         """
         Executing each transaction.
 
-        Parameters:
-            transaction: AbstractTransaction: The web transaction handler.
-            kwargs: dict: It contains all the necessary data and parameters for the transaction.
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
 
         Returns:
-            Application
+            (Application)
         """
         self.__transaction = transaction(self._driver)
         self._kwargs = kwargs
