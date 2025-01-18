@@ -50,13 +50,4 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
-        """
-        It performs a specific transaction
-
-        Parameters:
-            kwargs: dict: It contains all the necessary data and parameters for the transaction.
-
-        Returns:
-            Any
-        """
         raise NotImplementedError("Selenium does not support asynchronous execution.\nUse your preferable async WebDriver.\nFor example https://github.com/douglasdcm/caqui")
