@@ -109,7 +109,7 @@ class Application:
         Executing all of the coroutines.
 
         Returns:
-            Application
+            (Application)
         """
         for index in range(0, len(self._coroutines), 1):
             await self.get_assertion(index) if not await self.get_transaction(index) == False else None
