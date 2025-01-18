@@ -51,15 +51,6 @@ class CloseApp(AbstractTransaction):
         """
         super().__init__(driver)
 
-    def do(self, screenshot_filename="./captures/guara-capture") -> None:
-        """
-        It performs a specific transaction
-
-        Parameters:
-            screenshot_filename: string: The path of the directory of the screenshots.
-
-        Returns:
-            void
-        """
+    def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
         self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
         self._driver.quit()
