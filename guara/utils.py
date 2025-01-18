@@ -9,7 +9,7 @@ def get_transaction_info(transaction: Any) -> str:
     """
     Retrieving the information of a transaction.
 
-    Parameters:
+    Args:
         transaction: Any: The transaction object.
 
     Returns:
