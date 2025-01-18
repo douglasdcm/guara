@@ -91,12 +91,12 @@ class Application:
         Asserting the data that is performed by the transaction
         against its expected value.
 
-        Parameters:
-            it: IAssertion: The interface of the Assertion.
-            expected: Any: The expected data.
+        Args:
+            it: (IAssertion): The interface of the Assertion.
+            expected: (Any): The expected data.
 
         Returns:
-            Application
+            (Application)
         """
         self._it = it
         self._expected = expected
