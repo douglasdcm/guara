@@ -1,10 +1,6 @@
 """
 The module that is reponsible for the opening and closing
 transactions.
-
-Authors:
-    douglasdcm
-    RonaldTheodoro
 """
 from guara.asynchronous.transaction import AbstractTransaction, WebDriver
 from typing import Dict, Any
