@@ -20,7 +20,7 @@ class Application:
         Initializing the application with a driver.
 
         Args:
-            driver: (Any): This can be a web driver, the an object of the system being under test or any object where a transaction is needed.
+            driver: (Any): This is the driver of the system being under test.
         """
         self._driver: Any = driver
         """
