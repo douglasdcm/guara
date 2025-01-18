@@ -12,19 +12,13 @@ class TestSplinterIntegration:
     """
     TestSplinterIntegration is a test class for integrating Splinter with a local web page.
     Methods:
-        setup_method(method):
-            Sets up the test environment by initializing the browser and application, and opening the sample HTML page.
-        teardown_method(method):
-            Cleans up the test environment by closing the application.
-        test_local_page():
-            Tests the local HTML page by submitting text and asserting the expected output.
     """
+
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.resolve()
         self.browser = Browser('chrome', headless=True)
         self._app = Application(self.browser)
         self._app.at(setup.OpenSplinterApp, url=f"file:///{file_path}/sample.html")
-
 
     def teardown_method(self, method):
         self._app.at(setup.CloseSplinterApp)

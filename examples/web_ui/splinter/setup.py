@@ -14,9 +14,9 @@ class OpenSplinterApp(AbstractTransaction):
 
     def __init__(self, driver):
         super().__init__(driver)
+        self.browser = driver
 
     def do(self, url, headless=True):
-        self.browser = Browser('chrome', headless=headless)
         self.browser.visit(url)
 
 
@@ -31,6 +31,7 @@ class CloseSplinterApp(AbstractTransaction):
 
     def __init__(self, driver):
         super().__init__(driver)
+        self.browser = driver
 
     def do(self, screenshot_filename="./captures/guara-capture"):
         self.browser.screenshot(f"{screenshot_filename}-{datetime.now()}.png")
