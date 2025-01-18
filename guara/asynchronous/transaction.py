@@ -139,13 +139,13 @@ class Application:
         """
         Retrieving the assertion from the coroutine.
 
-        Parameters:
-            index: int: The index of the current coroutine.
+        Args:
+            index: (int): The index of the current coroutine.
 
         Returns:
-            None
+            (Coroutine[None, None, None])
         """
         LOGGER.info(f"Assertion: {self._it.__name__}")
-        LOGGER.info(f"Actual: {self._result}")
-        LOGGER.info(f"Expected: {self._expected}")
+        LOGGER.info(f" Actual Data: {self._result}")
+        LOGGER.info(f" Expected Data: {self._expected}")
         return self._coroutines[index].get(self._ASSERTION)
