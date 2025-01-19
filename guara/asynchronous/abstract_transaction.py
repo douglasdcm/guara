@@ -9,6 +9,13 @@ class AbstractTransaction:
     """
     It will handle web transactions in an automated browser.
     """
+    @property
+    def __name__(self) -> property:
+        """
+        The name of the transaction being implemented.
+        """
+        return self.__class__.__name__
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction which will allow it to interact
