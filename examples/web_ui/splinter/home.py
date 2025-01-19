@@ -15,13 +15,12 @@ class SubmitTextSplinter(AbstractTransaction):
 
     def __init__(self, driver):
         super().__init__(driver)
-        self.browser = driver
+        self._driver: Browser
 
     def do(self, text):
         TEXT = '//*[@id="input"]'
-        BUTTON_TEST = 'button'
-        text_field = self.browser.find_by_id(TEXT).first
-        text_field.fill(text)
-        button = self.browser.find_by_id(BUTTON_TEST).first
-        button.click()
-        return "It works!"
+        BUTTON_TEST = '//*[@id="button"]'
+        RESULT = '//*[@id="result"]'
+        self._driver.input.value(TEXT, text)
+        self._driver.click.button(BUTTON_TEST)
+        return self._driver.get.text(RESULT)
