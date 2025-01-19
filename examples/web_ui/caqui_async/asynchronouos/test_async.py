@@ -45,7 +45,6 @@ class TestAsyncTransaction:
                 }
             })
         ).build()
-        LOGGER.debug(f"Capabilities: {capabilities}")
         for index in range(0, maximum_attempts, 1):
             try:
                 self._session: Any = get_session(self._driver_url, capabilities)
@@ -53,8 +52,7 @@ class TestAsyncTransaction:
                 break
             except Exception as error:
                 LOGGER.warning(f"Failed to retrieve the session.\nAttempt: {index + 1}\nError: {error}")
-                if index < maximum_attempts - 1:
-                    sleep(2)
+                sleep(2) if index < maximum_attempts - 1 else None
         else:
             raise RuntimeError("Failed to initialize session after five attempts!")
         self._app: Application = Application(self._session)
