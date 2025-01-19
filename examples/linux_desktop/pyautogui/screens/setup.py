@@ -1,5 +1,4 @@
-import logging
-from dogtail.procedural import run, focus, click
+from dogtail.procedural import click
 from dogtail.utils import screenshot
 from guara.transaction import AbstractTransaction
 
