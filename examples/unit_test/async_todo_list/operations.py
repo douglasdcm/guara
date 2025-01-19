@@ -1,5 +1,5 @@
 from guara.asynchronous.transaction import AbstractTransaction
-from examples.unit_test.async_todo_list.todo import AsyncToDo
+from examples.unit_test.async_todo_list.async_todo import AsyncToDo
 
 
 class Add(AbstractTransaction):
