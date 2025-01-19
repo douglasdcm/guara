@@ -34,6 +34,6 @@ class CloseSplinterApp(AbstractTransaction):
         self._driver: Browser
 
     def do(self, screenshot_filename="./captures/guara-capture"):
-        os.makedirs(os.path.dirname(screenshot_filename), exist_ok=True)
+        os.makedirs('/tmp/captures', exist_ok=True)
         self._driver.screenshot(f"{screenshot_filename}-{datetime.now()}.png")
         self._driver.quit()
