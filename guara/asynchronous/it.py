@@ -33,9 +33,9 @@ class IsNotEqualTo(IAssertion):
 
 class Contains(IAssertion):
     async def asserts(self, actual, expected):
-        assert expected.result in actual
+        assert expected in actual.result
 
 
 class DoesNotContain(IAssertion):
     async def asserts(self, actual, expected):
-        assert expected.result not in actual
+        assert expected not in actual.result
