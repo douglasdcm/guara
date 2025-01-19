@@ -1,5 +1,4 @@
 from datetime import datetime
-from appium import webdriver
 from guara.transaction import AbstractTransaction
 
 
@@ -34,10 +33,10 @@ class CloseAppiumApp(AbstractTransaction):
     def do(self, screenshot_filename="./captures/guara-capture"):
         """
         Takes a screenshot of the current screen and saves it with a timestamped filename.
-        
+
         Args:
-            screenshot_filename (str): The base filename for the screenshot. Defaults to "./captures/guara-capture".
-        
+            screenshot_filename (str): The base filename for the screenshot.
+
         Returns:
             None
         """
