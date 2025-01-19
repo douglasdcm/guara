@@ -1,5 +1,16 @@
 # Dogtail experiment
 
+**Update**: The [issue](https://gitlab.com/dogtail/dogtail/-/issues/37) that was avoiding the execution of test was solved doing [this](https://gitlab.com/dogtail/dogtail/-/issues/37#note_2304763633). So, if you face this error, this it. As the issue was solved I'm adding the files with the example.
+
+To run, use `venv`
+
+```
+python -m venv venv
+source venv/bin/activate
+```
+
+## The context
+
 Dogtail is a pain in the ass to install. I did it once with `virtualenv` for Python 3.8 only.
 
 ```shell
