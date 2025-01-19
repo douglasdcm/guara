@@ -100,7 +100,7 @@ class Application:
         Returns:
             (Application)
         """
-        self._it = it
+        self._it = it()
         self._expected = expected
         coroutine: Coroutine[None, None, None] = self._it.validates(self, expected)
         self._coroutines.append({self._ASSERTION: coroutine})
