@@ -17,9 +17,9 @@ class SubmitTextSplinter(AbstractTransaction):
         TEXT = '//*[@id="input"]'
         BUTTON_TEST = "button"
         RESULT = '//*[@id="result"]'
-        text_field = self.browser.find_by_tag(TEXT).first
-        text_field.fill(text)
-        button = self.browser.find_by_tag(BUTTON_TEST).first
+        text_field = self._driver.find_by_tag(TEXT).first
+        text_field.send_keys(text)
+        button = self._driver.find_by_tag(BUTTON_TEST).first
         button.click()
-        result = self.browser.find_by_id(RESULT).first
+        result = self._driver.find_by_id(RESULT).first
         return result.text
