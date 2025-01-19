@@ -6,7 +6,7 @@ Before executing this example make sure your host matches the [requirements](htt
 
 If you are usinf Python 3.11 and faces errors `No module named 'pyatspi'` while runnig the tests, then try [this](https://gitlab.com/dogtail/dogtail/-/issues/37#note_2304763633)
 
-This example opens the Linux `GNOME Calculator`, sdivides sums 1 by 2. You will find the transactions to `Open` and `Close` the `GNOME Calculator` and the ones to click the buttons to `Divide` the numbers.
+This example opens the Linux `GNOME Calculator`, divides 1 by 2. You will find the transactions to `Open` and `Close` the `GNOME Calculator` and the ones to click the buttons to `Divide` the numbers.
 The outpout is:
 ```
 test_integration_with_pyautogui.py::TestLinuxCalculatorWithPyautogui::test_calculator 
