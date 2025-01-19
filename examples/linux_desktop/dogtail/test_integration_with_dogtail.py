@@ -34,4 +34,4 @@ class TestLinuxCalculatorWithDogtail:
         from examples.linux_desktop.dogtail.screens import calculator
         from examples.linux_desktop.dogtail.assertions import this
 
-        self._calculator.at(calculator.Add, a=1, b=2).asserts(this.Shows, 3)
+        self._calculator.at(calculator.Sum, a=1, b=2).asserts(this.Shows, 3)

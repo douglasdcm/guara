@@ -3,7 +3,7 @@ from guara.transaction import AbstractTransaction
 from dogtail.rawinput import pressKey, keyNameAliases
 
 
-class Add(AbstractTransaction):
+class Sum(AbstractTransaction):
     """
     Sums two numbers
 
