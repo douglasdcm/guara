@@ -22,6 +22,7 @@ def test_assert_is_not_equal_raises_exception():
 
 def test_assert_contains():
     assert it.Contains().asserts("any other", "any") is None
+    assert it.Contains().asserts(["any"], "any") is None
 
 
 def test_assert_contains_raises_exception():
