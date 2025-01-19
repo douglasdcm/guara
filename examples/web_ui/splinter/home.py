@@ -12,6 +12,9 @@ class SubmitTextSplinter(AbstractTransaction):
     Returns:
         str: the label 'It works! {code}!'
     """
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.browser = driver
 
     def do(self, text):
         TEXT_FIELD_ID = "input"
