@@ -19,22 +19,24 @@ class Add(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
 
+    def _get_button_path(self, button_name):
+        return f"{BASE_PATH}{button_name}.png"
+
+    def _click_buton(self, button, CONFIDENCE):
+        button = pyautogui.locateOnScreen(button, confidence=CONFIDENCE)
+        if not button:
+            raise ValueError(f"Button image {button} not found.")
+        pyautogui.click(button)
+
     def do(self, a, b):
-        BUTTON_1 = f"{BASE_PATH}button_{str(a)}.png"
-        BUTTON_2 = f"{BASE_PATH}button_{str(b)}.png"
-        BUTTON_SUM = f"{BASE_PATH}button_sum.png"
-        BUTTON_EQUALS = f"{BASE_PATH}button_equals.png"
+        BUTTON_1 = self._get_button_path(f"button_{str(a)}")
+        BUTTON_2 = self._get_button_path(f"button_{str(b)}")
+        BUTTON_SUM = self._get_button_path("button_sum")
+        BUTTON_EQUALS = self._get_button_path("button_equals")
         CONFIDENCE = 0.9
 
-        button_1 = pyautogui.locateOnScreen(BUTTON_1, confidence=CONFIDENCE)
-        pyautogui.click(button_1)
-
+        self._click_buton(BUTTON_1, CONFIDENCE)
         # The tool confuses "+" and "÷", but this example does not worry about it
-        button_sum = pyautogui.locateOnScreen(BUTTON_SUM, confidence=CONFIDENCE)
-        pyautogui.click(button_sum)
-
-        button_2 = pyautogui.locateOnScreen(BUTTON_2, confidence=CONFIDENCE)
-        pyautogui.click(button_2)
-
-        button_equals = pyautogui.locateOnScreen(BUTTON_EQUALS, confidence=CONFIDENCE)
-        pyautogui.click(button_equals)
+        self._click_buton(BUTTON_SUM, CONFIDENCE)
+        self._click_buton(BUTTON_2, CONFIDENCE)
+        self._click_buton(BUTTON_EQUALS, CONFIDENCE)

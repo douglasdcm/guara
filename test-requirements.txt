@@ -14,3 +14,4 @@ stestr
 green
 appium-python-client
 pyautogui
+dogtail

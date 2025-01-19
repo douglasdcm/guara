@@ -11,9 +11,7 @@ class TestLinuxCalculatorWithPyautogui:
         from screens import setup
 
         self._calculator = Application(driver=None)
-        self._calculator.at(
-            setup.OpenApp,
-        )
+        self._calculator.at(setup.OpenApp, name="gnome-calculator")
 
     def teardown_method(self, method):
         from screens import setup

@@ -1,3 +1,4 @@
+import logging
 from dogtail.procedural import run, focus, click
 from dogtail.utils import screenshot
 from guara.transaction import AbstractTransaction
@@ -6,15 +7,21 @@ from guara.transaction import AbstractTransaction
 class OpenApp(AbstractTransaction):
     """
     Opens the App using dogtail for convenience
+
+    Args:
+        name: the name of the app, for example 'gnome-calculator'
     """
 
     def __init__(self, driver):
         super().__init__(driver)
 
-    def do(self):
-        app_name = "gnome-calculator"
-        run(app_name)
-        focus.application(app_name)
+    def do(self, name):
+        try:
+            run(name)
+            focus.application(name)
+        except Exception as e:
+            logging.error(f"Failed to open {name}: {str(e)}")
+            raise
 
 
 class CloseApp(AbstractTransaction):

@@ -1,1 +1,1 @@
-BASE_PATH = "./images/"
+BASE_PATH = "./examples/linux_desktop/pyautogui/images/"
