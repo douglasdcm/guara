@@ -3,17 +3,19 @@ from constants import BASE_PATH
 from guara.transaction import AbstractTransaction
 
 
-class Add(AbstractTransaction):
+class Divide(AbstractTransaction):
     """
-    Sums two numbers
+    Divide two numbers
 
     Args:
         Just the numbers 1 and 2 are allowed for now.
         It is necessary to add more images in `images` folder if you want to
-        sum other numbers
+        divide other numbers
 
-        a (int): The 1st number to be added
-        b (int): The second number to be added
+        a (int): The number to be divided
+        b (int): The number that divides
+    Returns:
+        (Application) The application (self._driver)
     """
 
     def __init__(self, driver):
@@ -31,12 +33,13 @@ class Add(AbstractTransaction):
     def do(self, a, b):
         BUTTON_1 = self._get_button_path(f"button_{str(a)}")
         BUTTON_2 = self._get_button_path(f"button_{str(b)}")
-        BUTTON_SUM = self._get_button_path("button_sum")
+        # The tool confuses "+" and "÷", but this example does not worry about it
+        BUTTON_DIVIDE = self._get_button_path("button_sum")
         BUTTON_EQUALS = self._get_button_path("button_equals")
         CONFIDENCE = 0.9
 
         self._click_buton(BUTTON_1, CONFIDENCE)
-        # The tool confuses "+" and "÷", but this example does not worry about it
-        self._click_buton(BUTTON_SUM, CONFIDENCE)
+        self._click_buton(BUTTON_DIVIDE, CONFIDENCE)
         self._click_buton(BUTTON_2, CONFIDENCE)
         self._click_buton(BUTTON_EQUALS, CONFIDENCE)
+        return self._driver

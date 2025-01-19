@@ -1,4 +1,22 @@
 import pytest
+from guara.transaction import Application
+from guara import it
+
+
+class ItShows(it.IAssertion):
+    """
+    It checks if the value is shown in the calculator
+
+    Args:
+        actual (application): The calculator object
+        expected (number): the value that should be present in the screen
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def asserts(self, actual, expected):
+        assert actual.child(str(expected)).showing
 
 
 @pytest.mark.skip("Skipped due to the complexity to integrate it in pipeline")
@@ -7,11 +25,17 @@ class TestLinuxCalculatorWithPyautogui:
     def setup_method(self, method):
         # I opted for lazy imports just to not break the pipeline.
         # Do not do it.
-        from guara.transaction import Application
         from screens import setup
+        from dogtail.tree import root
+        from dogtail.procedural import run, focus
 
-        self._calculator = Application(driver=None)
-        self._calculator.at(setup.OpenApp, name="gnome-calculator")
+        app_name = "gnome-calculator"
+        run(app_name)
+        focus.application(app_name)
+        driver = root.application(app_name)
+
+        self._calculator = Application(driver=driver)
+        self._calculator.at(setup.OpenApp)
 
     def teardown_method(self, method):
         from screens import setup
@@ -26,11 +50,11 @@ class TestLinuxCalculatorWithPyautogui:
         # with whatever is shown in your host. One possible way to make assertions is
         # check if an specific image like `images/displays_3.png` is present in the screen
         # The tester has to be creative while asserting things with Pyautogui.
-        # Other possible way is use dogtail to return information about the opened app.
+        # I'm using dogtail to return information about the opened app.
         # In this case, dogtail has to be passed as the driver to the `Application`.
         # Check the examples in `examples/linux_desktop/dogtail` for more information.
         self._calculator.at(
-            calculator.Add,
+            calculator.Divide,
             a=1,
             b=2,
-        )
+        ).asserts(ItShows, 0.5)
