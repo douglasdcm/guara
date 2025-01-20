@@ -1,8 +1,8 @@
-import pytest
+from pytest import mark
 from guara.transaction import Application
 
 
-@pytest.mark.skip(reason="Complex setup in CI environment")
+@mark.skip(reason="Complex setup in CI environment")
 class TestLinuxCalculatorWithDogtail:
     def setup_method(self, method):
         # Opted for lazy import just to not break the pipeline
@@ -30,8 +30,9 @@ class TestLinuxCalculatorWithDogtail:
 
         self._calculator.at(setup.CloseApp)
 
-    def test_local_page(self):
+    @mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
+    def test_calculator_with_dogtail(self, a, b, expected):
         from examples.linux_desktop.dogtail.screens import calculator
         from examples.linux_desktop.dogtail.assertions import this
 
-        self._calculator.at(calculator.Sum, a=1, b=2).asserts(this.Shows, 3)
+        self._calculator.at(calculator.Sum, a=a, b=b).asserts(this.Shows, expected)

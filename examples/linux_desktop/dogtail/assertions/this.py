@@ -1,3 +1,4 @@
+from logging import error
 from guara import it
 
 
@@ -14,4 +15,8 @@ class Shows(it.IAssertion):
         super().__init__()
 
     def asserts(self, actual, expected):
-        assert actual.child(str(expected)).showing
+        try:
+            assert actual.child(str(expected)).showing
+        except Exception:
+            error(f"Expected value '{expected}' not found in the application.")
+            raise

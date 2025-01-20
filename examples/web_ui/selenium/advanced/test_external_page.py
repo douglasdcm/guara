@@ -1,4 +1,4 @@
-import pytest
+from pytest import fixture
 from selenium import webdriver
 from examples.web_ui.selenium.advanced import home, contact, info
 from guara.transaction import Application
@@ -53,7 +53,7 @@ class TestVpmTransaction:
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
 
 
-@pytest.fixture
+@fixture
 def setup_application():
     configuration = {
         "url": "https://vagaspramim.onrender.com/",

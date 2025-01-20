@@ -1,3 +1,4 @@
+from logging import warning
 from dogtail.procedural import click
 from dogtail.utils import screenshot
 from guara.transaction import AbstractTransaction
@@ -27,5 +28,8 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     def do(self):
-        screenshot()
-        click("Close")
+        try:
+            screenshot()
+            click("Close")
+        except LookupError:
+            warning("Close button not found; the application may already be closed.")

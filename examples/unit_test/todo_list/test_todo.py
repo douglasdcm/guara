@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 from examples.unit_test.todo_list.todo import ToDo
 from examples.unit_test.todo_list import operations
 from guara.transaction import Application
@@ -50,7 +50,7 @@ class TestToDo:
         self._todo.at(operations.GetBy, index=index).asserts(it.MatchesRegex, pattern)
 
 
-class TestToTestCase(unittest.TestCase):
+class TestToTestCase(TestCase):
     def setUp(self):
         self._todo = Application(ToDo())
 

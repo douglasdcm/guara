@@ -1,6 +1,6 @@
-import pathlib
-import random
-import pytest
+from pathlib import Path
+from random import randrange
+from pytest import mark
 from appium import webdriver
 from guara.transaction import Application
 from guara import it
@@ -8,10 +8,10 @@ from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium
 
 
-@pytest.mark.skip(reason="Complex setup in CI environment")
+@mark.skip(reason="Complex setup in CI environment")
 class TestAppiumIntegration:
     def setup_method(self, method):
-        file_path = pathlib.Path(__file__).parent.resolve()
+        file_path = Path(__file__).parent.resolve()
         desired_caps = {
             "platformName": "Android",
             "deviceName": "emulator-5554",
@@ -33,7 +33,7 @@ class TestAppiumIntegration:
 
     def test_local_page(self):
         text = ["cheese", "appium", "test", "bla", "foo"]
-        text = text[random.randrange(len(text))]
+        text = text[randrange(len(text))]
         self._app.at(SubmitTextAppium, text=text).asserts(
             it.IsEqualTo, f"It works! {text}!"
         )

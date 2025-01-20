@@ -1,4 +1,4 @@
-import pytest
+from pytest import raises
 from guara import it
 
 
@@ -7,7 +7,7 @@ def test_assert_is_equal():
 
 
 def test_assert_is_equal_raises_exception():
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.IsEqualTo().asserts("any", "other")
 
 
@@ -16,7 +16,7 @@ def test_assert_is_not_equal():
 
 
 def test_assert_is_not_equal_raises_exception():
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.IsNotEqualTo().asserts("any", "any")
 
 
@@ -26,7 +26,7 @@ def test_assert_contains():
 
 
 def test_assert_contains_raises_exception():
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.Contains().asserts("any", "other")
 
 
@@ -35,7 +35,7 @@ def test_assert_does_not_contain():
 
 
 def test_assert_does_not_contains_raises_exception():
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.DoesNotContain().asserts("any other", "any")
 
 
@@ -48,7 +48,7 @@ def test_assert_has_key_value():
 def test_assert_has_key_value_raises_exception():
     actual = {"any-key": "any-value", "other-key": "other-value"}
     expected = {"no-key": "no-value"}
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.HasKeyValue().asserts(actual, expected) is None
 
 
@@ -61,7 +61,7 @@ def test_assert_matches_regex():
 def test_assert_matches_regex_raises_exception():
     actual = "An explanation of your regex will be automatically generated as you type"
     expected = "do not match anything"
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.MatchesRegex().asserts(actual, expected) is None
 
 
@@ -114,7 +114,7 @@ def test_assert_is_subset_list_raises_exception():
         "be",
         "automatically",
     ]
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.HasSubset().asserts(actual, expected) is None
 
 
@@ -179,5 +179,5 @@ def test_assert_is_sorted_list_raises_exception():
         "explanation",
         "An",
     ]
-    with pytest.raises(AssertionError):
+    with raises(AssertionError):
         assert it.IsSortedAs().asserts(actual, expected) is None
