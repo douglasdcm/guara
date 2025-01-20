@@ -1,100 +1,82 @@
-import logging
-from typing import Any
+"""
+The module that deals with the assertion and validation of a
+transaction at the runtime.
+"""
+from typing import Any, List
+from guara.assertion import IAssertion
+from logging import getLogger, Logger
+from re import match
 
-LOGGER = logging.getLogger(__name__)
 
-
-class IAssertion:
-    def asserts(self, actual: Any, expected: Any) -> None:
-        raise NotImplementedError
-
-    def validates(self, actual, expected):
-        LOGGER.info(f"Assertion '{self.__class__.__name__}'")
-        try:
-            result = self.asserts(actual, expected)
-            LOGGER.info(f" actual:   '{actual}'")
-            LOGGER.info(f" expected: '{expected}'")
-            return result
-        except Exception:
-            LOGGER.error(f" actual:   '{actual}'")
-            LOGGER.error(f" expected: '{expected}'")
-            raise
+LOGGER: Logger = getLogger(__name__)
 
 
 class IsEqualTo(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Equality Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
         assert actual == expected
 
 
 class IsNotEqualTo(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Not Equality Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
         assert actual != expected
 
 
 class Contains(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Containing Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
         assert expected in actual
 
 
 class DoesNotContain(IAssertion):
-    def asserts(self, actual, expected):
+    """
+    Not Containing Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
         assert expected not in actual
 
 
 class HasKeyValue(IAssertion):
-    """Checks whether the `actual` dictionary has the key and value
-    set in `expected`. Returns when the first key-value pair is found and ignores
-    the remaining ones.
-
-    Args:
-        actual (dict): the dictionary to be inspected
-        expected (dict): the key-value pair to be found in `actual`
     """
-
-    def asserts(self, actual, expected):
-        for k, v in actual.items():
-            if list(expected.keys())[0] in k and list(expected.values())[0] in v:
+    Key-Value Assertion class
+    """
+    def asserts(self, actual: Any, expected: Any) -> None:
+        for key, value in actual.items():
+            if list(expected.keys())[0] in key and list(expected.values())[0] in value:
                 return
-        raise AssertionError
+        raise AssertionError("The expected key and value is not in the actual data.")
 
 
 class MatchesRegex(IAssertion):
-    """Checks whether the `expected` pattern matches the `actual` string
-
-    Args:
-        actual (str): the string to be inspected
-        expected (str): the pattern to be found in `actual`. For example '(?:anoother){d}'
     """
-
-    def asserts(self, actual, expected):
-        import re
-
-        if re.match(expected, actual):
+    Regular Expression Matches Assertion class
+    """
+    def asserts(self, actual: str, expected: str) -> None:
+        if match(expected, actual):
             return
-        raise AssertionError
+        raise AssertionError("The actual data does not match the expected regular expression.")
 
 
 class HasSubset(IAssertion):
-    """Checks whether the `expected` list is a subset of `actual`
-
-    Args:
-        actual (list): the list to be inspected
-        expected (list): the list to be found in `actual`.
     """
-
-    def asserts(self, actual, expected):
+    Has Subset Assertion class
+    """
+    def asserts(self, actual: List[Any], expected: List[Any]) -> None:
         if set(expected).intersection(actual) == set(expected):
             return
-        raise AssertionError
+        raise AssertionError("The expected data is not a subset of the actual data.")
 
 
 class IsSortedAs(IAssertion):
-    """Checks whether the `actual` list is as `expected`
-
-    Args:
-        actual (list): the list to be inspected
-        expected (list): the ordered list to compare againts `actual`.
     """
-
-    def asserts(self, actual, expected):
+    Sorted As Assertion class
+    """
+    def asserts(self, actual: List[Any], expected: List[Any]):
         IsEqualTo().asserts(actual, expected)

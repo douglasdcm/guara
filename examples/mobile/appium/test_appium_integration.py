@@ -7,6 +7,7 @@ from guara import it
 from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium
 
+
 @pytest.mark.skip(reason="Complex setup in CI environment")
 class TestAppiumIntegration:
     def setup_method(self, method):
@@ -21,7 +22,8 @@ class TestAppiumIntegration:
             "appWaitActivity": "*",
             'goog:chromeOptions': {'args': ['--headless']}
         }
-        self.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_capabilities=desired_caps)
+        uniform_resource_locator: str = "http://localhost:4723/wd/hub"
+        self.driver = webdriver.Remote(uniform_resource_locator, desired_capabilities=desired_caps)
         self._app = Application(self.driver)
         self._app.at(OpenAppiumApp, url=f"file:///{file_path}/sample.html")
 

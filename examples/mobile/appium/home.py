@@ -1,5 +1,5 @@
-from appium import webdriver
 from guara.transaction import AbstractTransaction
+
 
 class SubmitTextAppium(AbstractTransaction):
     """
