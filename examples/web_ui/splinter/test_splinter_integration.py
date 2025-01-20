@@ -14,7 +14,7 @@ class TestSplinterIntegration:
     """
 
     def setup_method(self, method):
-        file_path = pathlib.Path(__file__).parent.resolve()
+        file_path = pathlib.Path(__file__).parent.parent.resolve()
         browser = Browser("chrome", headless=True)
         self._app = Application(browser)
         self._app.at(setup.OpenSplinterApp, url=f"file:///{file_path}/sample.html")
