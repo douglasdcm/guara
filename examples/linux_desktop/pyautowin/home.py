@@ -15,4 +15,4 @@ class SubmitTextPyAutoWin(AbstractTransaction):
 
     def do(self, text):
         pyautowin.typewrite(text)
-        pyautowin.press('enter')
+        pyautowin.press("enter")

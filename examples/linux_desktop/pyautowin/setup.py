@@ -1,4 +1,3 @@
-import pyautowin
 from guara.transaction import AbstractTransaction
 
 
@@ -14,7 +13,7 @@ class OpenApplication(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, app_path):
-        pyautowin.start(app_path)
+        self._driver.start(app_path)
 
 
 class CloseApplication(AbstractTransaction):
@@ -29,4 +28,4 @@ class CloseApplication(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, app_name):
-        pyautowin.close(app_name)
+        self._driver.close(app_name)
