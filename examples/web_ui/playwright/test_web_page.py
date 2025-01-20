@@ -1,11 +1,11 @@
-import pytest
+from pytest import fixture, mark
 from playwright.sync_api import Page
 from examples.web_ui.playwright.pages import home, setup, getting_started
 from guara.transaction import Application
 from guara import it
 
 
-@pytest.fixture
+@fixture
 def setup_method(page: Page):
     app = Application(page)
     app.at(
@@ -15,7 +15,7 @@ def setup_method(page: Page):
     yield app
 
 
-@pytest.mark.skip(
+@mark.skip(
     "Check the requirements to run Playwright in"
     "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
 )

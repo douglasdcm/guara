@@ -1,5 +1,5 @@
-import pathlib
-import random
+from pathlib import Path
+from random import randrange
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.selenium.helium import setup
@@ -8,7 +8,7 @@ from examples.web_ui.selenium.helium import home
 
 class TestHeliumIntegration:
     def setup_method(self, method):
-        file_path = pathlib.Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.resolve()
 
         self._app = Application(None)
         self._app.at(
@@ -21,7 +21,7 @@ class TestHeliumIntegration:
 
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[random.randrange(len(text))]
+        text = text[randrange(len(text))]
         self._app.at(home.SubmitText, text=text).asserts(
             it.IsEqualTo, f"It works! {text}!"
         )

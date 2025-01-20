@@ -1,6 +1,6 @@
-import random
-import pathlib
-import pytest
+from random import randrange
+from pathlib import Path
+from pytest import fixture
 from selenium import webdriver
 
 from guara.transaction import Application
@@ -14,9 +14,9 @@ from examples.web_ui.caqui_async.synchronous import home
 
 class TestSyncTransaction:
     # Set the fixtures as asynchronous
-    @pytest.fixture(scope="function")
+    @fixture(scope="function")
     def setup_test(self):
-        file_path = pathlib.Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.resolve()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         self._app = Application(webdriver.Chrome(options=options))
@@ -34,7 +34,7 @@ class TestSyncTransaction:
         """Get all MAX_INDEX links from page and validates its text"""
         # arrange
         text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[random.randrange(len(text))]
+        text = text[randrange(len(text))]
         expected = []
         max_index = MAX_INDEX - 1
         for i in range(max_index):
