@@ -25,4 +25,5 @@ jobs:
         python-version: "3.11"
     - name: Run tests
       run: |
+        pip install tox
         tox
