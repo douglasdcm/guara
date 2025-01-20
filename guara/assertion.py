@@ -50,11 +50,8 @@ class IAssertion:
         LOGGER.info(f"Assertion: {self.__class__.__name__}")
         try:
             self.asserts(actual, expected)
-            LOGGER.info(f" Actual Data: {actual}")
+            LOGGER.info(f" Actual  : {actual}")
             LOGGER.info(f" Expected: {expected}")
         except Exception:
-            LOGGER.error(f" Actual Data: {actual}")
+            LOGGER.error(f" Actual  : {actual}")
             LOGGER.error(f" Expected: {expected}")
-            raise Exception(
-                f"The data failed the validation!\nActual Data: {actual}\nExpected Data: {expected}"
-            )

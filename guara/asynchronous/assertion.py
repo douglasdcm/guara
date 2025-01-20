@@ -2,6 +2,7 @@
 The module that has the interface for the implmentation of
 the assertion logic to be used for validation and testing.
 """
+
 from typing import Any
 from logging import getLogger, Logger
 
@@ -56,6 +57,6 @@ class IAssertion:
         try:
             await self.asserts(actual, expected)
         except Exception:
-            LOGGER.error(f" Actual Data: {actual.result}")
-            LOGGER.error(f" Expected Data: {expected}")
+            LOGGER.error(f" Actual  : {actual.result}")
+            LOGGER.error(f" Expected: {expected}")
             raise
