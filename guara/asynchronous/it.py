@@ -1,41 +1,42 @@
-import logging
-from typing import Any, TYPE_CHECKING
+"""
+The module that deals with the assertion and validation of a
+transaction at the runtime.
+"""
+from typing import Any
+from guara.asynchronous.assertion import IAssertion
+from logging import getLogger, Logger
 
-if TYPE_CHECKING:
-    from guara.asynchronous.transaction import AbstractTransaction
 
-LOGGER = logging.getLogger("guara")
-
-
-class IAssertion:
-
-    async def asserts(self, actual: "AbstractTransaction", expected: Any) -> None:
-        raise NotImplementedError
-
-    async def validates(self, actual, expected):
-        try:
-            await self.asserts(actual, expected)
-        except Exception:
-            LOGGER.error(f"actual:   '{actual.result}'")
-            LOGGER.error(f"expected: '{expected}'")
-            raise
+LOGGER: Logger = getLogger("guara")
 
 
 class IsEqualTo(IAssertion):
-    async def asserts(self, actual, expected):
+    """
+    Equality Assertion class
+    """
+    async def asserts(self, actual: Any, expected: Any) -> None:
         assert actual.result == expected
 
 
 class IsNotEqualTo(IAssertion):
-    async def asserts(self, actual, expected):
+    """
+    Not Equality Assertion class
+    """
+    async def asserts(self, actual: Any, expected: Any) -> None:
         assert actual.result != expected
 
 
 class Contains(IAssertion):
-    async def asserts(self, actual, expected):
+    """
+    Containing Assertion class
+    """
+    async def asserts(self, actual: Any, expected: Any) -> None:
         assert expected in actual.result
 
 
 class DoesNotContain(IAssertion):
-    async def asserts(self, actual, expected):
+    """
+    Not Containing Assertion class
+    """
+    async def asserts(self, actual: Any, expected: Any) -> None:
         assert expected not in actual.result

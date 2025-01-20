@@ -1,104 +1,145 @@
-import random
-import pathlib
-import pytest
-import pytest_asyncio
-from caqui import synchronous
+from time import sleep
+from pathlib import Path
 from caqui.easy.capabilities import CapabilitiesBuilder
-
-# imports from asynchrounous modules
+from pytest_asyncio import fixture
+from pytest import mark
+from typing import Any, Dict, Union, Generator
+from caqui.synchronous import get_session
+from guara.asynchronous.it import IsEqualTo
 from guara.asynchronous.transaction import Application
-from guara.asynchronous import it
-
-# `setup``is not the built-in transaction
-from examples.web_ui.caqui_async.asynchronouos import setup, home
+from examples.web_ui.caqui_async.asynchronouos.home import GetAllLinks, GetNthLink
 from examples.web_ui.caqui_async.constants import MAX_INDEX
+from logging import getLogger, Logger
+from examples.web_ui.caqui_async.asynchronouos.setup import OpenApp, CloseApp
 
 
-# comment it to execute
-@pytest.mark.skip(
+LOGGER: Logger = getLogger(__name__)
+
+
+@mark.skip(
     reason="before execute it start the driver as a service"
     "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
 )
 class TestAsyncTransaction:
-    # Set the fixtures as asynchronous
-    @pytest_asyncio.fixture(loop_scope="function")
-    async def setup_test(self):
-        file_path = pathlib.Path(__file__).parent.parent.resolve()
-        # This is how Caqui works
-        # https://github.com/douglasdcm/caqui?tab=readme-ov-file#simple-start
-        self._driver_url = "http://127.0.0.1:9999"
-        capabilities = (
+    """
+    The test class for asynchronuous transaction.
+    """
+
+    @fixture(loop_scope="function")
+    async def setup_test(self) -> Generator[None, Any, None]:  # type: ignore
+        """
+        Setting up the transaction for the test.
+
+        Returns:
+            (Generator[None, Any, None])
+        """
+        maximum_attempts: int = 5
+        file_path: Path = Path(__file__).parent.parent.resolve()
+        self._driver_url: str = "http://127.0.0.1:9999"
+        capabilities: Dict[str, Dict[Union[Any, str], Any]] = (
             CapabilitiesBuilder()
             .browser_name("chrome")
             .accept_insecure_certs(True)
-            # comment it to see the UI of the browser
             .additional_capability(
                 {"goog:chromeOptions": {"extensions": [], "args": ["--headless"]}}
             )
         ).build()
-        self._session = synchronous.get_session(self._driver_url, capabilities)
-        self._app = Application(self._session)
-
-        # Notice the introduction of the method `perform`
-        # It gets the list of coroutines and exeutes them in order
-        await self._app.at(
-            setup.OpenApp,
-            with_session=self._session,
-            connect_to_driver=self._driver_url,
-            access_url=f"file:///{file_path}/sample.html",
-        ).asserts(it.IsEqualTo, "Sample page").perform()
+        for index in range(0, maximum_attempts, 1):
+            try:
+                self._session: Any = get_session(self._driver_url, capabilities)
+                LOGGER.debug(f"The session has been retrieved!\nAttempt: {index + 1}")
+                break
+            except Exception as error:
+                LOGGER.warning(
+                    f"Failed to retrieve the session.\nAttempt: {index + 1}\nError: {error}"
+                )
+                sleep(2) if index < maximum_attempts - 1 else None
+        else:
+            raise RuntimeError("Failed to initialize session after five attempts!")
+        self._app: Application = Application(self._session)
+        try:
+            await self._app.at(
+                transaction=OpenApp,
+                with_session=self._session,
+                connect_to_driver=self._driver_url,
+                access_url=f"file:///{file_path}/sample.html",
+            ).asserts(IsEqualTo, "Sample page").perform()
+        except Exception as error:
+            LOGGER.error(f"Failed to open application!\nError: {str(error)}")
+            raise
         yield
-        await self._app.at(
-            setup.CloseApp,
-            with_session=self._session,
-            connect_to_driver=self._driver_url,
-        ).perform()
-
-    async def _run_it(self):
-        """Get all MAX_INDEX links from page and validates its text"""
-        # arrange
-        text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[random.randrange(len(text))]
-        expected = []
-        max_index = MAX_INDEX - 1
-        for i in range(max_index):
-            expected.append(f"any{i+1}.com")
-
-        # act and assert
-        # the method `perform` runs the coroutine related to GetAllLinks first and saves the
-        # result for further asserition. Then, it runs the coroutine of `asserts` and asserts
-        # the resuslt against the expected value
-        await self._app.at(
-            home.GetAllLinks,
-            with_session=self._session,
-            connect_to_driver=self._driver_url,
-        ).asserts(it.IsEqualTo, expected).perform()
-
-        # Does the same think as above, but asserts the items using the built-in method `assert`
-        # arrange
-        for i in range(max_index):
-
-            # act
-            actual = await self._app.at(
-                home.GetNthLink,
-                link_index=i + 1,
+        try:
+            await self._app.at(
+                transaction=CloseApp,
                 with_session=self._session,
                 connect_to_driver=self._driver_url,
             ).perform()
+        except Exception as error:
+            LOGGER.error(f"Failed to close application!\nError: {str(error)}")
+            raise
 
-            # assert
-            assert actual.result == f"any{i+1}.com"
+    async def _run_it(self) -> None:
+        """
+        Executing the transaction which will iterate over the list
+        needed for the test.
 
-    # both tests run in paralell
-    # it is necessary to mark the test as async
-    @pytest.mark.asyncio
-    async def test_async_page_1(self, setup_test):
+        Returns:
+            (None)
+        """
+        max_index: int = MAX_INDEX - 1
+        expected = [f"any{index + 1}.com" for index in range(max_index)]
+        LOGGER.debug(f"Application: {self._app=}")
+        await self._app.at(
+            transaction=GetAllLinks,
+            with_session=self._session,
+            connect_to_driver=self._driver_url,
+        ).asserts(IsEqualTo, expected).perform()
+        for index in range(max_index):
+            iteration: int = index + 1
+            actual = await self._app.at(
+                transaction=GetNthLink,
+                link_index=iteration,
+                with_session=self._session,
+                connect_to_driver=self._driver_url,
+            ).perform()
+            assert actual.result == f"any{iteration}.com"
+
+    @mark.asyncio
+    async def test_async_page_1(self, setup_test) -> None:
+        """
+        Testing the asynchronuous pages.
+
+        Returns:
+            (None)
+        """
         await self._run_it()
 
-    @pytest.mark.asyncio
-    async def test_async_page_2(self, setup_test):
+    @mark.asyncio
+    async def test_async_page_2(self, setup_test) -> None:
+        """
+        Testing the asynchronuous pages.
+
+        Returns:
+            (None)
+        """
         await self._run_it()
 
-    @pytest.mark.asyncio
-    async def test_async_page_3(self, setup_test):
+    @mark.asyncio
+    async def test_async_page_3(self, setup_test) -> None:
+        """
+        Testing the asynchronuous pages.
+
+        Returns:
+            (None)
+        """
+        await self._run_it()
+
+    @mark.asyncio
+    async def test_async_page_4(self, setup_test) -> None:
+        """
+        Testing the asynchronuous pages.
+
+        Returns:
+            (None)
+        """
         await self._run_it()
