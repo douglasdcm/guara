@@ -1,4 +1,4 @@
-import pytest
+from pytest import mark
 from guara.transaction import Application
 from guara import it
 
@@ -19,7 +19,7 @@ class ItShows(it.IAssertion):
         assert actual.child(str(expected)).showing
 
 
-@pytest.mark.skip("Skipped due to the complexity to integrate it in pipeline")
+@mark.skip("Skipped due to the complexity to integrate it in pipeline")
 class TestLinuxCalculatorWithPyautogui:
 
     def setup_method(self, method):

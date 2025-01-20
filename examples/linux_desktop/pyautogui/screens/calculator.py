@@ -1,4 +1,4 @@
-import pyautogui
+from pyautogui import locateOnScreen, click
 from constants import BASE_PATH
 from guara.transaction import AbstractTransaction
 
@@ -25,10 +25,10 @@ class Divide(AbstractTransaction):
         return f"{BASE_PATH}{button_name}.png"
 
     def _click_buton(self, button, CONFIDENCE):
-        button = pyautogui.locateOnScreen(button, confidence=CONFIDENCE)
+        button = locateOnScreen(button, confidence=CONFIDENCE)
         if not button:
             raise ValueError(f"Button image {button} not found.")
-        pyautogui.click(button)
+        click(button)
 
     def do(self, a, b):
         BUTTON_1 = self._get_button_path(f"button_{str(a)}")

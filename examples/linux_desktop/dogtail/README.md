@@ -1,4 +1,39 @@
-# Dogtail experiment
+# Update
+
+The [issue](https://gitlab.com/dogtail/dogtail/-/issues/37) that was avoiding the execution of test was solved doing [this](https://gitlab.com/dogtail/dogtail/-/issues/37#note_2304763633). So, if you face this error, this it. As the issue was solved I'm adding the files with the example. Check more datails in [The context of the issue](#The-context-of-the-issue)
+
+To run, use `venv`
+
+```
+python -m venv venv
+source venv/bin/activate
+```
+
+# Introduction
+[Dogtail](https://gitlab.com/dogtail/dogtail) is a GUI test tool and automation framework written in ​Python.
+
+## Test explanation
+Before executing this example make sure your host matches the [requirements](https://gitlab.com/dogtail/dogtail#dependencies) to install dogtail.
+
+This example opens the Linux `GNOME Calculator`, sums 1 and 2. You will find the transactions to `Open` and `Close` the `GNOME Calculator` and the ones to click the buttons to `Sum` the numbers.
+The outpout is:
+```
+examples/linux_desktop/dogtail/test_integration_with_dogtail.py::TestLinuxCalculatorWithDogtail::test_local_page 
+--------------------------------------------------------------- live log setup ---------------------------------------------------------------
+2025-01-19 03:39:37.341 INFO Transaction 'setup.OpenApp'
+--------------------------------------------------------------- live log call ----------------------------------------------------------------
+2025-01-19 03:39:37.364 INFO Transaction 'calculator.Sum'
+2025-01-19 03:39:37.365 INFO  a: 1
+2025-01-19 03:39:37.365 INFO  b: 2
+2025-01-19 03:39:40.908 INFO Assertion 'Shows'
+2025-01-19 03:39:40.999 INFO  actual:   '[application | gnome-calculator]'
+2025-01-19 03:39:41.000 INFO  expected: '3'
+PASSED                                                                                                                                 [100%]
+------------------------------------------------------------- live log teardown --------------------------------------------------------------
+2025-01-19 03:39:41.000 INFO Transaction 'setup.CloseApp'
+```
+
+## The context of the issue
 
 Dogtail is a pain in the ass to install. I did it once with `virtualenv` for Python 3.8 only.
 

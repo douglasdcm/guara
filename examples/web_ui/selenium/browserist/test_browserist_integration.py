@@ -1,5 +1,5 @@
-import pathlib
-import random
+from pathlib import Path
+from random import randrange
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.selenium.browserist import setup
@@ -9,7 +9,7 @@ from browserist import Browser, BrowserSettings
 
 class TestBrowseristIntegration:
     def setup_method(self, method):
-        file_path = pathlib.Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.resolve()
 
         self._app = Application(Browser(BrowserSettings(headless=True)))
         self._app.at(
@@ -25,7 +25,7 @@ class TestBrowseristIntegration:
 
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[random.randrange(len(text))]
+        text = text[randrange(len(text))]
         self._app.at(home.SubmitText, text=text).asserts(
             it.IsEqualTo, f"It works! {text}!"
         )
