@@ -8,7 +8,6 @@ from examples.linux_desktop.pyautowin import home
 class TestPyAutoWinIntegration:
     """
     TestPyAutoWinIntegration is a test class for integrating PyAutoWin with a local application.
-    Methods:
     """
 
     def setup_method(self, method):
