@@ -13,17 +13,18 @@ class TestAppiumIntegration:
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.resolve()
         desired_caps = {
-            'platformName': 'Android',
-            'deviceName': 'emulator-5554',
-            'browserName': 'Chrome',
+            "platformName": "Android",
+            "deviceName": "emulator-5554",
+            "browserName": "Chrome",
             "app": "/absolute/path/to/sample.apk",
             "automationName": "UiAutomator2",
             "noReset": True,
             "appWaitActivity": "*",
-            'goog:chromeOptions': {'args': ['--headless']}
+            "goog:chromeOptions": {"args": ["--headless"]},
         }
-        uniform_resource_locator: str = "http://localhost:4723/wd/hub"
-        self.driver = webdriver.Remote(uniform_resource_locator, desired_capabilities=desired_caps)
+        self.driver = webdriver.Remote(
+            "http://localhost:4723/wd/hub", desired_capabilities=desired_caps
+        )
         self._app = Application(self.driver)
         self._app.at(OpenAppiumApp, url=f"file:///{file_path}/sample.html")
 

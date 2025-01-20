@@ -17,7 +17,7 @@ class SubmitTextAppium(AbstractTransaction):
 
     def do(self, text):
         TEXT = '//*[@id="input"]'
-        BUTTON_TEST = 'button'
+        BUTTON_TEST = "button"
         text_field = self._driver.find_element_by_xpath(TEXT)
         text_field.send_keys(text)
         button = self._driver.find_element_by_id(BUTTON_TEST)

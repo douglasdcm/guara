@@ -13,4 +13,7 @@ testify
 stestr
 green
 appium-python-client
+pyautogui
+opencv-python
+dogtail
 splinter

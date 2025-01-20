@@ -36,6 +36,7 @@ class CloseAppiumApp(AbstractTransaction):
 
         Args:
             screenshot_filename (str): The base filename for the screenshot.
+            Defaults to "./captures/guara-capture".
 
         Returns:
             None
