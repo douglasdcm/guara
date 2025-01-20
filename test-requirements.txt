@@ -17,4 +17,3 @@ pyautogui
 opencv-python
 dogtail
 splinter
-pyautowin
