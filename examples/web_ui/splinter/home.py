@@ -1,4 +1,3 @@
-from splinter import Browser
 from guara.transaction import AbstractTransaction
 
 
@@ -12,6 +11,7 @@ class SubmitTextSplinter(AbstractTransaction):
     Returns:
         str: the label 'It works! {code}!'
     """
+
     def __init__(self, driver):
         super().__init__(driver)
         self.browser = driver

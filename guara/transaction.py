@@ -1,6 +1,7 @@
 """
 The module that has all of the transactions.
 """
+
 from typing import Any, Dict
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
@@ -15,6 +16,7 @@ class Application:
     """
     This is the runner of the automation.
     """
+
     def __init__(self, driver: Any = None):
         """
         Initializing the application with a driver.
@@ -46,7 +48,9 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def at(
+        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
+    ) -> "Application":
         """
         Performing a transaction.
 

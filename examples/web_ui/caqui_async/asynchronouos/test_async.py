@@ -1,30 +1,32 @@
+from time import sleep
+from pathlib import Path
 from caqui.easy.capabilities import CapabilitiesBuilder
 from pytest_asyncio import fixture
-from typing import Any, Dict, Union, Generator, List
-from pathlib import Path
-from caqui.synchronous import get_session
-from examples.web_ui.caqui_async.asynchronouos.setup import OpenApp, CloseApp
-from guara.asynchronous.it import IsEqualTo
-from examples.web_ui.caqui_async.asynchronouos.home import GetAllLinks, GetNthLink
 from pytest import mark
+from typing import Any, Dict, Union, Generator
+from caqui.synchronous import get_session
+from guara.asynchronous.it import IsEqualTo
 from guara.asynchronous.transaction import Application
+from examples.web_ui.caqui_async.asynchronouos.home import GetAllLinks, GetNthLink
 from examples.web_ui.caqui_async.constants import MAX_INDEX
 from logging import getLogger, Logger
-from requests import get, Response
-from requests.exceptions import RequestException
-from time import sleep
+from examples.web_ui.caqui_async.asynchronouos.setup import OpenApp, CloseApp
 
 
 LOGGER: Logger = getLogger(__name__)
 
 
+@mark.skip(
+    reason="before execute it start the driver as a service"
+    "https://github.com/douglasdcm/caqui/tree/main?tab=readme-ov-file#simple-start"
+)
 class TestAsyncTransaction:
     """
     The test class for asynchronuous transaction.
     """
 
     @fixture(loop_scope="function")
-    async def setup_test(self) -> Generator[None, Any, None]: # type: ignore
+    async def setup_test(self) -> Generator[None, Any, None]:  # type: ignore
         """
         Setting up the transaction for the test.
 
@@ -38,12 +40,9 @@ class TestAsyncTransaction:
             CapabilitiesBuilder()
             .browser_name("chrome")
             .accept_insecure_certs(True)
-            .additional_capability({
-                "goog:chromeOptions": {
-                    "extensions": [],
-                    "args": ["--headless"]
-                }
-            })
+            .additional_capability(
+                {"goog:chromeOptions": {"extensions": [], "args": ["--headless"]}}
+            )
         ).build()
         for index in range(0, maximum_attempts, 1):
             try:
@@ -51,7 +50,9 @@ class TestAsyncTransaction:
                 LOGGER.debug(f"The session has been retrieved!\nAttempt: {index + 1}")
                 break
             except Exception as error:
-                LOGGER.warning(f"Failed to retrieve the session.\nAttempt: {index + 1}\nError: {error}")
+                LOGGER.warning(
+                    f"Failed to retrieve the session.\nAttempt: {index + 1}\nError: {error}"
+                )
                 sleep(2) if index < maximum_attempts - 1 else None
         else:
             raise RuntimeError("Failed to initialize session after five attempts!")
@@ -61,7 +62,7 @@ class TestAsyncTransaction:
                 transaction=OpenApp,
                 with_session=self._session,
                 connect_to_driver=self._driver_url,
-                access_url=f"file:///{file_path}/sample.html"
+                access_url=f"file:///{file_path}/sample.html",
             ).asserts(IsEqualTo, "Sample page").perform()
         except Exception as error:
             LOGGER.error(f"Failed to open application!\nError: {str(error)}")

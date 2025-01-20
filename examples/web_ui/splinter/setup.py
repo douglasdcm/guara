@@ -3,6 +3,7 @@ from splinter import Browser
 from guara.transaction import AbstractTransaction
 import os
 
+
 class OpenSplinterApp(AbstractTransaction):
     """
     Opens the app using Splinter
@@ -34,6 +35,6 @@ class CloseSplinterApp(AbstractTransaction):
         self._driver: Browser
 
     def do(self, screenshot_filename="./captures/guara-capture"):
-        os.makedirs('/tmp/captures', exist_ok=True)
+        os.makedirs("/tmp/captures", exist_ok=True)
         self._driver.screenshot(f"{screenshot_filename}-{datetime.now()}.png")
         self._driver.quit()

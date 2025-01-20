@@ -1,6 +1,7 @@
 """
 The module that has all of the transactions.
 """
+
 from typing import Any, List, Dict, Coroutine, Union
 from guara.asynchronous.it import IAssertion
 from guara.utils import get_transaction_info
@@ -14,6 +15,7 @@ class Application:
     """
     The runner of the automation.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the application with a driver.
@@ -70,7 +72,9 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def at(
+        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
+    ) -> "Application":
         """
         Executing each transaction.
 
@@ -114,7 +118,11 @@ class Application:
             (Application)
         """
         for index in range(0, len(self._coroutines), 1):
-            await self.get_assertion(index) if not await self.get_transaction(index) else None
+            (
+                await self.get_assertion(index)
+                if not await self.get_transaction(index)
+                else None
+            )
         self._coroutines.clear()
         return self
 
@@ -128,11 +136,13 @@ class Application:
         Returns:
             (Coroutine[None, None, bool])
         """
-        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
+        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(
+            self._TRANSACTION
+        )
         if transaction:
             LOGGER.info(f"Transaction: {self._transaction_name}")
             for key, value in self._kwargs.items():
-                LOGGER.info(f"{key}: {value}")
+                LOGGER.info(f" {key}: {value}")
             self._result = await transaction
             return True
         return False
