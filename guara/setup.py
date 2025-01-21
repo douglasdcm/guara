@@ -37,12 +37,7 @@ class OpenApp(AbstractTransaction):
 
 class CloseApp(AbstractTransaction):
     """
-    Closes the app and saves its screenshot (PNG)
-
-    Args:
-        screenshot_filename (str): the path where the screenshot is saved.
-        Examples: './myfile', '/path/to/myfile'
-        Defaults to 'guara-{datetime.now()}.png'.
+    The transaction for closing the application.
     """
 
     def __init__(self, driver: Any):
