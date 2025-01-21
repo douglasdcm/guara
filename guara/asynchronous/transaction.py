@@ -149,7 +149,7 @@ class Application:
             return True
         return False
 
-    async def get_assertion(self, index: int) -> Coroutine[None, None, None]:
+    async def get_assertion(self, index: int) -> None:
         """
         Retrieving the assertion from the coroutine.
 
@@ -157,7 +157,7 @@ class Application:
             index: (int): The index of the current coroutine.
 
         Returns:
-            (Coroutine[None, None, None])
+            (None)
         """
         LOGGER.info(f"Assertion: {self._it.__name__}")
         LOGGER.info(f" Actual  : {self._result}")
