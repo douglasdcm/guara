@@ -2,7 +2,6 @@
 The module that has the interface for the implmentation of
 the assertion logic to be used for validation and testing.
 """
-
 from typing import Any
 from logging import getLogger, Logger
 
