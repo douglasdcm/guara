@@ -1,4 +1,3 @@
-import pyautowin
 from guara.transaction import AbstractTransaction
 
 
@@ -14,5 +13,5 @@ class SubmitTextPyAutoWin(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, text):
-        pyautowin.typewrite(text)
-        pyautowin.press("enter")
+        self._driver.typewrite(text)
+        self._driver.press("enter")
