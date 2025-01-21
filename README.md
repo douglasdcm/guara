@@ -32,7 +32,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 
 # Introduction
 > [!IMPORTANT]
-> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/examples)
+> Guará is the Python implementation of the design pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/examples)
 
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
@@ -49,7 +49,7 @@ The intent of this pattern is to simplify UI test automation. It was inspired by
 
 - `IAssertion`: This is the interface implemented by all assertion classes.
 - The `asserts` method of each subclass contains the logic to perform validations. For example, the `IsEqualTo` subclass compares the `result` with the expected value provided by the tester.
-- Testers can inherit from this interface to add new subclasses of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md#extending-assertions).
+- Testers can inherit from this interface to add new sub-classes of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md#extending-assertions).
 
 <p align="center">
     <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/uml_application.png?raw=true" width="600" height="200" />
@@ -66,7 +66,7 @@ The idea is to group blocks of interactions into classes. These classes inherit 
 
 Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`examples`](https://github.com/douglasdcm/guara/tree/main/examples) folder).
 
-When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is described in plain English improving the comprehention of the code.
+When the framework is in action, it follows a highly repetitive pattern. Notice the use of the `at` method to invoke transactions and the `asserts` method to apply assertion strategies. Also, the automation is described in plain English improving the comprehension of the code.
 
 ```python
 from selenium import webdriver
@@ -99,7 +99,7 @@ def test_sample_web_page():
     app.at(setup.CloseApp)
 ```
 - `setup.OpenApp` and `setup.CloseApp` are part of the framework and provide basic implementation to open and close the web application using Selenium Webdriver.
-- `it` is the module which contains the concret assertions.
+- `it` is the module which contains the concrete assertions.
 
 The *ugly* code which calls the webdriver is like this:
 
@@ -117,11 +117,11 @@ class ChangeToPortuguese(AbstractTransaction):
         return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
 ```
 
-Again, it is a very repetivite activity:
+Again, it is a very repetitive activity:
 - Create a class representing the transaction, in this case, the transaction changes the language to Portuguese
 - Inherits from `AbstractTransaction`
-- Implementes the `do` method
-    - Optinonal: Returns the result of the transaction
+- Implements the `do` method
+    - Optional: Returns the result of the transaction
 
 Read more in [Tutorial](#tutorial)
 
@@ -181,7 +181,7 @@ Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/docs/TUTOR
 
 # Using other Web Drivers
 
-It is possible to run Guara using other Web Drivers like [Caqui](https://github.com/douglasdcm/caqui) and [Playwright](https://playwright.dev/python/docs/intro). Check the requirements of each Web Driver before execute it. For example, Playwright requires the installation of browsers separetly.
+It is possible to run Guara using other Web Drivers like [Caqui](https://github.com/douglasdcm/caqui) and [Playwright](https://playwright.dev/python/docs/intro). Check the requirements of each Web Driver before execute it. For example, Playwright requires the installation of browsers separately.
 
 # Asynchronous execution
 The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/docs/ASYNC.md)

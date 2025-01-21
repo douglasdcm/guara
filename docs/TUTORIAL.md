@@ -45,7 +45,7 @@ class Search(AbstractTransaction):
             By.CSS_SELECTOR, ".Ap1Qsc > a:nth-child(1) > div:nth-child(1)"
         ).text
 ```
-- `class Search`: is a concret transation. Notice that the name of the class is an action and not a noun as usually saw in OOP. It is intentional to make the statments in the test more natural.
+- `class Search`: is a concrete transaction. Notice that the name of the class is an action and not a noun as usually saw in OOP. It is intentional to make the statement in the test more natural.
 - `def __init__`: is the same for all transactions. It passes the `driver` to the `AbstractTransaction`.
 - `def do`: is the *ugly* implementation of the method. It uses the private attribute `self._driver` inherited from `AbstractTransaction` to call `find_element`, `send_keys`, `click` and `text` from Selenium Webdriver. Notice the parameter `text`. It is received from the automation via `kwargs`. More details in further sessions.
 
@@ -74,16 +74,16 @@ def google():
     # Instantiates the Application to run the automation
     google = Application(webdriver.Chrome())
 
-    # Some intersting things happen here.
+    # Some interesting things happen here.
     # The framework is used to setup the web application.
     # The method `at` from `app` is the key point here as it
     # receives a transaction (AbstractTransaction) and its `kwargs`.
-    # Internaly `at` executes the `do` method of the transaction and
+    # Internally `at` executes the `do` method of the transaction and
     # holds the result in the property `result` which is going to be
     # presented soon.
     # `setup.OpenApp` is a built-in transaction.
     # The `url` is passed to the `at` method by `kwargs`.
-    # The result returned by `at` is asseted by `asserts`
+    # The result returned by `at` is asserted by `asserts`
     # using the strategy `it.IsEqualTo`.
     google.at(
         setup.OpenApp,
@@ -97,7 +97,7 @@ def google():
 
 def test_google_search(google: Application):
     # With the `app` received from the fixture the similar things
-    # explained previouslly in the fixture happens.
+    # explained previously in the fixture happens.
     # The transaction `home.Search` with the parameter `text`
     # is passed to `at` and the result is asserted by `asserts` with
     # the strategy `it.IsEqualTo`
@@ -105,7 +105,7 @@ def test_google_search(google: Application):
 
 ```
 - `class Application`: is the runner of the automation. It receives the `driver` and passes it hand by hand to transactions.
-- `def at`: receives the transaction created on `home.py` and its parameters. Notice the usage of the module name `home` to make the readability of the statement as plain English. The parameters are passed explictly for the same purpose. So the `google.at(home.Search, text="guara")` is read `Google at home [page] search [for] text "guara"`. The terms `page` and `for` could be added to the implementation to make it more explict, like `google.at(homePage.Search, for_text="guara")`. This is a decision the tester may make while developing the transactions. 
+- `def at`: receives the transaction created on `home.py` and its parameters. Notice the usage of the module name `home` to make the readability of the statement as plain English. The parameters are passed explicitly for the same purpose. So the `google.at(home.Search, text="guara")` is read `Google at home [page] search [for] text "guara"`. The terms `page` and `for` could be added to the implementation to make it more explicit, like `google.at(homePage.Search, for_text="guara")`. This is a decision the tester may make while developing the transactions. 
 - `def asserts`: receives a strategy to compare the result against an expected value. Again, the focus on readability is kept. So, `asserts(it.IsEqualTo, "All")` can be read `asserts it is equal to 'All'`
 - `it.IsEqualTo`: is one of the strategies to compare the actual and the expected result. Other example is the `it.Contains` which checks if the value is present in the page. Notice that the assertion is very simple: it validates just one value. The intention here is keep the framework simple, but robust. The tester is able to extend the strategies inheriting from `IAssertion`.
 
@@ -136,7 +136,7 @@ def test_google_search(setup_app):
 
 ```
 
-# Debbuging
+# Debugging
 
 Errors in assertions are printed like this. Got the same example above. Notice the `actual` and `expected` values do not match.
 ```python
@@ -168,7 +168,7 @@ E         + all
 ```
 
 # Best practices
-For a better readabilty of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete impletation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
+For a better readability of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete implementation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
 
 ```python
 from browserist import Browser
@@ -210,4 +210,4 @@ class SubmitText(AbstractTransaction):
 ```
 
 # Advanced
-For more examples of implentations check the [`examples`](https://github.com/douglasdcm/guara/blob/main/examples) folder.
+For more examples of implementations check the [`examples`](https://github.com/douglasdcm/guara/blob/main/examples) folder.
