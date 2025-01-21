@@ -2,12 +2,14 @@ import pytest
 from guara.transaction import Application
 from guara import it
 
+
 @pytest.mark.skip(reason="Complex setup in CI environment")
 class TestPyAutoWinIntegration:
     """
     TestPyAutoWinIntegration is a test class for integrating PyAutoWin with a local application.
     """
-    
+
+
     def setup_method(self, method):
         """Lazy import to avoid triggering module imports"""
         import pyautowin
