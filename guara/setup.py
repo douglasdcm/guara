@@ -10,16 +10,7 @@ from typing import Any
 
 class OpenApp(AbstractTransaction):
     """
-    Opens the app
-
-    Args:
-        url (str): the path where the screenshot is saved.
-        window_width (int): The width of the browser. Defaults to 1094
-        window_height (int): The height of the browser. Defaults t0 765
-        implicitly_wait (int): the implicity timeout for an element to be found.
-        Defaults to 10 (seconds)
-    Returns:
-        str: the title of the app
+    The transaction for opening the application.
     """
 
     def __init__(self, driver: Any):
