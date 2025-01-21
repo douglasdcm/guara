@@ -23,6 +23,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 - [Tutorial](#Tutorial)<br>
 - [Using other Web Drivers](#Using-other-Web-Drivers)<br>
 - [Asynchronous execution](#Asynchronous-execution)<br>
+- [ChatGPT assistance](#ChatGPT-assistance)<br>
 - [Contributing](#Contributing)<br>
 
 # Syntax
@@ -185,6 +186,8 @@ It is possible to run Guara using other Web Drivers like [Caqui](https://github.
 # Asynchronous execution
 The core code was extended to allow asynchronous executions. Get more details [here](https://github.com/douglasdcm/guara/tree/main/docs/ASYNC.md)
 
+# ChatGPT assistance
+It is possible to use [ChatGPT](https://chatgpt.com/) to help you organize your code in `Page Transactions` pattern. Check these [simple steps](https://github.com/douglasdcm/guara/blob/main/docs/CHATGPT_ASSISTANCE.md).
 
 # How you can help?
 
