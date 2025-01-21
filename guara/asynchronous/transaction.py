@@ -128,7 +128,7 @@ class Application:
         self._coroutines.clear()
         return self
 
-    async def get_transaction(self, index: int) -> Coroutine[None, None, bool]:
+    async def get_transaction(self, index: int) -> bool:
         """
         Retrieving the transaction from the coroutine.
 
@@ -136,7 +136,7 @@ class Application:
             index: (int): The index of the current coroutine.
 
         Returns:
-            (Coroutine[None, None, bool])
+            (bool)
         """
         transaction: Coroutine[None, None, Any] = self._coroutines[index].get(
             self._TRANSACTION
