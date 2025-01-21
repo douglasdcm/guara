@@ -2,9 +2,9 @@
 As describe in [main page](https://github.com/douglasdcm/guara?tab=readme-ov-file#introduction)
 
 > [!IMPORTANT]
-> Guará is the Python implementation of the desing pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium.
+> Guará is the Python implementation of the design pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium.
 
-As it can be bound to any Web Driver it can be associated with asynchronous drivers like [Caqui](https://github.com/douglasdcm/caqui). The core of the framework was extended to allow it. The UML diagrams of the asynchornous classes are
+As it can be bound to any Web Driver it can be associated with asynchronous drivers like [Caqui](https://github.com/douglasdcm/caqui). The core of the framework was extended to allow it. The UML diagrams of the asynchronous classes are
 
 <p align="center">
     <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/async/uml_application.png?raw=true" width="800" height="300" />

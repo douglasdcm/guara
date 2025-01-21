@@ -1,15 +1,15 @@
 from pathlib import Path
 from random import randrange
 from selenium import webdriver
-from examples.web_ui.selenium.simple import home
+from examples.web_ui.selenium.simple.local_page import home
 from guara.transaction import Application
 from guara import it
 from guara import setup
 
 
-class TestLocalTransaction:
+class TestLocalPage:
     def setup_method(self, method):
-        file_path = Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.parent.parent.resolve()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         self._app = Application(webdriver.Chrome(options=options))

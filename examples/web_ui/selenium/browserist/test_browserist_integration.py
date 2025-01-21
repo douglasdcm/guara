@@ -9,7 +9,7 @@ from browserist import Browser, BrowserSettings
 
 class TestBrowseristIntegration:
     def setup_method(self, method):
-        file_path = Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.parent.resolve()
 
         self._app = Application(Browser(BrowserSettings(headless=True)))
         self._app.at(

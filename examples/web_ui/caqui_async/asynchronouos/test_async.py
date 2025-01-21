@@ -34,7 +34,7 @@ class TestAsyncTransaction:
             (Generator[None, Any, None])
         """
         maximum_attempts: int = 5
-        file_path: Path = Path(__file__).parent.parent.resolve()
+        file_path: Path = Path(__file__).parent.parent.parent.parent.resolve()
         self._driver_url: str = "http://127.0.0.1:9999"
         capabilities: Dict[str, Dict[Union[Any, str], Any]] = (
             CapabilitiesBuilder()

@@ -8,7 +8,7 @@ from examples.web_ui.selenium.helium import home
 
 class TestHeliumIntegration:
     def setup_method(self, method):
-        file_path = Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.parent.resolve()
 
         self._app = Application(None)
         self._app.at(

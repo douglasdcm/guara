@@ -11,7 +11,7 @@ from home import SubmitTextAppium
 @mark.skip(reason="Complex setup in CI environment")
 class TestAppiumIntegration:
     def setup_method(self, method):
-        file_path = Path(__file__).parent.resolve()
+        file_path = Path(__file__).resolve()
         desired_caps = {
             "platformName": "Android",
             "deviceName": "emulator-5554",
