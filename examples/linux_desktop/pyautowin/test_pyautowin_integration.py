@@ -9,7 +9,6 @@ class TestPyAutoWinIntegration:
     TestPyAutoWinIntegration is a test class for integrating PyAutoWin with a local application.
     """
 
-
     def setup_method(self, method):
         """Lazy import to avoid triggering module imports"""
         import pyautowin
