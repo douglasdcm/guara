@@ -73,7 +73,9 @@ class Application:
         return self._result
 
     def at(
-        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
+        self,
+        transaction: AbstractTransaction,
+        **kwargs: Dict[str, Any]
     ) -> "Application":
         """
         Executing each transaction.
