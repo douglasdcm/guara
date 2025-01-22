@@ -1,10 +1,11 @@
 import rpa as r
+import pytest
 from guara.transaction import Application
 from guara import it
 from examples.linux_desktop.rpa_python import setup
 from examples.linux_desktop.rpa_python import home
 
-
+@pytest.mark.skip(reason="Complex setup in CI environment")
 class TestRPAIntegration:
     """
     TestRPAIntegration is a test class for integrating RPA for Python with a local application.
