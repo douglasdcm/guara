@@ -18,3 +18,4 @@ opencv-python
 dogtail
 splinter
 selene
+rpa
