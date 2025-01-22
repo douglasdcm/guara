@@ -14,5 +14,6 @@ class SubmitTextRPA(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, text):
+        r.init()
         r.type(text)
         r.keyboard("[enter]")
