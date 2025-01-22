@@ -1,4 +1,3 @@
-import rpa as r
 from guara.transaction import AbstractTransaction
 
 
@@ -14,6 +13,6 @@ class SubmitTextRPA(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, text):
-        r.init()
-        r.type(text)
-        r.keyboard("[enter]")
+        self._driver.init()
+        self._driver.type(text)
+        self._driver.keyboard("[enter]")

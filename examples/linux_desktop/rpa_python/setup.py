@@ -1,4 +1,3 @@
-import rpa as r
 from guara.transaction import AbstractTransaction
 
 class OpenApplication(AbstractTransaction):
@@ -13,8 +12,8 @@ class OpenApplication(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, app_path):
-        r.init()
-        r.run(app_path)
+        self._driver.init()
+        self._driver.run(app_path)
 
 
 class CloseApplication(AbstractTransaction):
@@ -26,4 +25,4 @@ class CloseApplication(AbstractTransaction):
         super().__init__(driver)
 
     def do(self):
-        r.close()
+        self._driver.close()
