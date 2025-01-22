@@ -16,7 +16,7 @@ class TestSyncTransaction:
     # Set the fixtures as asynchronous
     @fixture(scope="function")
     def setup_test(self):
-        file_path = Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.parent.resolve()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         self._app = Application(webdriver.Chrome(options=options))

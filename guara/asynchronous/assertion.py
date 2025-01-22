@@ -56,7 +56,8 @@ class IAssertion:
         """
         try:
             await self.asserts(actual, expected)
-        except Exception:
+        except Exception as e:
             LOGGER.error(f" Actual  : {actual.result}")
             LOGGER.error(f" Expected: {expected}")
+            LOGGER.exception(str(e))
             raise

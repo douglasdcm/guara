@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample page</title>
+    <style>
+        /* General body style */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #212121;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #1a73e8;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 1rem;
+            color: #5f6368;
+        }
+
+        input,
+        button {
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 1px solid #dadce0;
+            outline: none;
+            margin: 10px;
+        }
+
+        input:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 3px #1a73e8;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0c62d3;
+        }
+
+        #links a {
+            display: block;
+            text-decoration: none;
+            color: #1a73e8;
+            margin: 5px 0;
+            transition: color 0.3s;
+        }
+
+        #links a:hover {
+            color: #0c62d3;
+        }
+
+        .parent {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        .parent > div {
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: left;
+        }
+
+        form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        iframe {
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        #shadow-root {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            background-color: #ffffff;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body onload="setCookie()">
+    <h1>Basic Page</h1>
+    <p>This is a sample page to sanity-check the design.</p>
+    <input id="input" placeholder="Type something...">
+    <button id="button" onclick="myFunction(this, 'red')" class="my-class">Test</button>
+
+    <div>
+    	<p data-test>Find me using data-* attribute</p>
+    	<p id="result"></p>
+    </div>
+
+    <div id="links"></div>
+    <script>
+        let text = "";
+        for (let i = 0; i < 20; i++) {
+            text += '<a href="http://any' + i + '.com" id=a' + i + '>any' + i + '.com</a>';
+        }
+        document.getElementById("links").innerHTML = text;
+    </script>
+
+
+
+    <button id="alert-button" onclick="openAlert()">Alert</button>
+    <button id="alert-button-prompt" onclick="openAlertPrompt()">Alert Prompt</button>
+    <p id="demo"></p>
+
+    <div class="parent">
+        any0
+        <div class="child1">any1</div>
+        <div class="child2">any2</div>
+        <div class="child3">any3</div>
+        <div class="child4">any4</div>
+    </div>
+
+    <form name="my-form" action="#">
+        <label for="fname">First name:</label>
+        <input type="text" id="fname" name="fname" value="John">
+        <label for="lname">Last name:</label>
+        <input type="text" id="lname" name="lname" value="Doe">
+        <input type="submit" value="Submit">
+    </form>
+
+    <iframe id="my-iframe" src="iframe.html" height="200" width="300" title="Iframe Example"></iframe>
+
+    <div id="shadow-root"></div>
+    <script>
+        let shadowTarget = document.getElementById("shadow-root");
+        let shadow = shadowTarget.attachShadow({ mode: "open" });
+
+        let shadowButton = document.createElement("button");
+        shadowButton.setAttribute("id", "shadow-button");
+        let shadowParagraph = document.createElement("p");
+        shadowButton.type = "button";
+        shadowButton.innerHTML = "Click Shadow";
+        shadowParagraph.innerHTML = "Shadow Paragraph";
+        shadow.appendChild(shadowButton);
+        shadow.appendChild(shadowParagraph);
+
+        function setCookie() {
+            document.cookie = "username=John Doe";
+        }
+
+        function myFunction(element, color) {
+            element.style.color = color;
+            let txt = document.getElementById("input").value;
+            document.getElementById("result").innerHTML = "It works! " + txt + "!";
+        }
+
+        function openAlert() {
+            alert("any warn");
+        }
+
+        function openAlertPrompt() {
+            let person = prompt("Please enter your name", "Harry Potter");
+            if (person != null) {
+                document.getElementById("demo").innerHTML =
+                    "Hello " + person + "! How are you today?";
+            }
+        }
+    </script>
+</body>
+
+</html>

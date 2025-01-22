@@ -51,6 +51,8 @@ class IAssertion:
             self.asserts(actual, expected)
             LOGGER.info(f" Actual  : {actual}")
             LOGGER.info(f" Expected: {expected}")
-        except Exception:
+        except Exception as e:
             LOGGER.error(f" Actual  : {actual}")
             LOGGER.error(f" Expected: {expected}")
+            LOGGER.exception(str(e))
+            raise

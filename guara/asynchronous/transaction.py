@@ -16,7 +16,7 @@ class Application:
     The runner of the automation.
     """
 
-    def __init__(self, driver: Any):
+    def __init__(self, driver: Any = None):
         """
         Initializing the application with a driver.
 
@@ -119,12 +119,18 @@ class Application:
         Returns:
             (Application)
         """
-        for index in range(0, len(self._coroutines), 1):
-            (
-                await self.get_assertion(index)
-                if not await self.get_transaction(index)
-                else None
-            )
+        for coroutine in self._coroutines:
+            if coroutine.get(self._TRANSACTION):
+                LOGGER.info(f"Transaction '{self._transaction_name}'")
+                for k, v in self._kwargs.items():
+                    LOGGER.info(f" {k}: {v}")
+                self._result = await coroutine.get(self._TRANSACTION)
+                continue
+
+            LOGGER.info(f"Assertion '{self._it.__name__}'")
+            LOGGER.info(f" actual:   '{self._result}'")
+            LOGGER.info(f" expected: '{self._expected}'")
+            await coroutine.get(self._ASSERTION)
         self._coroutines.clear()
         return self
 
