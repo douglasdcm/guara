@@ -162,4 +162,6 @@ class Application:
         LOGGER.info(f"Assertion: {self._it.__name__}")
         LOGGER.info(f" Actual  : {self._result}")
         LOGGER.info(f" Expected: {self._expected}")
-        # assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
+        assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
+        if assertion:
+            return await assertion
