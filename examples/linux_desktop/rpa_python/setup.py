@@ -1,5 +1,6 @@
 from guara.transaction import AbstractTransaction
 
+
 class OpenApplication(AbstractTransaction):
     """
     Opens an application using RPA for Python

@@ -5,6 +5,7 @@ from guara import it
 from examples.linux_desktop.rpa_python import setup
 from examples.linux_desktop.rpa_python import home
 
+
 @pytest.mark.skip(reason="Complex setup in CI environment")
 class TestRPAIntegration:
     """
