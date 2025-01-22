@@ -17,5 +17,5 @@ pyautogui
 opencv-python
 dogtail
 splinter
-selene
 rpa
+
