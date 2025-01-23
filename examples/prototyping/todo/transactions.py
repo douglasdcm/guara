@@ -1,5 +1,4 @@
 from guara.transaction import AbstractTransaction
-from guara import it
 
 
 class ToDoPrototype:
