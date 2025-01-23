@@ -1,5 +1,5 @@
 from selene import browser
-import pathlib
+from pathlib import Path
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.selene import setup
@@ -12,9 +12,11 @@ class TestSeleneIntegration:
     """
 
     def setup_method(self, method):
-        file_path = pathlib.Path(__file__).parent.parent.resolve()
+        file_path = Path(__file__).parent.parent.parent.resolve()
         self._app = Application(browser)
-        self._app.at(setup.OpenSeleneApp, url="file:///path/to/sample.html")
+        self._app.at(
+            setup.OpenSeleneApp, 
+            url=f"file:///{file_path}/sample.html",)
 
     def teardown_method(self, method):
         self._app.at(setup.CloseSeleneApp)
