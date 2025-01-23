@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+      <!-- Based on the example https://pyscript.com/@examples/antigravity/latest?files=README.md,main.py,pyscript.toml,antigravity.py,index.html -->
+
       <!-- <a target="_blank" href="https://icons8.com/icon/53372/internet">favicon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> -->
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width,initial-scale=1" />
-      <script type="module" src="https://pyscript.net/releases/2024.11.1/core.js"></script>
+
+      <!-- PyScript CSS -->
+      <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
       <link rel="stylesheet" href="./style.css" />
+
+      <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
       
       <title>To Do PyScript</title>
   </head>
@@ -30,8 +36,7 @@
     <!-- Output Area -->
     <h3>Output:</h3>
     <div id="output" style="border: 1px solid black; padding: 10px; width: 50%; min-height: 50px;"></div>
-    
 
-    <script type="py" src="./operations.py" config="./pyscript.json"></script>
+    <script type="py" src="./main.py" config="./pyscript.json"></script>
   </body>
 </html>

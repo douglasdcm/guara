@@ -1,3 +1,6 @@
 {
-    "packages": ["guara"]
+    "packages": ["guara"],
+    "files":{
+        "./transactions.py": ""
+    }
 }

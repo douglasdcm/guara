@@ -1,5 +1,4 @@
-from pyscript import document
-from guara.transaction import AbstractTransaction, Application
+from guara.transaction import AbstractTransaction
 from guara import it
 
 
@@ -75,44 +74,3 @@ class GetBy(AbstractTransaction):
             return self._driver.tasks[index]
         except IndexError:
             return "No task"
-
-
-# For front-end
-app = Application(ToDoPrototype())
-
-
-def add_task(event):
-    try:
-        task = document.querySelector("#task").value
-        # This is the `Application` involker being used to bind the transations
-        # with the front-end
-        app.at(Add, task=task)
-        document.querySelector("#output").innerText = f"Task '{task}' added"
-    except Exception as e:
-        document.querySelector("#output").innerText = str(e)
-
-
-def remove_task(event):
-    try:
-        task = document.querySelector("#task").value
-        app.at(Remove, task=task)
-        document.querySelector("#output").innerText = f"Task '{task}' removed"
-    except Exception as e:
-        document.querySelector("#output").innerText = str(e)
-
-
-def print_task_dict(event):
-    document.querySelector("#output").innerText = app.at(PrintDict).result
-
-
-def list_tasks(event):
-    document.querySelector("#output").innerText = app.at(ListTasks).result
-
-
-def get_task(event):
-    index = document.querySelector("#index-input").value
-    if not index:
-        index = 0
-    index = int(index)
-    # index = int(value) - 1
-    document.querySelector("#output").innerText = app.at(GetBy, index=index).result
