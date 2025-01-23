@@ -14,9 +14,8 @@ class TestSeleneIntegration:
     def setup_method(self, method):
         file_path = Path(__file__).parent.parent.parent.resolve()
         self._app = Application(browser)
-        self._app.at(
-            setup.OpenSeleneApp, 
-            url=f"file:///{file_path}/sample.html",)
+        self._app.at(setup.OpenSeleneApp,
+                     url=f"file:///{file_path}/sample.html",)
 
     def teardown_method(self, method):
         self._app.at(setup.CloseSeleneApp)
