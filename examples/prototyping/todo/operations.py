@@ -35,8 +35,11 @@ class Remove(AbstractTransaction):
         self._driver: ToDoPrototype
 
     def do(self, task):
-        self._driver.tasks.remove(task)
-        return self._driver.tasks
+        try:
+            self._driver.tasks.remove(task)
+            return self._driver.tasks
+        except ValueError:
+            return f"Taks '{task}' not found"
 
 
 class ListTasks(AbstractTransaction):
@@ -75,38 +78,33 @@ class GetBy(AbstractTransaction):
 
 
 # For front-end
-todo_prototype = ToDoPrototype()
-app = Application(todo_prototype)
-
-add = Add(todo_prototype)
-remove = Remove(todo_prototype)
-list = ListTasks(todo_prototype)
-print_dict = PrintDict(todo_prototype)
-get_by = GetBy(todo_prototype)
+app = Application(ToDoPrototype())
 
 
 def add_task(event):
     try:
         task = document.querySelector("#task").value
-        # add.do(task)
-        app.at(Add, task=task).asserts(it.IsEqualTo, list.do())
+        app.at(Add, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' added"
     except Exception as e:
         document.querySelector("#output").innerText = str(e)
 
 
 def remove_task(event):
-    task = document.querySelector("#task").value
-    remove.do(task)
-    document.querySelector("#output").innerText = f"Task '{task}' removed"
+    try:
+        task = document.querySelector("#task").value
+        app.at(Remove, task=task)
+        document.querySelector("#output").innerText = f"Task '{task}' removed"
+    except Exception as e:
+        document.querySelector("#output").innerText = str(e)
 
 
 def print_task_dict(event):
-    document.querySelector("#output").innerText = print_dict.do()
+    document.querySelector("#output").innerText = app.at(PrintDict).result
 
 
 def list_tasks(event):
-    document.querySelector("#output").innerText = list.do()
+    document.querySelector("#output").innerText = app.at(ListTasks).result
 
 
 def get_task(event):
@@ -114,4 +112,4 @@ def get_task(event):
     if not value:
         value = 0
     index = int(value) - 1
-    document.querySelector("#output").innerText = str(get_by.do(index=index))
+    document.querySelector("#output").innerText = app.at(GetBy, index=index).result
