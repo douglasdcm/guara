@@ -84,6 +84,8 @@ app = Application(ToDoPrototype())
 def add_task(event):
     try:
         task = document.querySelector("#task").value
+        # This is the `Application` involker being used to bind the transations
+        # with the front-end
         app.at(Add, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' added"
     except Exception as e:
@@ -108,8 +110,9 @@ def list_tasks(event):
 
 
 def get_task(event):
-    value = document.querySelector("#index-input").value
-    if not value:
-        value = 0
-    index = int(value) - 1
+    index = document.querySelector("#index-input").value
+    if not index:
+        index = 0
+    index = int(index)
+    # index = int(value) - 1
     document.querySelector("#output").innerText = app.at(GetBy, index=index).result

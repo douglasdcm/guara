@@ -2,6 +2,11 @@ body {
     margin: 10;
 }
 
+.py-error
+{
+  display:none
+}
+
 .pyscript {
     margin: 0.5rem;
 }
