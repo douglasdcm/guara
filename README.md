@@ -24,6 +24,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 - [Using other Web Drivers](#Using-other-Web-Drivers)<br>
 - [Asynchronous execution](#Asynchronous-execution)<br>
 - [ChatGPT assistance](#ChatGPT-assistance)<br>
+- [Non-testers usage](#Non-testers-usage)<br>
 - [Contributing](#Contributing)<br>
 
 # Syntax
@@ -189,13 +190,22 @@ The core code was extended to allow asynchronous executions. Get more details [h
 # ChatGPT assistance
 It is possible to use [ChatGPT](https://chatgpt.com/) to help you organize your code in `Page Transactions` pattern. Check these [simple steps](https://github.com/douglasdcm/guara/blob/main/docs/CHATGPT_ASSISTANCE.md).
 
+# Non-Testers Usage
+
+Page Transactions is primarily based on the Command Pattern (GoF), making it suitable for product development as well, even though that is not its primary intent. This section is dedicated to showcasing other uses of the framework that are unrelated to automation testing.
+
+## Prototyping
+
+Software engineers, UX designers with some knowledge of programming, and software students can leverage this project to build simple applications that are testable by default. For example, [To-Do List web application](https://github.com/douglasdcm/guara/blob/main/examples/prototyping) was built with Guara and PyScript.
+
 # How you can help?
 
 Here's how you can help with this:
 - Star this project on GitHub.
 - Tell your friends and colleagues about it.
-- Share it on social media
+- Share it on social media.
 - Write a blog post about Guara.
+- Take a look at the `good first issue` [here](https://github.com/douglasdcm/guara/issues), assign any to you and push the code.
 
 # Contributing
 Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/docs/CODE_OF_CONDUCT.md) before push new Merge Requests.<br>
