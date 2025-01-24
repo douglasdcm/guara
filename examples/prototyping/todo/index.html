@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <!-- Based on the example https://pyscript.com/@examples/antigravity/latest?files=README.md,main.py,pyscript.toml,antigravity.py,index.html -->
+
+      <!-- <a target="_blank" href="https://icons8.com/icon/53372/internet">favicon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> -->
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+      <!-- PyScript CSS -->
+      <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+      <link rel="stylesheet" href="./style.css" />
+
+      <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+      
+      <title>To Do PyScript</title>
+  </head>
+  <body>
+    <h1>To Do List</h1>
+    <p>Manage your tasks</p>
+    <div>
+      <input type="text" id="task" placeholder="Enter task here..." />
+      <button py-click="add_task">Add task</button>
+      <button py-click="remove_task">Remove task</button>
+    </div>
+    <br>
+
+    <div>
+      <button py-click="list_tasks">List tasks</button>
+      <button py-click="print_task_dict">Print as Dictionary</button>
+      <button py-click="get_task">Get Task by Index</button>
+      <input type="number" id="index-input" placeholder="Enter index" />
+    </div>
+    <br>
+    
+    <!-- Output Area -->
+    <h3>Output:</h3>
+    <div id="output" style="border: 1px solid black; padding: 10px; width: 50%; min-height: 50px;"></div>
+
+    <script type="py" src="./main.py" config="./pyscript.json"></script>
+  </body>
+</html>
