@@ -1,34 +1,46 @@
 """
-The module needed for reading the performance metrics
-needed.
+The module for tracking the performance metrics of the
+library.
 """
-import psutil
-import time
 import threading
 import subprocess
+from logging import getLogger, Logger
+from csv import writer
+from time import time, sleep
+from psutil import cpu_percent, virtual_memory, disk_usage
 
 
-def monitor_resources(interval=1):
+LOGGER: Logger = getLogger("guara")
+
+def monitor_resources(csv_file: str, interval: int = 1) -> None:
     """
-    Monitor and print CPU, RAM, and Disk usage at regular intervals.
-    :param interval: Time in seconds between measurements
+    Monitoring the perfomance metrics such as CPU, RAM and disk
+    usage and writing them into a CSV file for the generation of
+    a chart.
+
+    Args:
+        csv_file: (str): Path to the CSV file where metrics will be saved
+        interval: (int): Time in seconds between measurements
+
+    Returns:
+        (None)
     """
     try:
-        print("Monitoring system resources... (Press Ctrl+C to stop)")
-        print(f"{'Time':<10}{'CPU (%)':<10}{'RAM (%)':<10}{'Disk (%)':<10}")
-        start_time = time.time()
-
+        LOGGER.info("Monitoring System Resources...")
+        file = open(csv_file, mode="w", newline="")
+        csv_writer = writer(file)
+        csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
+        start_time: float = time()
         while True:
-            cpu_usage = psutil.cpu_percent(interval=None)
-            ram_usage = psutil.virtual_memory().percent
-            disk_usage = psutil.disk_usage('/').percent
-            elapsed_time = time.time() - start_time
-
-            print(f"{elapsed_time:<10.2f}{cpu_usage:<10.2f}{ram_usage:<10.2f}{disk_usage:<10.2f}")
-            time.sleep(interval)
-
+            elapsed_time: float = time() - start_time
+            cpu_usage: float = cpu_percent(interval=None)
+            ram_usage: float = virtual_memory().percent
+            real_disk_usage: float = disk_usage('/').percent
+            csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
+            file.flush()
+            sleep(interval)
     except KeyboardInterrupt:
-        print("\nMonitoring stopped.")
+        LOGGER.info("\nMonitoring stopped.")
 
 def run_test_script(script_path):
     """
@@ -42,10 +54,11 @@ def run_test_script(script_path):
 
 if __name__ == "__main__":
     test_script = "test_script.py"  # Replace with the path to your test script
+    csv_output_file = "resource_metrics.csv"  # CSV file to save metrics
     monitoring_interval = 1  # Set the monitoring interval in seconds
 
     # Start monitoring in a separate thread
-    monitor_thread = threading.Thread(target=monitor_resources, args=(monitoring_interval,), daemon=True)
+    monitor_thread = threading.Thread(target=monitor_resources, args=(csv_output_file, monitoring_interval), daemon=True)
     monitor_thread.start()
 
     # Run the test script
