@@ -13,6 +13,7 @@ from threading import Thread, Event
 
 LOGGER: Logger = getLogger("guara")
 
+
 def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> None:
     """
     Monitoring the perfomance metrics such as CPU, RAM and disk
@@ -44,6 +45,7 @@ def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> No
     except Exception as error:
         LOGGER.error(f"Error during monitoring.\n Error: {error}")
 
+
 def run_test_script() -> None:
     """
     Running the test script.
@@ -57,6 +59,7 @@ def run_test_script() -> None:
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
         return error.returncode
+
 
 csv_output_directory: str = "./data/"
 csv_output_file: str = f"{csv_output_directory}/resource_metrics.{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
