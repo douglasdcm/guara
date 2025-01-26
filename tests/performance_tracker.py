@@ -3,12 +3,12 @@ The module for tracking the performance metrics of the
 library.
 """
 import threading
-import subprocess
 from logging import getLogger, Logger
 from csv import writer
 from time import time, sleep
 from psutil import cpu_percent, virtual_memory, disk_usage
 from typing import Any, NoReturn
+from subprocess import run, CalledProcessError
 
 
 LOGGER: Logger = getLogger("guara")
@@ -58,15 +58,20 @@ def write_performance_resource(writer: Any, file: Any, start_time: float, interv
         file.flush()
         sleep(interval)
 
-def run_test_script(script_path):
+def run_test_script(script_path: str) -> None:
     """
-    Run the test script.
-    :param script_path: Path to the Python script to be tested
+    Running the test script.
+
+    Args:
+        script_path: (str): Path to the Python script to be tested.
+
+    Returns:
+        (None)
     """
     try:
-        subprocess.run(["python", script_path], check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred while running the test script: {e}")
+        run(["python", script_path], check=True)
+    except CalledProcessError as error:
+        LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
 
 if __name__ == "__main__":
     test_script = "test_script.py"  # Replace with the path to your test script
