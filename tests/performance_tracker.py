@@ -6,7 +6,6 @@ from logging import getLogger, Logger
 from csv import writer
 from time import time, sleep
 from psutil import cpu_percent, virtual_memory, disk_usage
-from typing import Any, NoReturn
 from subprocess import run, CalledProcessError
 from datetime import datetime
 from threading import Thread, Event
