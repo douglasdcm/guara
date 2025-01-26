@@ -14,7 +14,7 @@ authors = [
 ]
 description = "Framework to build UI test automation in Page Transactions pattern"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
