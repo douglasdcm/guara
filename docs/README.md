@@ -1,16 +1,5 @@
 # Guará
 
-# Contents
-- [Syntax](#Syntax)<br>
-- [Sample](#Sample)<br>
-- [Installation](#Installation)<br>
-- [Execution](#Execution)<br>
-- [Tutorial](#Tutorial)<br>
-- [Using other Web Drivers](#Using-other-Web-Drivers)<br>
-- [The pattern explained](#The-pattern-explained)<br>
-- [Non-testers usage](#Non-testers-usage)<br>
-- [Contributing](#Contributing)<br>
-
 # Syntax
 
 <code>Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matches, a_condition)</code>
