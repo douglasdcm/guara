@@ -64,7 +64,7 @@ monitoring_interval: int = 1
 stop_event: Event = Event()
 monitor_thread: Thread = Thread(
     target=monitor_resources,
-    args=(csv_output_file, monitoring_interval, stop_event),
+    args=(csv_output_file, stop_event, monitoring_interval),
     daemon=True
 )
 monitor_thread.start()
