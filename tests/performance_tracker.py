@@ -62,7 +62,8 @@ def run_test_script() -> None:
 
 
 csv_output_directory: str = "./data/"
-csv_output_file: str = f"{csv_output_directory}/resource_metrics.{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+current_time: str = datetime.now().strftime("%Y%m%d_%H%M%S")
+csv_output_file: str = f"{csv_output_directory}/resource_metrics.{current_time}.csv"
 monitoring_interval: int = 1
 stop_event: Event = Event()
 monitor_thread: Thread = Thread(
@@ -75,4 +76,8 @@ LOGGER.info("Running The Test Script...")
 exit_code: int = run_test_script()
 stop_event.set()
 monitor_thread.join()
-LOGGER.info(f"Test script finished and the metrics saved.\n Exit Code: {exit_code}\n Metrics File: {csv_output_file}")
+LOGGER.info(
+    f"""Test script finished and the metrics saved.\n
+    Exit Code: {exit_code}\n
+    Metrics File: {csv_output_file}"""
+)
