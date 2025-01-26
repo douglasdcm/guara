@@ -2,13 +2,14 @@
 The module for tracking the performance metrics of the
 library.
 """
-import threading
 from logging import getLogger, Logger
 from csv import writer
 from time import time, sleep
 from psutil import cpu_percent, virtual_memory, disk_usage
 from typing import Any, NoReturn
 from subprocess import run, CalledProcessError
+from datetime import datetime
+from threading import Thread
 
 
 LOGGER: Logger = getLogger("guara")
@@ -74,16 +75,15 @@ def run_test_script(script_path: str) -> None:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
 
 if __name__ == "__main__":
-    test_script = "test_script.py"  # Replace with the path to your test script
-    csv_output_file = "resource_metrics.csv"  # CSV file to save metrics
-    monitoring_interval = 1  # Set the monitoring interval in seconds
-
-    # Start monitoring in a separate thread
-    monitor_thread = threading.Thread(target=monitor_resources, args=(csv_output_file, monitoring_interval), daemon=True)
+    test_script: str = "./examples/linux_desktop/dogtail/test_integration_with_dogtail.py"
+    csv_output_directory: str = "./data/"
+    csv_output_file: str = f"{csv_output_directory}/resource_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    monitoring_interval: int = 1
+    monitor_thread: Thread = Thread(
+        target=monitor_resources,
+        args=(csv_output_file, monitoring_interval),
+        daemon=True
+    )
     monitor_thread.start()
-
-    # Run the test script
     run_test_script(test_script)
-
-    # Wait for the monitoring thread to finish (optional)
     monitor_thread.join()
