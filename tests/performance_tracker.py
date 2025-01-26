@@ -70,9 +70,11 @@ def run_test_script(script_path: str) -> None:
         (None)
     """
     try:
-        run(["python", script_path], check=True)
+        process = run(["python", script_path], check=True)
+        return process.returncode
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
+        return error.returncode
 
 test_script: str = "./examples/linux_desktop/dogtail/test_integration_with_dogtail.py"
 data_script_name: str = test_script.split("/")[-1]
