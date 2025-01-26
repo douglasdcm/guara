@@ -1,18 +1,5 @@
 # Guará
 
-[![PyPI Downloads](https://static.pepy.tech/badge/guara)](https://pepy.tech/projects/guara)
-
-<img src=https://github.com/douglasdcm/guara/raw/main/docs/images/guara.jpg width="300" height="300" />
-
-Photo by <a href="https://unsplash.com/@matcfelipe?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Mateus Campos Felipe</a> on <a href="https://unsplash.com/photos/red-flamingo-svdE4f0K4bs?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
-      
-________
-
-
-[Scarlet ibis (Guará)](https://en.wikipedia.org/wiki/Scarlet_ibis)
-
-The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of ibis in the bird family Threskiornithidae. It inhabits tropical South America and part of the Caribbean. In form, it resembles most of the other twenty-seven extant species of ibis, but its remarkably brilliant scarlet coloration makes it unmistakable. It is one of the two national birds of Trinidad and Tobago, and its Tupi–Guarani name, guará, is part of the name of several municipalities along the coast of Brazil.
-
 # Contents
 - [Syntax](#Syntax)<br>
 - [Introduction](#Introduction)<br>
