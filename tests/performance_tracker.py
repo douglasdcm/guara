@@ -14,7 +14,7 @@ from threading import Thread, Event
 
 LOGGER: Logger = getLogger("guara")
 
-def monitor_resources(csv_file: str, interval: int = 1) -> None:
+def monitor_resources(csv_file: str, interval: int = 1, stop_event: Event) -> None:
     """
     Monitoring the perfomance metrics such as CPU, RAM and disk
     usage and writing them into a CSV file for the generation of
@@ -23,6 +23,7 @@ def monitor_resources(csv_file: str, interval: int = 1) -> None:
     Args:
         csv_file: (str): Path to the CSV file where metrics will be saved
         interval: (int): Time in seconds between measurements
+        stop_event: (Event): Threading event to signal when to stop monitoring
 
     Returns:
         (None)
@@ -33,7 +34,7 @@ def monitor_resources(csv_file: str, interval: int = 1) -> None:
         csv_writer = writer(file)
         csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
         start_time: float = time()
-        while True:
+        while not stop_event.is_set():
             elapsed_time: float = time() - start_time
             cpu_usage: float = cpu_percent(interval=None)
             ram_usage: float = virtual_memory().percent
@@ -41,8 +42,8 @@ def monitor_resources(csv_file: str, interval: int = 1) -> None:
             csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
             file.flush()
             sleep(interval)
-    except KeyboardInterrupt:
-        LOGGER.info("\nMonitoring stopped.")
+    except Exception as error:
+        LOGGER.error(f"Error during monitoring.\n Error: {error}")
 
 def run_test_script(script_path: str) -> None:
     """
