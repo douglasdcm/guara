@@ -14,7 +14,7 @@ from threading import Thread, Event
 
 LOGGER: Logger = getLogger("guara")
 
-def monitor_resources(csv_file: str, interval: int = 1, stop_event: Event) -> None:
+def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> None:
     """
     Monitoring the perfomance metrics such as CPU, RAM and disk
     usage and writing them into a CSV file for the generation of
