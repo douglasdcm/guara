@@ -45,18 +45,15 @@ def monitor_resources(csv_file: str, interval: int = 1, stop_event: Event) -> No
     except Exception as error:
         LOGGER.error(f"Error during monitoring.\n Error: {error}")
 
-def run_test_script(script_path: str) -> None:
+def run_test_script() -> None:
     """
     Running the test script.
-
-    Args:
-        script_path: (str): Path to the Python script to be tested.
 
     Returns:
         (None)
     """
     try:
-        process = run(["python", script_path], check=True)
+        process = run(["python", "-m", "pytest"], check=True)
         return process.returncode
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
