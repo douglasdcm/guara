@@ -33,31 +33,16 @@ def monitor_resources(csv_file: str, interval: int = 1) -> None:
         csv_writer = writer(file)
         csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
         start_time: float = time()
-        write_performance_resource(csv_writer, file, start_time, interval)
+        while True:
+            elapsed_time: float = time() - start_time
+            cpu_usage: float = cpu_percent(interval=None)
+            ram_usage: float = virtual_memory().percent
+            real_disk_usage: float = disk_usage('/').percent
+            csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
+            file.flush()
+            sleep(interval)
     except KeyboardInterrupt:
         LOGGER.info("\nMonitoring stopped.")
-
-def write_performance_resource(writer: Any, file: Any, start_time: float, interval: int) -> NoReturn:
-    """
-    Writing the performance resource into a CSV file.
-
-    Args:
-        writer: (Any): The writer object to write the data
-        file: (Any): The file object to write the data
-        start_time: (float): The start time of the test
-        interval: (int): The interval between measurements
-
-    Returns:
-        (NoReturn)
-    """
-    while True:
-        elapsed_time: float = time() - start_time
-        cpu_usage: float = cpu_percent(interval=None)
-        ram_usage: float = virtual_memory().percent
-        real_disk_usage: float = disk_usage('/').percent
-        writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
-        file.flush()
-        sleep(interval)
 
 def run_test_script(script_path: str) -> None:
     """
