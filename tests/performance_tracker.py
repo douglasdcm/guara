@@ -58,10 +58,8 @@ def run_test_script() -> None:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
         return error.returncode
 
-test_script: str = "./examples/linux_desktop/dogtail/test_integration_with_dogtail.py"
-data_script_name: str = test_script.split("/")[-1]
 csv_output_directory: str = "./data/"
-csv_output_file: str = f"{csv_output_directory}/resource_metrics.{data_script_name}.{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+csv_output_file: str = f"{csv_output_directory}/resource_metrics.{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
 monitoring_interval: int = 1
 stop_event: Event = Event()
 monitor_thread: Thread = Thread(
@@ -71,7 +69,7 @@ monitor_thread: Thread = Thread(
 )
 monitor_thread.start()
 LOGGER.info("Running The Test Script...")
-exit_code: int = run_test_script(test_script)
+exit_code: int = run_test_script()
 stop_event.set()
 monitor_thread.join()
 LOGGER.info(f"Test script finished and the metrics saved.\n Exit Code: {exit_code}\n Metrics File: {csv_output_file}")
