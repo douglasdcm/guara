@@ -74,16 +74,16 @@ def run_test_script(script_path: str) -> None:
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
 
-if __name__ == "__main__":
-    test_script: str = "./examples/linux_desktop/dogtail/test_integration_with_dogtail.py"
-    csv_output_directory: str = "./data/"
-    csv_output_file: str = f"{csv_output_directory}/resource_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-    monitoring_interval: int = 1
-    monitor_thread: Thread = Thread(
-        target=monitor_resources,
-        args=(csv_output_file, monitoring_interval),
-        daemon=True
-    )
-    monitor_thread.start()
-    run_test_script(test_script)
-    monitor_thread.join()
+test_script: str = "./examples/linux_desktop/dogtail/test_integration_with_dogtail.py"
+data_script_name: str = test_script.split("/")[-1]
+csv_output_directory: str = "./data/"
+csv_output_file: str = f"{csv_output_directory}/resource_metrics.{data_script_name}.{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+monitoring_interval: int = 1
+monitor_thread: Thread = Thread(
+    target=monitor_resources,
+    args=(csv_output_file, monitoring_interval),
+    daemon=True
+)
+monitor_thread.start()
+run_test_script(test_script)
+monitor_thread.join()
