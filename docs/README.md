@@ -109,7 +109,7 @@ examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_l
 2025-01-09 06:39:41 INFO Assertion 'IsNotEqualTo'
 2025-01-09 06:39:41 INFO  actual:   'It works! cheesecheese!'
 2025-01-09 06:39:41 INFO  expected: 'Any'
-PASSED                                                                                                                                 [100%]
+PASSED
 ------------------------------------------------------------- live log teardown
 2025-01-09 06:39:41 INFO Transaction 'CloseApp'
 
