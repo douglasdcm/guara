@@ -87,7 +87,7 @@ python -m pytest
 **Outputs**
 ```shell
 examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_local_page
---------------------------------------------------------------- live log setup ---------------------------------------------------------------
+--------------------------------------------------------------- live log setup
 2025-01-09 06:39:41 INFO Transaction 'OpenApp'
 2025-01-09 06:39:41 INFO  url: file:////...sample.html
 2025-01-09 06:39:41 INFO  window_width: 1094
@@ -96,7 +96,7 @@ examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_l
 2025-01-09 06:39:41 INFO Assertion 'IsEqualTo'
 2025-01-09 06:39:41 INFO  actual:   'Sample page'
 2025-01-09 06:39:41 INFO  expected: 'Sample page'
---------------------------------------------------------------- live log call ----------------------------------------------------------------
+--------------------------------------------------------------- live log call
 2025-01-09 06:39:41 INFO Transaction 'SubmitText'
 2025-01-09 06:39:41 INFO  text: cheese
 2025-01-09 06:39:41 INFO Assertion 'IsEqualTo'
@@ -108,7 +108,7 @@ examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_l
 2025-01-09 06:39:41 INFO  actual:   'It works! cheesecheese!'
 2025-01-09 06:39:41 INFO  expected: 'Any'
 PASSED                                                                                                                                 [100%]
-------------------------------------------------------------- live log teardown --------------------------------------------------------------
+------------------------------------------------------------- live log teardown
 2025-01-09 06:39:41 INFO Transaction 'CloseApp'
 
 ```
