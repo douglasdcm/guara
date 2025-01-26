@@ -1,6 +1,6 @@
 # Guará
 
-[![PyPI Downloads](https://static.pepy.tech/badge/guara)](https://pepy.tech/projects/guara) ![GitHub Repo stars](https://img.shields.io/github/stars/douglasdcm/guara?style=social) [![Build Status](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c7c_Build-Passing-brightgreen.svg)](https://github.com/douglasdcm/guara/actions) [![License: MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c34_License-MIT-blue.svg)]([/LICENSE](https://github.com/douglasdcm/guara/blob/main/LICENSE)) 
+[![PyPI Downloads](https://static.pepy.tech/badge/guara)](https://pepy.tech/projects/guara) ![GitHub Repo stars](https://img.shields.io/github/stars/douglasdcm/guara?style=social) ![GitHub forks](https://img.shields.io/github/forks/douglasdcm/guara) [![Build Status](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c7c_Build-Passing-brightgreen.svg)](https://github.com/douglasdcm/guara/actions) [![License: MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c34_License-MIT-blue.svg)]([/LICENSE](https://github.com/douglasdcm/guara/blob/main/LICENSE))
 
 # Syntax
 
