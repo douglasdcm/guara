@@ -2,12 +2,12 @@ import time
 import datetime
 import psutil
 import logging
+import pytest
+from tests.performance.sync_test.app.app import App
 
 
-from app import App
-
-
-def run():
+@pytest.mark.skip(reason="Do not run on pipelines. Run it manually on each release")
+def test_performance_sync():
     """Runs the test for SECONDS seconds, save the metrics `time`, `latency`, `cpu`,
     `memory` and `disk` in `data.csv` and the logs of the executin in `script_1.log`
     """
@@ -16,14 +16,16 @@ def run():
         format="%(asctime)s.%(msecs)03d %(levelname)s %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
         force=True,
-        filename=f"./data/script_1_{str(datetime.datetime.now())}.log",
+        filename=f"./data/script_1_sync_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log",
         filemode="w",
     )
     logging.getLogger("guara")
 
     SECONDS = 60 * 5
     s = time.time()
-    csv_writer = f"./data/script_1._{str(datetime.datetime.now())}csv"
+    csv_writer = (
+        f"./data/script_1_sync_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    )
     with open(csv_writer, mode="w", newline="") as f:
         f.write("time,latency,cpu,mem,disk\n")
         while time.time() - s < SECONDS:
@@ -44,7 +46,3 @@ def run():
                 )
             )
             f.flush()
-
-
-if __name__ == "__main__":
-    run()

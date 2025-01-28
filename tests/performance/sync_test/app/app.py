@@ -1,4 +1,4 @@
-import transactions
+from tests.performance.sync_test.app import transactions
 from guara.transaction import Application
 from guara import it
 
