@@ -7,7 +7,7 @@ import logging
 from app import App
 
 
-if __name__ == "__main__":
+def run():
     """Runs the test for SECONDS seconds, save the metrics `time`, `latency`, `cpu`,
     `memory` and `disk` in `data.csv` and the logs of the executin in `script_1.log`
     """
@@ -16,14 +16,14 @@ if __name__ == "__main__":
         format="%(asctime)s.%(msecs)03d %(levelname)s %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
         force=True,
-        filename="script_1.log",
+        filename=f"./data/script_1_{str(datetime.datetime.now())}.log",
         filemode="w",
     )
-    LOGGER = logging.getLogger("guara")
+    logging.getLogger("guara")
 
     SECONDS = 60 * 5
     s = time.time()
-    csv_writer = "data.csv"
+    csv_writer = f"./data/script_1._{str(datetime.datetime.now())}csv"
     with open(csv_writer, mode="w", newline="") as f:
         f.write("time,latency,cpu,mem,disk\n")
         while time.time() - s < SECONDS:
@@ -44,3 +44,7 @@ if __name__ == "__main__":
                 )
             )
             f.flush()
+
+
+if __name__ == "__main__":
+    run()
