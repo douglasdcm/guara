@@ -18,4 +18,5 @@ opencv-python
 dogtail
 splinter
 rpa
+psutil
 

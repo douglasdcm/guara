@@ -15,5 +15,5 @@ python3.11 -m venv venv
 source venv/bin/activate
 pip install -r test-requirements.txt
 mkdir data
-python tests/performance/script_*.py
+python -m pytest -k test_preformance_async
 ```
