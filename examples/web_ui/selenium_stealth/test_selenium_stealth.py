@@ -7,7 +7,8 @@ from random import randrange
 
 class TestSeleniumStealthIntegration:
     """
-    TestSeleniumStealthIntegration is a test class for integrating Selenium Stealth with a local web page.
+    TestSeleniumStealthIntegration is a test class for integrating
+    Selenium Stealth with a local web page.
     """
 
     def setup_method(self, method):

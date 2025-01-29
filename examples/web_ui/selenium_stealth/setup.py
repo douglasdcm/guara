@@ -22,6 +22,7 @@ class OpenStealthBrowser(AbstractTransaction):
         )
         return self._driver
 
+
 class CloseStealthBrowser(AbstractTransaction):
     """Close stealth browser"""
     def __init__(self, driver):
