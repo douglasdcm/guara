@@ -5,9 +5,6 @@ from selenium_stealth import stealth
 
 class OpenStealthBrowser(AbstractTransaction):
     """Initialize stealth browser"""
-    
-    def __init__(self, driver=None):
-        super().__init__(driver)
 
     def do(self, headless: bool = True):
         options = webdriver.ChromeOptions()

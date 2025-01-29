@@ -13,8 +13,9 @@ class TestSeleniumStealthIntegration:
 
     def setup_method(self, method):
         self._app = Application(None)
-        self._app.at(OpenStealthBrowser, headless=True)
-
+        driver = self._app.at(OpenStealthBrowser, headless=True)
+        self._app.set_driver(driver)
+    
     def teardown_method(self, method):
         self._app.at(CloseStealthBrowser)
 
