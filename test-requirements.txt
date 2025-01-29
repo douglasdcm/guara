@@ -20,5 +20,4 @@ dogtail
 splinter
 rpa
 selenium-stealth
-psutil
 
