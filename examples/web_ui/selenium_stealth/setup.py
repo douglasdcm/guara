@@ -11,10 +11,10 @@ class OpenStealthBrowser(AbstractTransaction):
         if headless:
             options.add_argument("--headless")
         options.add_argument("--disable-blink-features=AutomationControlled")
-        
+
         self._driver = webdriver.Chrome(options=options)
         stealth(
-            self.driver,
+            self._driver,
             languages=["en-US", "en"],
             vendor="Google Inc.",
             platform="Win32",
