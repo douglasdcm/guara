@@ -5,7 +5,7 @@ library.
 from logging import getLogger, Logger
 from csv import writer
 from time import time, sleep
-from psutil import cpu_percent, virtual_memory, disk_usage
+from psutil import cpu_percent, virtual_memory, disk_io_counters
 from subprocess import run, CalledProcessError
 from datetime import datetime
 from threading import Thread, Event
@@ -32,14 +32,18 @@ def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> No
         LOGGER.info("Monitoring System Resources...")
         file = open(csv_file, mode="w", newline="")
         csv_writer = writer(file)
-        csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
+        csv_writer.writerow(
+            ["Time (s)", "CPU (%)", "RAM (%)", "Disk Read (Bytes)", "Disk Write (Bytes)"]
+        )
         start_time: float = time()
         while not stop_event.is_set():
             elapsed_time: float = time() - start_time
             cpu_usage: float = cpu_percent(interval=None)
             ram_usage: float = virtual_memory().percent
-            real_disk_usage: float = disk_usage('/').percent
-            csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
+            disk_input_output = disk_io_counters()
+            read_bytes: int = disk_input_output.read_bytes
+            write_bytes: int = disk_input_output.write_bytes
+            csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, read_bytes, write_bytes])
             file.flush()
             sleep(interval)
     except Exception as error:
