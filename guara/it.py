@@ -89,11 +89,8 @@ class HasSubset(IAssertion):
 
 class IsSortedAs(IAssertion):
     """
-    Checks whether the `actual` list is as `expected`
-
-    Args:
-        actual (list): the list to be inspected
-        expected (list): the ordered list to compare againts `actual`.
+    The assertion class for verifying that that the actual array
+    is the expected array.
     """
 
     def asserts(self, actual: List[Any], expected: List[Any]):
