@@ -15,7 +15,6 @@ class IAssertion:
     It is the base class for implementing assertion logic which
     is used for validation and testing.
     """
-
     @property
     def __name__(self) -> property:
         """
@@ -41,7 +40,7 @@ class IAssertion:
         Raises:
             NotImplementedError: The method is not implemented in the subclass.
         """
-        raise NotImplementedError
+        raise NotImplementedError("The method is not implemented in the subclass.")
 
     async def validates(self, actual: Any, expected: Any) -> None:
         """
