@@ -77,11 +77,8 @@ class MatchesRegex(IAssertion):
 
 class HasSubset(IAssertion):
     """
-    Checks whether the `expected` list is a subset of `actual`
-
-    Args:
-        actual (list): the list to be inspected
-        expected (list): the list to be found in `actual`.
+    The assertion class for verifying that the expected array is
+    a subset of the actual array.
     """
 
     def asserts(self, actual: List[Any], expected: List[Any]) -> None:
