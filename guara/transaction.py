@@ -4,7 +4,6 @@ The module that has all of the transactions.
 
 from typing import Any, Dict
 from guara.it import IAssertion
-from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
@@ -63,7 +62,6 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
-        transaction_info: str = get_transaction_info(self._transaction)
         self._result = self._transaction.do(**kwargs)
         return self
 
