@@ -48,7 +48,8 @@ class Application:
         return self._result
 
     def at(
-        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
+        self, transaction: AbstractTransaction,
+        **kwargs: Dict[str, Any]
     ) -> "Application":
         """
         Performing a transaction.
@@ -62,9 +63,6 @@ class Application:
         """
         self._transaction = transaction(self._driver)
         transaction_info: str = get_transaction_info(self._transaction)
-        LOGGER.info(f"Transaction: {transaction_info}")
-        for key, value in kwargs.items():
-            LOGGER.info(f" {key}: {value}")
         self._result = self._transaction.do(**kwargs)
         return self
 
