@@ -26,7 +26,7 @@ class OpenApp(AbstractTransaction):
         url: str,
         window_width: int = 1094,
         window_height: int = 765,
-        delay: int = 10,
+        implicity_wait: int = 10,
     ) -> str:
         """
         It opens the application and returns its title.
@@ -35,14 +35,14 @@ class OpenApp(AbstractTransaction):
             url: (str): The path where the screenshot is saved.
             window_width: (int): The width of the application.
             window_height: (int): The height of the application.
-            delay: (int): The implicity timeout for an element to be found.
+            implicity_wait: (int): The implicity timeout for an element to be found.
 
         Returns:
             (str): the title of the app
         """
         self._driver.set_window_size(window_width, window_height)
         self._driver.get(url)
-        self._driver.implicitly_wait(delay)
+        self._driver.implicitly_wait(implicity_wait)
         return self._driver.title
 
 
