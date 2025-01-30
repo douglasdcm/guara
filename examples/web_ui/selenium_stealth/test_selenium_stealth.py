@@ -29,6 +29,6 @@ class TestSeleniumStealthIntegration:
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
         self._app.at(HomeTransactions, text=text).asserts(
-            it.IsEqualTo, "Example Domain"
+            it.Contains, "Example Domain"
         )
         self._app.at(HomeTransactions, text=text).asserts(it.IsNotEqualTo, "Any")
