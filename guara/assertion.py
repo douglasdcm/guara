@@ -49,8 +49,9 @@ class IAssertion:
         try:
             self.asserts(actual, expected)
         except Exception as error:
-            LOGGER.error(f"Assertion: {self.__class__.__name__}")
-            LOGGER.error(f" Actual  : {actual}")
-            LOGGER.error(f" Expected: {expected}")
-            LOGGER.error(f"Validation error on asserted data!\n Assertion: {self.__class__.__name__}\n Error: {e}")
+            LOGGER.error("Validation error on asserted data!")
+            LOGGER.error(f" Assertion: {self.__class__.__name__}")
+            LOGGER.error(f" Error: {error}")
+            LOGGER.error(f"  Actual  : {actual}")
+            LOGGER.error(f"  Expected: {expected}")
             raise Exception("Validation error on asserted data!")
