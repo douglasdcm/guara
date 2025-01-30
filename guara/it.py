@@ -63,11 +63,8 @@ class HasKeyValue(IAssertion):
 
 class MatchesRegex(IAssertion):
     """
-    Checks whether the `expected` pattern matches the `actual` string
-
-    Args:
-        actual (str): the string to be inspected
-        expected (str): the pattern to be found in `actual`. For example '(?:anoother){d}'
+    The assertion class for verifying that the actual string
+    matches the expected regular expression pattern.
     """
 
     def asserts(self, actual: str, expected: str) -> None:
