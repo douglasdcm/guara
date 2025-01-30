@@ -16,7 +16,6 @@ class Application:
     """
     This is the runner of the automation.
     """
-
     def __init__(self, driver: Any = None):
         """
         Initializing the application with a driver.
