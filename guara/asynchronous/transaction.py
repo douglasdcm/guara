@@ -142,9 +142,6 @@ class Application:
             self._TRANSACTION
         )
         if transaction:
-            LOGGER.info(f"Transaction: {self._transaction_name}")
-            for key, value in self._kwargs.items():
-                LOGGER.info(f" {key}: {value}")
             self._result = await transaction
             return True
         return False
