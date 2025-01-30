@@ -4,7 +4,6 @@ local pages.
 """
 from pathlib import Path
 from random import randrange
-from examples.web_ui.selenium.simple.local_page import home
 from guara.transaction import Application
 from selenium.webdriver import ChromeOptions, Chrome
 from selenium.webdriver.chrome.options import Options
