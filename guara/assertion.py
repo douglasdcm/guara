@@ -46,13 +46,11 @@ class IAssertion:
         Raises:
             Exception: An assertion exception
         """
-        LOGGER.info(f"Assertion: {self.__class__.__name__}")
         try:
             self.asserts(actual, expected)
-            LOGGER.info(f" Actual  : {actual}")
-            LOGGER.info(f" Expected: {expected}")
-        except Exception as e:
+        except Exception as error:
+            LOGGER.error(f"Assertion: {self.__class__.__name__}")
             LOGGER.error(f" Actual  : {actual}")
             LOGGER.error(f" Expected: {expected}")
-            LOGGER.exception(str(e))
-            raise
+            LOGGER.error(f"Validation error on asserted data!\n Assertion: {self.__class__.__name__}\n Error: {e}")
+            raise Exception("Validation error on asserted data!")
