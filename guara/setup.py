@@ -10,9 +10,8 @@ from typing import Any
 
 class OpenApp(AbstractTransaction):
     """
-    The transaction for opening an application.
+    The transaction class for opening an application.
     """
-
     def __init__(self, driver: Any):
         """
         Initializing the transaction
@@ -33,7 +32,7 @@ class OpenApp(AbstractTransaction):
         It opens the application and returns its title.
 
         Args:
-            url: (str): the path where the screenshot is saved.
+            url: (str): The path where the screenshot is saved.
             window_width: (int): The width of the application.
             window_height: (int): The height of the application.
             delay: (int): The implicity timeout for an element to be found.
@@ -49,14 +48,8 @@ class OpenApp(AbstractTransaction):
 
 class CloseApp(AbstractTransaction):
     """
-    Closes the app and saves its screenshot (PNG)
-
-    Args:
-        screenshot_filename (str): the path where the screenshot is saved.
-        Examples: './myfile', '/path/to/myfile'
-        Defaults to 'guara-{datetime.now()}.png'.
+    The transaction class for closing an application.
     """
-
     def __init__(self, driver: Any):
         """
         Initializing the transaction
@@ -67,6 +60,15 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
+        """
+        Closing the application and saving a screenshot.
+
+        Args:
+            screenshot_filename: (str): The path where the screenshot is saved.
+
+        Returns:
+            (None)
+        """
         self._driver.get_screenshot_as_file(
             f"{screenshot_filename}-{datetime.now()}.png"
         )
