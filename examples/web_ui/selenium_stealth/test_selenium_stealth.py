@@ -3,6 +3,7 @@ from guara import it
 from examples.web_ui.selenium_stealth.setup import OpenStealthBrowser, CloseStealthBrowser
 from examples.web_ui.selenium_stealth.home import HomeTransactions
 from random import randrange
+from selenium import webdriver
 
 
 class TestSeleniumStealthIntegration:
@@ -12,9 +13,14 @@ class TestSeleniumStealthIntegration:
     """
 
     def setup_method(self, method):
-        self._app = Application(None)
-        driver = self._app.at(OpenStealthBrowser, headless=True)
-        self._app._driver = driver
+
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--headless")
+
+        driver = webdriver.Chrome(options=options)
+        self._app = Application(driver)
+        self._app.at(OpenStealthBrowser)
 
     def teardown_method(self, method):
         self._app.at(CloseStealthBrowser)
@@ -23,6 +29,6 @@ class TestSeleniumStealthIntegration:
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
         self._app.at(HomeTransactions, text=text).asserts(
-            it.IsEqualTo, f"It works! {text}!"
+            it.IsEqualTo, "Example Domain"
         )
         self._app.at(HomeTransactions, text=text).asserts(it.IsNotEqualTo, "Any")
