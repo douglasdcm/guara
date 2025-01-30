@@ -3,7 +3,7 @@ The module that deals with the assertion and validation of a
 transaction at the runtime.
 """
 
-from typing import Any, List
+from typing import Any, List, Dict
 from guara.assertion import IAssertion
 from logging import getLogger, Logger
 from re import match
@@ -50,16 +50,11 @@ class DoesNotContain(IAssertion):
 
 class HasKeyValue(IAssertion):
     """
-    Checks whether the `actual` dictionary has the key and value
-    set in `expected`. Returns when the first key-value pair is found and ignores
-    the remaining ones.
-
-    Args:
-        actual (dict): the dictionary to be inspected
-        expected (dict): the key-value pair to be found in `actual`
+    The assertion class for verifying that the actual object has
+    the expected data.
     """
 
-    def asserts(self, actual: Any, expected: Any) -> None:
+    def asserts(self, actual: Dict[str, Any], expected: Dict[str, Any]) -> None:
         for key, value in actual.items():
             if list(expected.keys())[0] in key and list(expected.values())[0] in value:
                 return
