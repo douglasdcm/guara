@@ -6,7 +6,7 @@ class SubmitSeleniumStealth(AbstractTransaction):
 
     def do(self, text):
         self._driver.get("https://example.com")
-        search_box = self._driver.find_element("name", "q")
+        search_box = self._driver.find_element("tag name", "h1")
         search_box.send_keys(text)
         search_box.submit()
         return self._driver.page_source
