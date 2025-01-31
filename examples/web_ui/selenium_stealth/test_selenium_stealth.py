@@ -40,4 +40,4 @@ class TestSeleniumStealthIntegration:
         self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
             it.Contains, "Example Domain"
         )
-        self._app.at(home, text=text).asserts(it.IsNotEqualTo, "Any")
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.IsNotEqualTo, "Any")
