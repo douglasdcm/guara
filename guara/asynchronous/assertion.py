@@ -40,7 +40,7 @@ class IAssertion:
         Raises:
             NotImplementedError: The method is not implemented in the subclass.
         """
-        raise NotImplementedError("The method is not implemented in the subclass.")
+        raise NotImplementedError("The method is not implemented by the subclass.")
 
     async def validates(self, actual: Any, expected: Any) -> None:
         """
