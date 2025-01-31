@@ -5,6 +5,8 @@ from selenium_stealth import stealth
 
 class OpenStealthBrowser(AbstractTransaction):
     """Initialize stealth browser"""
+    def __init__(self, driver=None):
+        super().__init__(driver)
 
     def do(self, headless: bool = True):
         options = webdriver.ChromeOptions()
@@ -29,5 +31,6 @@ class CloseStealthBrowser(AbstractTransaction):
         super().__init__(driver)
 
     def do(self):
-        if self._driver:
-            self._driver.quit()
+        if not self._driver:
+            raise RuntimeError("WebDriver instance is not set. Cannot close the browser.")
+        self._driver.quit()

@@ -1,9 +1,10 @@
 from guara.transaction import Application
 from guara import it
-from examples.web_ui.selenium_stealth.setup import OpenStealthBrowser, CloseStealthBrowser
-from examples.web_ui.selenium_stealth.home import HomeTransactions
+from examples.web_ui.selenium_stealth import setup
+from examples.web_ui.selenium_stealth import home
 from random import randrange
 from selenium import webdriver
+from selenium_stealth import stealth
 
 
 class TestSeleniumStealthIntegration:
@@ -19,16 +20,24 @@ class TestSeleniumStealthIntegration:
         options.add_argument("--headless")
 
         driver = webdriver.Chrome(options=options)
+        stealth(driver,
+                languages=["en-US", "en"],
+                vendor="Google Inc.",
+                platform="Win32",
+                webgl_vendor="Intel Inc.",
+                renderer="Intel Iris OpenGL Engine",
+                fix_hairline=True)
+
         self._app = Application(driver)
-        self._app.at(OpenStealthBrowser)
+        self._app.at(setup.OpenStealthBrowser)
 
     def teardown_method(self, method):
-        self._app.at(CloseStealthBrowser)
+        self._app.at(setup.CloseStealthBrowser)
 
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
-        self._app.at(HomeTransactions, text=text).asserts(
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
             it.Contains, "Example Domain"
         )
-        self._app.at(HomeTransactions, text=text).asserts(it.IsNotEqualTo, "Any")
+        self._app.at(home, text=text).asserts(it.IsNotEqualTo, "Any")
