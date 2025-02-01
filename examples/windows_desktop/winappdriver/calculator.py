@@ -2,6 +2,7 @@ from guara.transaction import AbstractTransaction
 from guara import it
 import logging
 
+
 class CalculatorTransactions(AbstractTransaction):
     """Perform calculator operations"""
 
