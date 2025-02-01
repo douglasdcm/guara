@@ -40,7 +40,6 @@ class Application:
         """
         The assertion logic to be used for validation.
         """
-        self._transaction_pool = []
 
     @property
     def result(self) -> Any:
