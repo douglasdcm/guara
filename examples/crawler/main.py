@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from guara.transaction import AbstractTransaction, Application
-from guara import it
 import json
 import time
 
@@ -40,7 +39,8 @@ HISTORY_DAYS = 5
 # Helper Functions
 def read_json_file(file_name, default_value):
     """
-    Reads a JSON file and returns its content. If the file is not found or invalid, returns a default value.
+    Reads a JSON file and returns its content. If the file is not found or invalid,
+    returns a default value.
 
     Args:
         file_name (str): The name of the JSON file to read.
