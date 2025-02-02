@@ -4,6 +4,4 @@ repos:
     hooks:
       - id: black
         args: [--line-length=100]
-        feat/winappdriver-integration
         language_version: python3.12
-        language_version: python3.11
