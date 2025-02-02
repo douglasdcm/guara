@@ -12,6 +12,7 @@ class OpenApp(AbstractTransaction):
     """
     The transaction class for opening an application.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction
@@ -50,6 +51,7 @@ class CloseApp(AbstractTransaction):
     """
     The transaction class for closing an application.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction
