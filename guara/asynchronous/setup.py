@@ -2,6 +2,7 @@
 The module that is reponsible for the opening and closing
 transactions.
 """
+
 from guara.asynchronous.transaction import AbstractTransaction
 from typing import Dict, Any
 
@@ -45,7 +46,7 @@ class CloseApp(AbstractTransaction):
         https://github.com/douglasdcm/caqui
     """
 
-    def __init__(self, driver: (Any)):
+    def __init__(self, driver: Any):
         """
         Initializing the transaction
 

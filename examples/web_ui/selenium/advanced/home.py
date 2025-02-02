@@ -86,9 +86,7 @@ class Search(AbstractTransaction):
                 wait_for,
             )
         )
-        return self._driver.find_element(
-            By.CSS_SELECTOR, ".row:nth-child(1) > .col-md-2 > p"
-        ).text
+        return self._driver.find_element(By.CSS_SELECTOR, ".row:nth-child(1) > .col-md-2 > p").text
 
     def do(self, text, wait_for):
         self.fill_text(text)

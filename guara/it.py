@@ -78,9 +78,7 @@ class MatchesRegex(IAssertion):
     def asserts(self, actual: str, expected: str) -> None:
         if match(expected, actual):
             return
-        raise AssertionError(
-            "The actual data does not match the expected regular expression."
-        )
+        raise AssertionError("The actual data does not match the expected regular expression.")
 
 
 class HasSubset(IAssertion):
