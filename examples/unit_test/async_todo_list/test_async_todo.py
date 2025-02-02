@@ -40,14 +40,10 @@ class TestAsyncToDo:
         """
         task: str = "buy cheese"
         expected: List[str] = [task]
-        await self._todo.at(transaction=Add, task=task).asserts(
-            IsEqualTo, expected
-        ).perform()
+        await self._todo.at(transaction=Add, task=task).asserts(IsEqualTo, expected).perform()
 
     @mark.asyncio
-    async def test_async_remove_task(
-        self, setup_test: Coroutine[Any, Any, None]
-    ) -> None:
+    async def test_async_remove_task(self, setup_test: Coroutine[Any, Any, None]) -> None:
         """
         Testing the remove task transaction.
 
@@ -60,14 +56,10 @@ class TestAsyncToDo:
         task: str = "buy cheese"
         expected: List[str] = []
         await self._todo.at(transaction=Add, task=task).perform()
-        await self._todo.at(transaction=Remove, task=task).asserts(
-            IsEqualTo, expected
-        ).perform()
+        await self._todo.at(transaction=Remove, task=task).asserts(IsEqualTo, expected).perform()
 
     @mark.asyncio
-    async def test_async_list_tasks(
-        self, setup_test: Coroutine[Any, Any, None]
-    ) -> None:
+    async def test_async_list_tasks(self, setup_test: Coroutine[Any, Any, None]) -> None:
         """
         Testing the listing of the tasks transaction.
 
