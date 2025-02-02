@@ -72,11 +72,7 @@ class Application:
         """
         return self._result
 
-    def at(
-        self,
-        transaction: AbstractTransaction,
-        **kwargs: Dict[str, Any]
-    ) -> "Application":
+    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Executing each transaction.
 
@@ -120,11 +116,7 @@ class Application:
             (Application)
         """
         for index in range(0, len(self._coroutines), 1):
-            (
-                await self.get_assertion(index)
-                if not await self.get_transaction(index)
-                else None
-            )
+            (await self.get_assertion(index) if not await self.get_transaction(index) else None)
         self._coroutines.clear()
         return self
 
@@ -138,9 +130,7 @@ class Application:
         Returns:
             (bool)
         """
-        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(
-            self._TRANSACTION
-        )
+        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
             LOGGER.info(f"Transaction: {self._transaction_name}")
             for key, value in self._kwargs.items():
