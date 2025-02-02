@@ -3,8 +3,10 @@ from guara import it
 import logging
 
 
-class CalculatorTransactions(AbstractTransaction):
-    """Perform calculator operations"""
+class SumNumbers(AbstractTransaction):
+    """Perform addition operation"""
+    def __init__(self, driver):
+        super().__init__(driver)
 
     def do(self, num1: int, num2: int):
         try:

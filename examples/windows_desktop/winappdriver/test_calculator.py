@@ -1,6 +1,7 @@
 from guara.transaction import Application
 from examples.windows_desktop.winappdriver import setup
 from examples.windows_desktop.winappdriver import calculator
+import pytest
 
 
 class TestCalculator:
@@ -14,5 +15,16 @@ class TestCalculator:
         self.app.at(setup.CloseAppTransaction(driver=self.app._driver))
 
     def test_addition(self):
-        result = self.app.at(calculator.CalculatorTransactions(), num1=5, num2=3)
-        result.asserts(calculator.CalculatorTransactions().validate_result, 8)
+        self.app.at(calculator.CalculatorTransactions, num1=5, num2=3).asserts(
+            calculator.CalculatorTransactions().validate_result, 8
+        )
+
+    def test_validate_result_success(self):
+        self.app.at(calculator.CalculatorTransactions, num1=5, num2=3).asserts(
+            calculator.CalculatorTransactions().validate_result, 8
+        )
+
+    def test_validate_result_failure(self):
+        self.app.at(calculator.CalculatorTransactions, num1=5, num2=3).asserts(
+            calculator.CalculatorTransactions().validate_result, 10
+        )

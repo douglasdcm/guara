@@ -1,5 +1,6 @@
 from guara.transaction import AbstractTransaction
 from appium import webdriver
+from guara.transaction import Application
 
 
 class OpenAppTransaction(AbstractTransaction):
@@ -17,7 +18,8 @@ class OpenAppTransaction(AbstractTransaction):
         self._driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4723',
             desired_capabilities=desired_caps
-            )
+        )
+        self._application = Application(self._driver)
         return self._driver
 
 
@@ -28,5 +30,4 @@ class CloseAppTransaction(AbstractTransaction):
         super().__init__(driver)
 
     def do(self):
-        if self._driver:
-            self._driver.quit()
+        self._driver.quit()
