@@ -10,7 +10,6 @@ from selenium.webdriver import ChromeOptions, Chrome
 from selenium.webdriver.chrome.options import Options
 from guara.setup import OpenApp, CloseApp
 from guara.it import IsEqualTo, IsNotEqualTo
-from typing import List
 from examples.web_ui.selenium.simple.local_page import home
 
 
