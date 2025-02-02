@@ -1,7 +1,6 @@
 from guara.transaction import Application
 from examples.windows_desktop.winappdriver import setup
 from examples.windows_desktop.winappdriver import calculator
-import pytest
 
 
 class TestCalculator:
