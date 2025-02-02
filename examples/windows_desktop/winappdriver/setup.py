@@ -26,7 +26,7 @@ class CloseAppTransaction(AbstractTransaction):
 
     def __init__(self, driver):
         super().__init__(driver)
-     
+
     def do(self):
         if self._driver:
             self._driver.quit()
