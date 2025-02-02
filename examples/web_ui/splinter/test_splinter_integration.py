@@ -25,7 +25,5 @@ class TestSplinterIntegration:
     def test_local_page(self):
         text = ["cheese", "splinter", "test", "bla", "foo"]
         text = text[random.randrange(len(text))]
-        self._app.at(home.SubmitTextSplinter, text=text).asserts(
-            it.IsEqualTo, f"It works! {text}!"
-        )
+        self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")
