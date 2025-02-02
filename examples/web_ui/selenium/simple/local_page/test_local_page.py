@@ -15,14 +15,10 @@ from examples.web_ui.selenium.simple.local_page import home
 
 class TestLocalPage:
     def setup_method(self) -> None:
-        file_path: Path = Path(
-            __file__
-        ).parent.parent.parent.parent.resolve()
+        file_path: Path = Path(__file__).parent.parent.parent.parent.resolve()
         options: Options = ChromeOptions()
         options.add_argument("--headless=new")
-        self._app: Application = Application(
-            Chrome(options=options)
-        )
+        self._app: Application = Application(Chrome(options=options))
         self._app.at(
             transaction=OpenApp,
             url=f"file:///{file_path}/sample.html",
