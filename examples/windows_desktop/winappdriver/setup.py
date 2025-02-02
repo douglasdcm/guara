@@ -4,7 +4,7 @@ from appium import webdriver
 
 class OpenAppTransaction(AbstractTransaction):
     """Launch Windows Calculator"""
-    
+
     def __init__(self, driver=None):
         super().__init__(driver)
 
@@ -23,10 +23,10 @@ class OpenAppTransaction(AbstractTransaction):
 
 class CloseAppTransaction(AbstractTransaction):
     """Close Calculator"""
-    
+
     def __init__(self, driver):
         super().__init__(driver)
-        
+     
     def do(self):
         if self._driver:
             self._driver.quit()

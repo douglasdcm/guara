@@ -8,7 +8,7 @@ class TestCalculator:
 
     def setup_method(self):
         self.app = Application()
-        self.app.at(setup.OpenAppTransaction(driver=self.app._driver))
+        self.app._driver = self.app.at(setup.OpenAppTransaction())._driver
 
     def teardown_method(self):
         self.app.at(setup.CloseAppTransaction(driver=self.app._driver))
