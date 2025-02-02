@@ -15,6 +15,7 @@ class IAssertion:
     It is the base class for implementing assertion logic which
     is used for validation and testing.
     """
+
     @property
     def __name__(self) -> property:
         """
