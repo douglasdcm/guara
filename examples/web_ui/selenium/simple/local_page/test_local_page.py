@@ -11,9 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from guara.setup import OpenApp, CloseApp
 from guara.it import IsEqualTo, IsNotEqualTo
 from typing import List
-from examples.web_ui.selenium.simple.local_page.home import (
-    SubmitText,
-)
+from examples.web_ui.selenium.simple.local_page import home
 
 
 class TestLocalPage:
@@ -37,21 +35,8 @@ class TestLocalPage:
     def teardown_method(self) -> None:
         self._app.at(CloseApp)
 
-    def test_local_page(self) -> None:
-        items: List[str] = [
-            "cheese",
-            "selenium",
-            "test",
-            "bla",
-            "foo",
-        ]
-        text: str = items[randrange(len(items))]
-        self._app.at(
-            transaction=SubmitText, text=text
-        ).asserts(
-            assertion=IsEqualTo,
-            expected=f"It works! {text}!",
-        )
-        self._app.at(
-            transaction=SubmitText, text=text
-        ).asserts(IsNotEqualTo, "Any")
+    def test_local_page(self):
+        text = ["cheese", "selenium", "test", "bla", "foo"]
+        text = text[randrange(len(text))]
+        self._app.at(home.SubmitText, text=text).asserts(IsEqualTo, f"It works! {text}!")
+        self._app.at(home.SubmitText, text=text).asserts(IsNotEqualTo, "Any")

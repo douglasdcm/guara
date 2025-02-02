@@ -46,6 +46,10 @@ class TestVpmTransaction:
             home.ChangeToEnglish
         ).result
         IsEqualTo().asserts(result, content_in_english)
+        self._app.at(home.ChangeToPortuguese).asserts(IsEqualTo, content_in_portuguese)
+        # uses native assertion
+        result = self._app.at(home.ChangeToEnglish).result
+        IsEqualTo().asserts(result, content_in_english)
         self._app.at(info.NavigateTo).asserts(
             assertion=Contains,
             expected=(
@@ -63,28 +67,15 @@ class TestVpmTransaction:
         self._app.at(home.NavigateTo).asserts(
             assertion=IsEqualTo, expected=content_in_english
         )
-        self._app.at(
-            transaction=home.DoRestrictedSearch,
-            text=text,
-            wait_for=restricted_similariy,
-        ).asserts(
-            assertion=IsEqualTo,
-            expected=restricted_similariy,
+        self._app.at(home.NavigateTo).asserts(IsEqualTo, content_in_english)
+        self._app.at(home.DoRestrictedSearch, text=text, wait_for=restricted_similariy).asserts(
+            IsEqualTo, restricted_similariy
         )
-        self._app.at(home.NavigateTo).asserts(
-            assertion=IsEqualTo, expected=content_in_english
+        self._app.at(home.NavigateTo).asserts(IsEqualTo, content_in_english)
+        self._app.at(home.DoExpandedSearch, text=text, wait_for=expanded_similarity).asserts(
+            IsEqualTo, expanded_similarity
         )
-        self._app.at(
-            transaction=home.DoExpandedSearch,
-            text=text,
-            wait_for=expanded_similarity,
-        ).asserts(
-            assertion=IsEqualTo,
-            expected=expanded_similarity,
-        )
-        self._app.at(home.NavigateTo).asserts(
-            assertion=IsEqualTo, expected=content_in_english
-        )
+        self._app.at(home.NavigateTo).asserts(IsEqualTo, content_in_english)
 
 
 @fixture

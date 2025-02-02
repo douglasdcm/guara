@@ -2,6 +2,7 @@
 The module that have all of the transactions needed for the
 To-Do List.
 """
+
 from guara.asynchronous.transaction import AbstractTransaction
 from examples.unit_test.async_todo_list.async_todo import AsyncToDo
 from typing import Any, List, Dict
@@ -11,6 +12,7 @@ class Add(AbstractTransaction):
     """
     The addition transaction
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction.
@@ -29,6 +31,7 @@ class Remove(AbstractTransaction):
     """
     The removal transaction.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction.
@@ -47,6 +50,7 @@ class ListTasks(AbstractTransaction):
     """
     The listing transaction
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction.
@@ -65,6 +69,7 @@ class PrintDict(AbstractTransaction):
     """
     The array to object conversion transaction.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction.
@@ -83,6 +88,7 @@ class GetBy(AbstractTransaction):
     """
     The transaction which will get a specific task by its index.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction.

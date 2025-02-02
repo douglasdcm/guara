@@ -69,7 +69,5 @@ class CloseApp(AbstractTransaction):
         Returns:
             (None)
         """
-        self._driver.get_screenshot_as_file(
-            f"{screenshot_filename}-{datetime.now()}.png"
-        )
+        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
         self._driver.quit()

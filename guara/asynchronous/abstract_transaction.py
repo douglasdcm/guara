@@ -2,6 +2,7 @@
 It is the module where the interface of the transaction will
 handle web transactions in an automated browser.
 """
+
 from typing import Any, NoReturn, Union, Dict
 
 
@@ -9,6 +10,7 @@ class AbstractTransaction:
     """
     It will handle web transactions in an automated browser.
     """
+
     @property
     def __name__(self) -> property:
         """
