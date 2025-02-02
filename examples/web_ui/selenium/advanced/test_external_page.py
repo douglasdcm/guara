@@ -21,9 +21,7 @@ class TestVpmTransaction:
     def setup_method(self) -> None:
         options: Options = ChromeOptions()
         options.add_argument("--headless=new")
-        self._app: Application = Application(
-            Chrome(options=options)
-        )
+        self._app: Application = Application(Chrome(options=options))
         self._app.at(
             transaction=OpenApp,
             url="https://vagaspramim.onrender.com/",
@@ -42,9 +40,7 @@ class TestVpmTransaction:
             assertion=IsEqualTo,
             expected=content_in_portuguese,
         )
-        result: Any = self._app.at(
-            home.ChangeToEnglish
-        ).result
+        result: Any = self._app.at(home.ChangeToEnglish).result
         IsEqualTo().asserts(result, content_in_english)
         self._app.at(home.ChangeToPortuguese).asserts(IsEqualTo, content_in_portuguese)
         # uses native assertion
@@ -57,16 +53,12 @@ class TestVpmTransaction:
                 " people to find jobs more easily."
             ),
         )
-        self._app.at(home.NavigateTo).asserts(
-            assertion=IsEqualTo, expected=content_in_english
-        )
+        self._app.at(home.NavigateTo).asserts(assertion=IsEqualTo, expected=content_in_english)
         self._app.at(contact.NavigateTo).asserts(
             assertion=IsEqualTo,
             expected="Contact us. We would be happy to answer your questions.",
         )
-        self._app.at(home.NavigateTo).asserts(
-            assertion=IsEqualTo, expected=content_in_english
-        )
+        self._app.at(home.NavigateTo).asserts(assertion=IsEqualTo, expected=content_in_english)
         self._app.at(home.NavigateTo).asserts(IsEqualTo, content_in_english)
         self._app.at(home.DoRestrictedSearch, text=text, wait_for=restricted_similariy).asserts(
             IsEqualTo, restricted_similariy
@@ -79,9 +71,7 @@ class TestVpmTransaction:
 
 
 @fixture
-def setup_application() -> (
-    Generator[Application, Any, None]
-):
+def setup_application() -> Generator[Application, Any, None]:
     configuration: Dict[str, Union[str, int, float]] = {
         "url": "https://vagaspramim.onrender.com/",
         "window_width": 1094,
@@ -108,13 +98,9 @@ def test_vpm_transaction_builder(
     expanded_similarity: str = "Similarity 15.4%"
     content_in_english: str = "Content of curriculum"
     content_in_portuguese: str = "Conteúdo do currículo"
-    app.at(home.ChangeToPortuguese).asserts(
-        assertion=IsEqualTo, expected=content_in_portuguese
-    ).at(home.ChangeToEnglish).asserts(
-        assertion=IsEqualTo, expected=content_in_english
-    ).at(
-        info.NavigateTo
-    ).asserts(
+    app.at(home.ChangeToPortuguese).asserts(assertion=IsEqualTo, expected=content_in_portuguese).at(
+        home.ChangeToEnglish
+    ).asserts(assertion=IsEqualTo, expected=content_in_english).at(info.NavigateTo).asserts(
         assertion=Contains,
         expected=(
             "This project was born from the will of its collaborators to"
