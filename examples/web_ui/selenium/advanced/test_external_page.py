@@ -47,9 +47,7 @@ class TestVpmTransaction:
             home.DoRestrictedSearch, text=text, wait_for=restricted_similariy
         ).asserts(it.IsEqualTo, restricted_similariy)
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
-        self._app.at(
-            home.DoExpandedSearch, text=text, wait_for=expanded_similarity
-        ).asserts(it.IsEqualTo, expanded_similarity)
+        self._app.at(home.DoExpandedSearch, text=text, wait_for=expanded_similarity).asserts(it.IsEqualTo, expanded_similarity)
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
 
 
