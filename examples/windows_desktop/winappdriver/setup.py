@@ -16,7 +16,9 @@ class OpenAppTransaction(AbstractTransaction):
         options.set_capability("platformName", "Windows")
         options.set_capability("deviceName", "WindowsPC")
 
-        self._driver = webdriver.Remote(command_executor="http://127.0.0.1:4723", options=options)
+        self._driver = webdriver.Remote(
+            command_executor="http://localhost:4723/wd/hub", options=options
+        )
         self._application = Application(self._driver)
         return self._driver
 
