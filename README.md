@@ -24,6 +24,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 - [Using other Web Drivers](#Using-other-Web-Drivers)<br>
 - [Asynchronous execution](#Asynchronous-execution)<br>
 - [ChatGPT assistance](#ChatGPT-assistance)<br>
+- [Page Transactions and Page Objects Model](https://github.com/douglasdcm/guara/tree/main/docs/PT_AND_POM.md)
 - [Non-testers usage](#Non-testers-usage)<br>
 - [Contributing](#Contributing)<br>
 
@@ -37,7 +38,11 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
-# The pattern
+## Demonstration
+[![Watch the video](./docs/images/guara-demo.png)](https://www.youtube.com/watch?v=r2pCN2jG7Nw)
+
+
+# The pattern Explained
 <p align="center">
     <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/uml_abstract_transaction.png?raw=true" width="800" height="300" />
 </p>

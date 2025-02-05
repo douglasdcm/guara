@@ -2,6 +2,7 @@
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser.
 """
+
 from typing import Any, NoReturn, Union, Dict
 
 
@@ -9,6 +10,7 @@ class AbstractTransaction:
     """
     It will handle web transactions in an automated browser.
     """
+
     def __init__(self, driver: Any):
         """
         Initializing the transaction which will allow it to interact
