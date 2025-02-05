@@ -39,7 +39,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
 ## Demonstration
-[![Watch the video](./docs/images/guara-demo.png)](https://www.youtube.com/watch?v=B21rkofwXog)
+[![Watch the video](./docs/images/guara-demo.png)](https://www.youtube.com/watch?v=r2pCN2jG7Nw)
 
 
 # The pattern Explained
