@@ -24,6 +24,7 @@ The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of i
 - [Using other Web Drivers](#Using-other-Web-Drivers)<br>
 - [Asynchronous execution](#Asynchronous-execution)<br>
 - [ChatGPT assistance](#ChatGPT-assistance)<br>
+- [Page Transactions and Page Objects Model](https://github.com/douglasdcm/guara/tree/main/docs/PT_AND_POM.md)
 - [Non-testers usage](#Non-testers-usage)<br>
 - [Contributing](#Contributing)<br>
 
