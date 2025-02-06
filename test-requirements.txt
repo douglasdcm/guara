@@ -19,5 +19,4 @@ opencv-python
 dogtail
 splinter
 rpa
-selenium-stealth
-
+psutil

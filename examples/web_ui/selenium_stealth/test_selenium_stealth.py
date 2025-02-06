@@ -14,22 +14,29 @@ class TestSeleniumStealthIntegration:
     """
 
     def setup_method(self, method):
-
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument("--headless")
+        options.add_argument("--headless=new")
 
         driver = webdriver.Chrome(options=options)
-        stealth(driver,
-                languages=["en-US", "en"],
-                vendor="Google Inc.",
-                platform="Win32",
-                webgl_vendor="Intel Inc.",
-                renderer="Intel Iris OpenGL Engine",
-                fix_hairline=True)
+        stealth(
+            driver,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True,
+        )
 
         self._app = Application(driver)
-        self._app.at(setup.OpenStealthBrowser)
+        self._app.at(
+            setup.OpenStealthBrowser,
+            url="https://example.com",
+            window_width=1094,
+            window_height=765,
+            implicitly_wait=0.5,
+        )
 
     def teardown_method(self, method):
         self._app.at(setup.CloseStealthBrowser)
@@ -37,7 +44,5 @@ class TestSeleniumStealthIntegration:
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
-        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
-            it.Contains, "Example Domain"
-        )
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.Contains, "Example Domain")
         self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.IsNotEqualTo, "Any")
