@@ -1,8 +1,11 @@
+from pathlib import Path
 from pytest import fixture
 from selenium import webdriver
 from examples.web_ui.selenium.advanced import home, contact, info
 from guara.transaction import Application
 from guara import it, setup
+
+FILE_PATH = Path(__file__).parent.resolve()
 
 
 class TestVpmTransaction:
@@ -12,7 +15,7 @@ class TestVpmTransaction:
         self._app = Application(webdriver.Chrome(options=options))
         self._app.at(
             setup.OpenApp,
-            url="https://vagaspramim.onrender.com/",
+            url=f"file:///{FILE_PATH}/html/index.html",
         )
 
     def teardown_method(self, method):
@@ -26,7 +29,6 @@ class TestVpmTransaction:
         content_in_portuguese = "Conteúdo do currículo"
 
         self._app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
-        # uses native assertion
         result = self._app.at(home.ChangeToEnglish).result
         it.IsEqualTo().asserts(result, content_in_english)
         self._app.at(info.NavigateTo).asserts(
@@ -54,7 +56,7 @@ class TestVpmTransaction:
 @fixture
 def setup_application():
     configuration = {
-        "url": "https://vagaspramim.onrender.com/",
+        "url": f"file:///{FILE_PATH}/html/index.html",
         "window_width": 1094,
         "window_height": 765,
         "implicitly_wait": 0.5,
