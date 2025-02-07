@@ -3,18 +3,6 @@
 ## Overview
 This project demonstrates the integration of **RPA for Python** with a local desktop application using the **Guara framework**. It contains an automated test suite implemented with **pytest**, following the **Page Transactions (PT) pattern** for better maintainability and reusability of test automation.
 
-## Prerequisites
-Ensure you have the following installed:
-- Python 3.11+
-- `rpa` (Robotic Process Automation for Python)
-- `pytest` (for running tests)
-- `guara` (for transaction-based UI automation)
-
-You can install the required dependencies using:
-```sh
-pip install rpa pytest guara
-```
-
 ## Project Structure
 ```
 project-root/
@@ -75,20 +63,7 @@ def test_submit_text(self):
 ```
 - The test inputs the text **"Hello, RPA for Python!"** into the application and verifies the expected output using assertions.
 
-## Running the Tests
-To execute the test suite, run:
-```sh
-pytest test_rpa.py
-```
-
 ## Notes
 - This implementation follows the **Page Transactions (PT) pattern**, making automation code modular and reusable.
 - Update `app_path` to the actual executable path before running the tests.
 - The `@pytest.mark.skip` decorator can be removed if running in a local setup.
-
-## Contributing
-Feel free to modify and extend the tests to cover more application workflows. Pull requests are welcome!
-
-## License
-This project is licensed under the MIT License.
-

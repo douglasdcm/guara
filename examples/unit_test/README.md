@@ -7,19 +7,6 @@ Even being possible to use this framework with unit tests it is overkill.
 ## Overview
 This project demonstrates how to test **asynchronous transactions** on a **To-Do List**, **calculator operations**, and **To-Do List operations** using the **Guara framework**. The test suites are implemented using **pytest-asyncio**, **unittest-based frameworks**, and **Guara's transaction-based approach**, following the **Page Transactions (PT) pattern** for improved modularity and maintainability.
 
-## Prerequisites
-Ensure you have the following installed:
-- Python 3.7+
-- `pytest` (for running tests)
-- `pytest-asyncio` (for asynchronous test execution)
-- `unittest` (for standard test cases)
-- `guara` (for transaction-based UI automation)
-
-You can install the required dependencies using:
-```sh
-pip install pytest pytest-asyncio guara
-```
-
 ## Project Structure
 ```
 project-root/
@@ -67,12 +54,6 @@ async def setup_test(self) -> None:
     self._todo: Application = Application(AsyncToDo())
 ```
 
-### Running the Tests
-To execute the test suite, run:
-```sh
-pytest test_async_todo.py
-```
-
 ---
 
 ## Calculator Test Automation
@@ -98,12 +79,6 @@ class TestCalculator:
 ```
 - Initializes a `Calculator` application instance using Guara's transaction-based approach.
 
-### Running the Tests
-To execute the test suite, run:
-```sh
-pytest test_calculator.py
-```
-
 ---
 
 ## To-Do List Test Automation
@@ -127,12 +102,6 @@ class TestToDo:
 ```
 - Initializes a `To-Do List` application instance using Guara's transaction-based approach.
 
-### Running the Tests
-To execute the test suite, run:
-```sh
-pytest test_todo.py
-```
-
 ---
 
 ## Notes
@@ -141,9 +110,4 @@ pytest test_todo.py
 - The **Calculator tests** support multiple test frameworks, including `unittest` and `Testify`.
 - The **To-Do List tests** cover additional transactions like `PrintDict` and `GetBy`.
 
-## Contributing
-Feel free to modify and extend the tests to cover more operations. Pull requests are welcome!
-
-## License
-This project is licensed under the MIT License.
 

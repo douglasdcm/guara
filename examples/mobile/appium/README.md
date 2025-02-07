@@ -3,19 +3,6 @@
 ## Overview
 This project demonstrates how to integrate **Appium** with a local mobile application using the **Guara framework**. It contains an automated test suite implemented with **pytest**, following the **Page Transactions (PT) pattern** for better modularity and maintainability.
 
-## Prerequisites
-Ensure you have the following installed:
-- Python 3.7+
-- `pytest` (for running tests)
-- `appium-python-client` (for Appium automation)
-- `guara` (for transaction-based UI automation)
-- Appium server running on `http://localhost:4723`
-
-You can install the required dependencies using:
-```sh
-pip install pytest appium-python-client guara
-```
-
 ## Project Structure
 ```
 project-root/
@@ -97,20 +84,9 @@ def test_local_page(self):
 - It submits the text to the application and asserts that the expected response matches `"It works! {text}!"`.
 - A negative assertion checks that the response is not `"Any"`.
 
-## Running the Tests
-To execute the test suite, run:
-```sh
-pytest test_appium.py
-```
-
 ## Notes
 - Update `app` in `desired_caps` with the correct APK path before running the tests.
 - Ensure the Appium server is running on `http://localhost:4723`.
 - The `@mark.skip` decorator can be removed for local execution.
 
-## Contributing
-Feel free to modify and extend the tests to cover more application workflows. Pull requests are welcome!
-
-## License
-This project is licensed under the MIT License.
 

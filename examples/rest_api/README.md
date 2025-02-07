@@ -3,17 +3,6 @@
 ## Overview
 This project demonstrates how to test a **REST API** using the **Guara framework**. The test suite is implemented using **pytest** and follows the **Page Transactions (PT) pattern** to enhance modularity and maintainability.
 
-## Prerequisites
-Ensure you have the following installed:
-- Python 3.11+
-- `pytest` (for running tests)
-- `guara` (for transaction-based API testing)
-
-You can install the required dependencies using:
-```sh
-pip install pytest guara
-```
-
 ## Project Structure
 ```
 project-root/
@@ -77,19 +66,7 @@ def test_post(self):
 - Sends a **POST** request with a body payload.
 - Asserts that the response body matches the expected data.
 
-## Running the Tests
-To execute the test suite, run:
-```sh
-pytest test_rest_api.py
-```
-
 ## Notes
 - The **Guara framework** is used to structure API tests using transactions, making it easy to reuse test logic.
 - The API being tested is an **echo API**, meaning it simply returns the sent request data.
-
-## Contributing
-Feel free to modify and extend the tests to cover more API endpoints and scenarios. Pull requests are welcome!
-
-## License
-This project is licensed under the MIT License.
 
