@@ -1,4 +1,8 @@
-# Update
+# Introduction
+[Dogtail](https://gitlab.com/dogtail/dogtail) is a GUI test tool and automation framework written in ​Python.
+
+
+# Update of the issue
 
 The [issue](https://gitlab.com/dogtail/dogtail/-/issues/37) that was avoiding the execution of test was solved doing [this](https://gitlab.com/dogtail/dogtail/-/issues/37#note_2304763633). So, if you face this error, this it. As the issue was solved I'm adding the files with the example. Check more datails in [The context of the issue](#The-context-of-the-issue)
 
@@ -8,9 +12,6 @@ To run, use `venv`
 python -m venv venv
 source venv/bin/activate
 ```
-
-# Introduction
-[Dogtail](https://gitlab.com/dogtail/dogtail) is a GUI test tool and automation framework written in ​Python.
 
 ## Test explanation
 Before executing this example make sure your host matches the [requirements](https://gitlab.com/dogtail/dogtail#dependencies) to install dogtail.
