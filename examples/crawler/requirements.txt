@@ -1,0 +1,3 @@
+webdriver_manager
+bs4
+guara
