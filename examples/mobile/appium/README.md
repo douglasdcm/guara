@@ -1,3 +1,6 @@
+# Introduction
+[Appium](http://appium.io/docs/en/latest/#) is an open-source project and ecosystem of related software, designed to facilitate UI automation of many app platforms, including mobile (iOS, Android, Tizen), browser (Chrome, Firefox, Safari), desktop (macOS, Windows), TV (Roku, tvOS, Android TV, Samsung), and more!
+
 # README: Appium Test Automation with Guara Framework
 
 ## Overview

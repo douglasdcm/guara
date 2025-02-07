@@ -1,3 +1,6 @@
+# Introduction
+[Helium](https://github.com/mherrmann/helium) is lighter web automation with Python. It is a library for automating browsers such as Chrome and Firefox.
+
 # Helium Integration Testing with Guara
 
 This project demonstrates how to integrate [Helium](https://github.com/mherrmann/helium) with Guará for web UI testing using the Page Transactions (PT) pattern. The test suite automates interactions with a local HTML page and verifies expected behaviors.

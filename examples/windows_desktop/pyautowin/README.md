@@ -1,3 +1,6 @@
+# Introduction
+[PyAutoWin](https://pywinauto.readthedocs.io/en/latest/) is a set of python modules to automate the Microsoft Windows GUI. At its simplest it allows you to send mouse and keyboard actions to windows dialogs and controls.
+
 # PyAutoWin Integration Testing with Guara
 
 This project demonstrates how to integrate **PyAutoWin** with **Guará's Page Transactions (PT) pattern** to automate interactions with a local Windows application.

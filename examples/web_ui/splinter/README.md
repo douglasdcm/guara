@@ -1,3 +1,6 @@
+# Introduction
+[Splinter](https://splinter.readthedocs.io/en/stable/) is a Python framework that provides a simple and consistent interface for web application automation.
+
 # Splinter Integration Testing with Guara
 
 This project demonstrates how to integrate [Splinter](https://splinter.readthedocs.io/en/stable/) with **Guará's Page Transactions (PT) pattern** to test a local HTML page.

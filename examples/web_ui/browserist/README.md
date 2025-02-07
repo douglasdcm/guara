@@ -1,3 +1,6 @@
+# Introduction
+[Browserist](https://github.com/jakob-bagterp/browserist) is a Python extension for the Selenium web driver that makes browser automation even easier 
+
 # Browserist Integration Testing with Guara
 
 This project demonstrates how to integrate [Browserist](https://github.com/jakob-bagterp/browserist) with Guará for web UI testing using the Page Transactions (PT) pattern. The test suite automates interactions with a local HTML page and verifies expected behaviors.

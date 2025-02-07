@@ -1,6 +1,6 @@
 # Selenium Stealth Integration Testing with Guara
 
-This project demonstrates how to integrate **Selenium Stealth** with **Guará's Page Transactions (PT) pattern** to automate interactions with a web page while avoiding bot detection mechanisms.
+This project demonstrates how to integrate [Selenium Stealth](https://pypi.org/project/selenium-stealth/) with **Guará's Page Transactions (PT) pattern** to automate interactions with a web page while avoiding bot detection mechanisms.
 
 ## Code Breakdown
 

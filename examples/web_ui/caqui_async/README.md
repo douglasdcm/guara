@@ -1,4 +1,5 @@
 # Introduction
+[Caqui](https://github.com/douglasdcm/caqui) is an agnostic (Desktop, Mobile and Web) driver which performs sync and async operations on UIs.
 
 The folder `asynchronous` contains the example of asynchronous execution using [Caqui](https://github.com/douglasdcm/caqui). The folder `synchronous` is the same synchronous test for performance comparison
 
