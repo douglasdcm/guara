@@ -244,8 +244,8 @@ def get_aena_data():
     # Save flight data and close browser
     app.at(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
     app.at(CloseBrowser)
-        flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
-        all_flights_data.extend(flights)
+    flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
+    all_flights_data.extend(flights)
 
     # Save flight data and close browser
     app.when(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
