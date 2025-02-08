@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from caqui import asynchronous
 from guara.transaction import AbstractTransaction
 from examples.web_ui.caqui_async.constants import MAX_INDEX

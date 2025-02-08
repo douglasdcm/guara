@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 The module that has all of the transactions.
 """
@@ -66,6 +71,21 @@ class Application:
             LOGGER.info(f" {key}: {value}")
         self._result = self._transaction.do(**kwargs)
         return self
+
+    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+        """
+        Same as the `at` method. Introduced for better readability.
+
+        Performing a transaction.
+
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
+
+        Returns:
+            (Application)
+        """
+        return self.at(transaction, **kwargs)
 
     def asserts(self, assertion: IAssertion, expected: Any) -> "Application":
         """

@@ -8,7 +8,11 @@
 
 Guará is the Python implementation of the design pattern `Page Transactions`. The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
 
-## Sample
+## Demonstration
+[![Watch the video](./images/guara-demo.png)](https://www.youtube.com/watch?v=r2pCN2jG7Nw)
+
+
+## Sample code
 
 ```python
 from selenium import webdriver

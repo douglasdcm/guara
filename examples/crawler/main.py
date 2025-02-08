@@ -1,3 +1,7 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
@@ -229,6 +233,7 @@ def get_aena_data():
 
     # Open the AENA page
     app.at(OpenAenaPage)
+    app.when(OpenAenaPage)
 
     # Process data for each airport
     all_flights_data = []
@@ -239,6 +244,12 @@ def get_aena_data():
     # Save flight data and close browser
     app.at(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
     app.at(CloseBrowser)
+        flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
+        all_flights_data.extend(flights)
+
+    # Save flight data and close browser
+    app.when(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
+    app.when(CloseBrowser)
 
     # Update script status
     script_status["last_run"] = datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")

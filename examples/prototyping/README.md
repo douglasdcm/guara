@@ -17,7 +17,7 @@ python -m http.server
 3. Interact with the page
 4. Add more transactions ot `operation.py` file and bind them with Pyscript using the `Application` involker. It is necessary to restart the server and refresh the page to apply the changes.
 
-# A brief explanation of the code (ChatGPT helped me :)
+# A brief explanation of the code
 
 > [!TIP]
 > The complete code is in `todo` folder. You can get and change it to to your demanad.
