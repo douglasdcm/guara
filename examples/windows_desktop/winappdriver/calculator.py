@@ -45,7 +45,3 @@ class SumNumbers(AbstractTransaction):
         except Exception as e:
             logging.error(f"Error extracting result: {e}")
             raise
-
-    def validate_result(self, expected: int):
-        """Custom assertion"""
-        return it.IsEqualTo(value=str(expected))
