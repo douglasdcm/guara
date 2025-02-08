@@ -5,6 +5,7 @@ import logging
 
 class SumNumbers(AbstractTransaction):
     """Perform addition operation"""
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -34,9 +35,11 @@ class SumNumbers(AbstractTransaction):
     def _get_result(self):
         """Extract displayed result"""
         try:
-            result = self._driver.find_element(
-                "xpath", "//*[@AutomationId='CalculatorResults']"
-            ).text.replace("Display is", "").strip()
+            result = (
+                self._driver.find_element("xpath", "//*[@AutomationId='CalculatorResults']")
+                .text.replace("Display is", "")
+                .strip()
+            )
             logging.info(f"Extracted result: {result}")
             return result
         except Exception as e:
