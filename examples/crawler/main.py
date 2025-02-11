@@ -232,7 +232,6 @@ def get_aena_data():
     script_status = read_json_file("script_status.json", {"airports": {}, "status": None})
 
     # Open the AENA page
-    app.at(OpenAenaPage)
     app.when(OpenAenaPage)
 
     # Process data for each airport

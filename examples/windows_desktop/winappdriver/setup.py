@@ -1,6 +1,5 @@
 from guara.transaction import AbstractTransaction
 from appium import webdriver
-from guara.transaction import Application
 from appium.options.windows import WindowsOptions
 
 
@@ -19,8 +18,6 @@ class OpenAppTransaction(AbstractTransaction):
         self._driver = webdriver.Remote(
             command_executor="http://localhost:4723/wd/hub", options=options
         )
-        self._application = Application(self._driver)
-        return self._driver
 
 
 class CloseAppTransaction(AbstractTransaction):
