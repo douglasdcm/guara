@@ -2,6 +2,7 @@
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
+
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
@@ -237,14 +238,8 @@ def get_aena_data():
     # Process data for each airport
     all_flights_data = []
     for airport in AIRPORTS:
-        flights = app.at(ProcessAirportData, airport=airport, script_status=script_status).result
+        flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
         all_flights_data.extend(flights)
-
-    # Save flight data and close browser
-    app.at(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
-    app.at(CloseBrowser)
-    flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
-    all_flights_data.extend(flights)
 
     # Save flight data and close browser
     app.when(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
