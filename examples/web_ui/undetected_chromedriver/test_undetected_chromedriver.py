@@ -8,9 +8,7 @@ class TestUndetectedChromeDriver:
     def setup_method(self, method):
         """Initialize the browser"""
         self._app = Application()
-        self._app._driver = self._app.at(
-            setup.OpenBrowserTransaction
-        )._driverself._app._driver = self._app.at(setup.OpenBrowserTransaction)._driver
+        self._app._driver = self._app.at(setup.OpenBrowserTransaction)._driver
 
     def teardown_method(self, method):
         """Close the browser"""
