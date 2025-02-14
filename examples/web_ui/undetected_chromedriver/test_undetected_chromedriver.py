@@ -5,14 +5,16 @@ from examples.web_ui.undetected_chromedriver import setup, actions
 
 
 class TestUndetectedChromeDriver:
-    def setup_method(self):
+    def setup_method(self, method):
         """Initialize the browser"""
         self._app = Application()
-        self._app.at(setup.OpenBrowserTransaction)
+        self._app._driver = self._app.at(
+            setup.OpenBrowserTransaction
+        )._driverself._app._driver = self._app.at(setup.OpenBrowserTransaction)._driver
 
-    def teardown_method(self):
+    def teardown_method(self, method):
         """Close the browser"""
-        self._app.at(setup.CloseBrowserTransaction)
+        self._app.at(setup.CloseBrowserTransaction, driver=self._app._driver)
 
     @pytest.mark.parametrize("query", ["Guara framework", "undetected-chromedriver"])
     def test_google_search(self, query):

@@ -24,7 +24,7 @@ class OpenBrowserTransaction(AbstractTransaction):
 class CloseBrowserTransaction(AbstractTransaction):
     """Close the browser safely"""
 
-    def __init__(self, driver=None):  # Make driver optional
+    def __init__(self, driver):
         super().__init__(driver)
 
     def do(self):
