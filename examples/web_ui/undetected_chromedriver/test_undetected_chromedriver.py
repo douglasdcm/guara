@@ -8,8 +8,8 @@ class TestUndetectedChromeDriver:
         """Lazy import to avoid breaking the pipeline"""
         from examples.web_ui.undetected_chromedriver import setup
 
-        self.app = Application()
-        self.app._driver = self._app.at(setup.OpenBrowserTransaction)._driver
+        self._app = Application()
+        self._app._driver = self.app.at(setup.OpenBrowserTransaction)._driver
 
     def teardown_method(self, method):
         """Lazy import to avoid breaking the pipeline"""
