@@ -9,12 +9,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractTransaction:
     def __init__(self, driver: Any):
         self._driver = driver
 
     async def do(self, **kwargs) -> Any:
         raise NotImplementedError("Subclasses must implement do()")
+
 
 class TransactionExecutor:
     def __init__(self, transaction: AbstractTransaction, kwargs: dict):
@@ -35,19 +37,22 @@ class TransactionExecutor:
 
     def asserts(self, assertion: Any, expected: Any) -> "TransactionExecutor":
         """Run an assertion on the transaction result."""
-        if hasattr(assertion, 'asserts'):  # Check if it's an IAssertion class
+        if hasattr(assertion, "asserts"):  # Check if it's an IAssertion class
             assertion_instance = assertion()
             assertion_instance.asserts(self._result, expected)
         else:
             assertion(self._result, expected)
         return self
 
+
 class Application:
     def __init__(self, driver: Any):
         self._driver = driver
         self._result = None
 
-    async def at(self, transaction_cls: Type[AbstractTransaction], **kwargs) -> TransactionExecutor:
+    async def at(
+        self, transaction_cls: Type[AbstractTransaction], **kwargs
+    ) -> TransactionExecutor:
         """Set up and execute a transaction asynchronously."""
         transaction = transaction_cls(self._driver)
         executor = TransactionExecutor(transaction, kwargs)
