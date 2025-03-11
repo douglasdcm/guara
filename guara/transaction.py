@@ -3,102 +3,57 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-"""
-The module that has all of the transactions.
-"""
+import asyncio
+from typing import Any, Type, Optional
+import logging
 
-from typing import Any, Dict
-from guara.it import IAssertion
-from guara.utils import get_transaction_info
-from logging import getLogger, Logger
-from guara.abstract_transaction import AbstractTransaction
+logger = logging.getLogger(__name__)
 
+class AbstractTransaction:
+    def __init__(self, driver: Any):
+        self._driver = driver
 
-LOGGER: Logger = getLogger("guara")
+    async def do(self, **kwargs) -> Any:
+        raise NotImplementedError("Subclasses must implement do()")
 
+class TransactionExecutor:
+    def __init__(self, transaction: AbstractTransaction, kwargs: dict):
+        self._transaction = transaction
+        self._kwargs = kwargs
+        self._result = None
 
-class Application:
-    """
-    This is the runner of the automation.
-    """
-
-    def __init__(self, driver: Any = None):
-        """
-        Initializing the application with a driver.
-
-        Args:
-            driver: (Any): This is the driver of the system being under test.
-        """
-        self._driver: Any = driver
-        """
-        It is the driver that has a transaction.
-        """
-        self._result: Any = None
-        """
-        It is the result data of the transaction.
-        """
-        self._transaction: AbstractTransaction
-        """
-        The web transaction handler.
-        """
-        self._assertion: IAssertion
-        """
-        The assertion logic to be used for validation.
-        """
-
-    @property
-    def result(self) -> Any:
-        """
-        It is the result data of the transaction.
-        """
+    async def execute(self) -> Any:
+        """Execute the transaction, handling both sync and async do methods."""
+        logger.info(f"Transaction: {self._transaction.__class__.__name__}")
+        for key, value in self._kwargs.items():
+            logger.info(f" {key}: {value}")
+        if asyncio.iscoroutinefunction(self._transaction.do):
+            self._result = await self._transaction.do(**self._kwargs)
+        else:
+            self._result = self._transaction.do(**self._kwargs)
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
-        """
-        Performing a transaction.
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
-
-        Returns:
-            (Application)
-        """
-        self._transaction = transaction(self._driver)
-        transaction_info: str = get_transaction_info(self._transaction)
-        LOGGER.info(f"Transaction: {transaction_info}")
-        for key, value in kwargs.items():
-            LOGGER.info(f" {key}: {value}")
-        self._result = self._transaction.do(**kwargs)
+    def asserts(self, assertion: Any, expected: Any) -> "TransactionExecutor":
+        """Run an assertion on the transaction result."""
+        if hasattr(assertion, 'asserts'):  # Check if it's an IAssertion class
+            assertion_instance = assertion()
+            assertion_instance.asserts(self._result, expected)
+        else:
+            assertion(self._result, expected)
         return self
 
-    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
-        """
-        Same as the `at` method. Introduced for better readability.
+class Application:
+    def __init__(self, driver: Any):
+        self._driver = driver
+        self._result = None
 
-        Performing a transaction.
+    async def at(self, transaction_cls: Type[AbstractTransaction], **kwargs) -> TransactionExecutor:
+        """Set up and execute a transaction asynchronously."""
+        transaction = transaction_cls(self._driver)
+        executor = TransactionExecutor(transaction, kwargs)
+        self._result = await executor.execute()
+        return executor
 
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
-
-        Returns:
-            (Application)
-        """
-        return self.at(transaction, **kwargs)
-
-    def asserts(self, assertion: IAssertion, expected: Any) -> "Application":
-        """
-        Asserting and validating the data by implementing the
-        Strategy Pattern from the Gang of Four.
-
-        Args:
-            assertion: (IAssertion): The assertion logic to be used for validation.
-            expected: (Any): The expected data.
-
-        Returns:
-            (Application)
-        """
-        self._assertion = assertion()
-        self._assertion.validates(self._result, expected)
-        return self
+    @property
+    def result(self) -> Optional[Any]:
+        return self._result
