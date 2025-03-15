@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from pathlib import Path
 from random import randrange
 from guara.transaction import Application
@@ -26,7 +31,5 @@ class TestBrowseristIntegration:
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
-        self._app.at(home.SubmitText, text=text).asserts(
-            it.IsEqualTo, f"It works! {text}!"
-        )
+        self._app.at(home.SubmitText, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(home.SubmitText, text=text).asserts(it.IsNotEqualTo, "Any")

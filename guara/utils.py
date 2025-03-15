@@ -1,7 +1,13 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 The module to be used to retrieve the information of the
 transaction.
 """
+
 from typing import Any
 
 

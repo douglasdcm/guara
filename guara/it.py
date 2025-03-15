@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 The module that deals with the assertion and validation of a
 transaction at the runtime.
@@ -78,9 +83,7 @@ class MatchesRegex(IAssertion):
     def asserts(self, actual: str, expected: str) -> None:
         if match(expected, actual):
             return
-        raise AssertionError(
-            "The actual data does not match the expected regular expression."
-        )
+        raise AssertionError("The actual data does not match the expected regular expression.")
 
 
 class HasSubset(IAssertion):

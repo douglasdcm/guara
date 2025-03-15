@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 import pathlib
 import random
 from splinter import Browser
@@ -25,7 +30,5 @@ class TestSplinterIntegration:
     def test_local_page(self):
         text = ["cheese", "splinter", "test", "bla", "foo"]
         text = text[random.randrange(len(text))]
-        self._app.at(home.SubmitTextSplinter, text=text).asserts(
-            it.IsEqualTo, f"It works! {text}!"
-        )
+        self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")

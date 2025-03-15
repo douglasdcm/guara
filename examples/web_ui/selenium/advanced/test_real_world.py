@@ -1,8 +1,16 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
+from pathlib import Path
 from pytest import fixture
 from selenium import webdriver
 from examples.web_ui.selenium.advanced import home, contact, info
 from guara.transaction import Application
 from guara import it, setup
+
+FILE_PATH = Path(__file__).parent.resolve()
 
 
 class TestVpmTransaction:
@@ -12,7 +20,7 @@ class TestVpmTransaction:
         self._app = Application(webdriver.Chrome(options=options))
         self._app.at(
             setup.OpenApp,
-            url="https://vagaspramim.onrender.com/",
+            url=f"file:///{FILE_PATH}/html/index.html",
         )
 
     def teardown_method(self, method):
@@ -25,10 +33,7 @@ class TestVpmTransaction:
         content_in_english = "Content of curriculum"
         content_in_portuguese = "Conteúdo do currículo"
 
-        self._app.at(home.ChangeToPortuguese).asserts(
-            it.IsEqualTo, content_in_portuguese
-        )
-        # uses native assertion
+        self._app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
         result = self._app.at(home.ChangeToEnglish).result
         it.IsEqualTo().asserts(result, content_in_english)
         self._app.at(info.NavigateTo).asserts(
@@ -43,20 +48,20 @@ class TestVpmTransaction:
             it.IsEqualTo, "Contact us. We would be happy to answer your questions."
         )
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
-        self._app.at(
-            home.DoRestrictedSearch, text=text, wait_for=restricted_similariy
-        ).asserts(it.IsEqualTo, restricted_similariy)
+        self._app.at(home.DoRestrictedSearch, text=text, wait_for=restricted_similariy).asserts(
+            it.IsEqualTo, restricted_similariy
+        )
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
-        self._app.at(
-            home.DoExpandedSearch, text=text, wait_for=expanded_similarity
-        ).asserts(it.IsEqualTo, expanded_similarity)
+        self._app.at(home.DoExpandedSearch, text=text, wait_for=expanded_similarity).asserts(
+            it.IsEqualTo, expanded_similarity
+        )
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
 
 
 @fixture
 def setup_application():
     configuration = {
-        "url": "https://vagaspramim.onrender.com/",
+        "url": f"file:///{FILE_PATH}/html/index.html",
         "window_width": 1094,
         "window_height": 765,
         "implicitly_wait": 0.5,

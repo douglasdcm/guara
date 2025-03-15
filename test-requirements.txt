@@ -3,6 +3,7 @@ pytest-xdist
 pytest-asyncio
 flake8
 black
+pre-commit
 requests
 caqui
 tox
@@ -18,4 +19,5 @@ opencv-python
 dogtail
 splinter
 rpa
-
+psutil
+selenium-stealth

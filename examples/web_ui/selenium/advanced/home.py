@@ -1,7 +1,16 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction
+
+
+TEXT_AREA = ".col-md-10"
+TEXT_AREA_LABEL = "label:nth-child(1)"
 
 
 class NavigateTo(AbstractTransaction):
@@ -17,8 +26,8 @@ class NavigateTo(AbstractTransaction):
 
     def do(self, **kwargs):
         self._driver.find_element(By.CSS_SELECTOR, ".navbar-brand > img").click()
-        self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
-        return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
+        self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA).click()
+        return self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA_LABEL).text
 
 
 class ChangeToEnglish(AbstractTransaction):
@@ -33,9 +42,10 @@ class ChangeToEnglish(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, **kwargs):
-        self._driver.find_element(By.CSS_SELECTOR, "button:nth-child(2) > img").click()
-        self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
-        return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
+        EN_BUTTON = "en-usa"
+        self._driver.find_element(By.ID, EN_BUTTON).click()
+        self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA).click()
+        return self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA_LABEL).text
 
 
 class ChangeToPortuguese(AbstractTransaction):
@@ -50,11 +60,9 @@ class ChangeToPortuguese(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, **kwargs):
-        self._driver.find_element(
-            By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img"
-        ).click()
-        self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
-        return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
+        self._driver.find_element(By.ID, "pt-br").click()
+        self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA).click()
+        return self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA_LABEL).text
 
 
 class Search(AbstractTransaction):
@@ -79,16 +87,15 @@ class Search(AbstractTransaction):
         raise NotImplementedError
 
     def wait_search(self, wait_for):
+        ROW_1 = "row-1"
         self._driver.find_element(By.ID, "send_message").click()
         WebDriverWait(self._driver, 30).until(
             expected_conditions.text_to_be_present_in_element(
-                (By.CSS_SELECTOR, ".row:nth-child(1) > .col-md-2 > p"),
+                (By.ID, ROW_1),
                 wait_for,
             )
         )
-        return self._driver.find_element(
-            By.CSS_SELECTOR, ".row:nth-child(1) > .col-md-2 > p"
-        ).text
+        return self._driver.find_element(By.ID, ROW_1).text
 
     def do(self, text, wait_for):
         self.fill_text(text)
@@ -111,7 +118,9 @@ class DoRestrictedSearch(Search):
         super().__init__(driver)
 
     def select_search(self):
+        BUTTON_NARROW_SEARCH = "narrow-search"
         self._driver.find_element(By.ID, "cond_and").click()
+        self._driver.find_element(By.ID, BUTTON_NARROW_SEARCH).click()
 
 
 class DoExpandedSearch(Search):
@@ -129,4 +138,6 @@ class DoExpandedSearch(Search):
         super().__init__(driver)
 
     def select_search(self):
+        BUTTON_WIDE_SEARCH = "wide-search"
         self._driver.find_element(By.ID, "cond_or").click()
+        self._driver.find_element(By.ID, BUTTON_WIDE_SEARCH).click()

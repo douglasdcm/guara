@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from pytest import mark
 from guara.transaction import Application
 from guara import it
@@ -21,7 +26,6 @@ class ItShows(it.IAssertion):
 
 @mark.skip("Skipped due to the complexity to integrate it in pipeline")
 class TestLinuxCalculatorWithPyautogui:
-
     def setup_method(self, method):
         # I opted for lazy imports just to not break the pipeline.
         # Do not do it.

@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from pathlib import Path
 from random import randrange
 from pytest import mark
@@ -34,7 +39,5 @@ class TestAppiumIntegration:
     def test_local_page(self):
         text = ["cheese", "appium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
-        self._app.at(SubmitTextAppium, text=text).asserts(
-            it.IsEqualTo, f"It works! {text}!"
-        )
+        self._app.at(SubmitTextAppium, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsNotEqualTo, "Any")

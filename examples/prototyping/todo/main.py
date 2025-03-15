@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from pyscript import document
 from guara.transaction import Application
 import transactions as transactions
@@ -40,6 +45,4 @@ def get_task(event):
         index = 0
     index = int(index)
     # index = int(value) - 1
-    document.querySelector("#output").innerText = app.at(
-        transactions.GetBy, index=index
-    ).result
+    document.querySelector("#output").innerText = app.at(transactions.GetBy, index=index).result

@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 The module that is reponsible for the opening and closing
 transactions.
@@ -64,7 +69,5 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
-        self._driver.get_screenshot_as_file(
-            f"{screenshot_filename}-{datetime.now()}.png"
-        )
+        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
         self._driver.quit()

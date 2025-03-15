@@ -1,7 +1,13 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 It is the module where the interface of the transaction will
 handle web transactions in an automated browser.
 """
+
 from typing import Any, NoReturn, Union, Dict
 
 
@@ -9,6 +15,7 @@ class AbstractTransaction:
     """
     It will handle web transactions in an automated browser.
     """
+
     @property
     def __name__(self) -> property:
         """

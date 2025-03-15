@@ -1,7 +1,13 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 The module that has the interface for the implmentation of
 the assertion logic to be used for validation and testing.
 """
+
 from typing import Any
 from logging import getLogger, Logger
 
