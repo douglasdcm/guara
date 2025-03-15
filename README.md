@@ -5,46 +5,34 @@
 <img src=https://github.com/douglasdcm/guara/raw/main/docs/images/guara.jpg width="300" height="300" />
 
 Photo by <a href="https://unsplash.com/@matcfelipe?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Mateus Campos Felipe</a> on <a href="https://unsplash.com/photos/red-flamingo-svdE4f0K4bs?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
-      
-________
 
+---
 
-[Scarlet ibis (Guará)](https://en.wikipedia.org/wiki/Scarlet_ibis)
+## What is Guará?
 
-The scarlet ibis, sometimes called red ibis (Eudocimus ruber), is a species of ibis in the bird family Threskiornithidae. It inhabits tropical South America and part of the Caribbean. In form, it resembles most of the other twenty-seven extant species of ibis, but its remarkably brilliant scarlet coloration makes it unmistakable. It is one of the two national birds of Trinidad and Tobago, and its Tupi–Guarani name, guará, is part of the name of several municipalities along the coast of Brazil.
+Guará is a Python framework designed to simplify UI test automation. Inspired by design patterns like **Page Objects**, **App Actions**, and **Screenplay**, Guará focuses on **Page Transactions**—encapsulating user interactions (transactions) on web pages, such as Login, Logout, or Form Submissions. It’s not just a tool; it’s a programming pattern that can be adapted to any web driver, not just Selenium.
 
-# Contents
-- [Syntax](#Syntax)<br>
-- [Introduction](#Introduction)<br>
-- [Framework in action](#Framework-in-action)<br>
-- [Installation](#Installation)<br>
-- [Execution](#Execution)<br>
-- [Tutorial](https://github.com/douglasdcm/guara/tree/main/docs/TUTORIAL.md)<br>
-- [Examples](https://github.com/douglasdcm/guara/tree/main/examples)<br>
-- [The pattern explained](https://github.com/douglasdcm/guara/tree/main/docs/THE_PATTERN_EXPLAINED.md)<br>
-- [Using other Web Drivers](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Using-other-Web-Drivers)<br>
-- [Asynchronous execution](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Asynchronous-execution)<br>
-- [ChatGPT assistance](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#ChatGPT-assistance)<br>
-- [Page Transactions and Page Objects Model](https://github.com/douglasdcm/guara/tree/main/docs/PT_AND_POM.md)
-- [Non-testers usage](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Non-testers-usage)<br>
-- [Contributing](#Contributing)<br>
+### Why Guará?
+- **Simplicity**: Reduces repetitive code by encapsulating web interactions into reusable transactions.
+- **Flexibility**: Works with any web driver, not limited to Selenium.
+- **Clarity**: Makes test scripts more readable and maintainable.
 
-# Syntax
+---
 
-<code>Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matches, a_condition)</code>
+## Quick Start
 
-# Introduction
-> [!IMPORTANT]
-> Guará is the Python implementation of the design pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium. Check the examples [here](https://github.com/douglasdcm/guara/tree/main/examples)
+### Installation
+Guará requires **Python 3.11** and **Selenium**. Install it via pip:
+```shell
+pip install guara
+```
 
-The intent of this pattern is to simplify UI test automation. It was inspired by Page Objects, App Actions, and Screenplay. `Page Transactions` focus on the operations (transactions) a user can perform on a web page, such as Login, Logout, or Submit Forms.
+### Syntax
+```python
+Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matches, a_condition)
+```
 
-## Demonstration
-[![Watch the video](./docs/images/guara-demo.png)](https://www.youtube.com/watch?v=r2pCN2jG7Nw)
-
-
-## Framework in action
-
+### Example in Action
 ```python
 from selenium import webdriver
 from pages import home, contact, info
@@ -52,109 +40,99 @@ from guara.transaction import Application
 from guara import it, setup
 
 def test_sample_web_page():
-    # Instantiates the Application with a driver
+    # Initialize the Application with a driver
     app = Application(webdriver.Chrome())
     
-    # At setup opens the web application
-    app.at(setup.OpenApp, url="https://anyhost.com/",)
+    # Open the web application
+    app.at(setup.OpenApp, url="https://anyhost.com/")
     
-    # At Home page changes the language to Portuguese and asserts its content
+    # Change language to Portuguese and assert content
     app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
 
-    # At Info page asserts the text is present
-    app.at(info.NavigateTo).asserts(
-        it.Contains, "This project was born"
-    )
+    # Navigate to Info page and assert text presence
+    app.at(info.NavigateTo).asserts(it.Contains, "This project was born")
 
-    # At setup closes the web application
+    # Close the web application
     app.at(setup.CloseApp)
 ```
-The *ugly* code which calls the webdriver is like this:
 
+### Behind the Scenes
+The repetitive web driver code is encapsulated in a transaction class:
 ```python
 class ChangeToPortuguese(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
 
     def do(self, **kwargs):
-        self._driver.find_element(
-            By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img"
-        ).click()
+        self._driver.find_element(By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img").click()
         self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
         return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
 ```
 
-It is a very repetitive activity:
-- Create a class representing the transaction, in this case, the transaction changes the language to Portuguese
-- Inherits from `AbstractTransaction`
-- Implements the `do` method
-    - Optional: Returns the result of the transaction
+---
 
-Read more in [Tutorial](#tutorial)
+## Key Features
 
-# Installation
-## Dependencies
-- Python 3.11
-- Selenium
+### 1. **Page Transactions**
+- Encapsulates user actions into reusable transactions.
+- Reduces boilerplate code and improves readability.
 
-This framework can be installed by
-```shell
-pip install guara
-```
+### 2. **Flexible Assertions**
+- Use built-in assertions like `it.IsEqualTo`, `it.Contains`, and more to validate outcomes.
 
-# Execution
-It is recommended to use `pytest`
+### 3. **Cross-Driver Compatibility**
+- Works with Selenium and can be adapted to other web drivers.
 
-```shell
-# Executes reporting the complete log
-python -m pytest -o log_cli=1 --log-cli-level=INFO --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S"
-```
-> [!TIP]
-> These options can also be customized through your `pytest.ini` file. Refer to [Pytest documentaion](https://docs.pytest.org/en/stable/how-to/logging.html).
+### 4. **Asynchronous Execution**
+- Supports asynchronous operations for modern web applications.
 
-**Outputs**
-```shell
-examples/web_ui/selenium/simple/test_local_page.py::TestLocalTransaction::test_local_page
---------------------------------------------------------------- live log setup ---------------------------------------------------------------
-2025-01-09 06:39:41 INFO Transaction 'OpenApp'
-2025-01-09 06:39:41 INFO  url: file:////...sample.html
-2025-01-09 06:39:41 INFO  window_width: 1094
-2025-01-09 06:39:41 INFO  window_height: 765
-2025-01-09 06:39:41 INFO  implicitly_wait: 0.5
-2025-01-09 06:39:41 INFO Assertion 'IsEqualTo'
-2025-01-09 06:39:41 INFO  actual:   'Sample page'
-2025-01-09 06:39:41 INFO  expected: 'Sample page'
---------------------------------------------------------------- live log call ----------------------------------------------------------------
-2025-01-09 06:39:41 INFO Transaction 'SubmitText'
-2025-01-09 06:39:41 INFO  text: cheese
-2025-01-09 06:39:41 INFO Assertion 'IsEqualTo'
-2025-01-09 06:39:41 INFO  actual:   'It works! cheese!'
-2025-01-09 06:39:41 INFO  expected: 'It works! cheese!'
-2025-01-09 06:39:41 INFO Transaction 'SubmitText'
-2025-01-09 06:39:41 INFO  text: cheese
-2025-01-09 06:39:41 INFO Assertion 'IsNotEqualTo'
-2025-01-09 06:39:41 INFO  actual:   'It works! cheesecheese!'
-2025-01-09 06:39:41 INFO  expected: 'Any'
-PASSED                                                                                                                                 [100%]
-------------------------------------------------------------- live log teardown --------------------------------------------------------------
-2025-01-09 06:39:41 INFO Transaction 'CloseApp'
+### 5. **ChatGPT Assistance**
+- Leverage AI to generate or debug transactions.
 
-```
+---
 
-It also works well with other test frameworks. Check more details [here](https://github.com/douglasdcm/guara/blob/main/docs/TEST_FRAMEWORKS.md)
+## Documentation
 
-# Tutorial
-Read the [step-by-step](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md) to build your first automation with this framework.
+### Tutorial
+Get started with a [step-by-step guide](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md) to build your first automation.
 
-# How you can help?
+### Demonstration
+[![Watch the video](./docs/images/guara-demo.png)](https://www.youtube.com/watch?v=r2pCN2jG7Nw)
 
-Here's how you can help with this:
-- Star this project on GitHub.
-- Tell your friends and colleagues about it.
-- Share it on social media.
-- Write a blog post about Guara.
-- Take a look at the `good first issue` [here](https://github.com/douglasdcm/guara/issues), assign any to you and push the code.
+### Examples
+Explore practical examples in the [examples folder](https://github.com/douglasdcm/guara/tree/main/examples).
 
-# Contributing
-Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/docs/CODE_OF_CONDUCT.md) before push new Merge Requests.<br>
-Now, follow the steps in [Contributing](https://github.com/douglasdcm/guara/blob/main/docs/CONTRIBUTING.md) session.
+### Advanced Topics
+- [The pattern explained](https://github.com/douglasdcm/guara/tree/main/docs/THE_PATTERN_EXPLAINED.md)
+- [ChatGPT assistance](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#ChatGPT-assistance)
+- [Page Transactions and Page Objects Model](https://github.com/douglasdcm/guara/tree/main/docs/PT_AND_POM.md)
+- [Using Other Web Drivers](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Using-other-Web-Drivers)
+- [Asynchronous Execution](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Asynchronous-execution)
+- [Non-Testers Usage](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Non-testers-usage)
+---
+
+## Contributing
+
+### How You Can Help
+- **Star this project** on GitHub.
+- **Share** it with your network.
+- **Write** a blog post or tutorial about Guará.
+- **Contribute code**: Check out the [good first issues](https://github.com/douglasdcm/guara/issues) and submit a pull request.
+
+### Guidelines
+- Read the [Code of Conduct](https://github.com/douglasdcm/guara/blob/main/docs/CODE_OF_CONDUCT.md) before contributing.
+- Follow the steps in the [Contributing Guide](https://github.com/douglasdcm/guara/blob/main/docs/CONTRIBUTING.md).
+
+---
+
+## Why the Name "Guará"?
+Guará is the Tupi–Guarani name for the **Scarlet Ibis**, a vibrant bird native to South America. Just like the bird, Guará stands out for its simplicity and elegance in solving complex UI automation challenges.
+
+---
+
+## Ready to Dive In?
+Start automating with Guará today! Check out the [tutorial](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md) and explore the [examples](https://github.com/douglasdcm/guara/tree/main/examples) to see how Guará can simplify your UI testing workflow.
+
+---
+
+**Guará**: Simplifying UI automation, one transaction at a time. 🚀
