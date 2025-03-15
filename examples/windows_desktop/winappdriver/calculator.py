@@ -35,9 +35,7 @@ class SumNumbers(AbstractTransaction):
         """Extract displayed result"""
         try:
             result = (
-                self._driver.find_element(
-                    "xpath", "//*[@AutomationId='CalculatorResults']"
-                )
+                self._driver.find_element("xpath", "//*[@AutomationId='CalculatorResults']")
                 .text.replace("Display is", "")
                 .strip()
             )

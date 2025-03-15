@@ -27,6 +27,4 @@ def setup_method(page: Page):
 def test_local_page_playwright(setup_method):
     dev_page: Application = setup_method
     dev_page.at(home.NavigateToGettingStarted).asserts(it.IsEqualTo, "Installation")
-    dev_page.at(getting_started.NavigateToWritingTests).asserts(
-        it.IsNotEqualTo, "Writing Tests"
-    )
+    dev_page.at(getting_started.NavigateToWritingTests).asserts(it.IsNotEqualTo, "Writing Tests")

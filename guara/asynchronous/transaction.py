@@ -77,9 +77,7 @@ class Application:
         """
         return self._result
 
-    def at(
-        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
-    ) -> "Application":
+    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Executing each transaction.
 
@@ -97,9 +95,7 @@ class Application:
         self._coroutines.append({self._TRANSACTION: coroutine})
         return self
 
-    def when(
-        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
-    ) -> "Application":
+    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -140,11 +136,7 @@ class Application:
             (Application)
         """
         for index in range(0, len(self._coroutines), 1):
-            (
-                await self.get_assertion(index)
-                if not await self.get_transaction(index)
-                else None
-            )
+            (await self.get_assertion(index) if not await self.get_transaction(index) else None)
         self._coroutines.clear()
         return self
 
@@ -158,9 +150,7 @@ class Application:
         Returns:
             (bool)
         """
-        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(
-            self._TRANSACTION
-        )
+        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
             LOGGER.info(f"Transaction: {self._transaction_name}")
             for key, value in self._kwargs.items():
@@ -182,8 +172,6 @@ class Application:
         LOGGER.info(f"Assertion: {self._it.__name__}")
         LOGGER.info(f" Actual  : {self._result}")
         LOGGER.info(f" Expected: {self._expected}")
-        assertion: Coroutine[None, None, None] = self._coroutines[index].get(
-            self._ASSERTION
-        )
+        assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
         if assertion:
             return await assertion

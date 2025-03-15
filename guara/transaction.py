@@ -53,9 +53,7 @@ class Application:
         """
         return self._result
 
-    def at(
-        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
-    ) -> "Application":
+    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Performing a transaction.
 
@@ -74,9 +72,7 @@ class Application:
         self._result = self._transaction.do(**kwargs)
         return self
 
-    def when(
-        self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]
-    ) -> "Application":
+    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Same as the `at` method. Introduced for better readability.
 

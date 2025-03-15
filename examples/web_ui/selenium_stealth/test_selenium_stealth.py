@@ -49,9 +49,5 @@ class TestSeleniumStealthIntegration:
     def test_local_page(self):
         text = ["cheese", "selenium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
-        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
-            it.Contains, "Example Domain"
-        )
-        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
-            it.IsNotEqualTo, "Any"
-        )
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.Contains, "Example Domain")
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.IsNotEqualTo, "Any")

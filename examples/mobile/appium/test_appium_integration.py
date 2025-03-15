@@ -39,7 +39,5 @@ class TestAppiumIntegration:
     def test_local_page(self):
         text = ["cheese", "appium", "test", "bla", "foo"]
         text = text[randrange(len(text))]
-        self._app.at(SubmitTextAppium, text=text).asserts(
-            it.IsEqualTo, f"It works! {text}!"
-        )
+        self._app.at(SubmitTextAppium, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsNotEqualTo, "Any")
