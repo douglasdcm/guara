@@ -1,11 +1,10 @@
 import asyncio
 from playwright.async_api import async_playwright
-from guara.transaction import Application, AbstractTransaction
-from guara import it
+from guara.asynchronous.transaction import Application, AbstractTransaction
+from guara.asynchronous import it
 import pytest
 
 
-# Setup transaction to Open the app
 class OpenApp(AbstractTransaction):
     async def do(
         self,
@@ -13,7 +12,6 @@ class OpenApp(AbstractTransaction):
         window_width: int = 1094,
         window_height: int = 765,
         timeout: int = 60000,
-        **kwargs,
     ):
         page = self._driver
         await page.set_viewport_size({"width": window_width, "height": window_height})
@@ -21,18 +19,16 @@ class OpenApp(AbstractTransaction):
         return await page.title()
 
 
-# Setup transaction to Close the app
 class CloseApp(AbstractTransaction):
-    async def do(self, screenshot_filename: str = "./captures/guara-capture", **kwargs):
+    async def do(self, screenshot_filename: str = "./captures/guara-capture"):
         page = self._driver
         timestamp = asyncio.get_event_loop().time()
         await page.screenshot(path=f"{screenshot_filename}-{timestamp:.0f}.png")
         await page.close()
 
 
-# Test transaction to Get page heading
 class NavigateToDocs(AbstractTransaction):
-    async def do(self, **kwargs):
+    async def do(self):
         page = self._driver
         return await page.text_content("h1")
 
@@ -44,18 +40,10 @@ async def test_sample_web_page():
         page = await browser.new_page()
         app = Application(page)
 
-        # Open the app
-        await app.at(OpenApp, url="https://example.com/")
+        await app.when(OpenApp, url="https://example.com/").perform()
+        await app.when(NavigateToDocs).asserts(it.Contains, "Example Domain").perform()
+        await app.when(CloseApp).perform()
 
-        # Navigate and assert
-        executor = await app.at(NavigateToDocs)
-        executor.asserts(it.Contains, "Example Domain")
-
-        # Close the app
-        await app.at(CloseApp)
-
+        # As playwrite is async, we need to close the browser
+        # then it is an exception to Page Transations pattern
         await browser.close()
-
-
-if __name__ == "__main__":
-    asyncio.run(test_sample_web_page())
