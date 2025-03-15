@@ -4,7 +4,9 @@ from guara.transaction import Application
 from guara import it
 
 # Skip the tests if not running on Windows
-pytestmark = pytest.mark.skipif(platform.system() != "Windows", reason="Requires Windows")
+pytestmark = pytest.mark.skipif(
+    platform.system() != "Windows", reason="Requires Windows"
+)
 
 
 class ItShows(it.IAssertion):
@@ -37,7 +39,9 @@ class TestWindowsCalculatorWithWinAppDriver:
 
         self._app.at(setup.CloseAppTransaction)
 
-    @pytest.mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
+    @pytest.mark.parametrize(
+        "a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)]
+    )
     def test_addition(self, a, b, expected):
         from examples.windows_desktop.winappdriver import calculator
 

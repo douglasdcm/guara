@@ -28,7 +28,9 @@ def test_performance_sync():
 
     SECONDS = 60 * 5
     s = time.time()
-    csv_writer = f"./data/script_1_sync_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    csv_writer = (
+        f"./data/script_1_sync_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    )
     with open(csv_writer, mode="w", newline="") as f:
         f.write("time,latency,cpu,mem,disk\n")
         while time.time() - s < SECONDS:

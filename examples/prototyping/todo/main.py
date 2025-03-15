@@ -45,4 +45,6 @@ def get_task(event):
         index = 0
     index = int(index)
     # index = int(value) - 1
-    document.querySelector("#output").innerText = app.at(transactions.GetBy, index=index).result
+    document.querySelector("#output").innerText = app.at(
+        transactions.GetBy, index=index
+    ).result

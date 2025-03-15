@@ -60,7 +60,9 @@ def run_test_script() -> None:
         (None)
     """
     try:
-        process = run(["python", "tests/performance/script_2_initializer.py"], check=True)
+        process = run(
+            ["python", "tests/performance/script_2_initializer.py"], check=True
+        )
         return process.returncode
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")

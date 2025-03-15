@@ -122,7 +122,9 @@ class ProcessAirportData(AbstractTransaction):
             while True:
                 try:
                     more_button = Wait(self._driver, 10).until(
-                        EC.visibility_of_element_located((By.CLASS_NAME, "btn-see-more"))
+                        EC.visibility_of_element_located(
+                            (By.CLASS_NAME, "btn-see-more")
+                        )
                     )
                     self._driver.execute_script("arguments[0].click();", more_button)
                 except (TimeoutException, NoSuchElementException):
@@ -149,7 +151,9 @@ class ProcessAirportData(AbstractTransaction):
                         "origen": origen,
                         "estado": estado,
                         "fecha": datetime.now(TIMEZONE).strftime("%Y-%m-%d"),
-                        "hora_actualizacion": datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S"),
+                        "hora_actualizacion": datetime.now(TIMEZONE).strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        ),
                     }
                 )
 
@@ -230,7 +234,9 @@ def get_aena_data():
     # Instantiate Application with the driver
     app = Application(driver)
 
-    script_status = read_json_file("script_status.json", {"airports": {}, "status": None})
+    script_status = read_json_file(
+        "script_status.json", {"airports": {}, "status": None}
+    )
 
     # Open the AENA page
     app.when(OpenAenaPage)
@@ -238,7 +244,9 @@ def get_aena_data():
     # Process data for each airport
     all_flights_data = []
     for airport in AIRPORTS:
-        flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
+        flights = app.when(
+            ProcessAirportData, airport=airport, script_status=script_status
+        ).result
         all_flights_data.extend(flights)
 
     # Save flight data and close browser
