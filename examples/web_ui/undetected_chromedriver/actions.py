@@ -13,3 +13,4 @@ class SearchGoogle(AbstractTransaction):
         search_box = self._driver.find_element(By.NAME, "q")
         search_box.send_keys(query)
         search_box.submit()
+        return self._driver.current_url

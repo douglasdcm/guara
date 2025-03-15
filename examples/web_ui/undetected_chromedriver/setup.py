@@ -18,5 +18,4 @@ class CloseBrowserTransaction(AbstractTransaction):
         super().__init__(driver)
 
     def do(self):
-        if self._driver:
-            self._driver.quit()
+        self._driver.quit()
