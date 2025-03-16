@@ -3,8 +3,6 @@ from guara import it
 from guara.setup import OpenApp, CloseApp
 from selenium import webdriver
 
-app = Application(driver="selenium")
-
 
 class Demo(AbstractTransaction):
     def do(self, **kwargs):
