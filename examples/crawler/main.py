@@ -233,17 +233,17 @@ def get_aena_data():
     script_status = read_json_file("script_status.json", {"airports": {}, "status": None})
 
     # Open the AENA page
-    app.when(OpenAenaPage)
+    app.then(OpenAenaPage)
 
     # Process data for each airport
     all_flights_data = []
     for airport in AIRPORTS:
-        flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
+        flights = app.then(ProcessAirportData, airport=airport, script_status=script_status).result
         all_flights_data.extend(flights)
 
     # Save flight data and close browser
-    app.when(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
-    app.when(CloseBrowser)
+    app.then(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
+    app.then(CloseBrowser)
 
     # Update script status
     script_status["last_run"] = datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")

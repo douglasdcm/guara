@@ -51,8 +51,8 @@ async def test_sample_web_page():
         # and the browser can be accessed by `self._driver["browser"]`
         app = Application(page)
 
-        await app.when(OpenApp, url="https://example.com/").perform()
+        await app.then(OpenApp, url="https://example.com/").perform()
         await app.when(NavigateToDocs).asserts(it.Contains, "Example Domain").perform()
-        await app.when(CloseApp).perform()
+        await app.then(CloseApp).perform()
 
         await browser.close()

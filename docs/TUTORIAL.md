@@ -22,7 +22,7 @@ class CloseApp(AbstractTransaction):
 def test_canonical():
     google = Application(webdriver.Chrome())
     google.when(OpenApp, url="http://www.google.com",).asserts(it.IsEqualTo,"Google")
-    google.when(CloseApp)
+    google.then(CloseApp)
 ```
 
 # Basic practical example
