@@ -102,7 +102,7 @@ Explore practical examples in the [examples folder](https://github.com/douglasdc
 ### Advanced Topics
 - [The pattern explained](https://github.com/douglasdcm/guara/tree/main/docs/THE_PATTERN_EXPLAINED.md)
 - [Configuring dry-run](https://github.com/douglasdcm/guara/tree/main/docs/DRY_RUN.md)
-- [Embeded logs](https://github.com/douglasdcm/guara/tree/main/docs/LOGS.md)
+- [Embedded logs](https://github.com/douglasdcm/guara/tree/main/docs/LOGS.md)
 - [ChatGPT assistance](https://github.com/douglasdcm/guara/tree/main/docs/CHATGPT_ASSISTANCE.md)
 - [Page Transactions and Page Objects Model](https://github.com/douglasdcm/guara/tree/main/docs/PT_AND_POM.md)
 - [Using Other Web Drivers](https://github.com/douglasdcm/guara/tree/main/docs/OTHER_DRIVERS.md)
