@@ -22,7 +22,7 @@ Guará is a Python framework designed to simplify UI test automation. Inspired b
 ## Quick Start
 
 ### Installation
-Guará requires **Python 3.11** and **Selenium**. Install it via pip:
+Guará requires **Python 3.8+**. Install it via pip:
 ```shell
 pip install guara
 ```
