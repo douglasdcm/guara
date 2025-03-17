@@ -4,13 +4,14 @@
 </p>
 
 - `AbstractTransaction`: This is the class from which all transactions inherit. The `do` method is implemented by each transaction. In this method, calls to WebDriver are placed. If the method returns something, like a string, the automation can use it for assertions.
+- `OpenApp` and `CloseApp` are examples of concrete transactions.
 
 <p align="center">
     <img src="https://github.com/douglasdcm/guara/blob/main/docs/images/uml_iassertion.png?raw=true" width="800" height="300" />
 </p>
 
-- `IAssertion`: This is the interface implemented by all assertion classes.
-- The `asserts` method of each subclass contains the logic to perform validations. For example, the `IsEqualTo` subclass compares the `result` with the expected value provided by the tester.
+- `IAssertion`: This is the interface implemented by all concrete assertions.
+- The `asserts` method of each concrete assertion contains the logic to perform validations. For example, the `IsEqualTo` concrete assertion compares the `result` with the expected value provided by the tester.
 - Testers can inherit from this interface to add new sub-classes of validations that the framework does not natively support. More details [here](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md#extending-assertions).
 
 <p align="center">
@@ -31,9 +32,9 @@ When the framework is in action, it follows a highly repetitive pattern. Notice 
 
 ```python
 from selenium import webdriver
-from pages import home, contact, info
+from pages import home, contact, info, setup
 from guara.transaction import Application
-from guara import it, setup
+from guara import it
 
 def test_sample_web_page():
     app = Application(webdriver.Chrome())
@@ -45,7 +46,6 @@ def test_sample_web_page():
     )
     app.at(setup.CloseApp)
 ```
-- `setup.OpenApp` and `setup.CloseApp` are part of the framework and provide basic implementation to open and close the web application using Selenium Webdriver.
 - `it` is the module which contains the concrete assertions.
 
 The *ugly* code which calls the webdriver is like this:

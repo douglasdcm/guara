@@ -76,7 +76,7 @@ import pathlib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction, Application
-from guara import it, setup
+from guara import it
 
 
 # Transaction: Open the sample page
@@ -111,6 +111,11 @@ class ValidateResult(AbstractTransaction):
         message = self._driver.find_element(by=By.ID, value="result")
         return message.text == f"It works! {expected_text}!"
 
+# Transaction to close the application
+class CloseApplication(AbstractTransaction):
+    def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
+        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
+        self._driver.quit()
 
 # Test Case
 def test_sample_page():
@@ -132,7 +137,7 @@ def test_sample_page():
     app.at(ValidateResult, expected_text=selected_text).asserts(it.IsTrue)
 
     # Close the application
-    app.at(setup.CloseApp)
+    app.at(CloseApplication)
 
 ```
 
@@ -142,6 +147,7 @@ Transactions:
     OpenSamplePage: Handles the logic to open the web page and optionally returns the page title.
     SubmitText: Interacts with the input field and submits the form, returning the entered text.
     ValidateResult: Validates that the result message matches the expected format.
+    CloseApplication: Closes the application
 
 Application:
     Orchestrates the transactions using the at method and applies assertions using the asserts method.
@@ -210,7 +216,7 @@ import pathlib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction, Application, IAssertion
-from guara import it, setup
+from guara import it
 
 
 # Custom Assertion: Checks if the actual value is True
@@ -254,6 +260,12 @@ class ValidateResult(AbstractTransaction):
         return actual_text == f"It works! {expected_text}!"
 
 
+# Transaction to close the application
+class CloseApplication(AbstractTransaction):
+    def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
+        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
+        self._driver.quit()
+
 # Test Case
 def test_sample_page():
     file_path = pathlib.Path(__file__).parent.resolve()
@@ -277,7 +289,7 @@ def test_sample_page():
     app.asserts(IsTrue, result)
 
     # Close the application
-    app.at(setup.CloseApp)
+    app.at(CloseApplication)
 ```
 
 # Conclusion

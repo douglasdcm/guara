@@ -35,9 +35,9 @@ Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matche
 ### Example in Action
 ```python
 from selenium import webdriver
-from pages import home, contact, info
+from pages import home, contact, info, setup
 from guara.transaction import Application
-from guara import it, setup
+from guara import it
 
 def test_sample_web_page():
     # Initialize the Application with a driver
@@ -60,9 +60,6 @@ def test_sample_web_page():
 The repetitive web driver code is encapsulated in a transaction class:
 ```python
 class ChangeToPortuguese(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, **kwargs):
         self._driver.find_element(By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img").click()
         self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()

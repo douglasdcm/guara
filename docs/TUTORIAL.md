@@ -1,20 +1,28 @@
 # Canonical implementation
-This is the simplest implementation to warm up the framework. It uses the built-in `setup` transaction to open the web page of Google, to assert the title of the page is `Google` and to close the web application. More details about each component of the framework are explained in further sessions.
+This is the simplest implementation to warm up the framework. It uses the `OpenApp` and `CloseApp` transactions to open the web page of Google, to assert the title of the page is `Google` and to close the web application. More details about each component of the framework are explained in further sessions.
 
 ```python
 from selenium import webdriver
 from guara import it
-from guara import setup
 from guara.transaction import Application
+
+
+class OpenApp(AbstractTransaction):
+    def do(
+        self, url: str,
+    ) -> str:
+        return self._driver.get(url).title
+
+
+class CloseApp(AbstractTransaction):
+    def do(self) -> None:
+        self._driver.quit()
 
 
 def test_canonical():
     google = Application(webdriver.Chrome())
-    google.at(
-        setup.OpenApp,
-        url="http://www.google.com",
-    ).asserts(it.IsEqualTo, "Google")
-    google.at(setup.CloseApp)
+    google.when(OpenApp, url="http://www.google.com",).asserts(it.IsEqualTo,"Google")
+    google.when(CloseApp)
 ```
 
 # Basic practical example
@@ -65,10 +73,6 @@ from guara.transaction import Application
 # Imports the module with the strategies to asset the result
 from guara import it
 
-# Imports the module which contains the built-in transactions to open
-# and close the web application using Selenium
-from guara import setup
-
 @pytest.fixture
 def google():
     # Instantiates the Application to run the automation
@@ -81,18 +85,18 @@ def google():
     # Internally `at` executes the `do` method of the transaction and
     # holds the result in the property `result` which is going to be
     # presented soon.
-    # `setup.OpenApp` is a built-in transaction.
+    # `OpenApp` is a concrete transaction.
     # The `url` is passed to the `at` method by `kwargs`.
     # The result returned by `at` is asserted by `asserts`
     # using the strategy `it.IsEqualTo`.
     google.at(
-        setup.OpenApp,
+        OpenApp,
         url="http://www.google.com",
     ).asserts(it.IsEqualTo, "Google")
     yield google
 
-    # Uses the built-in `setup.CloseApp` to close the web application
-    google.at(setup.CloseApp)
+    # Uses the concrete transaction `CloseApp` to close the web application
+    google.at(CloseApp)
 
 
 def test_google_search(google: Application):
