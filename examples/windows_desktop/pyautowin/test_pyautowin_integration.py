@@ -3,15 +3,14 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from guara.transaction import Application
 from guara import it
 from guara.utils import is_dry_run
 from examples.windows_desktop.pyautowin import setup, home
 
-if not is_dry_run():
-    import pyautowin
 
-
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestPyAutoWinIntegration:
     """
     TestPyAutoWinIntegration is a test class for integrating PyAutoWin with a local application.
@@ -20,6 +19,8 @@ class TestPyAutoWinIntegration:
     def setup_method(self, method):
         driver = None
         if not is_dry_run():
+            import pyautowin
+
             driver = pyautowin
         self._app = Application(driver)
         self._app.at(setup.OpenApplication, app_path="path/to/application.exe")

@@ -3,6 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from pathlib import Path
 from random import randrange
 from guara.transaction import Application
@@ -11,15 +12,16 @@ from examples.web_ui.browserist import setup
 from examples.web_ui.browserist import home
 from guara.utils import is_dry_run
 
-if not is_dry_run():
-    from browserist import Browser, BrowserSettings
 
-
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestBrowseristIntegration:
     def setup_method(self, method):
+
         file_path = Path(__file__).parent.parent.resolve()
         driver = None
         if not is_dry_run():
+            from browserist import Browser, BrowserSettings
+
             driver = Browser(BrowserSettings(headless=True))
         self._app = Application(driver)
         self._app.at(

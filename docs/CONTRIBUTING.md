@@ -1,9 +1,10 @@
-To start to contribute, install the dependencies (Python >= 3.11)
+To start to contribute, install the dependencies (Python >= 3.8)
 ```
-python3.11 -m venv venv
+python3.8 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt -r test-requirements.txt
+pip install --upgrade setuptools
+pip install -r test-requirements.txt
 ```
 
 Fork this repository, make the changes into the forked repository and push a new Merge Request to 'main' branch.
@@ -26,6 +27,7 @@ python -m pytest
 ## Linter
 ```
 flake8 --exclude venv,.tox --max-line-length 100
+black -l 100 .
 ```
 
 # Tox

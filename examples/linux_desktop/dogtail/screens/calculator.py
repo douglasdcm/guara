@@ -5,10 +5,6 @@
 
 from logging import exception
 from guara.transaction import AbstractTransaction
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from dogtail.rawinput import pressKey, keyNameAliases
 
 
 class Sum(AbstractTransaction):
@@ -27,6 +23,8 @@ class Sum(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, a, b):
+        from dogtail.rawinput import pressKey, keyNameAliases
+
         if not (0 <= a <= 9) or not (0 <= b <= 9):
             raise ValueError("Inputs must be single-digit numbers between 0 and 9.")
         try:

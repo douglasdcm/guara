@@ -3,6 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from pathlib import Path
 from random import randrange
 from pytest import mark
@@ -16,6 +17,7 @@ if not is_dry_run():
     from appium import webdriver
 
 
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestAppiumIntegration:
     def setup_method(self, method):
         file_path = Path(__file__).resolve()

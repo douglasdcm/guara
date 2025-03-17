@@ -4,11 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from guara.transaction import AbstractTransaction
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from dogtail.procedural import click
-    from dogtail.utils import screenshot
 
 
 class OpenApp(AbstractTransaction):
@@ -28,9 +23,9 @@ class CloseApp(AbstractTransaction):
     Closes the App using dogtail for convenience
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self):
+        from dogtail.procedural import click
+        from dogtail.utils import screenshot
+
         screenshot()
         click("Close")

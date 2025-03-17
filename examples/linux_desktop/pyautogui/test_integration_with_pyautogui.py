@@ -3,14 +3,11 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from guara.transaction import Application
 from guara import it
 from guara.utils import is_dry_run
 from screens import calculator, setup
-
-if not is_dry_run():
-    from dogtail.tree import root
-    from dogtail.procedural import run, focus
 
 
 class ItShows(it.IAssertion):
@@ -29,10 +26,14 @@ class ItShows(it.IAssertion):
         assert actual.child(str(expected)).showing
 
 
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestLinuxCalculatorWithPyautogui:
     def setup_method(self, method):
         driver = None
         if not is_dry_run():
+            from dogtail.tree import root
+            from dogtail.procedural import run, focus
+
             app_name = "gnome-calculator"
             run(app_name)
             focus.application(app_name)

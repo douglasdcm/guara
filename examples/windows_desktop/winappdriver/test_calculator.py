@@ -25,6 +25,7 @@ class ItShows(it.IAssertion):
         assert actual.child(str(expected)).showing
 
 
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestWindowsCalculatorWithWinAppDriver:
     def setup_method(self, method):
         driver = None

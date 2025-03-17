@@ -76,7 +76,7 @@ Again, it is a very repetitive activity:
 
 # Installation
 ## Dependencies
-- Python 3.11
+- Python 3.8+
 
 This framework can be installed by
 ```shell

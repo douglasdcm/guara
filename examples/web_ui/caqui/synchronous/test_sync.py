@@ -3,6 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from random import randrange
 from pathlib import Path
 from pytest import fixture
@@ -16,6 +17,7 @@ if not is_dry_run():
     from selenium import webdriver
 
 
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestSyncTransaction:
     # Set the fixtures as asynchronous
     @fixture(scope="function")

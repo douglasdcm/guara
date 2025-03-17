@@ -3,24 +3,26 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from guara.transaction import Application
 from guara import it
 from examples.linux_desktop.rpa_python import setup
 from examples.linux_desktop.rpa_python import home
 from guara.utils import is_dry_run
 
-if not is_dry_run():
-    import rpa as r
 
-
+@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestRPAIntegration:
     """
     TestRPAIntegration is a test class for integrating RPA for Python with a local application.
     """
 
     def setup_method(self, method):
+
         driver = None
         if not is_dry_run():
+            import rpa as r
+
             driver = r
         self._app = Application(driver)
         self._app.at(setup.OpenApplication, app_path="path/to/application.exe")
