@@ -4,9 +4,12 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from logging import warning
-from dogtail.procedural import click
-from dogtail.utils import screenshot
 from guara.transaction import AbstractTransaction
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from dogtail.procedural import click
+    from dogtail.utils import screenshot
 
 
 class OpenApp(AbstractTransaction):

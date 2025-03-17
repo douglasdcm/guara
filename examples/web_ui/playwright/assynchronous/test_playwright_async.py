@@ -4,10 +4,21 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import asyncio
-from playwright.async_api import async_playwright
+import pytest
 from guara.asynchronous.transaction import Application, AbstractTransaction
 from guara.asynchronous import it
-import pytest
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from playwright.async_api import async_playwright
+else:
+
+    async def async_playwright():
+        class Any:
+            async def __aexit__(self, *args, **kargs):
+                pass
+
+        return Any()
 
 
 class OpenApp(AbstractTransaction):
@@ -41,17 +52,23 @@ class NavigateToDocs(AbstractTransaction):
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip(
+    "Check the requirements to run Playwright in"
+    "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
+)
 async def test_sample_web_page():
     async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        # Instead of passing just the page it is possible to build a custom `driver`
-        # object that hosts the `page` and the `browser`. For example
-        # driver = {"browser": browser,
-        #           "page": page}
-        # Inside of each transaction the page can be accessed by `self._driver["page"]`
-        # and the browser can be accessed by `self._driver["browser"]`
-        driver = {"browser": browser, "page": page}
+        driver = None
+        if not is_dry_run():
+            browser = await p.chromium.launch()
+            page = await browser.new_page()
+            # Instead of passing just the page it is possible to build a custom `driver`
+            # object that hosts the `page` and the `browser`. For example
+            # driver = {"browser": browser,
+            #           "page": page}
+            # Inside of each transaction the page can be accessed by `self._driver["page"]`
+            # and the browser can be accessed by `self._driver["browser"]`
+            driver = {"browser": browser, "page": page}
         app = Application(driver)
 
         await app.then(OpenApp, url="https://example.com/").perform()

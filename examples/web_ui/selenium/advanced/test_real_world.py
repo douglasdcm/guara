@@ -5,19 +5,24 @@
 
 from pathlib import Path
 from pytest import fixture
-from selenium import webdriver
 from examples.web_ui.selenium.advanced import home, contact, info, setup
 from guara.transaction import Application
 from guara import it
+from guara.utils import is_dry_run
 
+if not is_dry_run():
+    from selenium import webdriver
 FILE_PATH = Path(__file__).parent.resolve()
 
 
 class TestVpmTransaction:
     def setup_method(self, method):
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
-        self._app = Application(webdriver.Chrome(options=options))
+        driver = None
+        if not is_dry_run():
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless=new")
+            driver = webdriver.Chrome(options=options)
+        self._app = Application(driver)
         self._app.at(
             setup.OpenApp,
             url=f"file:///{FILE_PATH}/html/index.html",
@@ -65,9 +70,12 @@ def setup_application():
         "window_height": 765,
         "implicitly_wait": 0.5,
     }
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")
-    app = Application(webdriver.Chrome(options=options))
+    driver = None
+    if not is_dry_run():
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless=new")
+        driver = webdriver.Chrome(options=options)
+    app = Application(driver)
     app.at(setup.OpenApp, **configuration)
     yield app
     app.at(setup.CloseApp, screenshot_filename="./captures/guara-my-picture")

@@ -3,12 +3,15 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import rpa as r
 import pytest
 from guara.transaction import Application
 from guara import it
 from examples.linux_desktop.rpa_python import setup
 from examples.linux_desktop.rpa_python import home
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    import rpa as r
 
 
 @pytest.mark.skip(reason="Complex setup in CI environment")
@@ -18,7 +21,10 @@ class TestRPAIntegration:
     """
 
     def setup_method(self, method):
-        self._app = Application(r)
+        driver = None
+        if not is_dry_run():
+            driver = r
+        self._app = Application(driver)
         self._app.at(setup.OpenApplication, app_path="path/to/application.exe")
 
     def teardown_method(self, method):

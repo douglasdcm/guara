@@ -4,7 +4,10 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from guara.transaction import AbstractTransaction
-from selenium.webdriver.common.by import By
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from selenium.webdriver.common.by import By
 
 
 class SearchGoogle(AbstractTransaction):
@@ -14,6 +17,7 @@ class SearchGoogle(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, query):
+
         self._driver.get("https://www.google.com")
         search_box = self._driver.find_element(By.NAME, "q")
         search_box.send_keys(query)

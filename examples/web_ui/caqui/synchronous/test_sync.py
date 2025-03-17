@@ -6,11 +6,14 @@
 from random import randrange
 from pathlib import Path
 from pytest import fixture
-from selenium import webdriver
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.caqui.constants import MAX_INDEX
 from examples.web_ui.caqui.synchronous import home, setup
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from selenium import webdriver
 
 
 class TestSyncTransaction:
@@ -18,9 +21,12 @@ class TestSyncTransaction:
     @fixture(scope="function")
     def setup_test(self):
         file_path = Path(__file__).parent.parent.parent.resolve()
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
-        self._app = Application(webdriver.Chrome(options=options))
+        driver = None
+        if not is_dry_run():
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless=new")
+            driver = webdriver.Chrome(options=options)
+        self._app = Application(driver)
 
         self._app.at(
             setup.OpenApp,

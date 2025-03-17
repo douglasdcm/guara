@@ -8,13 +8,13 @@ exclude = ["examples*", ".vscode", ".git*", "dist*", "*pytest*", "docs*"]
 
 [project]
 name = "guara"
-version = "0.0.10"
+version = "0.0.11"
 authors = [
   { name="Douglas Cardoso", email="noemail@noemail.com" },
 ]
 description = "Framework to build UI test automation in Page Transactions pattern"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.6"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",

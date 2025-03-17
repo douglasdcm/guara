@@ -4,15 +4,21 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pytest
-import undetected_chromedriver as uc
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.undetected_chromedriver import setup, actions
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    import undetected_chromedriver as uc
 
 
 class TestUndetectedChromeDriver:
     def setup_method(self, method):
-        self._app = Application(uc.Chrome(headless=True))
+        driver = None
+        if not is_dry_run():
+            driver = uc.Chrome(headless=True)
+        self._app = Application(driver)
         self._app._driver = self._app.at(setup.OpenBrowserTransaction)._driver
 
     def teardown_method(self, method):

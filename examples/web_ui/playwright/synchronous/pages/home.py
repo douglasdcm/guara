@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from playwright.sync_api import Page
 from guara.transaction import AbstractTransaction
 
 
@@ -14,10 +13,6 @@ class NavigateToGettingStarted(AbstractTransaction):
     Returns:
         str: the heading 'Installation'
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: Page
 
     def do(self, **kwargs):
         self._driver.get_by_role("link", name="Get started").click()

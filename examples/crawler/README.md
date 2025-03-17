@@ -1,5 +1,10 @@
 This Python script scrapes flight arrival data from the AENA (Spanish airport authority) website for a list of predefined airports. It automates browser interactions using Selenium, extracts flight data using BeautifulSoup, and saves the information to a JSON file for historical reference.
 
+```
+# Python3.11
+python examples/crawler/main.py
+```
+
 ---
 
 ### **Breakdown of the Script**

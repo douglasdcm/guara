@@ -4,8 +4,11 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from datetime import datetime
-from helium import start_chrome, go_to, get_driver, kill_browser
 from guara.transaction import AbstractTransaction
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from helium import start_chrome, go_to, get_driver, kill_browser
 
 
 class OpenApp(AbstractTransaction):

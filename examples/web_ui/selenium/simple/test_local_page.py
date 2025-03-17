@@ -8,15 +8,21 @@ from random import randrange
 from guara import it
 from examples.web_ui.selenium.simple import home, setup
 from guara.transaction import Application
-from selenium import webdriver
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from selenium import webdriver
 
 
 class TestLocalPage:
     def setup_method(self, method):
         file_path = Path(__file__).parent.parent.parent.resolve()
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
-        self._app = Application(webdriver.Chrome(options=options))
+        driver = None
+        if not is_dry_run():
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless=new")
+            driver = webdriver.Chrome(options=options)
+        self._app = Application(driver)
         self._app.at(
             setup.OpenApp,
             url=f"file:///{file_path}/sample.html",

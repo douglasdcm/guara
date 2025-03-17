@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from datetime import datetime
-from browserist import Browser
 from guara.transaction import AbstractTransaction
 
 
@@ -21,10 +20,6 @@ class OpenApp(AbstractTransaction):
     Returns:
         str: the title of the app
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: Browser
 
     def do(self, url, window_width=1094, window_height=765, implicitly_wait=10):
         self._driver.window.set.width(window_width)
@@ -46,10 +41,6 @@ class CloseApp(AbstractTransaction):
         Defaults to './captures'.
 
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: Browser
 
     def do(
         self,

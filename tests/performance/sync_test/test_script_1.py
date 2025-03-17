@@ -5,10 +5,13 @@
 
 import time
 import datetime
-import psutil
 import logging
 import pytest
 from tests.performance.sync_test.app.app import App
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    import psutil
 
 
 @pytest.mark.skip(reason="Do not run on pipelines. Run it manually on each release")

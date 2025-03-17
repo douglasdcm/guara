@@ -3,8 +3,11 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from helium import find_all, write, click, S, Text
 from guara.transaction import AbstractTransaction
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from helium import find_all, write, click, S, Text
 
 
 class SubmitText(AbstractTransaction):

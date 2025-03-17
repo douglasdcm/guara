@@ -8,8 +8,11 @@ from guara import it
 from examples.web_ui.selenium_stealth import setup
 from examples.web_ui.selenium_stealth import home
 from random import randrange
-from selenium import webdriver
-from selenium_stealth import stealth
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from selenium import webdriver
+    from selenium_stealth import stealth
 
 
 class TestSeleniumStealthIntegration:
@@ -19,20 +22,22 @@ class TestSeleniumStealthIntegration:
     """
 
     def setup_method(self, method):
-        options = webdriver.ChromeOptions()
-        options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument("--headless=new")
+        driver = None
+        if not is_dry_run():
+            options = webdriver.ChromeOptions()
+            options.add_argument("--disable-blink-features=AutomationControlled")
+            options.add_argument("--headless=new")
 
-        driver = webdriver.Chrome(options=options)
-        stealth(
-            driver,
-            languages=["en-US", "en"],
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True,
-        )
+            driver = webdriver.Chrome(options=options)
+            stealth(
+                driver,
+                languages=["en-US", "en"],
+                vendor="Google Inc.",
+                platform="Win32",
+                webgl_vendor="Intel Inc.",
+                renderer="Intel Iris OpenGL Engine",
+                fix_hairline=True,
+            )
 
         self._app = Application(driver)
         self._app.at(

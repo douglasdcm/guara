@@ -5,7 +5,10 @@
 
 from logging import exception
 from guara.transaction import AbstractTransaction
-from dogtail.rawinput import pressKey, keyNameAliases
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from dogtail.rawinput import pressKey, keyNameAliases
 
 
 class Sum(AbstractTransaction):

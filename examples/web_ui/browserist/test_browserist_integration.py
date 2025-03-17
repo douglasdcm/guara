@@ -9,14 +9,19 @@ from guara.transaction import Application
 from guara import it
 from examples.web_ui.browserist import setup
 from examples.web_ui.browserist import home
-from browserist import Browser, BrowserSettings
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from browserist import Browser, BrowserSettings
 
 
 class TestBrowseristIntegration:
     def setup_method(self, method):
         file_path = Path(__file__).parent.parent.resolve()
-
-        self._app = Application(Browser(BrowserSettings(headless=True)))
+        driver = None
+        if not is_dry_run():
+            driver = Browser(BrowserSettings(headless=True))
+        self._app = Application(driver)
         self._app.at(
             setup.OpenApp,
             url=f"file:///{file_path}/sample.html",

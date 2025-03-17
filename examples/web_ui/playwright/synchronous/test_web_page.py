@@ -4,10 +4,17 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import fixture, mark
-from playwright.sync_api import Page
 from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
 from guara.transaction import Application
 from guara import it
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from playwright.sync_api import Page
+else:
+
+    class Page:
+        pass
 
 
 @fixture

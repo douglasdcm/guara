@@ -3,9 +3,12 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pyautogui import locateOnScreen, click
 from constants import BASE_PATH
 from guara.transaction import AbstractTransaction
+from guara.utils import is_dry_run
+
+if not is_dry_run():
+    from pyautogui import locateOnScreen, click
 
 
 class Divide(AbstractTransaction):
