@@ -18,7 +18,7 @@ class OpenApp(AbstractTransaction):
         window_height: int = 765,
         timeout: int = 60000,
     ):
-        page = self._driver
+        page = self._driver["page"]
         await page.set_viewport_size({"width": window_width, "height": window_height})
         await page.goto(url, timeout=timeout, wait_until="domcontentloaded")
         return await page.title()
@@ -26,15 +26,17 @@ class OpenApp(AbstractTransaction):
 
 class CloseApp(AbstractTransaction):
     async def do(self, screenshot_filename: str = "./captures/guara-capture"):
-        page = self._driver
+        page = self._driver["page"]
+        browser = self._driver["browser"]
         timestamp = asyncio.get_event_loop().time()
         await page.screenshot(path=f"{screenshot_filename}-{timestamp:.0f}.png")
         await page.close()
+        await browser.close()
 
 
 class NavigateToDocs(AbstractTransaction):
     async def do(self):
-        page = self._driver
+        page = self._driver["page"]
         return await page.text_content("h1")
 
 
@@ -45,14 +47,13 @@ async def test_sample_web_page():
         page = await browser.new_page()
         # Instead of passing just the page it is possible to build a custom `driver`
         # object that hosts the `page` and the `browser`. For example
-        # driver = {"browser": browser
+        # driver = {"browser": browser,
         #           "page": page}
         # Inside of each transaction the page can be accessed by `self._driver["page"]`
         # and the browser can be accessed by `self._driver["browser"]`
-        app = Application(page)
+        driver = {"browser": browser, "page": page}
+        app = Application(driver)
 
         await app.then(OpenApp, url="https://example.com/").perform()
         await app.when(NavigateToDocs).asserts(it.Contains, "Example Domain").perform()
         await app.then(CloseApp).perform()
-
-        await browser.close()

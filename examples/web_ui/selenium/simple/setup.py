@@ -7,7 +7,6 @@
 The module that is reponsible for the opening and closing
 transactions.
 """
-
 from datetime import datetime
 from guara.transaction import AbstractTransaction
 

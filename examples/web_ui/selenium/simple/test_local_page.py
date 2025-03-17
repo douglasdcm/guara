@@ -5,10 +5,10 @@
 
 from pathlib import Path
 from random import randrange
-from selenium import webdriver
+from guara import it
 from examples.web_ui.selenium.simple import home, setup
 from guara.transaction import Application
-from guara import it
+from selenium import webdriver
 
 
 class TestLocalPage:

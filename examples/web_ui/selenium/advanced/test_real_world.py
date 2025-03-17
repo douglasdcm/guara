@@ -34,8 +34,7 @@ class TestVpmTransaction:
         content_in_portuguese = "Conteúdo do currículo"
 
         self._app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
-        result = self._app.at(home.ChangeToEnglish).result
-        it.IsEqualTo().asserts(result, content_in_english)
+        self._app.at(home.ChangeToEnglish).asserts(it.IsEqualTo, content_in_english)
         self._app.at(info.NavigateTo).asserts(
             it.Contains,
             (

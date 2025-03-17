@@ -7,8 +7,8 @@
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser.
 """
-
 from typing import Any, NoReturn, Union, Dict
+from guara.utils import is_dry_run
 
 
 class AbstractTransaction:
@@ -50,3 +50,8 @@ class AbstractTransaction:
             NotImplementedError: The method is not implemented in the subclass.
         """
         raise NotImplementedError
+
+    def act(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
+        if is_dry_run():
+            return
+        return self.do(**kwargs)
