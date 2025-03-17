@@ -7,7 +7,6 @@ black
 tox
 pre-commit
 requests
-
 psutil
 caqui
 pytest-playwright

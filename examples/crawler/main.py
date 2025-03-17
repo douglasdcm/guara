@@ -13,7 +13,8 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+
+# from zoneinfo import ZoneInfo
 from guara.transaction import AbstractTransaction, Application
 import json
 import time
@@ -37,7 +38,6 @@ AIRPORTS = [
     "ALICANTE-ELCHE MIGUEL HERNÁNDEZ",
     "VALENCIA",
 ]
-TIMEZONE = ZoneInfo("Europe/Madrid")
 HISTORY_DAYS = 5
 
 
@@ -148,8 +148,8 @@ class ProcessAirportData(AbstractTransaction):
                         "aerolinea": aerolinea,
                         "origen": origen,
                         "estado": estado,
-                        "fecha": datetime.now(TIMEZONE).strftime("%Y-%m-%d"),
-                        "hora_actualizacion": datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S"),
+                        "fecha": datetime.now().strftime("%Y-%m-%d"),
+                        "hora_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     }
                 )
 
@@ -179,7 +179,7 @@ class SaveFlightData(AbstractTransaction):
 
     def do(self, flights_data, history_days):
         existing_data = read_json_file("flights_data.json", [])
-        current_date = datetime.now(TIMEZONE).date()
+        current_date = datetime.now().date()
 
         # Filter outdated data
         updated_data = [
@@ -246,7 +246,7 @@ def get_aena_data():
     app.then(CloseBrowser)
 
     # Update script status
-    script_status["last_run"] = datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")
+    script_status["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     script_status["status"] = "Success"
     write_json_file("script_status.json", script_status)
 
