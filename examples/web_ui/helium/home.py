@@ -4,10 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from guara.transaction import AbstractTransaction
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from helium import find_all, write, click, S, Text
 
 
 class SubmitText(AbstractTransaction):
@@ -25,6 +21,9 @@ class SubmitText(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, text):
+        # Lazy import as Helium is not compatible with Python 3.7
+        from helium import find_all, write, click, S, Text
+
         TEXT = '//*[@id="input"]'
         BUTTON_TEST = "button"
         text_field = find_all(S(TEXT))[0]

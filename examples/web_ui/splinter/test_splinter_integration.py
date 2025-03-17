@@ -10,9 +10,7 @@ from guara import it
 from examples.web_ui.splinter import setup
 from examples.web_ui.splinter import home
 from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from splinter import Browser
+from splinter import Browser
 
 
 class TestSplinterIntegration:

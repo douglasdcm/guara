@@ -3,14 +3,12 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import pytest
+from pytest import mark
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.undetected_chromedriver import setup, actions
 from guara.utils import is_dry_run
-
-if not is_dry_run():
-    import undetected_chromedriver as uc
+import undetected_chromedriver as uc
 
 
 class TestUndetectedChromeDriver:
@@ -24,7 +22,7 @@ class TestUndetectedChromeDriver:
     def teardown_method(self, method):
         self._app.at(setup.CloseBrowserTransaction)
 
-    @pytest.mark.parametrize("query", ["Guara framework", "undetected-chromedriver"])
+    @mark.parametrize("query", ["Guara framework", "undetected-chromedriver"])
     def test_google_search(self, query):
 
         self._app.at(actions.SearchGoogle, query=query).asserts(

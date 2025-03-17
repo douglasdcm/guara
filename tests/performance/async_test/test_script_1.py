@@ -6,16 +6,13 @@
 import time
 import datetime
 import logging
-import pytest
-from guara.utils import is_dry_run
+from pytest import mark
 from tests.performance.async_test.app.app import App
-
-if not is_dry_run():
-    import psutil
+import psutil
 
 
-@pytest.mark.skip(reason="Do not run on pipelines. Run it manually on each release")
-@pytest.mark.asyncio
+@mark.skip(reason="Do not run on pipelines. Run it manually on each release")
+@mark.asyncio
 async def test_performance_async():
     """Runs the test for SECONDS seconds, save the metrics `time`, `latency`, `cpu`,
     `memory` and `disk` in `data.csv` and the logs of the executin in `script_1.log`
@@ -53,7 +50,3 @@ async def test_performance_async():
                 )
             )
             f.flush()
-
-
-# if __name__ == "__main__":
-#     asyncio.run(test_performance_async())

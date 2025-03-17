@@ -7,22 +7,12 @@ from pytest import fixture
 from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
 from guara.transaction import Application
 from guara import it
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from playwright.sync_api import Page
-else:
-
-    @fixture
-    def page():
-        pass
+from playwright.sync_api import Page
 
 
 @fixture
-def setup_method(page):
-    driver = None
-    if not is_dry_run():
-        driver = page
+def setup_method(page: Page):
+    driver = page
 
     app = Application(driver)
     app.at(

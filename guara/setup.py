@@ -24,7 +24,8 @@ class OpenApp(AbstractTransaction):
     def do(self, **kwargs) -> str:
         raise DeprecatedError(
             "This method is deprecated. Copy the code from"
-            " https://github.com/douglasdcm/guara/blob/main/examples/web_ui/selenium/simple/local_page/setup.py"
+            " https://github.com/douglasdcm/guara"
+            "/blob/main/examples/web_ui/selenium/simple/local_page/setup.py"
         )
 
 

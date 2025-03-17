@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import pytest
+from pytest import mark
 from guara.transaction import Application
 from guara.utils import is_dry_run
 from examples.linux_desktop.dogtail.screens import setup
@@ -11,7 +11,7 @@ from examples.linux_desktop.dogtail.screens import calculator
 from examples.linux_desktop.dogtail.assertions import this
 
 
-@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestLinuxCalculatorWithDogtail:
     def setup_method(self, method):
         driver = None
@@ -36,6 +36,6 @@ class TestLinuxCalculatorWithDogtail:
     def teardown_method(self, method):
         self._calculator.at(setup.CloseApp)
 
-    @pytest.mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
+    @mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
     def test_calculator_with_dogtail(self, a, b, expected):
         self._calculator.at(calculator.Sum, a=a, b=b).asserts(this.Shows, expected)

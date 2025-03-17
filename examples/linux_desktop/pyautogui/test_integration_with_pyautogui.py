@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import pytest
+from pytest import mark
 from guara.transaction import Application
 from guara import it
 from guara.utils import is_dry_run
@@ -26,7 +26,7 @@ class ItShows(it.IAssertion):
         assert actual.child(str(expected)).showing
 
 
-@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestLinuxCalculatorWithPyautogui:
     def setup_method(self, method):
         driver = None

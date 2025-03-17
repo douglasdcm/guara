@@ -1,12 +1,8 @@
-import pytest
+from pytest import mark
 from guara.transaction import Application
 from guara import it
 from guara.utils import is_dry_run
 from examples.windows_desktop.winappdriver import setup, calculator
-
-if not is_dry_run():
-    from appium import webdriver
-    from appium.options.windows import WindowsOptions
 
 
 class ItShows(it.IAssertion):
@@ -25,11 +21,15 @@ class ItShows(it.IAssertion):
         assert actual.child(str(expected)).showing
 
 
-@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestWindowsCalculatorWithWinAppDriver:
     def setup_method(self, method):
         driver = None
         if not is_dry_run():
+            # Lazy import as Appium needs local resources
+            from appium import webdriver
+            from appium.options.windows import WindowsOptions
+
             options = WindowsOptions()
             options.set_capability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App")
             options.set_capability("platformName", "Windows")
@@ -42,7 +42,7 @@ class TestWindowsCalculatorWithWinAppDriver:
     def teardown_method(self, method):
         self._app.at(setup.CloseAppTransaction)
 
-    @pytest.mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
+    @mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
     def test_addition(self, a, b, expected):
 
         self._app.at(calculator.SumNumbers, num1=a, num2=b).asserts(ItShows, expected)

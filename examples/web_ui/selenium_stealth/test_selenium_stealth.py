@@ -9,10 +9,8 @@ from examples.web_ui.selenium_stealth import setup
 from examples.web_ui.selenium_stealth import home
 from random import randrange
 from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from selenium import webdriver
-    from selenium_stealth import stealth
+from selenium import webdriver
+from selenium_stealth import stealth
 
 
 class TestSeleniumStealthIntegration:

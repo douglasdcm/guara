@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import pytest
+from pytest import mark
 from random import randrange
 from pathlib import Path
 from pytest import fixture
@@ -12,12 +12,10 @@ from guara import it
 from examples.web_ui.caqui.constants import MAX_INDEX
 from examples.web_ui.caqui.synchronous import home, setup
 from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from selenium import webdriver
+from selenium import webdriver
 
 
-@pytest.mark.skipif(not is_dry_run(), reason="Dry run is disabled")
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestSyncTransaction:
     # Set the fixtures as asynchronous
     @fixture(scope="function")

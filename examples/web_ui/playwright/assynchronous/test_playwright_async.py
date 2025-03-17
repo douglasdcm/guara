@@ -3,22 +3,11 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import asyncio
-import pytest
+from asyncio import get_event_loop
+from pytest import mark
 from guara.asynchronous.transaction import Application, AbstractTransaction
 from guara.asynchronous import it
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from playwright.async_api import async_playwright
-else:
-
-    async def async_playwright():
-        class Any:
-            async def __aexit__(self, *args, **kargs):
-                pass
-
-        return Any()
+from playwright.async_api import async_playwright
 
 
 class OpenApp(AbstractTransaction):
@@ -39,7 +28,7 @@ class CloseApp(AbstractTransaction):
     async def do(self, screenshot_filename: str = "./captures/guara-capture"):
         page = self._driver["page"]
         browser = self._driver["browser"]
-        timestamp = asyncio.get_event_loop().time()
+        timestamp = get_event_loop().time()
         await page.screenshot(path=f"{screenshot_filename}-{timestamp:.0f}.png")
         await page.close()
         await browser.close()
@@ -51,24 +40,22 @@ class NavigateToDocs(AbstractTransaction):
         return await page.text_content("h1")
 
 
-@pytest.mark.asyncio
-@pytest.mark.skip(
+@mark.asyncio
+@mark.skip(
     "Check the requirements to run Playwright in"
     "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
 )
 async def test_sample_web_page():
     async with async_playwright() as p:
-        driver = None
-        if not is_dry_run():
-            browser = await p.chromium.launch()
-            page = await browser.new_page()
-            # Instead of passing just the page it is possible to build a custom `driver`
-            # object that hosts the `page` and the `browser`. For example
-            # driver = {"browser": browser,
-            #           "page": page}
-            # Inside of each transaction the page can be accessed by `self._driver["page"]`
-            # and the browser can be accessed by `self._driver["browser"]`
-            driver = {"browser": browser, "page": page}
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        # Instead of passing just the page it is possible to build a custom `driver`
+        # object that hosts the `page` and the `browser`. For example
+        # driver = {"browser": browser,
+        #           "page": page}
+        # Inside of each transaction the page can be accessed by `self._driver["page"]`
+        # and the browser can be accessed by `self._driver["browser"]`
+        driver = {"browser": browser, "page": page}
         app = Application(driver)
 
         await app.then(OpenApp, url="https://example.com/").perform()

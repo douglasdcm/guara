@@ -4,12 +4,9 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from guara.transaction import AbstractTransaction
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from selenium.webdriver.support import expected_conditions
-    from selenium.webdriver.support.wait import WebDriverWait
-    from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
 
 TEXT_AREA = ".col-md-10"
 TEXT_AREA_LABEL = "label:nth-child(1)"

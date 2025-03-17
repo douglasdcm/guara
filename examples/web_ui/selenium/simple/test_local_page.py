@@ -9,9 +9,7 @@ from guara import it
 from examples.web_ui.selenium.simple import home, setup
 from guara.transaction import Application
 from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from selenium import webdriver
+from selenium import webdriver
 
 
 class TestLocalPage:

@@ -5,10 +5,6 @@
 
 from constants import BASE_PATH
 from guara.transaction import AbstractTransaction
-from guara.utils import is_dry_run
-
-if not is_dry_run():
-    from pyautogui import locateOnScreen, click
 
 
 class Divide(AbstractTransaction):
@@ -33,6 +29,8 @@ class Divide(AbstractTransaction):
         return f"{BASE_PATH}{button_name}.png"
 
     def _click_buton(self, button, CONFIDENCE):
+        from pyautogui import locateOnScreen, click
+
         button = locateOnScreen(button, confidence=CONFIDENCE)
         if not button:
             raise ValueError(f"Button image {button} not found.")
