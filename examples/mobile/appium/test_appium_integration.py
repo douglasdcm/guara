@@ -16,7 +16,6 @@ if not is_dry_run():
     from appium import webdriver
 
 
-@mark.skip(reason="Complex setup in CI environment")
 class TestAppiumIntegration:
     def setup_method(self, method):
         file_path = Path(__file__).resolve()

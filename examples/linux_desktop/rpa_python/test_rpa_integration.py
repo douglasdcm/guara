@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import pytest
 from guara.transaction import Application
 from guara import it
 from examples.linux_desktop.rpa_python import setup
@@ -14,7 +13,6 @@ if not is_dry_run():
     import rpa as r
 
 
-@pytest.mark.skip(reason="Complex setup in CI environment")
 class TestRPAIntegration:
     """
     TestRPAIntegration is a test class for integrating RPA for Python with a local application.

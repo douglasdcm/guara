@@ -1,10 +1,12 @@
 import pytest
-import platform
 from guara.transaction import Application
 from guara import it
+from guara.utils import is_dry_run
+from examples.windows_desktop.winappdriver import setup, calculator
 
-# Skip the tests if not running on Windows
-pytestmark = pytest.mark.skipif(platform.system() != "Windows", reason="Requires Windows")
+if not is_dry_run():
+    from appium import webdriver
+    from appium.options.windows import WindowsOptions
 
 
 class ItShows(it.IAssertion):
@@ -25,20 +27,21 @@ class ItShows(it.IAssertion):
 
 class TestWindowsCalculatorWithWinAppDriver:
     def setup_method(self, method):
-        """Lazy import to avoid breaking the pipeline"""
-        from examples.windows_desktop.winappdriver import setup
-
-        self._app = Application()
-        self._app._driver = self.app.at(setup.OpenAppTransaction)._driver
+        driver = None
+        if not is_dry_run():
+            options = WindowsOptions()
+            options.set_capability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App")
+            options.set_capability("platformName", "Windows")
+            options.set_capability("deviceName", "WindowsPC")
+            driver = webdriver.Remote(
+                command_executor="http://localhost:4723/wd/hub", options=options
+            )
+        self._app = Application(driver)
 
     def teardown_method(self, method):
-        """Lazy import to avoid breaking the pipeline"""
-        from examples.windows_desktop.winappdriver import setup
-
         self._app.at(setup.CloseAppTransaction)
 
     @pytest.mark.parametrize("a,b,expected", [(1, 2, 3), (3, 5, 8), (0, 0, 0), (9, 1, 10)])
     def test_addition(self, a, b, expected):
-        from examples.windows_desktop.winappdriver import calculator
 
         self._app.at(calculator.SumNumbers, num1=a, num2=b).asserts(ItShows, expected)

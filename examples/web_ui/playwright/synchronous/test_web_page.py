@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pytest import fixture, mark
+from pytest import fixture
 from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
 from guara.transaction import Application
 from guara import it
@@ -13,13 +13,18 @@ if not is_dry_run():
     from playwright.sync_api import Page
 else:
 
-    class Page:
+    @fixture
+    def page():
         pass
 
 
 @fixture
-def setup_method(page: Page):
-    app = Application(page)
+def setup_method(page):
+    driver = None
+    if not is_dry_run():
+        driver = page
+
+    app = Application(driver)
     app.at(
         setup.OpenApp,
         with_url="https://playwright.dev/",
@@ -27,10 +32,6 @@ def setup_method(page: Page):
     yield app
 
 
-@mark.skip(
-    "Check the requirements to run Playwright in"
-    "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
-)
 def test_local_page_playwright(setup_method):
     dev_page: Application = setup_method
     dev_page.at(home.NavigateToGettingStarted).asserts(it.IsEqualTo, "Installation")
