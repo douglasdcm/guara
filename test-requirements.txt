@@ -22,3 +22,4 @@ rpa
 psutil
 selenium-stealth
 undetected_chromedriver
+selenium

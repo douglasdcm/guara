@@ -7,14 +7,10 @@ from random import randrange
 from pathlib import Path
 from pytest import fixture
 from selenium import webdriver
-
 from guara.transaction import Application
-from guara import it, setup
-
-from examples.web_ui.caqui_async.constants import MAX_INDEX
-
-# `setup` is not the built-in transaction
-from examples.web_ui.caqui_async.synchronous import home
+from guara import it
+from examples.web_ui.caqui.constants import MAX_INDEX
+from examples.web_ui.caqui.synchronous import home, setup
 
 
 class TestSyncTransaction:

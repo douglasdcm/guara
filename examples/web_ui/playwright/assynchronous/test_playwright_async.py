@@ -1,3 +1,8 @@
+# Copyright (C) 2025 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 import asyncio
 from playwright.async_api import async_playwright
 from guara.asynchronous.transaction import Application, AbstractTransaction
@@ -38,12 +43,16 @@ async def test_sample_web_page():
     async with async_playwright() as p:
         browser = await p.chromium.launch()
         page = await browser.new_page()
+        # Instead of passing just the page it is possible to build a custom `driver`
+        # object that hosts the `page` and the `browser`. For example
+        # driver = {"browser": browser
+        #           "page": page}
+        # Inside of each transaction the page can be accessed by `self._driver["page"]`
+        # and the browser can be accessed by `self._driver["browser"]`
         app = Application(page)
 
         await app.when(OpenApp, url="https://example.com/").perform()
         await app.when(NavigateToDocs).asserts(it.Contains, "Example Domain").perform()
         await app.when(CloseApp).perform()
 
-        # As playwrite is async, we need to close the browser
-        # then it is an exception to Page Transations pattern
         await browser.close()

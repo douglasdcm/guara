@@ -6,9 +6,9 @@
 from pathlib import Path
 from pytest import fixture
 from selenium import webdriver
-from examples.web_ui.selenium.advanced import home, contact, info
+from examples.web_ui.selenium.advanced import home, contact, info, setup
 from guara.transaction import Application
-from guara import it, setup
+from guara import it
 
 FILE_PATH = Path(__file__).parent.resolve()
 
