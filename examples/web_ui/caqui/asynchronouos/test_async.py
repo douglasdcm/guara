@@ -12,10 +12,10 @@ from typing import Any, Dict, Union, Generator
 from caqui.synchronous import get_session
 from guara.asynchronous.it import IsEqualTo
 from guara.asynchronous.transaction import Application
-from examples.web_ui.caqui_async.asynchronouos.home import GetAllLinks, GetNthLink
-from examples.web_ui.caqui_async.constants import MAX_INDEX
+from examples.web_ui.caqui.asynchronouos.home import GetAllLinks, GetNthLink
+from examples.web_ui.caqui.constants import MAX_INDEX
 from logging import getLogger, Logger
-from examples.web_ui.caqui_async.asynchronouos.setup import OpenApp, CloseApp
+from examples.web_ui.caqui.asynchronouos.setup import OpenApp, CloseApp
 
 
 LOGGER: Logger = getLogger(__name__)

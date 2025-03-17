@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from playwright.sync_api import Page
 from guara.transaction import AbstractTransaction
 
 
@@ -17,10 +16,6 @@ class OpenApp(AbstractTransaction):
     Returns:
         str: the title of the App
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: Page
 
     def do(self, with_url):
         self._driver.goto(with_url)

@@ -3,8 +3,8 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from selenium.webdriver.common.by import By
 from guara.transaction import AbstractTransaction
+from selenium.webdriver.common.by import By
 
 
 class NavigateTo(AbstractTransaction):

@@ -35,9 +35,9 @@ Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matche
 ### Example in Action
 ```python
 from selenium import webdriver
-from pages import home, contact, info
+from pages import home, contact, info, setup
 from guara.transaction import Application
-from guara import it, setup
+from guara import it
 
 def test_sample_web_page():
     # Initialize the Application with a driver
@@ -60,9 +60,6 @@ def test_sample_web_page():
 The repetitive web driver code is encapsulated in a transaction class:
 ```python
 class ChangeToPortuguese(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, **kwargs):
         self._driver.find_element(By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img").click()
         self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
@@ -104,11 +101,13 @@ Explore practical examples in the [examples folder](https://github.com/douglasdc
 
 ### Advanced Topics
 - [The pattern explained](https://github.com/douglasdcm/guara/tree/main/docs/THE_PATTERN_EXPLAINED.md)
-- [ChatGPT assistance](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#ChatGPT-assistance)
+- [ChatGPT assistance](https://github.com/douglasdcm/guara/tree/main/docs/CHATGPT_ASSISTANCE.md)
 - [Page Transactions and Page Objects Model](https://github.com/douglasdcm/guara/tree/main/docs/PT_AND_POM.md)
-- [Using Other Web Drivers](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Using-other-Web-Drivers)
-- [Asynchronous Execution](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Asynchronous-execution)
-- [Non-Testers Usage](https://github.com/douglasdcm/guara/tree/main/docs/MISCELANEOS.md#Non-testers-usage)
+- [Using Other Web Drivers](https://github.com/douglasdcm/guara/tree/main/docs/OTHER_DRIVERS.md)
+- [Using test frameworks](https://github.com/douglasdcm/guara/tree/main/docs/TEST_FRAMEWORKS.md)
+- [Configuring dry-run](https://github.com/douglasdcm/guara/tree/main/docs/DRY_RUN.md)
+- [Asynchronous Execution](https://github.com/douglasdcm/guara/tree/main/docs/ASYNC.md)
+- [Non-Testers Usage](https://github.com/douglasdcm/guara/tree/main/docs/NON_TESTERS.md)
 ---
 
 ## Contributing

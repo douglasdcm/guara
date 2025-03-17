@@ -3,8 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from dogtail.procedural import click
-from dogtail.utils import screenshot
 from guara.transaction import AbstractTransaction
 
 
@@ -25,9 +23,9 @@ class CloseApp(AbstractTransaction):
     Closes the App using dogtail for convenience
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self):
+        from dogtail.procedural import click
+        from dogtail.utils import screenshot
+
         screenshot()
         click("Close")

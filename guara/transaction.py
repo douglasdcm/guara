@@ -9,7 +9,7 @@ The module that has all of the transactions.
 
 from typing import Any, Dict
 from guara.it import IAssertion
-from guara.utils import get_transaction_info
+from guara.utils import get_transaction_info, is_dry_run
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
@@ -29,6 +29,9 @@ class Application:
         Args:
             driver: (Any): This is the driver of the system being under test.
         """
+        if is_dry_run():
+            self._driver = None
+            return
         self._driver: Any = driver
         """
         It is the driver that has a transaction.
@@ -69,10 +72,25 @@ class Application:
         LOGGER.info(f"Transaction: {transaction_info}")
         for key, value in kwargs.items():
             LOGGER.info(f" {key}: {value}")
-        self._result = self._transaction.do(**kwargs)
+        self._result = self._transaction.act(**kwargs)
         return self
 
     def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+        """
+        Same as the `at` method. Introduced for better readability.
+
+        Performing a transaction.
+
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
+
+        Returns:
+            (Application)
+        """
+        return self.at(transaction, **kwargs)
+
+    def then(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Same as the `at` method. Introduced for better readability.
 

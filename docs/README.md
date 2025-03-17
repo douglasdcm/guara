@@ -16,9 +16,9 @@ Guará is the Python implementation of the design pattern `Page Transactions`. T
 
 ```python
 from selenium import webdriver
-from pages import home, contact, info
+from pages import home, contact, info, setup
 from guara.transaction import Application
-from guara import it, setup
+from guara import it
 
 def test_sample_web_page():
     # Instantiates the Application with a driver
@@ -76,7 +76,7 @@ Again, it is a very repetitive activity:
 
 # Installation
 ## Dependencies
-- Python 3.11
+- Python 3.8+
 
 This framework can be installed by
 ```shell

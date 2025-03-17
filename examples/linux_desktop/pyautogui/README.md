@@ -2,7 +2,7 @@
 [Pyautogui](https://pyautogui.readthedocs.io/en/latest/) lets your Python scripts control the mouse and keyboard to automate interactions with other applications. The API is designed to be simple. PyAutoGUI works on Windows, macOS, and Linux, and runs on Python 2 and 3.
 
 ## Test explanation
-Before executing this example make sure your host matches the [requirements](https://pyautogui.readthedocs.io/en/latest/install.html) to install Pyautogui ans dogtail.
+Before executing this example make sure your host matches the [requirements](https://pyautogui.readthedocs.io/en/latest/install.html) to install Pyautogui and dogtail.
 
 If you are usinf Python 3.11 and faces errors `No module named 'pyatspi'` while runnig the tests, then try [this](https://gitlab.com/dogtail/dogtail/-/issues/37#note_2304763633)
 

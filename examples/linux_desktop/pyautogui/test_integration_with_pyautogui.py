@@ -6,6 +6,8 @@
 from pytest import mark
 from guara.transaction import Application
 from guara import it
+from guara.utils import is_dry_run
+from screens import calculator, setup
 
 
 class ItShows(it.IAssertion):
@@ -24,30 +26,26 @@ class ItShows(it.IAssertion):
         assert actual.child(str(expected)).showing
 
 
-@mark.skip("Skipped due to the complexity to integrate it in pipeline")
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestLinuxCalculatorWithPyautogui:
     def setup_method(self, method):
-        # I opted for lazy imports just to not break the pipeline.
-        # Do not do it.
-        from screens import setup
-        from dogtail.tree import root
-        from dogtail.procedural import run, focus
+        driver = None
+        if not is_dry_run():
+            from dogtail.tree import root
+            from dogtail.procedural import run, focus
 
-        app_name = "gnome-calculator"
-        run(app_name)
-        focus.application(app_name)
-        driver = root.application(app_name)
+            app_name = "gnome-calculator"
+            run(app_name)
+            focus.application(app_name)
+            driver = root.application(app_name)
 
         self._calculator = Application(driver=driver)
         self._calculator.at(setup.OpenApp)
 
     def teardown_method(self, method):
-        from screens import setup
-
         self._calculator.at(setup.CloseApp)
 
     def test_calculator(self):
-        from screens import calculator
 
         # Pyautogui seems not to enforce assertions. It also does not have a driver
         # which the tester could use to get information about the app. It just interacts

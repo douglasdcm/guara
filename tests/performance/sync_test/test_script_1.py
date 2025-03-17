@@ -5,13 +5,13 @@
 
 import time
 import datetime
-import psutil
 import logging
-import pytest
+from pytest import mark
 from tests.performance.sync_test.app.app import App
+import psutil
 
 
-@pytest.mark.skip(reason="Do not run on pipelines. Run it manually on each release")
+@mark.skip(reason="Do not run on pipelines. Run it manually on each release")
 def test_performance_sync():
     """Runs the test for SECONDS seconds, save the metrics `time`, `latency`, `cpu`,
     `memory` and `disk` in `data.csv` and the logs of the executin in `script_1.log`

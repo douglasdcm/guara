@@ -110,6 +110,21 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
+    def then(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+        """
+        Same as the `at` method. Introduced for better readability.
+
+        Performing a transaction.
+
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
+
+        Returns:
+            (Application)
+        """
+        return self.at(transaction, **kwargs)
+
     def asserts(self, it: IAssertion, expected: Any) -> "Application":
         """
         Asserting the data that is performed by the transaction

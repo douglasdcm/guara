@@ -1,14 +1,15 @@
 pytest
+python-dotenv
 pytest-xdist
 pytest-asyncio
 flake8
 black
+tox
 pre-commit
 requests
+psutil
 caqui
-tox
 pytest-playwright
-browserist
 helium
 testify
 stestr
@@ -19,6 +20,9 @@ opencv-python
 dogtail
 splinter
 rpa
-psutil
 selenium-stealth
 undetected_chromedriver
+selenium
+# Uncomment the following lines to use the corresponding library when DRY_RUN is set to "false"
+# browserist
+# pyautowin

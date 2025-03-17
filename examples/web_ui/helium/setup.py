@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from datetime import datetime
-from helium import start_chrome, go_to, get_driver, kill_browser
 from guara.transaction import AbstractTransaction
 
 
@@ -20,6 +19,9 @@ class OpenApp(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, url, headless=True):
+        # Lazy import as Helium is not compatible with Python 3.7
+        from helium import start_chrome, go_to
+
         start_chrome(headless=headless)
         go_to(url)
 
@@ -40,5 +42,9 @@ class CloseApp(AbstractTransaction):
         self,
         screenshot_filename="./captures/guara-capture",
     ):
+        # Lazy import as Helium is not compatible with Python 3.7
+
+        from helium import get_driver, kill_browser
+
         get_driver().save_screenshot(f"{screenshot_filename}-{datetime.now()}.png")
         kill_browser()

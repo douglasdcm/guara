@@ -6,14 +6,15 @@
 from pathlib import Path
 from random import randrange
 from pytest import mark
-from appium import webdriver
 from guara.transaction import Application
 from guara import it
 from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium
+from guara.utils import is_dry_run
+from appium import webdriver
 
 
-@mark.skip(reason="Complex setup in CI environment")
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestAppiumIntegration:
     def setup_method(self, method):
         file_path = Path(__file__).resolve()
@@ -27,9 +28,11 @@ class TestAppiumIntegration:
             "appWaitActivity": "*",
             "goog:chromeOptions": {"args": ["--headless"]},
         }
-        self.driver = webdriver.Remote(
-            "http://localhost:4723/wd/hub", desired_capabilities=desired_caps
-        )
+        self.driver = None
+        if not is_dry_run():
+            self.driver = webdriver.Remote(
+                "http://localhost:4723/wd/hub", desired_capabilities=desired_caps
+            )
         self._app = Application(self.driver)
         self._app.at(OpenAppiumApp, url=f"file:///{file_path}/sample.html")
 

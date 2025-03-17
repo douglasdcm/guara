@@ -1,5 +1,10 @@
 This Python script scrapes flight arrival data from the AENA (Spanish airport authority) website for a list of predefined airports. It automates browser interactions using Selenium, extracts flight data using BeautifulSoup, and saves the information to a JSON file for historical reference.
 
+```
+# Python3.11
+python examples/crawler/main.py
+```
+
 ---
 
 ### **Breakdown of the Script**
@@ -8,7 +13,7 @@ The script uses:
 - **Selenium** (for browser automation)
 - **BeautifulSoup** (for parsing HTML)
 - **JSON and File Handling** (to read/write flight data)
-- **Datetime and ZoneInfo** (for timestamps and timezone management)
+- **Datetime** (for timestamps)
 - **Guara Transaction Framework** (to structure automated tasks)
 - **WebDriver Manager** (to manage ChromeDriver installation)
 
@@ -16,7 +21,6 @@ The script uses:
 
 #### **2. Constants**
 - **`AIRPORTS`**: A predefined list of Spanish airports.
-- **`TIMEZONE`**: Ensures timestamps are in **Europe/Madrid** time.
 - **`HISTORY_DAYS`**: Keeps only the last 5 days of flight data.
 
 ---
@@ -67,4 +71,3 @@ When run (`__main__` block), `get_aena_data()` starts the process, collecting an
 ✅ **Transaction-based Architecture**: Uses **Guara Transactions** to structure execution.  
 ✅ **Data Persistence**: Maintains a JSON-based historical record.  
 ✅ **Error Handling**: Catches missing elements & timeout issues.  
-✅ **Timezone Management**: Ensures timestamps align with Madrid time.  

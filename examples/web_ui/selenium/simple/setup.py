@@ -3,6 +3,10 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+"""
+The module that is reponsible for the opening and closing
+transactions.
+"""
 from datetime import datetime
 from guara.transaction import AbstractTransaction
 
@@ -21,12 +25,17 @@ class OpenApp(AbstractTransaction):
         str: the title of the app
     """
 
-    def do(self, url, window_width=1094, window_height=765, implicitly_wait=10):
-        self._driver.window.set.width(window_width)
-        self._driver.window.set.height(window_height)
-        self._driver.open.url(url)
-        self._driver.wait.seconds(implicitly_wait)
-        return self._driver.get.page_title()
+    def do(
+        self,
+        url: str,
+        window_width: int = 1094,
+        window_height: int = 765,
+        implicitly_wait: int = 10,
+    ) -> str:
+        self._driver.set_window_size(window_width, window_height)
+        self._driver.get(url)
+        self._driver.implicitly_wait(implicitly_wait)
+        return self._driver.title
 
 
 class CloseApp(AbstractTransaction):
@@ -34,20 +43,11 @@ class CloseApp(AbstractTransaction):
     Closes the app and saves its screenshot (PNG)
 
     Args:
-        screenshot_filename (str): the name of the screenshot file.
+        screenshot_filename (str): the path where the screenshot is saved.
+        Examples: './myfile', '/path/to/myfile'
         Defaults to 'guara-{datetime.now()}.png'.
-
-        screenshot_destination (str): the path where the screenshot is saved.
-        Defaults to './captures'.
-
     """
 
-    def do(
-        self,
-        screenshot_destination="./captures",
-        screenshot_filename="guara-capture",
-    ):
-        self._driver.screenshot.complete_page(
-            f"{screenshot_filename}-{datetime.now()}.png", screenshot_destination
-        )
+    def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
+        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
         self._driver.quit()

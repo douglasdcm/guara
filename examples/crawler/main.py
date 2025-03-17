@@ -13,7 +13,8 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+
+# from zoneinfo import ZoneInfo
 from guara.transaction import AbstractTransaction, Application
 import json
 import time
@@ -37,7 +38,6 @@ AIRPORTS = [
     "ALICANTE-ELCHE MIGUEL HERNÁNDEZ",
     "VALENCIA",
 ]
-TIMEZONE = ZoneInfo("Europe/Madrid")
 HISTORY_DAYS = 5
 
 
@@ -148,8 +148,8 @@ class ProcessAirportData(AbstractTransaction):
                         "aerolinea": aerolinea,
                         "origen": origen,
                         "estado": estado,
-                        "fecha": datetime.now(TIMEZONE).strftime("%Y-%m-%d"),
-                        "hora_actualizacion": datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S"),
+                        "fecha": datetime.now().strftime("%Y-%m-%d"),
+                        "hora_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     }
                 )
 
@@ -179,7 +179,7 @@ class SaveFlightData(AbstractTransaction):
 
     def do(self, flights_data, history_days):
         existing_data = read_json_file("flights_data.json", [])
-        current_date = datetime.now(TIMEZONE).date()
+        current_date = datetime.now().date()
 
         # Filter outdated data
         updated_data = [
@@ -233,20 +233,20 @@ def get_aena_data():
     script_status = read_json_file("script_status.json", {"airports": {}, "status": None})
 
     # Open the AENA page
-    app.when(OpenAenaPage)
+    app.then(OpenAenaPage)
 
     # Process data for each airport
     all_flights_data = []
     for airport in AIRPORTS:
-        flights = app.when(ProcessAirportData, airport=airport, script_status=script_status).result
+        flights = app.then(ProcessAirportData, airport=airport, script_status=script_status).result
         all_flights_data.extend(flights)
 
     # Save flight data and close browser
-    app.when(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
-    app.when(CloseBrowser)
+    app.then(SaveFlightData, flights_data=all_flights_data, history_days=HISTORY_DAYS)
+    app.then(CloseBrowser)
 
     # Update script status
-    script_status["last_run"] = datetime.now(TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")
+    script_status["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     script_status["status"] = "Success"
     write_json_file("script_status.json", script_status)
 

@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from helium import find_all, write, click, S, Text
 from guara.transaction import AbstractTransaction
 
 
@@ -22,6 +21,9 @@ class SubmitText(AbstractTransaction):
         super().__init__(driver)
 
     def do(self, text):
+        # Lazy import as Helium is not compatible with Python 3.7
+        from helium import find_all, write, click, S, Text
+
         TEXT = '//*[@id="input"]'
         BUTTON_TEST = "button"
         text_field = find_all(S(TEXT))[0]

@@ -3,28 +3,30 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+from pytest import mark
 from random import randrange
 from pathlib import Path
 from pytest import fixture
+from guara.transaction import Application
+from guara import it
+from examples.web_ui.caqui.constants import MAX_INDEX
+from examples.web_ui.caqui.synchronous import home, setup
+from guara.utils import is_dry_run
 from selenium import webdriver
 
-from guara.transaction import Application
-from guara import it, setup
 
-from examples.web_ui.caqui_async.constants import MAX_INDEX
-
-# `setup` is not the built-in transaction
-from examples.web_ui.caqui_async.synchronous import home
-
-
+@mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestSyncTransaction:
     # Set the fixtures as asynchronous
     @fixture(scope="function")
     def setup_test(self):
         file_path = Path(__file__).parent.parent.parent.resolve()
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
-        self._app = Application(webdriver.Chrome(options=options))
+        driver = None
+        if not is_dry_run():
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless=new")
+            driver = webdriver.Chrome(options=options)
+        self._app = Application(driver)
 
         self._app.at(
             setup.OpenApp,
@@ -55,13 +57,10 @@ class TestSyncTransaction:
         for i in range(max_index):
 
             # act
-            result = self._app.at(
+            self._app.at(
                 home.GetNthLink,
                 link_index=i + 1,
-            ).result
-
-            # assert
-            it.IsEqualTo().asserts(result, f"any{i+1}.com")
+            ).asserts(it.IsEqualTo, f"any{i+1}.com")
 
     # both tests run in paralell
     # it is necessary to mark the test as async

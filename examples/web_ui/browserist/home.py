@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from browserist import Browser
 from guara.transaction import AbstractTransaction
 
 
@@ -17,10 +16,6 @@ class SubmitText(AbstractTransaction):
     Returns:
         str: the label 'It works! {code}!'
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: Browser
 
     def do(self, text):
         TEXT = '//*[@id="input"]'

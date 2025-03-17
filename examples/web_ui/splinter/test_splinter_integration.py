@@ -5,11 +5,12 @@
 
 import pathlib
 import random
-from splinter import Browser
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.splinter import setup
 from examples.web_ui.splinter import home
+from guara.utils import is_dry_run
+from splinter import Browser
 
 
 class TestSplinterIntegration:
@@ -20,7 +21,9 @@ class TestSplinterIntegration:
 
     def setup_method(self, method):
         file_path = pathlib.Path(__file__).parent.parent.resolve()
-        browser = Browser("chrome", headless=True)
+        browser = None
+        if not is_dry_run():
+            browser = Browser("chrome", headless=True)
         self._app = Application(browser)
         self._app.at(setup.OpenSplinterApp, url=f"file:///{file_path}/sample.html")
 
