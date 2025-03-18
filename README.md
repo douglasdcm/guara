@@ -129,6 +129,13 @@ Explore practical examples in the [examples folder](https://github.com/douglasdc
 Guará is the Tupi–Guarani name for the **Scarlet Ibis**, a vibrant bird native to South America. Just like the bird, Guará stands out for its simplicity and elegance in solving complex UI automation challenges.
 
 ---
+## Used by
+
+- [@cu-sanjay/cricket-score-scraper](https://github.com/cu-sanjay/cricket-score-scraper)
+- [@theijhay/platform_automation](https://github.com/theijhay/platform_automation)
+- [@srmorita/py-selenium-practices](https://github.com/srmorita/py-selenium-practices)
+- [@douglasdcm/automacao_de_testes](https://github.com/douglasdcm/automacao_de_testes)
+
 
 ## Ready to Dive In?
 Start automating with Guará today! Check out the [tutorial](https://github.com/douglasdcm/guara/blob/main/docs/TUTORIAL.md) and explore the [examples](https://github.com/douglasdcm/guara/tree/main/examples) to see how Guará can simplify your UI testing workflow.

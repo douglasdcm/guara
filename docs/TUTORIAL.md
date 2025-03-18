@@ -1,7 +1,9 @@
 # Canonical implementation
-This is the simplest implementation to warm up the framework. It uses the `OpenApp` and `CloseApp` transactions to open the web page of Google, to assert the title of the page is `Google` and to close the web application. More details about each component of the framework are explained in further sessions.
+This is the simplest implementation to warm up the framework. It uses the `OpenApp` and `CloseApp` transactions to open the web page of Google, to assert the title of the page is `Google` and to close the web application. More details about each component of the framework are explained in further sessions. First install Selenium with `pip install selenium`
 
 ```python
+# test_guara.py
+
 from selenium import webdriver
 from guara import it
 from guara.transaction import Application
