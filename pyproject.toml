@@ -23,7 +23,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "selenium",
+  "python-dotenv",
 ]
 
 [project.urls]
