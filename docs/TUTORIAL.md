@@ -6,14 +6,15 @@ This is the simplest implementation to warm up the framework. It uses the `OpenA
 
 from selenium import webdriver
 from guara import it
-from guara.transaction import Application
+from guara.transaction import Application, AbstractTransaction
 
 
 class OpenApp(AbstractTransaction):
     def do(
         self, url: str,
     ) -> str:
-        return self._driver.get(url).title
+        self._driver.get(url)
+        return self._driver.title
 
 
 class CloseApp(AbstractTransaction):
