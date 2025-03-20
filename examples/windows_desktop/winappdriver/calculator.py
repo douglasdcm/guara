@@ -5,9 +5,6 @@ import logging
 class SumNumbers(AbstractTransaction):
     """Perform addition operation"""
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, num1: int, num2: int):
         try:
             logging.info(f"Performing addition: {num1} + {num2}")

@@ -14,9 +14,6 @@ class SubmitTextRPA(AbstractTransaction):
         text (str): The text to be submitted
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, text):
         self._driver.init()
         self._driver.type(text)

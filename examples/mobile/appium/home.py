@@ -17,9 +17,6 @@ class SubmitTextAppium(AbstractTransaction):
         str: the label 'It works! {code}!'
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, text):
         TEXT = '//*[@id="input"]'
         BUTTON_TEST = "button"

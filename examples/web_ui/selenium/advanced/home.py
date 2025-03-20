@@ -20,9 +20,6 @@ class NavigateTo(AbstractTransaction):
         str: The label of the page
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, **kwargs):
         self._driver.find_element(By.CSS_SELECTOR, ".navbar-brand > img").click()
         self._driver.find_element(By.CSS_SELECTOR, TEXT_AREA).click()
@@ -75,9 +72,6 @@ class Search(AbstractTransaction):
         str: The result with the first similarity of the search
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def fill_text(self, text):
         self._driver.find_element(By.ID, "message_field").click()
         self._driver.find_element(By.ID, "message_field").send_keys(text)
@@ -113,9 +107,6 @@ class DoRestrictedSearch(Search):
         str: The result with the first similarity of the search
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def select_search(self):
         BUTTON_NARROW_SEARCH = "narrow-search"
         self._driver.find_element(By.ID, "cond_and").click()
@@ -132,9 +123,6 @@ class DoExpandedSearch(Search):
     Returns:
         str: The result with the first similarity of the search
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
 
     def select_search(self):
         BUTTON_WIDE_SEARCH = "wide-search"

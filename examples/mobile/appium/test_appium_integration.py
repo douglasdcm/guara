@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from random import randrange
 from pytest import mark
 from guara.transaction import Application
 from guara import it
@@ -17,7 +16,6 @@ from guara.utils import is_dry_run
 class TestAppiumIntegration:
     def setup_method(self, method):
         # Lazy import to avoid installation of the library
-        from appium import webdriver
 
         file_path = Path(__file__).resolve()
         desired_caps = {
@@ -32,6 +30,8 @@ class TestAppiumIntegration:
         }
         self.driver = None
         if not is_dry_run():
+            from appium import webdriver
+
             self.driver = webdriver.Remote(
                 "http://localhost:4723/wd/hub", desired_capabilities=desired_caps
             )
@@ -42,7 +42,6 @@ class TestAppiumIntegration:
         self._app.at(CloseAppiumApp)
 
     def test_local_page(self):
-        text = ["cheese", "appium", "test", "bla", "foo"]
-        text = text[randrange(len(text))]
+        text = "guara"
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsNotEqualTo, "Any")

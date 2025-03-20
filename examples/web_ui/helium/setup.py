@@ -15,9 +15,6 @@ class OpenApp(AbstractTransaction):
         url (str): the path where the screenshot is saved.
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, url, headless=True):
         # Lazy import as Helium is not compatible with Python 3.7
         from helium import start_chrome, go_to
@@ -34,9 +31,6 @@ class CloseApp(AbstractTransaction):
         screenshot_filename (str): the name of the screenshot file.
         Defaults to './captures/guara-{datetime.now()}.png'.
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
 
     def do(
         self,

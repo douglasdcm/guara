@@ -22,9 +22,6 @@ class Divide(AbstractTransaction):
         (Application) The application (self._driver)
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def _get_button_path(self, button_name):
         return f"{BASE_PATH}{button_name}.png"
 
@@ -32,8 +29,6 @@ class Divide(AbstractTransaction):
         from pyautogui import locateOnScreen, click
 
         button = locateOnScreen(button, confidence=CONFIDENCE)
-        if not button:
-            raise ValueError(f"Button image {button} not found.")
         click(button)
 
     def do(self, a, b):

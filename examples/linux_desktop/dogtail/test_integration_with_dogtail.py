@@ -29,9 +29,7 @@ class TestLinuxCalculatorWithDogtail:
             driver = root.application("gnome-calculator")
 
         self._calculator = Application(driver=driver)
-        self._calculator.at(
-            setup.OpenApp,
-        )
+        self._calculator.at(setup.OpenApp)
 
     def teardown_method(self, method):
         self._calculator.at(setup.CloseApp)

@@ -11,9 +11,6 @@ class OpenApp(AbstractTransaction):
     Opens the App using dogtail for convenience
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self):
         return self._driver
 

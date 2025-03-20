@@ -17,9 +17,6 @@ class SubmitText(AbstractTransaction):
         str: the label 'It works! {code}!'
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, text):
         # Lazy import as Helium is not compatible with Python 3.7
         from helium import find_all, write, click, S, Text

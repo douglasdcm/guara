@@ -34,7 +34,7 @@ class TestEchoApi:
 ### Setup Method
 ```python
 def setup_method(self, method):
-    self._app = Application(None)
+    self._app = Application()
 ```
 - `setup_method` initializes an `Application` instance. Since this is a REST API test, no UI driver is required, so `None` is passed.
 

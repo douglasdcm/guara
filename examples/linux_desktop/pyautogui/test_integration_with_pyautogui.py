@@ -19,9 +19,6 @@ class ItShows(it.IAssertion):
         expected (number): the value that should be present in the screen
     """
 
-    def __init__(self):
-        super().__init__()
-
     def asserts(self, actual, expected):
         assert actual.child(str(expected)).showing
 

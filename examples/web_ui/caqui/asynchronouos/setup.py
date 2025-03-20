@@ -19,9 +19,6 @@ class OpenApp(AbstractTransaction):
         str: the title of the App
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     async def do(self, with_session, connect_to_driver, access_url):
         # Lazy import to avoid installation of the library
         from caqui import synchronous
@@ -42,9 +39,6 @@ class CloseApp(AbstractTransaction):
         with_session (object): The session of the Web Driver
         connect_to_driver (str): The URL to connect the Web Driver server
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
 
     async def do(self, with_session, connect_to_driver):
         from caqui import synchronous

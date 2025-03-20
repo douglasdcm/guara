@@ -15,9 +15,6 @@ class NavigateTo(AbstractTransaction):
         str: Paragraph informing the contacts
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, **kwargs):
         BUTTON_CONTACT = "contact"
         self._driver.find_element(By.ID, BUTTON_CONTACT).click()

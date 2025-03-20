@@ -18,9 +18,6 @@ class SubmitText(AbstractTransaction):
         str: the label 'It works! {code}!'
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, text):
         text_box = self._driver.find_element(by=By.ID, value="input")
         submit_button = self._driver.find_element(by=By.CSS_SELECTOR, value="button")
