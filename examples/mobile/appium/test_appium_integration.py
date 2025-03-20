@@ -16,7 +16,6 @@ from guara.utils import is_dry_run
 class TestAppiumIntegration:
     def setup_method(self, method):
         # Lazy import to avoid installation of the library
-        from appium import webdriver
 
         file_path = Path(__file__).resolve()
         desired_caps = {
@@ -31,6 +30,8 @@ class TestAppiumIntegration:
         }
         self.driver = None
         if not is_dry_run():
+            from appium import webdriver
+
             self.driver = webdriver.Remote(
                 "http://localhost:4723/wd/hub", desired_capabilities=desired_caps
             )
