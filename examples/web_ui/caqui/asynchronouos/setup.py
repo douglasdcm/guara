@@ -47,5 +47,7 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, with_session, connect_to_driver):
+        from caqui import synchronous
+
         synchronous.take_screenshot(connect_to_driver, with_session, "/tmp")
         synchronous.close_session(connect_to_driver, with_session)
