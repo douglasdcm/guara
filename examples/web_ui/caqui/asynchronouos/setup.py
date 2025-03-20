@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from guara.transaction import AbstractTransaction
-from caqui import synchronous
 
 
 class OpenApp(AbstractTransaction):
@@ -24,6 +23,9 @@ class OpenApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, with_session, connect_to_driver, access_url):
+        # Lazy import to avoid installation of the library
+        from caqui import synchronous
+
         synchronous.go_to_page(
             connect_to_driver,
             with_session,
@@ -45,5 +47,7 @@ class CloseApp(AbstractTransaction):
         super().__init__(driver)
 
     async def do(self, with_session, connect_to_driver):
+        from caqui import synchronous
+
         synchronous.take_screenshot(connect_to_driver, with_session, "/tmp")
         synchronous.close_session(connect_to_driver, with_session)

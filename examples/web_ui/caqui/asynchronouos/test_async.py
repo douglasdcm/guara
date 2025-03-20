@@ -5,11 +5,9 @@
 
 from time import sleep
 from pathlib import Path
-from caqui.easy.capabilities import CapabilitiesBuilder
 from pytest_asyncio import fixture
 from pytest import mark
 from typing import Any, Dict, Union, Generator
-from caqui.synchronous import get_session
 from guara.asynchronous.it import IsEqualTo
 from guara.asynchronous.transaction import Application
 from examples.web_ui.caqui.asynchronouos.home import GetAllLinks, GetNthLink
@@ -38,6 +36,10 @@ class TestAsyncTransaction:
         Returns:
             (Generator[None, Any, None])
         """
+        # Lazy import to avoid installation of the library
+        from caqui.easy.capabilities import CapabilitiesBuilder
+        from caqui.synchronous import get_session
+
         maximum_attempts: int = 5
         file_path: Path = Path(__file__).parent.parent.parent.parent.resolve()
         self._driver_url: str = "http://127.0.0.1:9999"
