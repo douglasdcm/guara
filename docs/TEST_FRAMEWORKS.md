@@ -82,6 +82,12 @@ Not working as there is an associated [issue](https://github.com/nose-devs/nose/
 
 ## [stestr](https://github.com/mtreinish/stestr)
 
+Example of `.stestr.config`. Add to the root folder
+```
+[DEFAULT]
+test_path=./examples
+```
+Running it
 ```shell
 stestr run -v
 ```
