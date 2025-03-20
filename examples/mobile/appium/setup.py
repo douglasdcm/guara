@@ -16,9 +16,6 @@ class OpenAppiumApp(AbstractTransaction):
         headless (bool): whether to run the browser in headless mode.
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     def do(self, url):
         self._driver.get(url)
 
@@ -31,9 +28,6 @@ class CloseAppiumApp(AbstractTransaction):
         screenshot_filename (str): the name of the screenshot file.
         Defaults to './captures/guara-{datetime.now()}.png'.
     """
-
-    def __init__(self, driver):
-        super().__init__(driver)
 
     def do(self, screenshot_filename="./captures/guara-capture"):
         """

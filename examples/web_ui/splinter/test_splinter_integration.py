@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pathlib
-import random
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.splinter import setup
@@ -31,7 +30,6 @@ class TestSplinterIntegration:
         self._app.at(setup.CloseSplinterApp)
 
     def test_local_page(self):
-        text = ["cheese", "splinter", "test", "bla", "foo"]
-        text = text[random.randrange(len(text))]
+        text = "guara"
         self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")

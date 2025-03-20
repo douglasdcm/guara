@@ -7,7 +7,6 @@ from guara.transaction import Application
 from guara import it
 from examples.web_ui.selenium_stealth import setup
 from examples.web_ui.selenium_stealth import home
-from random import randrange
 from guara.utils import is_dry_run
 from selenium import webdriver
 from selenium_stealth import stealth
@@ -50,7 +49,6 @@ class TestSeleniumStealthIntegration:
         self._app.at(setup.CloseStealthBrowser)
 
     def test_local_page(self):
-        text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[randrange(len(text))]
+        text = "guara"
         self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.Contains, "Example Domain")
         self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.IsNotEqualTo, "Any")

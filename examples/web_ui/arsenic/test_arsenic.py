@@ -25,7 +25,7 @@ class Submit(AbstractTransaction):
 @mark.skip(
     reason=(
         "The headless option does not work"
-        "refers to https://arsenic.readthedocs.io/en/latest/reference/"
+        " refers to https://arsenic.readthedocs.io/en/latest/reference/"
         "supported-browsers.html?highlight=browsers#headless-firefox"
     )
 )

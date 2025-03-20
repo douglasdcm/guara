@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from random import randrange
 from pytest import mark
 from guara.transaction import Application
 from guara import it
@@ -42,7 +41,6 @@ class TestAppiumIntegration:
         self._app.at(CloseAppiumApp)
 
     def test_local_page(self):
-        text = ["cheese", "appium", "test", "bla", "foo"]
-        text = text[randrange(len(text))]
+        text = "guara"
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsNotEqualTo, "Any")

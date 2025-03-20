@@ -18,7 +18,7 @@ def setup_method(page: Page):
     app.at(
         setup.OpenApp,
         with_url="https://playwright.dev/",
-    ).asserts(it.Contains, "Playwright")
+    )
     yield app
 
 

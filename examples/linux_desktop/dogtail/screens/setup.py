@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from logging import warning
 from guara.transaction import AbstractTransaction
 
 
@@ -25,11 +24,8 @@ class CloseApp(AbstractTransaction):
     """
 
     def do(self):
-        try:
-            from dogtail.procedural import click
-            from dogtail.utils import screenshot
+        from dogtail.procedural import click
+        from dogtail.utils import screenshot
 
-            screenshot()
-            click("Close")
-        except LookupError:
-            warning("Close button not found; the application may already be closed.")
+        screenshot()
+        click("Close")

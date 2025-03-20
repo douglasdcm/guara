@@ -25,6 +25,4 @@ class TestCalculator:
         self._calculator.at(operations.Add, a=1, b=0).asserts(it.IsEqualTo, 1)
 
     def test_add_returns_2_when_subtracting_1_from_2(self):
-        text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[randrange(len(text))]
         self._calculator.at(operations.Subtract, a=2, b=1).asserts(it.IsEqualTo, 1)

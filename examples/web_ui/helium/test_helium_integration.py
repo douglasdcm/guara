@@ -4,7 +4,6 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from random import randrange
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.helium import setup
@@ -25,7 +24,6 @@ class TestHeliumIntegration:
         self._app.at(setup.CloseApp)
 
     def test_local_page(self):
-        text = ["cheese", "selenium", "test", "bla", "foo"]
-        text = text[randrange(len(text))]
+        text = "guara"
         self._app.at(home.SubmitText, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
         self._app.at(home.SubmitText, text=text).asserts(it.IsNotEqualTo, "Any")

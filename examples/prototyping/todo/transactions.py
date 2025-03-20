@@ -21,10 +21,6 @@ class ToDoPrototype:
 
 
 class Add(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: ToDoPrototype
-
     def do(self, task: str):
         if not task.strip():
             raise ValueError("Invalid task")
@@ -33,10 +29,6 @@ class Add(AbstractTransaction):
 
 
 class Remove(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: ToDoPrototype
-
     def do(self, task):
         try:
             self._driver.tasks.remove(task)
@@ -46,19 +38,11 @@ class Remove(AbstractTransaction):
 
 
 class ListTasks(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: ToDoPrototype
-
     def do(self):
         return self._driver.tasks
 
 
 class PrintDict(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: ToDoPrototype
-
     def do(self):
         result = {}
         count = 1
@@ -69,10 +53,6 @@ class PrintDict(AbstractTransaction):
 
 
 class GetBy(AbstractTransaction):
-    def __init__(self, driver):
-        super().__init__(driver)
-        self._driver: ToDoPrototype
-
     def do(self, index):
         try:
             return self._driver.tasks[index]
