@@ -11,12 +11,14 @@ from guara import it
 from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium
 from guara.utils import is_dry_run
-from appium import webdriver
 
 
 @mark.skipif(not is_dry_run(), reason="Dry run is disabled")
 class TestAppiumIntegration:
     def setup_method(self, method):
+        # Lazy import to avoid installation of the library
+        from appium import webdriver
+
         file_path = Path(__file__).resolve()
         desired_caps = {
             "platformName": "Android",

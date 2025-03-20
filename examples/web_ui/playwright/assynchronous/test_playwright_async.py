@@ -41,10 +41,6 @@ class NavigateToDocs(AbstractTransaction):
 
 
 @mark.asyncio
-@mark.skip(
-    "Check the requirements to run Playwright in"
-    "   https://playwright.dev/python/docs/intro#installing-playwright-pytest"
-)
 async def test_sample_web_page():
     async with async_playwright() as p:
         browser = await p.chromium.launch()

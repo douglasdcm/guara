@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from caqui import asynchronous
 from guara.transaction import AbstractTransaction
 from examples.web_ui.caqui.constants import MAX_INDEX
 
@@ -21,15 +20,15 @@ class GetNthLink(AbstractTransaction):
         str: The nth link
     """
 
-    def __init__(self, driver):
-        super().__init__(driver)
-
     async def do(
         self,
         link_index,
         with_session,
         connect_to_driver,
     ):
+        # Lazy import to avoid installation of the library
+        from caqui import asynchronous
+
         locator_type = "xpath"
         locator_value = f"//a[@id='a{link_index}']"
         anchor = await asynchronous.find_element(

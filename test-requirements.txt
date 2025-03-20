@@ -8,21 +8,9 @@ tox
 pre-commit
 requests
 psutil
-caqui
 pytest-playwright
 helium
-testify
-stestr
-green
-appium-python-client
-pyautogui
-opencv-python
-dogtail
 splinter
-rpa
 selenium-stealth
 undetected_chromedriver
 selenium
-# Uncomment the following lines to use the corresponding library when DRY_RUN is set to "false"
-# browserist
-# pyautowin
