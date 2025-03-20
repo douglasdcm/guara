@@ -1,5 +1,5 @@
-# Using ChatGPT with Page Transactions
-
+Using ChatGPT with Page Transactions
+====================================
 As `Page Transactions` pattern is a new term. ChatGPT will not find a reference to it. But, it is not an excuse to not use the pattern. Teaching ChatGPT about the pattern is very easy and fast and the result is pretty much accurate.
 
 1. Go to [ChatGPT](https://chatgpt.com/) page and login with your account. Create a new one if necessary.
