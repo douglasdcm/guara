@@ -1,4 +1,5 @@
-# Canonical implementation
+# Tutorial
+## Canonical implementation
 This is the simplest implementation to warm up the framework. It uses the `OpenApp` and `CloseApp` transactions to open the web page of Google, to assert the title of the page is `Google` and to close the web application. More details about each component of the framework are explained in further sessions. First install Selenium with `pip install selenium`
 
 ```python
@@ -28,7 +29,7 @@ def test_canonical():
     google.then(CloseApp)
 ```
 
-# Basic practical example
+## Basic practical example
 
 This is a basic search of the term "guara" on Google. To follow the steps create the files `home.py` and `test_tutorial.py` at the same folder.
 
@@ -116,7 +117,7 @@ def test_google_search(google: Application):
 - `def asserts`: receives a strategy to compare the result against an expected value. Again, the focus on readability is kept. So, `asserts(it.IsEqualTo, "All")` can be read `asserts it is equal to 'All'`
 - `it.IsEqualTo`: is one of the strategies to compare the actual and the expected result. Other example is the `it.Contains` which checks if the value is present in the page. Notice that the assertion is very simple: it validates just one value. The intention here is keep the framework simple, but robust. The tester is able to extend the strategies inheriting from `IAssertion`.
 
-# Extending assertions
+## Extending assertions
 The strategies to assert the result can e extended by inheriting from `IAssertion` as following:
 
 ```python
@@ -143,11 +144,11 @@ def test_google_search(setup_app):
 
 ```
 
-# Debugging
+## Debugging
 
 Errors in assertions are printed like this. Got the same example above. Notice the `actual` and `expected` values do not match.
-```python
 
+```shell
 _____________________________________________________________ test_google_search _____________________________________________________________
 
 setup_app = <guara.transaction.Application object at 0x7f3c42bf6f90>
@@ -174,7 +175,7 @@ E         + all
 
 ```
 
-# Best practices
+## Best practices
 For a better readability of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete implementation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
 
 ```python
@@ -216,5 +217,5 @@ class SubmitText(AbstractTransaction):
         return Text("It works!").value
 ```
 
-# Advanced
-For more examples of implementations check the [`examples`](https://github.com/douglasdcm/guara/blob/main/examples) folder.
+## Advanced
+For more examples of implementations check the [examples](https://github.com/douglasdcm/guara/blob/main/examples) folder.

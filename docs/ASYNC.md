@@ -21,6 +21,6 @@ The built-in classes `OpenApp` and `CloseApp` are here just for compatibility wi
 
 There is a subtle change in `asserts` method. In this design the `actual` is an `AbstractTransaction`. Internally the method gets the `AbstractTransaction.result` and compares it against the expected value.
 
-# Examples
+## Examples
 
 Check more details [here](https://github.com/douglasdcm/guara/blob/main/examples/web_ui/caqui/asynchronouos/test_async.py)

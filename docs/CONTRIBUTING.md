@@ -1,3 +1,5 @@
+# Contributing
+
 To start to contribute, install the dependencies (Python >= 3.8)
 ```
 python3.8 -m venv venv
@@ -30,7 +32,7 @@ flake8 --exclude venv,.tox --max-line-length 100
 black -l 100 .
 ```
 
-# Tox
+## Tox
 Use tox to run the unit tests and linter
 ```
 tox
