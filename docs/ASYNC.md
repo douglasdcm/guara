@@ -1,5 +1,4 @@
-Asynchronous execution
-======================
+# Asynchronous execution
 Guará is the Python implementation of the design pattern `Page Transactions`. It is more of a programming pattern than a tool. It can be bound to any web driver other than Selenium.
 
 As it can be bound to any Web Driver it can be associated with asynchronous drivers like [Caqui](https://github.com/douglasdcm/caqui). The core of the framework was extended to allow it. The UML diagrams of the asynchronous classes are
@@ -22,6 +21,6 @@ The built-in classes `OpenApp` and `CloseApp` are here just for compatibility wi
 
 There is a subtle change in `asserts` method. In this design the `actual` is an `AbstractTransaction`. Internally the method gets the `AbstractTransaction.result` and compares it against the expected value.
 
-# Examples
+## Examples
 
 Check more details [here](https://github.com/douglasdcm/guara/blob/main/examples/web_ui/caqui/asynchronouos/test_async.py)

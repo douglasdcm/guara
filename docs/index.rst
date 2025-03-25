@@ -10,10 +10,19 @@ Welcome to guara's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   README
+   TUTORIAL
+   LOGS
    CHATGPT_ASSISTANCE
+   OTHER_DRIVERS
+   TEST_FRAMEWORKS
    ASYNC
    DRY_RUN
-   LOGS
+   NON_TESTERS
+   THE_PATTERN_EXPLAINED
+   PT_AND_POM
+   CODE_OF_CONDUCT
+   CONTRIBUTING
 
 Indices and tables
 ==================

@@ -1,5 +1,4 @@
-Using ChatGPT with Page Transactions
-====================================
+# Using ChatGPT with Page Transactions
 As `Page Transactions` pattern is a new term. ChatGPT will not find a reference to it. But, it is not an excuse to not use the pattern. Teaching ChatGPT about the pattern is very easy and fast and the result is pretty much accurate.
 
 1. Go to [ChatGPT](https://chatgpt.com/) page and login with your account. Create a new one if necessary.
@@ -24,9 +23,9 @@ Based on your understanding about the pattern Page Transactions organize the cod
 7. Make necessary adjustments if necessary
 8. Done! Your code is in the new pattern.
 
-# Here is a practical example
+## Here is a practical example
 
-## Raw code in Selenium
+### Raw code in Selenium
 
 ```python
 import random
@@ -64,7 +63,7 @@ def test_sample_page():
     driver.quit()
 ```
 
-## It is the output of ChatGPT
+### It is the output of ChatGPT
 
 To organize this code following the Page Transactions pattern, we need to abstract transactions (e.g., opening the page, interacting with input fields, and validating results) into reusable classes that inherit from AbstractTransaction. The test logic should then use the Application class to orchestrate these transactions.
 
@@ -161,7 +160,7 @@ Reusability:
 
 Let me know if you'd like further adjustments!
 
-## Make necessary adjustments
+### Make necessary adjustments
 
 Notice the class `OpenSamplePage` has the parameter `file_path` with is not following the functional usage of the pattern and the assertion `it.IsTrue` does not exist in Guara core (yet). The new assertion introduced by the AI was a good induction. 
 
@@ -200,7 +199,7 @@ def test_google_search(setup_app):
     app.at(home.Search, text="guara").asserts(IsEqualToVariationsOf, "All") 
 ```
 
-### The output
+#### The output
 
 Here is the corrected and updated code based on the feedback:
 Updates:
@@ -292,5 +291,5 @@ def test_sample_page():
     app.at(CloseApplication)
 ```
 
-# Conclusion
+## Conclusion
 The code needs some polishiment, like the `title` variable is never used, the occurrences of `app.asserts` can be suppressed to a single line like `app.at(OpenSamplePage, file_path=str(file_path)).asserts(it.IsEqualTo, "Sample page")` and the transaction `ValidateResult` does not seems to be a valid transaction the user does in the application, so this code could be merged with `SubmitText` to reduce the verbosity. However, despite these embellishments, the code works perfectly.

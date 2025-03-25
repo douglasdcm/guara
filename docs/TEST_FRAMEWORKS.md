@@ -1,4 +1,4 @@
-# Introduction
+# Other test runners
 Guara can e executed with many test frameworks other than `pytest`, for example [`unitest`](https://docs.python.org/3.6/library/unittest.html) and [`testify`](https://github.com/Yelp/Testify). Here are the command examples and their outputs.
 
 ## unittest
@@ -83,7 +83,7 @@ Not working as there is an associated [issue](https://github.com/nose-devs/nose/
 ## [stestr](https://github.com/mtreinish/stestr)
 
 Example of `.stestr.config`. Add to the root folder
-```
+```ini
 [DEFAULT]
 test_path=./examples
 ```
@@ -158,7 +158,7 @@ green -vvv
 
 Output
 
-```
+```shell
 Green 4.0.2, Coverage 7.6.10, Python 3.11.9
 
 examples.unit_test.calculator.test_calculator
@@ -228,11 +228,11 @@ examples/unit_test/calculator/test_calculator.py ....
 ```
 
 Generate HTML
-```
+```shell
 coverage html
 ```
 Output
-```
+```shell
 Wrote HTML report to htmlcov/index.html
 ```
 ![alt text](images/calculator_coverage.png)

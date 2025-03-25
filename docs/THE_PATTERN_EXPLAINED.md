@@ -22,7 +22,7 @@
 - The `asserts` method receives a reference to an `IAssertion` instance. It implements the `Strategy Pattern (GoF)` to allow its behavior to change at runtime.
 - Another important component of the `Application` is the `result` property. It holds the result of the transaction, which can be used by `asserts` or inspected by the test using the native built-in `assert` method.
 
-# Using it
+## Using it
 The idea is to group blocks of interactions into classes. These classes inherit from `AbstractTransaction` and override the `do` method.
 
 Each transaction is passed to the `Application` instance, which provides the methods `at` and `asserts`. These are the only two methods necessary to orchestrate the automation. While it is primarily bound to `Selenium WebDriver`, experience shows that it can also be used to test REST APIs, unit tests and can be executed in asynchronous mode (check the [`examples`](https://github.com/douglasdcm/guara/tree/main/examples) folder).
