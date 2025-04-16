@@ -114,6 +114,7 @@ Guará is the Tupi–Guarani name for the **Scarlet Ibis**, a vibrant bird nativ
 - [@theijhay/platform_automation](https://github.com/theijhay/platform_automation)
 - [@srmorita/py-selenium-practices](https://github.com/srmorita/py-selenium-practices)
 - [@douglasdcm/automacao_de_testes](https://github.com/douglasdcm/automacao_de_testes)
+- [@chalakbilla/React-tutorials](https://github.com/chalakbilla/React-tutorials)
 
 
 ## Ready to Dive In?
