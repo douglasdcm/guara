@@ -1,7 +1,7 @@
 # Introduction
 [Caqui](https://github.com/douglasdcm/caqui) is an agnostic (Desktop, Mobile and Web) driver which performs sync and async operations on UIs.
 
-The folder `asynchronous` contains the example of asynchronous execution using [Caqui](https://github.com/douglasdcm/caqui). The folder `synchronous` is the same synchronous test for performance comparison
+The folder `asynchronous` contains the example of asynchronous execution using [Caqui](https://github.com/douglasdcm/caqui).
 
 # Asynchronous Testing with Caqui and Guara
 
@@ -27,18 +27,16 @@ The test suite leverages asynchronous transactions to:
 
 ### **Test Execution**
 
-- The `_run_it` method retrieves all links on the page and verifies their correctness.
-- It iterates through the links, using the `GetNthLink` transaction to extract and validate individual links.
+- The test iterates through the links, using the `GetNthLink` transaction to extract and validate individual links.
 - The assertions ensure that the retrieved values match the expected format (`any1.com`, `any2.com`, etc.).
 
 ### **Test Cases**
 
 - `test_async_page_1`, `test_async_page_2`, `test_async_page_3`, and `test_async_page_4` execute `_run_it` to validate link retrieval in different test cases.
-- The tests run asynchronously using `pytest-asyncio`.
+- The tests run asynchronously uses `pytest-asyncio`.
 
 ## Notes
 
-- The test class is marked as `@mark.skip` to indicate that the driver should be started manually before execution.
 - Logging is integrated for debugging session creation and transaction execution.
 - The code follows the Page Transactions pattern, ensuring modular and scalable test flows.
 
