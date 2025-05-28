@@ -48,6 +48,10 @@ class Application:
         """
         The assertion logic to be used for validation.
         """
+        self._transaction_pool: list[AbstractTransaction] = []
+        """
+        Stores all transactions
+        """
 
     @property
     def result(self) -> Any:
@@ -68,6 +72,7 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
+        self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
         LOGGER.info(f"Transaction: {transaction_info}")
         for key, value in kwargs.items():
@@ -119,4 +124,17 @@ class Application:
         """
         self._assertion = assertion()
         self._assertion.validates(self._result, expected)
+        return self
+
+    def undo(self):
+        """
+        Reverts the actions performed by the `do` method when applicable
+
+        Returns:
+            (Application)
+        """
+        self._transaction_pool.reverse()
+        for transaction in self._transaction_pool:
+            LOGGER.info(f"Reverting '{transaction.__name__}' actions")
+            transaction.revert_action()
         return self
