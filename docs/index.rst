@@ -18,6 +18,7 @@ Welcome to guara's documentation!
    TEST_FRAMEWORKS
    ASYNC
    DRY_RUN
+   UNDO
    NON_TESTERS
    THE_PATTERN_EXPLAINED
    PT_AND_POM
