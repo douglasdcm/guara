@@ -11,6 +11,7 @@ from guara.utils import is_dry_run
 import undetected_chromedriver as uc
 
 
+@mark.skip(reason="https://github.com/ultrafunkamsterdam/undetected-chromedriver/issues/2163")
 class TestUndetectedChromeDriver:
     def setup_method(self, method):
         driver = None
