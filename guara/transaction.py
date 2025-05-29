@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 """
-The module that has all of the transactions.
+This module has all the transactions.
 """
 
 from typing import Any, Dict
@@ -32,26 +32,26 @@ class Application:
         if is_dry_run():
             self._driver = None
             return
-        self._driver: Any = driver
         """
         It is the driver that has a transaction.
         """
-        self._result: Any = None
+        self._driver: Any = driver
         """
         It is the result data of the transaction.
         """
-        self._transaction: AbstractTransaction
+        self._result: Any = None
         """
         The web transaction handler.
         """
-        self._assertion: IAssertion
+        self._transaction: AbstractTransaction
         """
         The assertion logic to be used for validation.
         """
-        self._transaction_pool: list[AbstractTransaction] = []
+        self._assertion: IAssertion
         """
         Stores all transactions
         """
+        self._transaction_pool: list[AbstractTransaction] = []
 
     @property
     def result(self) -> Any:
