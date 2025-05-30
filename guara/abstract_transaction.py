@@ -55,3 +55,17 @@ class AbstractTransaction:
         if is_dry_run():
             return
         return self.do(**kwargs)
+
+    def undo(self):
+        """
+        Reverts the actions performed by the method `do`
+
+        Returns:
+            (NoReturn)
+        """
+        pass
+
+    def revert_action(self) -> NoReturn:
+        if is_dry_run():
+            return
+        return self.undo()

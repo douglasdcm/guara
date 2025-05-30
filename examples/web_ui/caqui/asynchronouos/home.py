@@ -4,6 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from guara.transaction import AbstractTransaction
+from caqui import asynchronous
 
 
 class GetNthLink(AbstractTransaction):
@@ -25,9 +26,6 @@ class GetNthLink(AbstractTransaction):
         with_session,
         connect_to_driver,
     ):
-        # Lazy import to avoid installation of the library
-        from caqui import asynchronous
-
         locator_type = "xpath"
         locator_value = f"//a[@id='a{link_index}']"
         anchor = await asynchronous.find_element(

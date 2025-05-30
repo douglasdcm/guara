@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 """
-The module that has all of the transactions.
+This module has all the transactions.
 """
 
 from typing import Any, Dict
@@ -32,22 +32,26 @@ class Application:
         if is_dry_run():
             self._driver = None
             return
-        self._driver: Any = driver
         """
         It is the driver that has a transaction.
         """
-        self._result: Any = None
+        self._driver: Any = driver
         """
         It is the result data of the transaction.
         """
-        self._transaction: AbstractTransaction
+        self._result: Any = None
         """
         The web transaction handler.
         """
-        self._assertion: IAssertion
+        self._transaction: AbstractTransaction
         """
         The assertion logic to be used for validation.
         """
+        self._assertion: IAssertion
+        """
+        Stores all transactions
+        """
+        self._transaction_pool: list[AbstractTransaction] = []
 
     @property
     def result(self) -> Any:
@@ -68,6 +72,7 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
+        self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
         LOGGER.info(f"Transaction: {transaction_info}")
         for key, value in kwargs.items():
@@ -119,4 +124,17 @@ class Application:
         """
         self._assertion = assertion()
         self._assertion.validates(self._result, expected)
+        return self
+
+    def undo(self):
+        """
+        Reverts the actions performed by the `do` method when applicable
+
+        Returns:
+            (Application)
+        """
+        self._transaction_pool.reverse()
+        for transaction in self._transaction_pool:
+            LOGGER.info(f"Reverting '{transaction.__name__}' actions")
+            transaction.revert_action()
         return self
