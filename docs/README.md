@@ -59,6 +59,8 @@ def test_sample_web_page():
 ### Behind the Scenes
 The repetitive web driver code is encapsulated in a transaction class:
 ```python
+from guara.transaction import AbstractTransaction
+
 class ChangeToPortuguese(AbstractTransaction):
     def do(self, **kwargs):
         self._driver.find_element(By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img").click()
