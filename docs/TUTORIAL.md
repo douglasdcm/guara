@@ -175,6 +175,82 @@ E         + all
 ```
 
 # Best practices
+1. Add typing to `self._driver` in transactions to allow the autocomplete of IDEs
+```python
+class CloseBrowser(AbstractTransaction):
+    def __init__(self, driver):
+        self._driver : Chrome = driver
+```
+2. Add documentation of transactions in the class level describing all arguments and the returned value.
+```python
+class SaveFlightData(AbstractTransaction):
+    """
+    Saves flight data to a JSON file after filtering outdated data.
+
+    Args:
+        flights_data (list): The list of flight data to save.
+        history_days (int): The number of days to retain in history.
+
+    Returns:
+        str: A message indicating the data was saved.
+    """
+    def do(self, flights_data, history_days):
+        existing_data = read_json_file("flights_data.json", [])
+        current_date = datetime.now().date()
+```
+3. Use the `app.result` attribute to return the result of the last transaction
+```python
+urls = app.at(GetURLs).result
+for url in urls:
+    print(url)
+```
+4. Use the `app.asserts` method directly to validate the result of the last transaction. Sometimes the user wants to get the result of the transaction to use it later.
+```python
+ids, data, has_more = app.at(GetArticleIDs, page=page).result
+app.asserts(it.IsEqualTo, len(ids) > 0, True)  # Verify we got articles
+```
+5. Use the proper verb method of `app` to make the statements as natural speech
+```python
+app.at(home.OpenInfo, ...)
+app.when(OpenInfo, ...).then(ChangeToEnglish, ...)
+```
+6. Use chained verb methods to build your statements in natural language
+```python
+app.at(home.OpenInfo, ...).then(ChangeToEnglish, ...).asserts(...)
+app.when(OpenInfo, ...).then(ChangeToEnglish, ...).asserts(...)
+app.at(home.OpenInfo, ...).at(info.ChangeToEnglish, ...).asserts(...)
+```
+7. Give good names to parameters of transactions to keep a smooth reading
+```python
+# do
+app.at(home.Search, by_text="foo").at(home.CreateResource, with_name="bla")
+
+# don't
+app.at(home.Search, value="foo").at(home.CreateResource, value="bla")
+```
+8. (Required) Use named arguments of the transactions to keep the natural speech
+```python
+# do
+app.at(home.Search, by_text="foo").at(home.CreateResource, named="bla")
+
+# don't (the code will fail)
+app.at(home.Search, "foo").at(home.CreateResource, "bla")
+```
+9. Use named arguments in the transaction's signature
+```python
+# recommended
+class SaveFlightData(AbstractTransaction):
+    def do(self, flights_data, history_days):
+        existing_data = read_json_file(flights_data)
+        current_date = timedelta(days=history_days)
+
+# not recommended
+class SaveFlightData(AbstractTransaction):
+    def do(self, **kwargs):
+        existing_data = read_json_file(kwargs.get(flights_data))
+        current_date = timedelta(days=kwargs.get(history_days))
+```
+
 For a better readability of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete implementation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
 
 ```python
