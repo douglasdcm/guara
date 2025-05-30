@@ -175,7 +175,6 @@ E         + all
 
 ```
 
-<<<<<<< HEAD
 # Best practices
 1. Add typing to `self._driver` in transactions to allow the autocomplete of IDEs
 ```python
@@ -253,9 +252,6 @@ class SaveFlightData(AbstractTransaction):
         current_date = timedelta(days=kwargs.get(history_days))
 ```
 
-=======
-## Best practices
->>>>>>> main
 For a better readability of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete implementation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
 
 ```python
