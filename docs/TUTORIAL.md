@@ -175,7 +175,7 @@ E         + all
 
 ```
 
-# Best practices
+## Best practices
 1. Add typing to `self._driver` in transactions to allow the autocomplete of IDEs
 ```python
 class CloseBrowser(AbstractTransaction):
