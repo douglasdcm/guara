@@ -2,7 +2,7 @@
 As `Page Transactions` pattern is a new term. ChatGPT will not find a reference to it. But, it is not an excuse to not use the pattern. Teaching ChatGPT about the pattern is very easy and fast and the result is pretty much accurate.
 
 1. Go to [ChatGPT](https://chatgpt.com/) page and login with your account. Create a new one if necessary.
-2. Go to [Guara README.md](https://github.com/douglasdcm/guara/tree/main/docs/THE_PATTERN_EXPLAINED.md) and copy the raw content ![alt text](images/copy_raw_content.png)
+2. Go to [Guara README.md](https://github.com/douglasdcm/guara/tree/main/docs/AI_TEACHING.md) and copy the raw content ![alt text](images/copy_raw_content.png)
 3. Paste the following statements in the ChatGPT prompt
 ```
 Given the explanation of the pattern Page Transactions after the dots let me know what you understood
