@@ -29,6 +29,10 @@ class Application:
         Args:
             driver: (Any): This is the driver of the system being under test.
         """
+        """
+        Stores all transactions
+        """
+        self._transaction_pool: list[AbstractTransaction] = []
         if is_dry_run():
             self._driver = None
             return
@@ -48,10 +52,6 @@ class Application:
         The assertion logic to be used for validation.
         """
         self._assertion: IAssertion
-        """
-        Stores all transactions
-        """
-        self._transaction_pool: list[AbstractTransaction] = []
 
     @property
     def result(self) -> Any:
