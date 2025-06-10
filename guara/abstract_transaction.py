@@ -7,8 +7,11 @@
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser.
 """
+from logging import getLogger, Logger
 from typing import Any, NoReturn, Union, Dict
 from guara.utils import is_dry_run
+
+LOGGER: Logger = getLogger("guara")
 
 
 class AbstractTransaction:
@@ -63,7 +66,7 @@ class AbstractTransaction:
         Returns:
             (NoReturn)
         """
-        pass
+        LOGGER.info(" Nothing to revert")
 
     def revert_action(self) -> NoReturn:
         if is_dry_run():
