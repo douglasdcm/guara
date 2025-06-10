@@ -3,6 +3,8 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import logging
+import pytest
 from guara.transaction import Application
 from guara import it
 from guara.transaction import AbstractTransaction
@@ -25,12 +27,19 @@ class Post(AbstractTransaction):
         return "un-posted"
 
 
-class TestUndo:
-    def setup_method(self, method):
-        self._app = Application()
+class Update(AbstractTransaction):
+    def do(self):
+        return "updated"
 
-    def teardown_method(self, method):
+
+class TestUndo:
+    @pytest.fixture(autouse=True, scope="function")
+    def setup_method(self, caplog):
+        caplog.set_level(logging.INFO)
+        self._app = Application()
+        yield
         self._app.undo()
+        assert "Reverting" in caplog.text
 
     def test_get(self):
         any = "any"
@@ -41,13 +50,5 @@ class TestUndo:
         expected = "posted"
         self._app.at(Post).asserts(it.IsEqualTo, expected)
 
-    def test_get_post_are_executed_in_reverse_order(self):
-        # This test does not have assetions. It is necessary to cehck the logs
-        # tests/unit_test/test_undo.py::TestUndo::test_get_post_are_executed_in_reverse_order
-        # 2025-05-28 00:02:15.150 INFO Transaction: test_undo.Get
-        # 2025-05-28 00:02:15.150 INFO  any_param: any
-        # 2025-05-28 00:02:15.151 INFO Transaction: test_undo.Post
-        # 2025-05-28 00:02:15.151 INFO Reverting 'Post' actions
-        # 2025-05-28 00:02:15.151 INFO Reverting 'Get' actions
-
-        self._app.at(Get, any_param="any").at(Post)
+    def test_transactions_are_executed_in_reverse_order(self, caplog):
+        self._app.at(Get, any_param="any").at(Post).at(Update)
