@@ -1,6 +1,6 @@
 # Prototypes and Page Transactions
 
-It is not the primary goal of the `Page Transactions` pattern, but since it adheres to the `Command Pattern (GoF)`, it can also be effectively utilized in product development. An experiment was conducted using a simple web application to manage `To-Do` lists. I employed [Pyscript](https://pyscript.net/) to create the front-end of the prototype and Page Transactions (Guara) to handle the back-end logic. The result was highly satisfactory, especially for someone like me, who is not particularly skilled in front-end development. Within just a few minutes, I was able to design the transactions, test them, and leverage the Application invoker to seamlessly connect the back-end with the front-end.
+It is not the primary goal of the `Page Transactions` pattern, but since it adheres to the `Command Pattern (GoF)`, it can also be effectively utilized in product development. An experiment was conducted using a simple web application to manage `To-Do` lists. I employed [PyScript](https://pyscript.net/) to create the front-end of the prototype and Page Transactions (Guara) to handle the back-end logic. The result was highly satisfactory, especially for someone like me, who is not particularly skilled in front-end development. Within just a few minutes, I was able to design the transactions, test them, and leverage the Application invoker to seamlessly connect the back-end with the front-end.
 
 By using Guara for both product implementation and testing, we save significant time and streamline repetitive processes. Additionally, testing the prototype aligns well with the shift-left principle, which emphasizes performing tests in the earliest stages of the development cycle.
 
@@ -15,12 +15,12 @@ python -m http.server
 ![alt text](image.png)
 
 3. Interact with the page
-4. Add more transactions ot `operation.py` file and bind them with Pyscript using the `Application` involker. It is necessary to restart the server and refresh the page to apply the changes.
+4. Add more transactions to `operations.py` file and bind them with Pyscript using the `Application` involker. It is necessary to restart the server and refresh the page to apply the changes.
 
 # A brief explanation of the code
 
 > [!TIP]
-> The complete code is in `todo` folder. You can get and change it to to your demanad.
+> The complete code is in `todo` folder. You can get and change it to your demand.
 
 This code implements a To-Do application using Python. Here's a detailed breakdown of the code's functionality:
 Core Classes and Logic
