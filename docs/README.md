@@ -90,7 +90,7 @@ class ChangeToPortuguese(AbstractTransaction):
 
 ---
 ### Complete Tutorial
-[Watch the videos](https://www.youtube.com/watch?v=Cz1k2d8Dbgc&list=PLR5jeODwvciLaJErpM4PNXnKvLRe9Hc53)
+[![Watch the video](https://github.com/douglasdcm/guara/blob/main/docs/images/guara-demo.png?raw=true)](https://www.youtube.com/watch?v=Cz1k2d8Dbgc&list=PLR5jeODwvciLaJErpM4PNXnKvLRe9Hc53)
 
 ### Examples
 Explore practical examples in the [examples folder](https://github.com/douglasdcm/guara/tree/main/examples).
