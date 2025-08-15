@@ -3,6 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from guara.transaction import Application
 from guara import it
 from examples.web_ui.selenium_stealth import setup
@@ -12,6 +13,7 @@ from selenium import webdriver
 from selenium_stealth import stealth
 
 
+@pytest.skipif(is_dry_run(), reason="Selenium Stealth tests are skipped in dry run mode.")
 class TestSeleniumStealthIntegration:
     """
     TestSeleniumStealthIntegration is a test class for integrating
