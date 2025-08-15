@@ -13,7 +13,7 @@ from selenium import webdriver
 from selenium_stealth import stealth
 
 
-@pytest.skip(reason="Selenium Stealth tests failing in pipeline.")
+@pytest.mark.skip(reason="Selenium Stealth tests failing in pipeline.")
 class TestSeleniumStealthIntegration:
     """
     TestSeleniumStealthIntegration is a test class for integrating
