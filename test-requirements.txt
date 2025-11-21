@@ -1,5 +1,4 @@
 pytest
-python-dotenv
 pytest-xdist
 pytest-asyncio
 flake8

@@ -8,7 +8,7 @@ exclude = ["examples*", ".vscode", ".git*", "dist*", "*pytest*", "docs*"]
 
 [project]
 name = "guara"
-version = "0.0.14"
+version = "0.0.15"
 authors = [
   { name="Douglas Cardoso", email="noemail@noemail.com" },
 ]
@@ -22,9 +22,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-dependencies = [
-  "python-dotenv",
-]
+dependencies = []
 
 [project.urls]
 "Homepage" = "https://github.com/douglasdcm/guara"

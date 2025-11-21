@@ -10,9 +10,7 @@ transaction.
 import os
 from typing import Any
 from logging import getLogger, Logger
-from dotenv import load_dotenv
 
-load_dotenv()
 LOGGER: Logger = getLogger(__name__)
 
 
