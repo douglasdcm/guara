@@ -9,7 +9,7 @@ This module has all the transactions.
 
 from typing import Any, Dict
 from guara.it import IAssertion
-from guara.utils import get_transaction_info, is_dry_run
+from guara.utils import get_transaction_info, is_dry_run, get_retries_on_failure
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
@@ -77,8 +77,22 @@ class Application:
         LOGGER.info(f"Transaction: {transaction_info}")
         for key, value in kwargs.items():
             LOGGER.info(f" {key}: {value}")
-        self._result = self._transaction.act(**kwargs)
-        return self
+        
+        retries_on_failure = get_retries_on_failure()
+        exception: Exception = None
+        if retries_on_failure:
+            retries: int = -1
+            while retries < retries_on_failure:
+                try:
+                    self._result = self._transaction.act(**kwargs)
+                    return self
+                except Exception as e:
+                    LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries + 1}")
+                    LOGGER.exception(str(e))
+                    retries += 1
+                    exception = e
+                    
+        raise exception
 
     def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
