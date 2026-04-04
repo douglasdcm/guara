@@ -77,21 +77,23 @@ class Application:
         LOGGER.info(f"Transaction: {transaction_info}")
         for key, value in kwargs.items():
             LOGGER.info(f" {key}: {value}")
-        
+
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
-        if retries_on_failure:
-            retries: int = -1
-            while retries < retries_on_failure:
-                try:
-                    self._result = self._transaction.act(**kwargs)
-                    return self
-                except Exception as e:
-                    LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries + 1}")
-                    LOGGER.exception(str(e))
-                    retries += 1
-                    exception = e
-                    
+        retries: int = -1
+        while retries < retries_on_failure:
+            try:
+                self._result = self._transaction.act(**kwargs)
+                return self
+            except Exception as e:
+                LOGGER.error(
+                    f"Transaction '{transaction_info}' \
+                                failed on attempt {retries + 1}"
+                )
+                LOGGER.exception(str(e))
+                retries += 1
+                exception = e
+
         raise exception
 
     def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
