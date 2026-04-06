@@ -20,13 +20,13 @@
 # -- Project information -----------------------------------------------------
 
 project = "Guará"
-copyright = "2025, Douglas Cardoso"
+copyright = "2026, Douglas Cardoso"
 author = "Douglas Cardoso"
 
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "0.0.14"
+release = "0.0.16"
 
 
 # -- General configuration ---------------------------------------------------
