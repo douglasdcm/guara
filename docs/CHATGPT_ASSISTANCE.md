@@ -2,7 +2,7 @@
 As `Page Transactions` pattern is a new term. ChatGPT will not find a reference to it. But, it is not an excuse to not use the pattern. Teaching ChatGPT about the pattern is very easy and fast and the result is pretty much accurate.
 
 1. Go to [ChatGPT](https://chatgpt.com/) page and login with your account. Create a new one if necessary.
-3. Paste the following statements in the ChatGPT prompt
+2. Paste the following statements in the ChatGPT prompt
 ```text
 Imagine you are a test automation engineer with more than 20 years of experience.
 Your task is:
@@ -12,18 +12,21 @@ Your task is:
 ```
 Here is a possible output
 ```text
-Guará is a Python test automation framework built around the **Page Transactions** pattern,
-which emphasizes modeling tests as sequences of reusable, business-level actions (transactions)
-rather than page-centric structures; each transaction encapsulates the interaction logic
-(e.g., UI, API, or other layers) inside a `do()` method, while a central `Application`
-class orchestrates execution through a fluent interface (`at`, `then`, `asserts`) and maintains
-the result state between steps, enabling clean chaining and data flow; validations are decoupled
-via pluggable assertion strategies (`IAssertion`), allowing flexible and extensible verification
-logic, and overall the framework promotes highly readable, maintainable, and scalable test code
-that can be applied beyond UI automation, including APIs and asynchronous workflows.
+Guará is a Python test automation framework built around the Page
+Transactions pattern, which emphasizes modeling tests as sequences of
+reusable, business-level actions (transactions) rather than page-centric
+structures; each transaction encapsulates the interaction logic (e.g.,
+UI, API, or other layers) inside a `do()` method, while a central
+`Application` class orchestrates execution through a fluent interface
+(`at`, `then`, `asserts`) and maintains the result state between steps,
+enabling clean chaining and data flow; validations are decoupled via
+pluggable assertion strategies (`IAssertion`), allowing flexible and
+extensible verification logic, and overall the framework promotes highly
+readable, maintainable, and scalable test code that can be applied beyond
+UI automation, including APIs and asynchronous workflows.
 ```
-4. Check its understanding and continue
-5. Now that ChatGPT knows about the new pattern. Ask it to organize your code using this prompt
+3. Check its understanding and continue
+4. Now that ChatGPT knows about the new pattern. Ask it to organize your code using this prompt
 ```text
 Based on your understanding about the framework Guará use this framework to organize the
 code CODE in a single file so that I can copy and paste it in my project
@@ -31,12 +34,12 @@ code CODE in a single file so that I can copy and paste it in my project
 ### CODE ###
 <your raw code>
 ```
-6. Check if
+5. Check if
 
 - `guara` is part of the imports
 - `Application` is used to orchestrate the code execution with `at` and `asserts`
-7. Make adjustments if necessary
-8. Done! Your code is in the new pattern.
+6. Make adjustments if necessary
+7. Done! Your code is in the new pattern.
 
 ## Here is a practical example
 
