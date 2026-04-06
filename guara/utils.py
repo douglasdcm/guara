@@ -29,8 +29,7 @@ def get_retries_on_failure() -> int:
 
         if result > 0:
             LOGGER.warning(
-                f"RETRIES_ON_FAILURE: {result}. \
-                           Transactions will be retried on failure."
+                f"RETRIES_ON_FAILURE: {result}. Transactions will be retried on failure."
             )
             return result
 
@@ -40,8 +39,8 @@ def get_retries_on_failure() -> int:
     except (ValueError, TypeError):
         # If user entered "abc", log an error and default to 0 so the test can still run
         LOGGER.warning(
-            f"Invalid RETRIES_ON_FAILURE value: \
-                     '{os.getenv('RETRIES_ON_FAILURE')}'. Expected an integer. Defaulting to 0."
+            f"Invalid RETRIES_ON_FAILURE value: '{os.getenv('RETRIES_ON_FAILURE')}'."
+            " Expected an integer. Defaulting to 0."
         )
         return 0
 

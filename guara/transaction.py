@@ -86,10 +86,7 @@ class Application:
                 self._result = self._transaction.act(**kwargs)
                 return self
             except Exception as e:
-                LOGGER.error(
-                    f"Transaction '{transaction_info}' \
-                                failed on attempt {retries + 1}"
-                )
+                LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries + 1}")
                 LOGGER.exception(str(e))
                 retries += 1
                 exception = e

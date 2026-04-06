@@ -2,9 +2,6 @@ import os
 import pytest
 from unittest.mock import patch
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
-from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.common.by import By
 
 from guara.transaction import Application, AbstractTransaction
@@ -34,11 +31,9 @@ class FailingTransaction(AbstractTransaction):
 
 @pytest.fixture
 def app():
-    # Setup Firefox options (optional: add --headless to run without opening a window)
-    options = Options()
-
-    # Automatically manages the geckodriver executable
-    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless=new")
+    driver = webdriver.Chrome(options=options)
 
     driver.get("https://www.google.com")
     yield Application(driver)
