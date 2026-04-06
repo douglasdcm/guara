@@ -13,4 +13,4 @@ splinter
 selenium-stealth
 undetected_chromedriver
 selenium
-caqui
+caqui==3.0.3
