@@ -7,6 +7,10 @@ from pytest import raises
 from guara import it
 
 
+def test_assert_has_legth():
+    it.HasLength().asserts(["1", "2"], 2)
+
+
 def test_assert_is_equal():
     assert it.IsEqualTo().asserts("any", "any") is None
 
