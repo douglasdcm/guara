@@ -44,4 +44,4 @@ async def test_arsenic():
         TEXT = "guara"
         app = Application(session)
         await app.when(OpenSamplePage, with_url=URL).asserts(IsEqualTo, "Basic Page").perform()
-        await app.then(Submit, text=TEXT).asserts(IsEqualTo, f"It works! {TEXT}!").perform()
+        await app.and_(Submit, text=TEXT).asserts(IsEqualTo, f"It works! {TEXT}!").perform()
