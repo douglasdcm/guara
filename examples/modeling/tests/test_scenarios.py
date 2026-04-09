@@ -1,13 +1,13 @@
-from src.application.runner import EducationApplication
-from src.application.transactions import (
+from examples.modeling.src.application.runner import EducationApplication
+from examples.modeling.src.application.transactions import (
     CreateCourse,
     CreateStudent,
     EnrollStudent,
     AddGrade,
 )
-from src.application.assertions import StudentGPAIs, StudentIsApproved, StudentIsLocked
-from src.domain.repository import Repository
-from src.domain.entities import Student, Course
+from examples.modeling.src.application.assertions import StudentGPAIs, StudentIsApproved, StudentIsLocked
+from examples.modeling.src.domain.repository import Repository
+from examples.modeling.src.domain.entities import Student, Course
 
 repo = Repository()
 
