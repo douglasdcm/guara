@@ -54,6 +54,6 @@ async def test_sample_web_page():
         driver = {"browser": browser, "page": page}
         app = Application(driver)
 
-        await app.then(OpenApp, url="https://example.com/").perform()
+        await app.and_(OpenApp, url="https://example.com/").perform()
         await app.when(NavigateToDocs).asserts(it.Contains, "Example Domain").perform()
-        await app.then(CloseApp).perform()
+        await app.and_(CloseApp).perform()

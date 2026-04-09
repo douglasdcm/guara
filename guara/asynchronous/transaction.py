@@ -110,7 +110,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def then(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def and_(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -142,6 +142,20 @@ class Application:
         coroutine: Coroutine[None, None, None] = self._it.validates(self, expected)
         self._coroutines.append({self._ASSERTION: coroutine})
         return self
+
+    def then(self, it: IAssertion, expected: Any) -> "Application":
+        """
+        Asserting the data that is performed by the transaction
+        against its expected value.
+
+        Args:
+            it: (IAssertion): The interface of the Assertion.
+            expected: (Any): The expected data.
+
+        Returns:
+            (Application)
+        """
+        return self.asserts(it, expected)
 
     async def perform(self) -> "Application":
         """

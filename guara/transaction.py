@@ -123,21 +123,6 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def then(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
-        """
-        Same as the `at` method. Introduced for better readability.
-
-        Performing a transaction.
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
-
-        Returns:
-            (Application)
-        """
-        return self.at(transaction, **kwargs)
-
     def and_(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
         Same as the `at` method. Introduced for better readability.
@@ -170,6 +155,20 @@ class Application:
         return self
 
     def expects(self, assertion: IAssertion, expected: Any) -> "Application":
+        """
+        Asserting and validating the data by implementing the
+        Strategy Pattern from the Gang of Four.
+
+        Args:
+            assertion: (IAssertion): The assertion logic to be used for validation.
+            expected: (Any): The expected data.
+
+        Returns:
+            (Application)
+        """
+        return self.asserts(assertion, expected)
+
+    def then(self, assertion: IAssertion, expected: Any) -> "Application":
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
