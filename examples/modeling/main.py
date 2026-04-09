@@ -1,12 +1,13 @@
 import sys
 
 from src.domain.repository import Repository
-from src.application.transactions import *
+from src.application.transactions import EnrollStudent, EnsureCourseExists, EnsureStudentExists
 from src.application.runner import EducationApplication
+from src.domain.entities import Course, Student
 
 
 def main(args):
-    repo = Repository()  
+    repo = Repository()
     course = Course(1, "CS1")
     student = Student("Marcos", "876")
 

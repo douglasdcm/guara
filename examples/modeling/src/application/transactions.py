@@ -35,6 +35,7 @@ class AddGrade(AbstractTransaction):
         repo.save_student(student)
         return student
 
+
 class EnsureStudentExists(AbstractTransaction):
     def do(self, repo, student):
         if student not in repo.students:
@@ -42,13 +43,15 @@ class EnsureStudentExists(AbstractTransaction):
 
         return student
 
+
 class EnsureCourseExists(AbstractTransaction):
     def do(self, repo, course):
         if course not in repo.courses:
             raise Exception("Course does not exist")
 
         return course
-    
+
+
 class EnsureSubjectExists(AbstractTransaction):
     def do(self, course, niu):
         subject = next((s for s in course.subjects if s.niu == niu), None)
@@ -57,7 +60,7 @@ class EnsureSubjectExists(AbstractTransaction):
             raise Exception(f"Subject {niu} does not exist in course")
 
         return subject
-    
+
 
 class EnsureStudentEnrolledInCourse(AbstractTransaction):
     def do(self, student, course):
@@ -65,14 +68,16 @@ class EnsureStudentEnrolledInCourse(AbstractTransaction):
             raise Exception("Student is not enrolled in this course")
 
         return True
-    
+
+
 class EnsureCourseHasSubjects(AbstractTransaction):
     def do(self, course):
         if not course.subjects:
             raise Exception("Course has no subjects")
 
         return course.subjects
-    
+
+
 class EnsureStudentSubscribedInSubject(AbstractTransaction):
     def do(self, student, course, niu):
         if student.course != course:
@@ -84,7 +89,8 @@ class EnsureStudentSubscribedInSubject(AbstractTransaction):
             raise Exception("Subject does not belong to student's course")
 
         return subject
-    
+
+
 class EnsureStudentCanReceiveGrade(AbstractTransaction):
     def do(self, repo, student, course, niu):
         if student not in repo.students:

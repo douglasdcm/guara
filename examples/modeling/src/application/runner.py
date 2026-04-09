@@ -27,7 +27,6 @@ class EducationApplication(Application):
         super().when(transaction, **kwargs)
         return self
 
-
     def student_receives_grade(self, transaction, **kwargs):
         super().when(transaction, **kwargs)
         return self
