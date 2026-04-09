@@ -32,8 +32,8 @@ def test_natural_laguage():
         app.given(UserLoggedIn)
         .when(Search, product="notebook")
         .and_(SelectItem)
-        .then(ReportChart)
-        .expects(it.IsEqualTo, 1)
+        .and_(ReportChart)
+        .then(it.IsEqualTo, 1)
     )
 
 
@@ -72,11 +72,11 @@ class FinancialApplication(Application):
         super().when(transaction, **kwargs)
         return self
 
-    # THEN block
     def settles(self, transaction, **kwargs):
-        super().then(transaction, **kwargs)
+        super().when(transaction, **kwargs)
         return self
 
+    # THEN block
     def result_in(self, transaction, **kwargs):
         super().then(transaction, **kwargs)
         return self
@@ -85,7 +85,6 @@ class FinancialApplication(Application):
         super().then(transaction, **kwargs)
         return self
 
-    # ASSERTS block
     def reconciles(self, assertion, expected):
         super().asserts(assertion, expected)
         return self
