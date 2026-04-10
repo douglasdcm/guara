@@ -1,10 +1,10 @@
-# Undo (experimental)
+# Undo
 
 The `undo` feature allows users to revert actions performed by transactions, offering a basic form of rollback support. This can be especially useful during development or testing phases where reverting a chain of changes might be necessary.
 
-## Experimental status
+## Limitations
 
-Please note that `undo` is still experimental and has known limitations:
+Please note that `undo` is has known limitations:
 
 ### Some actions cannot be reverted
 
