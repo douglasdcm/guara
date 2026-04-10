@@ -59,7 +59,7 @@ def test_sample_web_page():
     app.execute(CloseApp)
 ```
 
-## 📚 Documentation
+## Documentation
 
 For more information, check:
 [https://guara.readthedocs.io/en/latest/](https://guara.readthedocs.io/en/latest/)

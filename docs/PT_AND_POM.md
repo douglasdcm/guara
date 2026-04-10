@@ -5,7 +5,7 @@ Below is a comparison of **Page Object Model (POM)** and **Page Transactions (PT
 
 ---
 
-## **📌 Page Object Model (POM)**
+## ** Page Object Model (POM)**
 | **Criteria**           | **Pros** | **Cons** | **Rating (0-5)** |
 |------------------------|---------|---------|------------------|
 | **Code Maintainability** | ✅ Separates locators from tests ✅ Easy to update elements | ❌ Still tightly coupled with page structure ❌ If UI changes, all affected pages must be updated | **4** |
@@ -19,7 +19,7 @@ Below is a comparison of **Page Object Model (POM)** and **Page Transactions (PT
 
 ---
 
-## **📌 Page Transactions (PT)**
+## ** Page Transactions (PT)**
 | **Criteria**           | **Pros** | **Cons** | **Rating (0-5)** |
 |------------------------|---------|---------|------------------|
 | **Code Maintainability** | ✅ Transactions focus on user actions rather than elements, reducing maintenance | ❌ Requires a different mindset for those used to POM | **5** |
@@ -33,7 +33,7 @@ Below is a comparison of **Page Object Model (POM)** and **Page Transactions (PT
 
 ---
 
-## **🏆 Which Pattern is Better?**
+## ** Which Pattern is Better?**
 Based on the **overall scores**, **Page Transactions (PT) scores higher (29/30) than Page Object Model (POM) (22/30)**.  
 
 **Why?**  
@@ -50,7 +50,7 @@ Moving from **POM** to **PT** requires shifting from **page-centric automation**
 
 ---
 
-### **1️⃣ Identify User Transactions**  
+### ** Identify User Transactions**  
 In POM, page objects represent pages. In PT, we focus on **transactions** (user actions) like:  
 - **Login**
 - **Logout**
@@ -62,7 +62,7 @@ In POM, page objects represent pages. In PT, we focus on **transactions** (user 
 
 ---
 
-### **2️⃣ Convert POM Methods to PT Transactions**  
+### ** Convert POM Methods to PT Transactions**  
 #### **POM Example (Before Migration)**
 ```python
 from selenium.webdriver.common.by import By
@@ -123,14 +123,14 @@ def test_login():
 
 ---
 
-### **3️⃣ Benefits of the PT Approach**  
+### ** Benefits of the PT Approach**  
 ✔ **Less boilerplate code** – No need for page-specific methods in tests  
 ✔ **Readable test cases** – Tests describe actions in plain English  
 ✔ **Easier maintenance** – UI changes don’t break all related test methods  
 
 ---
 
-### **4️⃣ Additional Refactoring for Other Pages**  
+### ** Additional Refactoring for Other Pages**  
 #### **Example: Changing Language Transaction**
 Instead of:
 ```python
@@ -152,7 +152,7 @@ app.at(ChangeLanguageTransaction, language="pt").asserts(it.Contains, "Página i
 
 ---
 
-### **5️⃣ Gradual Migration Strategy**  
+### ** Gradual Migration Strategy**  
 - Start with frequently changing tests  
 - Convert one transaction at a time  
 - Keep old POM code until full migration is complete

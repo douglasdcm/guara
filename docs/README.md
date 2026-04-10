@@ -10,7 +10,7 @@ Photo by <a href="https://unsplash.com/@matcfelipe?utm_content=creditCopyText&ut
 
 ## What is Guará?
 
-Guará is a Python framework for **business logic expression** designed to simplify production code implemntation and UI test automation. Inspired by design patterns like **Page Objects**, **App Actions**, and **Screenplay**, Guará focuses on **Page Transactions**—encapsulating user interactions (transactions), such as BuyAsset, Login, Logout, or Form Submissions. It’s not just a tool; it’s a programming pattern.
+Guará is a Python framework for **business logic expression** designed to simplify production code implementation and UI test automation. Inspired by design patterns like **Page Objects**, **App Actions**, and **Screenplay**, Guará focuses on **Page Transactions**—encapsulating user interactions (transactions), such as BuyAsset, Login, Logout, or Form Submissions. It’s not just a tool; it’s a programming pattern.
 
 ### Why Guará?
 - **Simplicity**: Reduces repetitive code by encapsulating interactions into reusable transactions.
