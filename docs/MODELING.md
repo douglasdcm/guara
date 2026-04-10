@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Guará provides a simple and powerful way to model system behavior using **transactions as first-class concepts**. Instead of separating requirements, implementation, and tests, Guará allows you to describe everything using a single, consistent language.
+Guará provides a simple and powerful way to model system behavior using **transactions as first-class concepts**. Instead of separating requirements, implementation, and tests, Guará allows you to describe everything using a single, consistent language. More details can be found it the [examples](https://github.com/douglasdcm/guara/tree/main/examples/modeling)
 
 With Guará, you can:
 

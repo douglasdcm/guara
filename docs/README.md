@@ -10,12 +10,12 @@ Photo by <a href="https://unsplash.com/@matcfelipe?utm_content=creditCopyText&ut
 
 ## What is Guará?
 
-Guará is a Python framework designed to simplify UI test automation. Inspired by design patterns like **Page Objects**, **App Actions**, and **Screenplay**, Guará focuses on **Page Transactions**—encapsulating user interactions (transactions) on web pages, such as Login, Logout, or Form Submissions. It’s not just a tool; it’s a programming pattern that can be adapted to any web driver, not just Selenium.
+Guará is a Python framework for **business logic expression** designed to simplify production code implementation and UI test automation. Inspired by design patterns like **Page Objects**, **App Actions**, and **Screenplay**, Guará focuses on **Page Transactions**—encapsulating user interactions (transactions), such as BuyAsset, Login, Logout, or Form Submissions. It’s not just a tool; it’s a programming pattern.
 
 ### Why Guará?
-- **Simplicity**: Reduces repetitive code by encapsulating web interactions into reusable transactions.
-- **Flexibility**: Works with any web driver, not limited to Selenium.
-- **Clarity**: Makes test scripts more readable and maintainable.
+- **Simplicity**: Reduces repetitive code by encapsulating interactions into reusable transactions.
+- **Flexibility**: Can be extende to a specific ubiquitous language.
+- **Clarity**: Makes production code and test scripts more readable and maintainable.
 
 ---
 
@@ -29,43 +29,64 @@ pip install guara
 
 ### Syntax
 ```python
-Application.at(apage.DoSomething [,with_parameter=value, ...]).asserts(it.Matches, a_condition)
+Application.when(DoSomething [,with_parameter=value, ...]).expects(it.Matches, a_condition)
 ```
 
-### Example in Action
+## Example in Action
+
+### Modeling
+
 ```python
-from selenium import webdriver
-from pages import home, contact, info, setup
 from guara.transaction import Application
 from guara import it
+from transactions import HasBalance, BuyAsset, UpdatePortfolio
+
+def main():
+    finance_app = Application()
+    (
+        finance_app
+        .given(HasBalance)
+        .when(BuyAsset, symbol="AAPL", amount=2000)
+        .and_(UpdatePortfolio).expects(it.IsEqualTo, 20)
+    )
+```
+
+### UI Testing
+
+```python
+from guara.transaction import Application
+from guara import it
+from selenium import webdriver
+from transactions import OpenApp, ChangeToPortuguese, NavigateToInfoPage, CloseApp
 
 def test_sample_web_page():
-    # Initialize the Application with a driver
     app = Application(webdriver.Chrome())
-    
-    # Open the web application
-    app.at(setup.OpenApp, url="https://anyhost.com/")
-    
-    # Change language to Portuguese and assert content
-    app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
-
-    # Navigate to Info page and assert text presence
-    app.at(info.NavigateTo).asserts(it.Contains, "This project was born")
-
-    # Close the web application
-    app.at(setup.CloseApp)
+    app.given(OpenApp, url="https://anyhost.com/")
+    app.when(ChangeToPortuguese).expects(it.IsEqualTo, CONTENT_IN_PORTUGUESE)
+    app.when(NavigateToInfoPage).then(it.Contains, "This project was born")
+    app.execute(CloseApp)
 ```
 
 ### Behind the Scenes
-The repetitive web driver code is encapsulated in a transaction class:
+The code is encapsulated in a transaction class:
+
+#### Production code
+```python
+from guara.transaction import AbstractTransaction
+
+class BuyAsset(AbstractTransaction):
+    def do(self, symbol, amount):
+        DataBase.balance -= amount
+```
+
+#### UI testing
 ```python
 from guara.transaction import AbstractTransaction
 
 class ChangeToPortuguese(AbstractTransaction):
     def do(self, **kwargs):
-        self._driver.find_element(By.CSS_SELECTOR, ".btn:nth-child(3) > button:nth-child(1) > img").click()
-        self._driver.find_element(By.CSS_SELECTOR, ".col-md-10").click()
-        return self._driver.find_element(By.CSS_SELECTOR, "label:nth-child(1)").text
+        self._driver.find_element(By.CSS_SELECTOR, "#PT-btn").click()
+        return self._driver.find_element(By.CSS_SELECTOR, "#PT-label").text
 ```
 
 ---
