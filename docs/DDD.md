@@ -1,14 +1,12 @@
-## Modeling a CLI Education Platform with Guará
+# Modeling a CLI Education Platform with Guará
 
-### Introduction
+## Introduction
 
 This article presents a complete example of how to build a CLI-based education platform using the Guará framework. The goal is to demonstrate how business requirements can be translated directly into executable use cases, and how those same use cases drive implementation and testing.
 
 Instead of separating requirements, application logic, and tests, Guará allows you to express everything through a unified approach based on transactions and fluent scenarios. This results in a system where behavior is explicit, traceable, and aligned with business intent.
 
----
-
-### Problem Overview
+## Problem Overview
 
 The system models a simple academic environment with the following core concepts:
 
@@ -27,9 +25,7 @@ The platform supports operations such as:
 
 All interactions are performed via CLI, but internally represented as Guará transactions.
 
----
-
-### Use Cases as the Source of Truth
+## Use Cases as the Source of Truth
 
 In Guará, behavior is expressed using a fluent syntax:
 
@@ -50,9 +46,7 @@ eduapp.when(SetGrade, student_id="S1", subject_id="SUB1", with_grade=8) \
 
 These use cases are not just tests. They define what the system must do. The implementation follows directly from them.
 
----
-
-### Domain Model
+## Domain Model
 
 The domain is intentionally simple and focuses on business rules.
 
@@ -91,9 +85,7 @@ class Student:
         return sum(self.subjects.values()) / len(self.subjects)
 ```
 
----
-
-### Persistence Layer
+## Persistence Layer
 
 The repository persists data using SQLite. It abstracts the storage from the rest of the system.
 
@@ -116,9 +108,7 @@ class Repository:
         return cursor.fetchone()
 ```
 
----
-
-### Transactions
+## Transactions
 
 Each use case is implemented as a transaction. This is where business behavior lives.
 
@@ -156,9 +146,7 @@ class SetGrade(AbstractTransaction):
         return True
 ```
 
----
-
-### Application Layer
+## Application Layer
 
 Guará provides an Application object that orchestrates transactions.
 
@@ -172,9 +160,7 @@ eduapp.when(CreateStudent, repo=repo, with_name="John")
 
 The Application instance manages execution, state, and undo operations when needed.
 
----
-
-### CLI Integration
+## CLI Integration
 
 The CLI acts as an entrypoint that maps user commands to Guará use cases.
 
@@ -198,19 +184,25 @@ def main():
         app.when(CreateStudent, repo=repo, with_name=args.name)
 
     elif args.action == "enroll_course":
-        app.when(
-            EnrollStudentInCourse,
-            repo=repo,
-            student_id=args.student,
-            course_id=args.course
-        ).asserts(it.IsTrue)
+        try:
+            (
+                eduapp
+                .given(HasCourse, repo=repo, course=Course(nui=args.course))
+                .given(HasStudent, repo=repo, student=Student(nui=args.student))
+                .given(
+                    IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student
+                )
+                .when(EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course)
+                .asserts(it.IsTrue)
+            )
+        except Exception as e:
+            print(str(e))
+            eduapp.undo()
 ```
 
 This design keeps the CLI thin and delegates all logic to transactions.
 
----
-
-### Testing with the Same Use Cases
+## Testing with the Same Use Cases
 
 Tests reuse the same transactions and scenarios.
 
@@ -236,9 +228,7 @@ def test_enroll_course():
 
 There is no need for a separate testing DSL. The same language is used everywhere.
 
----
-
-### Benefits of This Approach
+## Benefits of This Approach
 
 This architecture provides several advantages:
 
@@ -248,9 +238,7 @@ This architecture provides several advantages:
 * Faster feedback loop during development
 * Easier onboarding for new developers and stakeholders
 
----
-
-### Conclusion
+## Conclusion
 
 This project shows how Guará enables a different way of building systems. By modeling behavior as executable use cases, the gap between requirements, implementation, and testing disappears.
 
