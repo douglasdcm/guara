@@ -153,7 +153,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def asserts(self, assertion: IAssertion, expected: Any) -> "Application":
+    def asserts(self, assertion: IAssertion, expected: Any = None) -> "Application":
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
@@ -169,7 +169,7 @@ class Application:
         self._assertion.validates(self._result, expected)
         return self
 
-    def expects(self, assertion: IAssertion, expected: Any) -> "Application":
+    def expects(self, assertion: IAssertion, expected: Any = None) -> "Application":
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
@@ -183,7 +183,7 @@ class Application:
         """
         return self.asserts(assertion, expected)
 
-    def then(self, assertion: IAssertion, expected: Any) -> "Application":
+    def then(self, assertion: IAssertion, expected: Any = None) -> "Application":
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
