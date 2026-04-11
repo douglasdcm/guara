@@ -71,14 +71,16 @@ class IsStudentEnrolledInACourse(AbstractTransaction):
         student = Student(nui=raw[0], name=[1])
         student.course = raw[2]
         if not student.course:
-            raise Exception(f"Student not enrolled to any course")
+            raise Exception("Student not enrolled to any course")
+
 
 class IsStudentEnrolledInSubject(AbstractTransaction):
     def do(self, repo: Repository, student_id, subject_id):
         for raw in repo.list_enrollments_by_student(student_id):
             if raw[1] == subject_id:
                 return
-        raise Exception(f"Student not enrolled to subject")
+        raise Exception("Student not enrolled to subject")
+
 
 class IsNotStudentEnrolledInSubject(AbstractTransaction):
     def do(self, repo: Repository, student_id, subject_id):
@@ -86,11 +88,13 @@ class IsNotStudentEnrolledInSubject(AbstractTransaction):
         student = Student(nui=raw[0], name=[1])
         student.subjects.append(raw[2])
         if subject_id in student.subjects:
-            raise Exception(f"Student already enrolled to subject")
+            raise Exception("Student already enrolled to subject")
+
 
 class IsGradeInValidRange(AbstractTransaction):
     def do(self, grade):
         assert 0 <= grade <= 10, "Grade must be between 0 and 10"
+
 
 class EnrollStudentInSubject(AbstractTransaction):
     """Enroll student in subject."""
@@ -144,7 +148,7 @@ class HasCourse(AbstractTransaction):
 
 
 class HasStudent(AbstractTransaction):
-    def do(self, repo: Repository, student_id=None, student_name = None):
+    def do(self, repo: Repository, student_id=None, student_name=None):
         for raw in repo.list_students():
             sobj = Student(raw[0], raw[1])
             if sobj.nui == student_id:
@@ -152,6 +156,7 @@ class HasStudent(AbstractTransaction):
             if sobj.name == student_name:
                 return
         raise Exception(f"Student {student_id} {student_name} does not exist")
+
 
 class HasSubject(AbstractTransaction):
     def do(self, repo: Repository, subject_id=None, subject_name=None):

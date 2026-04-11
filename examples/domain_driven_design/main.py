@@ -65,9 +65,9 @@ def main():
     if args.action == "create_student":
         try:
             (
-                eduapp
-                .given(HosNotStudent, repo=repo, student=Student(None, args.name))
-                .when(CreateStudent, repo=repo, with_name=args.name)
+                eduapp.given(HosNotStudent, repo=repo, student=Student(None, args.name)).when(
+                    CreateStudent, repo=repo, with_name=args.name
+                )
             )
         except Exception as e:
             print(str(e))
@@ -99,13 +99,12 @@ def main():
     elif args.action == "enroll_course":
         try:
             (
-                eduapp
-                .given(HasCourse, repo=repo, course=Course(nui=args.course))
+                eduapp.given(HasCourse, repo=repo, course=Course(nui=args.course))
                 .given(HasStudent, repo=repo, student=Student(nui=args.student))
-                .given(
-                    IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student
+                .given(IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student)
+                .when(
+                    EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course
                 )
-                .when(EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course)
                 .asserts(it.IsTrue)
             )
         except Exception as e:
@@ -115,13 +114,20 @@ def main():
     elif args.action == "enroll_subject":
         try:
             (
-                eduapp
-                .given(HasStudent, repo=repo, student_id=args.student)
+                eduapp.given(HasStudent, repo=repo, student_id=args.student)
                 .given(IsStudentEnrolledInACourse, repo=repo, student_id=args.student)
                 .given(HasSubject, repo=repo, subject_id=args.subject)
-                .given(IsNotStudentEnrolledInSubject, repo=repo, student_id=args.student, subject_id=args.subject)
+                .given(
+                    IsNotStudentEnrolledInSubject,
+                    repo=repo,
+                    student_id=args.student,
+                    subject_id=args.subject,
+                )
                 .when(
-                    EnrollStudentInSubject, repo=repo, student_id=args.student, subject_id=args.subject
+                    EnrollStudentInSubject,
+                    repo=repo,
+                    student_id=args.student,
+                    subject_id=args.subject,
                 )
                 .asserts(it.IsTrue)
             )
@@ -132,10 +138,14 @@ def main():
     elif args.action == "set_grade":
         try:
             (
-                eduapp
-                .given(HasStudent, repo=repo, student_id=args.student)
+                eduapp.given(HasStudent, repo=repo, student_id=args.student)
                 .given(HasSubject, repo=repo, subject_id=args.subject)
-                .given(IsStudentEnrolledInSubject, repo=repo, student_id=args.student, subject_id=args.subject)
+                .given(
+                    IsStudentEnrolledInSubject,
+                    repo=repo,
+                    student_id=args.student,
+                    subject_id=args.subject,
+                )
                 .given(IsGradeInValidRange, grade=args.grade)
                 .when(
                     SetGrade,
@@ -161,7 +171,8 @@ def main():
     elif args.action == "list_subjects":
         result = (
             eduapp.when(ListSubjects, repo=repo, course_id=args.course)
-            .asserts(it.IsNotEmpty).result
+            .asserts(it.IsNotEmpty)
+            .result
         )
         print(result)
 
