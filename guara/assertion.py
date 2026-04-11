@@ -21,7 +21,7 @@ class IAssertion:
     is used for validation and testing.
     """
 
-    def asserts(self, actual: Any, expected: Any) -> None:
+    def asserts(self, actual: Any, expected: Any = None) -> None:
         """
         It defines the assertion logic by comparing the actual data
         against the expected data.
@@ -38,7 +38,7 @@ class IAssertion:
         """
         raise NotImplementedError
 
-    def validates(self, actual: Any, expected: Any) -> None:
+    def validates(self, actual: Any, expected: Any = None) -> None:
         """
         Executing the assertion logic.
 
