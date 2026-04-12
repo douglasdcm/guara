@@ -178,10 +178,10 @@ def main():
     args = parser.parse_args()
 
     repo = Repository()
-    app = Application()
+    eduapp = Application()
 
     if args.action == "create_student":
-        app.when(CreateStudent, repo=repo, with_name=args.name)
+        eduapp.when(CreateStudent, repo=repo, with_name=args.name)
 
     elif args.action == "enroll_course":
         try:
@@ -250,7 +250,6 @@ The result is a system where:
 
 This approach is particularly effective for business-driven applications where clarity and correctness are more important than technical complexity.
 
-For more details, refer to the official documentation and examples:
+For more details, refer to the example:
 
- - [https://guara.readthedocs.io/en/latest/](https://guara.readthedocs.io/en/latest/)
- - [Domain Driven Design example](https://github.com/douglasdcm/guara/blob/main/examples/domain_driven_design/REQUIREMENTS.md)
+ - [Domain Driven Design example](https://github.com/douglasdcm/guara/blob/main/examples/domain_driven_design/)
