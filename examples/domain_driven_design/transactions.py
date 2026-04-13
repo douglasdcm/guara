@@ -1,6 +1,11 @@
+# Copyright (C) 2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 from guara.transaction import AbstractTransaction
-from examples.domain_driven_design.repository import Repository
-from examples.domain_driven_design.domain import Student, Subject, Course
+from repository import Repository
+from domain import Student, Subject
 
 # =========================
 # Transactions
@@ -15,9 +20,8 @@ class CreateStudent(AbstractTransaction):
 
     def do(self, repo: Repository, with_name):
         nui = len(repo.list_students()) + 1
-        student = Student(nui, with_name)
         repo.add_student(nui, with_name)
-        return student
+        return True
 
 
 class CreateCourse(AbstractTransaction):
@@ -25,9 +29,8 @@ class CreateCourse(AbstractTransaction):
 
     def do(self, repo: Repository, with_name):
         nui = len(repo.list_courses()) + 1
-        course = Course(nui, with_name)
-        repo.courses = course
-        return course.name
+        repo.add_course(nui, with_name)
+        return True
 
 
 class CreateSubject(AbstractTransaction):
@@ -45,38 +48,29 @@ class EnrollStudentInCourse(AbstractTransaction):
     """Enroll student in course."""
 
     def do(self, repo: Repository, student_id, course_id):
-        raw = repo.get_student(student_id)
-        student = Student(nui=raw[0], name=raw[1])
-        raw = repo.get_course(course_id)
-        course = Course(nui=raw[0], name=raw[1])
-
-        if student.enroll_course(course):
-            repo.update_student_course(student_id, course_id)
-            return True
-        return False
+        repo.update_student_course(student_id, course_id)
+        return True
 
 
 class IsNotStudentEnrolledInACourse(AbstractTransaction):
     def do(self, repo: Repository, student_id):
-        raw = repo.get_student(student_id)
-        student = Student(nui=raw[0], name=[1])
-        student.course = raw[2]
-        if student.course:
-            raise Exception(f"Student enrolled to course {student.course}")
+        try:
+            IsStudentEnrolledInACourse().do(repo, student_id)
+        except Exception:
+            return
+        raise Exception("Student enrolled to other course")
 
 
 class IsStudentEnrolledInACourse(AbstractTransaction):
     def do(self, repo: Repository, student_id):
-        raw = repo.get_student(student_id)
-        student = Student(nui=raw[0], name=[1])
-        student.course = raw[2]
+        student = repo.get_student(student_id)
         if not student.course:
             raise Exception("Student not enrolled to any course")
 
 
 class IsStudentEnrolledInSubject(AbstractTransaction):
     def do(self, repo: Repository, student_id, subject_id):
-        for raw in repo.list_enrollments_by_student(student_id):
+        for raw in repo.list_enrollments_by_student(student_id, subject_id):
             if raw[1] == subject_id:
                 return
         raise Exception("Student not enrolled to subject")
@@ -84,11 +78,11 @@ class IsStudentEnrolledInSubject(AbstractTransaction):
 
 class IsNotStudentEnrolledInSubject(AbstractTransaction):
     def do(self, repo: Repository, student_id, subject_id):
-        raw = repo.get_student(student_id)
-        student = Student(nui=raw[0], name=[1])
-        student.subjects.append(raw[2])
-        if subject_id in student.subjects:
-            raise Exception("Student already enrolled to subject")
+        try:
+            IsStudentEnrolledInSubject().do(repo, student_id, subject_id)
+        except Exception:
+            return
+        raise Exception("Student already enrolled to subject")
 
 
 class IsGradeInValidRange(AbstractTransaction):
@@ -100,15 +94,8 @@ class EnrollStudentInSubject(AbstractTransaction):
     """Enroll student in subject."""
 
     def do(self, repo: Repository, student_id, subject_id):
-        raw = repo.get_student(student_id)
-        student = Student(raw[0], raw[1])
-        raw = repo.get_subject(subject_id)
-        subject = Subject(raw[0], raw[1])
-        if student.enroll_subject(subject):
-            subject.add_student(student)
-            repo.add_enrollment(subject_id, student_id)
-            return True
-        return False
+        repo.add_enrollment(subject_id, student_id)
+        return True
 
 
 class SetGrade(AbstractTransaction):
@@ -124,8 +111,7 @@ class CalculateGPA(AbstractTransaction):
 
     def do(self, repo: Repository, student_id):
         student = Student(student_id)
-        for raw in repo.get_grades_by_student(student_id):
-            student.add_grade(raw[0], raw[1])
+        student = repo.get_student_grades(student_id)
         return student.gpa()
 
 
@@ -137,14 +123,13 @@ class ListSubjects(AbstractTransaction):
 
 
 class HasCourse(AbstractTransaction):
-    def do(self, repo: Repository, course: Course):
-        for raw in repo.list_courses():
-            cobj = Course(raw[0], raw[1])
-            if cobj.nui == course.nui:
+    def do(self, repo: Repository, course_name: str = None, course_id=None):
+        for cobj in repo.list_courses():
+            if cobj.name == course_name:
                 return
-            if cobj.name == course.name:
+            if cobj.nui == course_id:
                 return
-        raise Exception(f"Course {course.nui} {course.name} does not exist")
+        raise Exception(f"Course {course_name} does not exist")
 
 
 class HasStudent(AbstractTransaction):
@@ -156,6 +141,13 @@ class HasStudent(AbstractTransaction):
             if sobj.name == student_name:
                 return
         raise Exception(f"Student {student_id} {student_name} does not exist")
+
+
+class IsNotStudentLocked(AbstractTransaction):
+    def do(self, repo: Repository, student_id):
+        student = repo.get_student(student_id)
+        if student.status == "locked":
+            raise Exception("Student locked")
 
 
 class HasSubject(AbstractTransaction):
@@ -174,12 +166,12 @@ class HasNotCourse(AbstractTransaction):
         super().__init__(driver)
         self._repo = None
 
-    def do(self, repo: Repository, course: Course):
-        self._repo = repo
-        for raw in repo.list_courses():
-            cobj = Course(raw[0], raw[1])
-            if course.name == cobj.name:
-                raise Exception("Course exists")
+    def do(self, repo: Repository, course_name: str):
+        try:
+            HasCourse().do(repo, course_name=course_name)
+        except Exception:
+            return
+        raise Exception("Course exists")
 
 
 class HasNotSubject(AbstractTransaction):
@@ -187,22 +179,22 @@ class HasNotSubject(AbstractTransaction):
         super().__init__(driver)
         self._repo = None
 
-    def do(self, repo: Repository, subject: Subject):
+    def do(self, repo: Repository, subject_name: Subject):
         self._repo = repo
         for raw in repo.list_subjects():
             sobj = Subject(raw[0], raw[1])
-            if subject.name == sobj.name:
-                raise Exception("Subject exists")
+            if subject_name == sobj.name:
+                raise Exception(f"Subject {subject_name} exists")
 
 
-class HosNotStudent(AbstractTransaction):
+class HasNotStudent(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
         self._repo = None
 
-    def do(self, repo: Repository, student: Student):
+    def do(self, repo: Repository, student_name: str):
         self._repo = repo
         for s in repo.list_students():
             s_obj = Student(s[0], s[1])
-            if student.name == s_obj.name:
+            if student_name == s_obj.name:
                 raise Exception("Student exists")

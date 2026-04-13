@@ -181,17 +181,15 @@ def main():
     eduapp = Application()
 
     if args.action == "create_student":
-        eduapp.when(CreateStudent, repo=repo, with_name=args.name)
+        eduapp.when(CreateStudent, repo=repo, with_name=args.name).expects(it.IsTrue)
 
     elif args.action == "enroll_course":
         try:
             (
                 eduapp
-                .given(HasCourse, repo=repo, course=Course(nui=args.course))
-                .given(HasStudent, repo=repo, student=Student(nui=args.student))
-                .given(
-                    IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student
-                )
+                .given(HasCourse, repo=repo, course=args.course)
+                .and_(HasStudent, repo=repo, student=args.student)
+                .and_(IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student)
                 .when(EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course)
                 .asserts(it.IsTrue)
             )
@@ -210,8 +208,7 @@ Tests reuse the same transactions and scenarios.
 def test_create_student():
     app = Application()
 
-    app.when(CreateStudent, repo=repo, with_name="John") \
-       .asserts(it.IsNotNone)
+    app.when(CreateStudent, repo=repo, with_name="John").asserts(it.IsNotNone)
 ```
 
 ```python

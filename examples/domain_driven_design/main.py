@@ -1,3 +1,8 @@
+# Copyright (C) 2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
 """
 Education Platform CLI using Guará
 
@@ -7,30 +12,8 @@ domain, and CLI interface.
 
 import argparse
 from guara.transaction import Application
-from guara import it
-from examples.domain_driven_design.repository import Repository
-from examples.domain_driven_design.transactions import (
-    CreateCourse,
-    CreateStudent,
-    CreateSubject,
-    HasCourse,
-    HasNotCourse,
-    EnrollStudentInCourse,
-    EnrollStudentInSubject,
-    HasNotSubject,
-    HasStudent,
-    HasSubject,
-    HosNotStudent,
-    IsGradeInValidRange,
-    IsNotStudentEnrolledInSubject,
-    IsStudentEnrolledInACourse,
-    IsStudentEnrolledInSubject,
-    SetGrade,
-    ListSubjects,
-    CalculateGPA,
-    IsNotStudentEnrolledInACourse,
-)
-from examples.domain_driven_design.domain import Course, Subject, Student
+from scenarios import scenarios_student, scenarios_subject, scenarios_course
+from repository import Repository
 
 # =========================
 # CLI Use Cases
@@ -64,117 +47,46 @@ def main():
 
     if args.action == "create_student":
         try:
-            (
-                eduapp.given(HosNotStudent, repo=repo, student=Student(None, args.name)).when(
-                    CreateStudent, repo=repo, with_name=args.name
-                )
-            )
-        except Exception as e:
-            print(str(e))
-            eduapp.undo()
+            scenarios_student.create_student(eduapp, repo, args)
+        except Exception:
+            pass
 
     elif args.action == "create_course":
         try:
-            (
-                eduapp.given(HasNotCourse, repo=repo, course=Course(name=args.name))
-                .when(CreateCourse, repo=repo, with_name=args.name)
-                .then(it.IsEqualTo, args.name)
-            )
-        except Exception as e:
-            print(str(e))
-            eduapp.undo()
-
+            scenarios_course.create_course(eduapp, repo, args)
+        except Exception:
+            pass
     elif args.action == "create_subject":
         try:
-            (
-                eduapp.given(HasCourse, repo=repo, course=Course(nui=args.course))
-                .given(HasNotSubject, repo=repo, subject=Subject(name=args.name))
-                .when(CreateSubject, repo=repo, with_name=args.name, in_course_with_id=args.course)
-                .then(it.IsEqualTo, args.name)
-            )
-        except Exception as e:
-            print(e)
-            eduapp.undo()
-
+            scenarios_subject.create_subject(eduapp, repo, args)
+        except Exception:
+            pass
     elif args.action == "enroll_course":
         try:
-            (
-                eduapp.given(HasCourse, repo=repo, course=Course(nui=args.course))
-                .given(HasStudent, repo=repo, student=Student(nui=args.student))
-                .given(IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student)
-                .when(
-                    EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course
-                )
-                .asserts(it.IsTrue)
-            )
-        except Exception as e:
-            print(str(e))
-            eduapp.undo()
+            scenarios_student.enroll_course(eduapp, repo, args)
+        except Exception:
+            pass
 
     elif args.action == "enroll_subject":
         try:
-            (
-                eduapp.given(HasStudent, repo=repo, student_id=args.student)
-                .given(IsStudentEnrolledInACourse, repo=repo, student_id=args.student)
-                .given(HasSubject, repo=repo, subject_id=args.subject)
-                .given(
-                    IsNotStudentEnrolledInSubject,
-                    repo=repo,
-                    student_id=args.student,
-                    subject_id=args.subject,
-                )
-                .when(
-                    EnrollStudentInSubject,
-                    repo=repo,
-                    student_id=args.student,
-                    subject_id=args.subject,
-                )
-                .asserts(it.IsTrue)
-            )
-        except Exception as e:
-            print(e)
-            eduapp.undo()
-
+            scenarios_student.enroll_subject(eduapp, repo, args)
+        except Exception:
+            pass
     elif args.action == "set_grade":
         try:
-            (
-                eduapp.given(HasStudent, repo=repo, student_id=args.student)
-                .given(HasSubject, repo=repo, subject_id=args.subject)
-                .given(
-                    IsStudentEnrolledInSubject,
-                    repo=repo,
-                    student_id=args.student,
-                    subject_id=args.subject,
-                )
-                .given(IsGradeInValidRange, grade=args.grade)
-                .when(
-                    SetGrade,
-                    repo=repo,
-                    student_id=args.student,
-                    subject_id=args.subject,
-                    with_grade=args.grade,
-                )
-                .asserts(it.IsTrue)
-            )
-        except Exception as e:
-            print(e)
-            eduapp.undo()
-
+            scenarios_student.set_grade(eduapp, repo, args)
+        except Exception:
+            pass
     elif args.action == "gpa":
         try:
-            result = eduapp.when(CalculateGPA, repo=repo, student_id=args.student).result
-            print(result)
-        except Exception as e:
-            print(e)
-            eduapp.undo()
-
+            scenarios_student.calculate_gpa(eduapp, repo, args)
+        except Exception:
+            pass
     elif args.action == "list_subjects":
-        result = (
-            eduapp.when(ListSubjects, repo=repo, course_id=args.course)
-            .asserts(it.IsNotEmpty)
-            .result
-        )
-        print(result)
+        try:
+            scenarios_subject.list_subjects(eduapp, repo, args)
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
