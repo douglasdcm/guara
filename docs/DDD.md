@@ -52,37 +52,22 @@ The domain is intentionally simple and focuses on business rules.
 
 ```python
 class Student:
-    def __init__(self, nui, name):
+    """Represents a student."""
+
+    def __init__(self, nui=None, name=None):
         self.nui = nui
         self.name = name
         self.course = None
-        self.subjects = {}
-        self.locked = False
+        self.subjects_grade = []
+        self.status = None
 
-    def enroll_course(self, course):
-        if self.course:
-            return False
-        self.course = course
-        return True
-
-    def enroll_subject(self, subject):
-        if self.locked:
-            return False
-        if subject.course != self.course:
-            return False
-        self.subjects[subject.nui] = 0
-        return True
-
-    def set_grade(self, subject_nui, grade):
-        if subject_nui not in self.subjects:
-            return False
-        self.subjects[subject_nui] = max(self.subjects[subject_nui], grade)
-        return True
+    def add_grade(self, grade):
+        self.subjects_grade.append(float(grade))
 
     def gpa(self):
-        if not self.subjects:
+        if not self.subjects_grade:
             return 0
-        return sum(self.subjects.values()) / len(self.subjects)
+        return sum(self.subjects_grade) / len(self.subjects_grade)
 ```
 
 ## Persistence Layer
@@ -116,33 +101,23 @@ Each use case is implemented as a transaction. This is where business behavior l
 from guara import AbstractTransaction
 
 class CreateStudent(AbstractTransaction):
-    def do(self, repo, with_name):
-        nui = f"S{len(repo.list_students()) + 1}"
+    def do(self, repo: Repository, with_name):
+        nui = len(repo.list_students()) + 1
         repo.add_student(nui, with_name)
-        return nui
+        return True
 ```
 
 ```python
 class EnrollStudentInCourse(AbstractTransaction):
-    def do(self, repo, student_id, course_id):
-        student = repo.get_student(student_id)
-        course = repo.get_course(course_id)
-
-        if not student or not course:
-            return False
-
+    def do(self, repo: Repository, student_id, course_id):
         repo.update_student_course(student_id, course_id)
         return True
 ```
 
 ```python
 class SetGrade(AbstractTransaction):
-    def do(self, repo, student_id, subject_id, with_grade):
-        if with_grade < 0 or with_grade > 10:
-            return False
-
-        nui = f"G{student_id}_{subject_id}"
-        repo.update_grade(nui, student_id=student_id, subject_id=subject_id, grade=with_grade)
+    def do(self, repo: Repository, student_id, subject_id, with_grade):
+        repo.add_grade(student_id, subject_id, with_grade)
         return True
 ```
 
@@ -154,8 +129,7 @@ Guará provides an Application object that orchestrates transactions.
 from guara import Application
 
 eduapp = Application()
-
-eduapp.when(CreateStudent, repo=repo, with_name="John")
+eduapp.execute(CreateStudent, repo=repo, with_name="John")
 ```
 
 The Application instance manages execution, state, and undo operations when needed.
@@ -207,14 +181,12 @@ Tests reuse the same transactions and scenarios.
 ```python
 def test_create_student():
     app = Application()
-
     app.when(CreateStudent, repo=repo, with_name="John").asserts(it.IsNotNone)
 ```
 
 ```python
 def test_enroll_course():
     app = Application()
-
     app.when(
         EnrollStudentInCourse,
         repo=repo,
