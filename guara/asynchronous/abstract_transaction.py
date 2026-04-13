@@ -23,7 +23,7 @@ class AbstractTransaction:
         """
         return self.__class__.__name__
 
-    def __init__(self, driver: Any):
+    def __init__(self, driver: Any = None):
         """
         Initializing the transaction which will allow it to interact
         with the driver.

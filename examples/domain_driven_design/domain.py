@@ -1,3 +1,9 @@
+# Copyright (C) 2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
+
 # =========================
 # Domain Models
 # =========================
@@ -10,33 +16,16 @@ class Student:
         self.nui = nui
         self.name = name
         self.course = None
-        self.subjects = []
-        self.locked = False
+        self.subjects_grade = []
+        self.status = None
 
-    def enroll_course(self, course):
-        if self.course:
-            return False
-        self.course = course
-        return True
-
-    def enroll_subject(self, subject):
-        if self.locked:
-            return False
-        if subject.course != self.course:
-            return False
-        if len(self.subjects) >= 3:
-            return False
-        self.subjects.append(subject)
-        return True
-
-    def add_grade(self, subject_nui, grade):
-        self.subjects.append(float(grade))
-        return True
+    def add_grade(self, grade):
+        self.subjects_grade.append(float(grade))
 
     def gpa(self):
-        if not self.subjects:
+        if not self.subjects_grade:
             return 0
-        return sum(self.subjects) / len(self.subjects)
+        return sum(self.subjects_grade) / len(self.subjects_grade)
 
 
 class Subject:

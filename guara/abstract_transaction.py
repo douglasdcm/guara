@@ -19,7 +19,7 @@ class AbstractTransaction:
     It will handle web transactions in an automated browser.
     """
 
-    def __init__(self, driver: Any):
+    def __init__(self, driver: Any = None):
         """
         Initializing the transaction which will allow it to interact
         with the driver.

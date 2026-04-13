@@ -1,10 +1,16 @@
+# Copyright (C) 2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://github.com/douglasdcm/guara
+
+
 """
 SQLite-backed Repository implementation.
 """
 
 import sqlite3
 from typing import List
-from examples.domain_driven_design.domain import Course
+from domain import Course, Student
 
 
 class Repository:
@@ -26,9 +32,10 @@ class Repository:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS students (
-                nui TEXT PRIMARY KEY,
+                nui INTEGER PRIMARY KEY,
                 name TEXT,
-                course_id TEXT
+                course_id INTEGER,
+                status TEXT
             )
         """
         )
@@ -36,7 +43,7 @@ class Repository:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS courses (
-                nui TEXT PRIMARY KEY,
+                nui INTEGER PRIMARY KEY,
                 name TEXT
             )
         """
@@ -45,7 +52,7 @@ class Repository:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS subjects (
-                nui TEXT PRIMARY KEY,
+                nui INTEGER PRIMARY KEY,
                 name TEXT,
                 course_id TEXT
             )
@@ -55,10 +62,10 @@ class Repository:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS grades (
-                nui TEXT PRIMARY KEY,
-                student_id TEXT,
-                subject_id TEXT,
-                grade TEXT
+                student_id INTEGER,
+                subject_id INTEGER,
+                grade FLOAT,
+                PRIMARY KEY (student_id, subject_id, grade)
             )
         """
         )
@@ -66,9 +73,9 @@ class Repository:
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS enrollments (
-                nui TEXT PRIMARY KEY,
-                subject_id TEXT,
-                student_id TEXT
+                subject_id INTEGER,
+                student_id INTEGER,
+                PRIMARY KEY (subject_id, student_id)
             )
         """
         )
@@ -91,7 +98,12 @@ class Repository:
         """Get student by ID."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT nui, name, course_id FROM students WHERE nui = ?", (nui,))
-        return cursor.fetchone()
+        raw = cursor.fetchone()
+        student = Student(raw[0], raw[1])
+        student.course = raw[2]
+        if len(raw) > 3:
+            student.status = raw[3]
+        return student
 
     def list_students(self):
         """List all students."""
@@ -131,7 +143,8 @@ class Repository:
         """List all courses."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT nui, name FROM courses")
-        return cursor.fetchall()
+        raws = cursor.fetchall()
+        return [Course(raw[0], raw[1]) for raw in raws]
 
     def update_course_name(self, nui, name):
         """Update course name."""
@@ -189,19 +202,22 @@ class Repository:
 
     def add_grade(self, student_id, subject_id, grade):
         """Insert a new grade."""
-        nui = f"{subject_id}-{student_id}-{grade}"
         cursor = self.conn.cursor()
         cursor.execute(
-            "INSERT INTO grades (nui, subject_id, student_id, grade) VALUES (?, ?, ?, ?)",
-            (nui, subject_id, student_id, grade),
+            "INSERT INTO grades (subject_id, student_id, grade) VALUES (?, ?, ?)",
+            (subject_id, student_id, grade),
         )
         self.conn.commit()
 
-    def get_grades_by_student(self, student_id):
+    def get_student_grades(self, student_id) -> Student:
         """Get course by ID."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT student_id, grade FROM grades WHERE student_id = ?", (student_id,))
-        return cursor.fetchall()
+        raws = cursor.fetchall()
+        student = Student(nui=student_id)
+        for raw in raws:
+            student.add_grade(raw[1])
+        return student
 
     def update_grade_value(self, nui, grade):
         """Update grade value."""
@@ -256,11 +272,10 @@ class Repository:
 
     def add_enrollment(self, subject_id, student_id):
         """Insert a new enrollment."""
-        nui = f"{subject_id}-{student_id}"
         cursor = self.conn.cursor()
         cursor.execute(
-            "INSERT INTO enrollments (nui, subject_id, student_id) VALUES (?, ?, ?)",
-            (nui, subject_id, student_id),
+            "INSERT INTO enrollments (subject_id, student_id) VALUES (?, ?)",
+            (subject_id, student_id),
         )
         self.conn.commit()
 
@@ -268,28 +283,36 @@ class Repository:
         """Insert multiple enrollments."""
         cursor = self.conn.cursor()
         cursor.executemany(
-            "INSERT INTO enrollments (nui, subject_id, student_id) VALUES (?, ?, ?)", enrollments
+            "INSERT INTO enrollments (subject_id, student_id) VALUES (?, ?)", enrollments
         )
         self.conn.commit()
 
-    def get_enrollment(self, nui):
+    def get_enrollment(self, subject_id, student_id):
         """Get enrollment by NUI."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT nui, subject_id, student_id FROM enrollments WHERE nui = ?", (nui,))
+        cursor.execute(
+            "SELECT subject_id, student_id FROM enrollments"
+            " WHERE subject_id = ? AND student_id = ?",
+            (
+                subject_id,
+                student_id,
+            ),
+        )
         return cursor.fetchone()
 
     def list_enrollments(self):
         """List all enrollments."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT nui, subject_id, student_id FROM enrollments")
+        cursor.execute("SELECT subject_id, student_id FROM enrollments")
         return cursor.fetchall()
 
-    def list_enrollments_by_student(self, student_id):
+    def list_enrollments_by_student(self, student_id, subject_id):
         """List enrollments by student."""
         cursor = self.conn.cursor()
         cursor.execute(
-            "SELECT nui, subject_id, student_id FROM enrollments WHERE student_id = ?",
-            (student_id,),
+            "SELECT subject_id, student_id FROM enrollments"
+            " WHERE student_id = ? and subject_id = ?",
+            (student_id, subject_id),
         )
         return cursor.fetchall()
 
@@ -297,7 +320,7 @@ class Repository:
         """List enrollments by subject."""
         cursor = self.conn.cursor()
         cursor.execute(
-            "SELECT nui, subject_id, student_id FROM enrollments WHERE subject_id = ?",
+            "SELECT subject_id, student_id FROM enrollments WHERE subject_id = ?",
             (subject_id,),
         )
         return cursor.fetchall()
