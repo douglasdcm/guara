@@ -114,7 +114,7 @@ for item in my_list:
 * Group them by categories (Actions, Preconditions, Questions, etc.)
 * Move them into modules
 * Create helper modules for support logic
-* Use [composite transactions](https://guara.readthedocs.io/en/latest/COMPOSITE_TRANSACTIONS.html) to simplify the exposed interface
+* Use [composite transactions](https://guara.readthedocs.io/en/latest/COMPOSITE_TRANSACTION.html) to simplify the exposed interface
 
 ## Q: My transaction needs methods other than `do`
 
