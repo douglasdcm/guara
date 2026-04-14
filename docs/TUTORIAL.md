@@ -11,6 +11,8 @@ Instead of separating requirements, application logic, and tests, Guará allows 
 :maxdepth: 1
 
 DDD
+COMPOSITE_TRANSACTION
+MIGRATE_CODE
 ```
 
 ## Modeling
@@ -55,3 +57,23 @@ Software engineers, UX designers with some knowledge of programming, and softwar
 ## Crawler
 
 Page transactions can be used to organize procedural code of crawlers. Here is an [example of a crawler](https://github.com/douglasdcm/guara/tree/main/examples/crawler) to get information from airports in Spain
+
+## Extending Assertions
+
+This example demonstrates how Guará allows you to extend its assertion mechanism by creating custom strategies tailored to your domain needs. By inheriting from `IAssertion`, you can define your own validation logic beyond the built-in assertions, enabling more flexible and expressive test scenarios. In this case, the custom assertion ignores case sensitivity when comparing values, showing how you can encapsulate reusable validation rules and seamlessly integrate them into your scenarios using the same fluent syntax.
+
+```{toctree}
+:maxdepth: 1
+
+EXTEND_ASSERTIONS
+```
+
+## Debug
+
+This example shows how Guará surfaces assertion failures in a clear and debuggable way. When an assertion does not pass, the framework propagates the error with detailed information, including the `actual` and `expected` values, along with the exact location in the test where the failure occurred. This makes it easy to understand what went wrong and why, without requiring additional debugging tools. Since assertions are implemented as Python code, you also benefit from standard traceback information, allowing you to quickly trace issues back to your custom logic or transaction behavior.
+
+```{toctree}
+:maxdepth: 1
+
+DEBUG
+```

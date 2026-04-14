@@ -1,11 +1,11 @@
 # Page Transactions and Page Objects Model
 
-## **Pros and Cons of Page Object Model (POM) and Page Transactions (PT)**  
+## Pros and Cons of Page Object Model (POM) and Page Transactions (PT)
 Below is a comparison of **Page Object Model (POM)** and **Page Transactions (PT)** based on different aspects, rated from **0 to 5** (where 0 is the worst and 5 is the best).  
 
 ---
 
-## ** Page Object Model (POM)**
+## Page Object Model (POM)
 | **Criteria**           | **Pros** | **Cons** | **Rating (0-5)** |
 |------------------------|---------|---------|------------------|
 | **Code Maintainability** | ✅ Separates locators from tests ✅ Easy to update elements | ❌ Still tightly coupled with page structure ❌ If UI changes, all affected pages must be updated | **4** |
@@ -19,7 +19,7 @@ Below is a comparison of **Page Object Model (POM)** and **Page Transactions (PT
 
 ---
 
-## ** Page Transactions (PT)**
+## Page Transactions (PT)
 | **Criteria**           | **Pros** | **Cons** | **Rating (0-5)** |
 |------------------------|---------|---------|------------------|
 | **Code Maintainability** | ✅ Transactions focus on user actions rather than elements, reducing maintenance | ❌ Requires a different mindset for those used to POM | **5** |
@@ -33,7 +33,7 @@ Below is a comparison of **Page Object Model (POM)** and **Page Transactions (PT
 
 ---
 
-## ** Which Pattern is Better?**
+## Which Pattern is Better?
 Based on the **overall scores**, **Page Transactions (PT) scores higher (29/30) than Page Object Model (POM) (22/30)**.  
 
 **Why?**  
@@ -45,12 +45,12 @@ Based on the **overall scores**, **Page Transactions (PT) scores higher (29/30) 
 
 If your project involves **complex user workflows** across multiple pages, **Page Transactions is the better approach**. If you need **simple UI structure representation**, POM works well.
 
-## **Tips for Migrating from Page Object Model (POM) to Page Transactions (PT)**  
+## Tips for Migrating from Page Object Model (POM) to Page Transactions (PT)
 Moving from **POM** to **PT** requires shifting from **page-centric automation** to **user action-centric automation**. Below are key steps and examples to help with the transition.
 
 ---
 
-### ** Identify User Transactions**  
+### Identify User Transactions
 In POM, page objects represent pages. In PT, we focus on **transactions** (user actions) like:  
 - **Login**
 - **Logout**
@@ -62,8 +62,8 @@ In POM, page objects represent pages. In PT, we focus on **transactions** (user 
 
 ---
 
-### ** Convert POM Methods to PT Transactions**  
-#### **POM Example (Before Migration)**
+### Convert POM Methods to PT Transactions
+#### POM Example (Before Migration)
 ```python
 from selenium.webdriver.common.by import By
 
@@ -95,7 +95,7 @@ def test_login():
     assert "Dashboard" in driver.title
 ```
 ---
-#### **PT Example (After Migration)**
+#### PT Example (After Migration)
 ```python
 from guara.transaction import AbstractTransaction
 
@@ -123,15 +123,15 @@ def test_login():
 
 ---
 
-### ** Benefits of the PT Approach**  
+### Benefits of the PT Approach
 ✔ **Less boilerplate code** – No need for page-specific methods in tests  
 ✔ **Readable test cases** – Tests describe actions in plain English  
 ✔ **Easier maintenance** – UI changes don’t break all related test methods  
 
 ---
 
-### ** Additional Refactoring for Other Pages**  
-#### **Example: Changing Language Transaction**
+### Additional Refactoring for Other Pages
+#### Example: Changing Language Transaction
 Instead of:
 ```python
 class HomePage:
@@ -152,7 +152,7 @@ app.at(ChangeLanguageTransaction, language="pt").asserts(it.Contains, "Página i
 
 ---
 
-### ** Gradual Migration Strategy**  
+### Gradual Migration Strategy
 - Start with frequently changing tests  
 - Convert one transaction at a time  
 - Keep old POM code until full migration is complete
