@@ -97,7 +97,7 @@ for item in my_list:
 
 ## Q: I couldn't find a specific assertion
 
-**A:** You can extend assertions as described in the [documentation](https://guara.readthedocs.io/en/latest/TUTORIAL.html#ubiquitous-language).
+**A:** You can extend assertions as described in the [documentation](https://guara.readthedocs.io/en/latest/TUTORIAL.html#extending-assertions).
 
 ## Q: I couldn't find a specific verb
 
