@@ -48,7 +48,7 @@ While testing with Python3.11 lots of errors happened in special this one that I
 
 ```shell
 ______________________________________ ERROR collecting examples/linux_desktop/test_linux_calculator.py ______________________________________
-ImportError while importing test module '/home/douglas/repo/guara/examples/linux_desktop/test_linux_calculator.py'.
+ImportError while importing test module '~/guara/examples/linux_desktop/test_linux_calculator.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 /usr/local/lib/python3.11/importlib/__init__.py:126: in import_module

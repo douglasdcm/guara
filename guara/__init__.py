@@ -9,7 +9,11 @@ responsible for initializing the logger and handling command
 line arguments.
 """
 
-from logging import basicConfig, getLogger, Logger, INFO
+from os import getenv
+from logging import basicConfig, getLogger, Logger, INFO, disable
+
+if getenv("GUARA_DISABLE_LOGS", "false").lower() == "true":
+    disable(INFO)
 
 
 basicConfig(

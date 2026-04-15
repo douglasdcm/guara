@@ -23,7 +23,7 @@ file_path: Path = Path(__file__).parent.parent.parent.resolve()
 PAGE_URL = f"file:///{file_path}/sample.html"
 
 
-@fixture(scope="function")
+@fixture
 def setup_server():
     server = Server.get_instance(port=SERVER_PORT)
     server.start()
@@ -46,7 +46,7 @@ class TestAsyncTransactionCaqui:
     The test class for asynchronuous transaction.
     """
 
-    @fixture(loop_scope="function")
+    @fixture
     async def setup_test(self, setup_environment) -> Generator[None, Any, None]:  # type: ignore
         """
         Setting up the transaction for the test.

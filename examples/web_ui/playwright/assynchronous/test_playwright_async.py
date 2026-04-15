@@ -3,7 +3,6 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from asyncio import get_event_loop
 from pytest import mark
 from guara.asynchronous.transaction import Application, AbstractTransaction
 from guara.asynchronous import it
@@ -28,8 +27,7 @@ class CloseApp(AbstractTransaction):
     async def do(self, screenshot_filename: str = "./captures/guara-capture"):
         page = self._driver["page"]
         browser = self._driver["browser"]
-        timestamp = get_event_loop().time()
-        await page.screenshot(path=f"{screenshot_filename}-{timestamp:.0f}.png")
+        await page.screenshot(path=f"{screenshot_filename}.png")
         await page.close()
         await browser.close()
 

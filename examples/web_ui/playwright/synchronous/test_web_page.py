@@ -7,11 +7,18 @@ from pytest import fixture
 from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
 from guara.transaction import Application
 from guara import it
-from playwright.sync_api import Page
-
+from playwright.sync_api import sync_playwright
 
 @fixture
-def setup_method(page: Page):
+def page():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        yield page
+        browser.close()
+
+@fixture
+def setup_method(page):
     driver = page
 
     app = Application(driver)

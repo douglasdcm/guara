@@ -13,7 +13,7 @@ from guara.asynchronous.assertion import IAssertion
 from logging import getLogger, Logger
 
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 class IsEqualTo(IAssertion):

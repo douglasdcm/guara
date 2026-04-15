@@ -14,6 +14,7 @@ Welcome to guara's documentation!
    TUTORIAL
    QUICK_REF
    UNDO
+   LOGS
    ENVIRONMENT_VARIABLES
    BEST_PRACTICES
    FAQ

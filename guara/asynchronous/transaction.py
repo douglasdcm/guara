@@ -13,7 +13,7 @@ from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.asynchronous.abstract_transaction import AbstractTransaction
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 class Application:
@@ -165,7 +165,10 @@ class Application:
             (Application)
         """
         for index in range(0, len(self._coroutines), 1):
-            (await self.get_assertion(index) if not await self.get_transaction(index) else None)
+            if self._coroutines[index].get(self._TRANSACTION):
+                await self.get_transaction(index)
+            if self._coroutines[index].get(self._ASSERTION):
+                await self.get_assertion(index)
         self._coroutines.clear()
         return self
 
@@ -183,7 +186,9 @@ class Application:
         if transaction:
             LOGGER.info(f"Running transaction '{self._transaction_name}'")
             for key, value in self._kwargs.items():
-                LOGGER.info(f" {key}: {value}")
+                if "secret" in key.lower():
+                    value = "*****"
+                LOGGER.info(f" With paramater '{key}' set to '{value}'")
             self._result = await transaction
             return True
         return False

@@ -14,7 +14,7 @@ from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 class Application:
@@ -76,7 +76,9 @@ class Application:
         transaction_info: str = get_transaction_info(self._transaction)
         LOGGER.info(f"Running transaction '{transaction_info}'")
         for key, value in kwargs.items():
-            LOGGER.info(f" {key}: {value}")
+            if "secret" in key.lower():
+                value = "*****"
+            LOGGER.info(f" With parameter '{key}' set to '{value}'")
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
