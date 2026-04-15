@@ -9,6 +9,7 @@ from guara.transaction import Application
 from guara import it
 from playwright.sync_api import sync_playwright
 
+
 @fixture
 def page():
     with sync_playwright() as p:
@@ -16,6 +17,7 @@ def page():
         page = browser.new_page()
         yield page
         browser.close()
+
 
 @fixture
 def setup_method(page):
