@@ -11,7 +11,7 @@ from logging import getLogger, Logger
 from typing import Any, NoReturn, Union, Dict
 from guara.utils import is_dry_run
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 class AbstractTransaction:

@@ -17,13 +17,12 @@ from guara.asynchronous.it import IsEqualTo, IsNotEqualTo, Contains, DoesNotCont
 from pytest import mark
 
 
-@mark.skip("Not work with python3.6")
 class TestAsyncToDo:
     """
     The test class for asynchronuous To-Do List.
     """
 
-    @fixture(loop_scope="function")
+    @fixture
     async def setup_test(self) -> None:
         """
         Setting up for the test.

@@ -7,7 +7,6 @@ tox
 pre-commit
 requests
 psutil
-pytest-playwright
 helium
 splinter
 selenium-stealth

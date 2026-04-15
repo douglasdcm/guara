@@ -13,7 +13,7 @@ from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.asynchronous.abstract_transaction import AbstractTransaction
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 class Application:
@@ -34,7 +34,7 @@ class Application:
         """
         self._result: Any = None
         """
-        It is the result data of the transaction.
+        It is the result data of the last transaction.
         """
         self._coroutines: List[Dict[str, Coroutine[None, None, Union[Any, None]]]] = []
         """
@@ -73,7 +73,7 @@ class Application:
     @property
     def result(self) -> Any:
         """
-        It is the result data of the transaction.
+        It is the result data of the last transaction.
         """
         return self._result
 
@@ -165,7 +165,10 @@ class Application:
             (Application)
         """
         for index in range(0, len(self._coroutines), 1):
-            (await self.get_assertion(index) if not await self.get_transaction(index) else None)
+            if self._coroutines[index].get(self._TRANSACTION):
+                await self.get_transaction(index)
+            if self._coroutines[index].get(self._ASSERTION):
+                await self.get_assertion(index)
         self._coroutines.clear()
         return self
 
@@ -181,9 +184,11 @@ class Application:
         """
         transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
-            LOGGER.info(f"Transaction: {self._transaction_name}")
+            LOGGER.info(f"Running transaction '{self._transaction_name}'")
             for key, value in self._kwargs.items():
-                LOGGER.info(f" {key}: {value}")
+                if "secret" in key.lower():
+                    value = "*****"
+                LOGGER.info(f" With paramater '{key}' set to '{value}'")
             self._result = await transaction
             return True
         return False
@@ -198,7 +203,7 @@ class Application:
         Returns:
             (None)
         """
-        LOGGER.info(f"Assertion: {self._it.__name__}")
+        LOGGER.info(f"Asserting '{self._it.__name__}'")
         LOGGER.info(f" Actual  : {self._result}")
         LOGGER.info(f" Expected: {self._expected}")
         assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)

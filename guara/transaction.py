@@ -14,7 +14,7 @@ from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 class Application:
@@ -29,34 +29,34 @@ class Application:
         Args:
             driver: (Any): This is the driver of the system being under test.
         """
+        self._transaction_pool: list[AbstractTransaction] = []
         """
         Stores all transactions
         """
-        self._transaction_pool: list[AbstractTransaction] = []
         if is_dry_run():
             self._driver = None
             return
+        self._driver: Any = driver
         """
         It is the driver that has a transaction.
         """
-        self._driver: Any = driver
-        """
-        It is the result data of the transaction.
-        """
         self._result: Any = None
         """
-        The web transaction handler.
+        It is the result data of the last transaction.
         """
         self._transaction: AbstractTransaction
         """
-        The assertion logic to be used for validation.
+        The web transaction handler.
         """
         self._assertion: IAssertion
+        """
+        The assertion logic to be used for validation.
+        """
 
     @property
     def result(self) -> Any:
         """
-        It is the result data of the transaction.
+        It is the result data of the last transaction.
         """
         return self._result
 
@@ -74,9 +74,11 @@ class Application:
         self._transaction = transaction(self._driver)
         self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
-        LOGGER.info(f"Transaction: {transaction_info}")
+        LOGGER.info(f"Running transaction '{transaction_info}'")
         for key, value in kwargs.items():
-            LOGGER.info(f" {key}: {value}")
+            if "secret" in key.lower():
+                value = "*****"
+            LOGGER.info(f" With parameter '{key}' set to '{value}'")
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
@@ -206,6 +208,6 @@ class Application:
         """
         self._transaction_pool.reverse()
         for transaction in self._transaction_pool:
-            LOGGER.info(f"Reverting '{transaction.__name__}' actions")
+            LOGGER.info(f"Reverting transaction '{transaction.__name__}'")
             transaction.revert_action()
         return self

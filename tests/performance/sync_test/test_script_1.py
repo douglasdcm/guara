@@ -24,7 +24,7 @@ def test_performance_sync():
         filename=f"./data/script_1_sync_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log",
         filemode="w",
     )
-    logging.getLogger("guara")
+    logging.getLogger(__name__)
 
     SECONDS = 60 * 5
     s = time.time()

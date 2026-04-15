@@ -37,7 +37,6 @@ PT_AND_POM
 OTHER_DRIVERS
 TEST_FRAMEWORKS
 ASYNC
-LOGS
 ```
 
 ## Ubiquitous language

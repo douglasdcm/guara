@@ -17,7 +17,7 @@ from datetime import datetime
 from threading import Thread, Event
 
 
-LOGGER: Logger = getLogger("guara")
+LOGGER: Logger = getLogger(__name__)
 
 
 def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> None:

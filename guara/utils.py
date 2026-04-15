@@ -55,5 +55,4 @@ def get_transaction_info(transaction: Any) -> str:
     Returns:
         string
     """
-    module_name: str = ".".join(transaction.__module__.split(".")[-1:])
-    return f"{module_name}.{transaction.__name__}"
+    return f"{transaction.__name__}"

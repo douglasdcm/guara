@@ -54,7 +54,7 @@ class IAssertion:
         """
         if is_dry_run():
             return
-        LOGGER.info(f"Assertion: {self.__class__.__name__}")
+        LOGGER.info(f"Asserting '{self.__class__.__name__}'")
         try:
             self.asserts(actual, expected)
             LOGGER.info(f" Actual  : {actual}")
