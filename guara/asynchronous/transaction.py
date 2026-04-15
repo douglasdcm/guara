@@ -34,7 +34,7 @@ class Application:
         """
         self._result: Any = None
         """
-        It is the result data of the transaction.
+        It is the result data of the last transaction.
         """
         self._coroutines: List[Dict[str, Coroutine[None, None, Union[Any, None]]]] = []
         """
@@ -73,7 +73,7 @@ class Application:
     @property
     def result(self) -> Any:
         """
-        It is the result data of the transaction.
+        It is the result data of the last transaction.
         """
         return self._result
 
@@ -181,7 +181,7 @@ class Application:
         """
         transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
-            LOGGER.info(f"Transaction: {self._transaction_name}")
+            LOGGER.info(f"Running transaction '{self._transaction_name}'")
             for key, value in self._kwargs.items():
                 LOGGER.info(f" {key}: {value}")
             self._result = await transaction
@@ -198,7 +198,7 @@ class Application:
         Returns:
             (None)
         """
-        LOGGER.info(f"Assertion: {self._it.__name__}")
+        LOGGER.info(f"Asserting '{self._it.__name__}'")
         LOGGER.info(f" Actual  : {self._result}")
         LOGGER.info(f" Expected: {self._expected}")
         assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
