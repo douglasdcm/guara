@@ -37,7 +37,7 @@ Application.when(DoSomething [,with_parameter=value, ...]).expects(it.Matches, a
 ### Modeling
 
 ```python
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from transactions import HasBalance, BuyAsset, UpdatePortfolio
 
@@ -54,7 +54,7 @@ def main():
 ### UI Testing
 
 ```python
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from selenium import webdriver
 from transactions import OpenApp, ChangeToPortuguese, NavigateToInfoPage, CloseApp

@@ -72,7 +72,7 @@ import home
 from selenium import webdriver
 
 # Imports the Application to build and run the automation
-from guara.transaction import Application
+from guara.application import Application
 
 # Imports the module with the strategies to asset the result
 from guara import it

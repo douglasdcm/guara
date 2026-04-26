@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import mark
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.web_ui.undetected_chromedriver import setup, actions
 from guara.utils import is_dry_run

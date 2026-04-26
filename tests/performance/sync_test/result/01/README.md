@@ -20,7 +20,7 @@ import datetime
 import psutil
 import logging
 import transactions
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 

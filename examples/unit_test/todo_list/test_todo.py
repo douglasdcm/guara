@@ -6,7 +6,7 @@
 from unittest import TestCase
 from examples.unit_test.todo_list.todo import ToDo
 from examples.unit_test.todo_list import operations
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 

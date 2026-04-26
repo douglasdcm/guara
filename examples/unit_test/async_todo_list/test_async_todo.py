@@ -9,7 +9,7 @@ To-Do List.
 """
 
 from examples.unit_test.async_todo_list.async_todo import AsyncToDo
-from guara.asynchronous.transaction import Application
+from guara.asynchronous.application import Application
 from pytest_asyncio import fixture
 from typing import List, Coroutine, Any
 from examples.unit_test.async_todo_list.operations import Add, Remove, ListTasks

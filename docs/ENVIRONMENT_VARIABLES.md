@@ -8,29 +8,31 @@ Guará utilizes environment variables to manage global configurations. This allo
 
 | Variable | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `DRY_RUN` | Boolean | `false` | When enabled, logs transactions without executing driver actions. |
-| `RETRIES_ON_FAILURE` | Integer | `0` | Defines how many times a transaction should retry before failing. |
+| `GUARA_DRY_RUN` | Boolean | `false` | When enabled, logs transactions without executing driver actions. |
+| `GUARA_RETRIES_ON_FAILURE` | Integer | `0` | Defines how many times a transaction should retry before failing. |
 | `GUARA_DISABLE_LOGS` | Boolean | `false` | When enabled, logs at or bellow the level INFO are suppresed. |
+| `DRY_RUN` (deprecated) | Boolean | `false` | When enabled, logs transactions without executing driver actions. |
+| `RETRIES_ON_FAILURE` (deprecated) | Integer | `0` | Defines how many times a transaction should retry before failing. |
 
 ---
 
 ## Detailed Configuration
 
-### 1. DRY_RUN
+### 1. GUARA_DRY_RUN
 This variable is used to validate the flow of your automation suite without triggering actual browser or device interactions.
 
 * **Usage**: Set to `true` to enable.
 * **Effect**: The `is_dry_run()` utility will return `True`. Transactions will skip the `.do()` implementation and a warning will be logged: 
-  > `DRY_RUN: True. Dry run is enabled. No action was taken on drivers.`
+  > `GUARA_DRY_RUN: True. Dry run is enabled. No action was taken on drivers.`
 
-### 2. RETRIES_ON_FAILURE
+### 2. GUARA_RETRIES_ON_FAILURE
 This variable enables automatic recovery for flaky transactions. If a transaction fails due to an exception, the `Application.at()` method will catch it and attempt to re-run the transaction.
 
 * **Usage**: Set to a positive integer (e.g., `3`).
 * **Effect**: 
     * If a transaction fails, it will be retried up to the specified number of times.
     * If it fails after all retry attempts, the last exception is raised.
-    * When active, the log will show: `RETRIES_ON_FAILURE: <value>. Transactions will be retried on failure.`
+    * When active, the log will show: `GUARA_RETRIES_ON_FAILURE: <value>. Transactions will be retried on failure.`
 
 ### 3. GUARA_DISABLE_LOGS
 This variable disables logs at or bellow the level INFO. If a transaction fails due to an exception, this logs are still presented.
@@ -61,5 +63,5 @@ Environment variables should be set in your shell or terminal. Guará does **not
 
 ### Linux and macOS
 ```bash
-export DRY_RUN=false
-export RETRIES_ON_FAILURE=3
+export GUARA_DRY_RUN=false
+export GUARA_RETRIES_ON_FAILURE=3

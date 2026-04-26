@@ -5,7 +5,7 @@
 
 from pytest import fixture
 from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from playwright.sync_api import sync_playwright
 

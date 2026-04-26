@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.web_ui.helium import setup
 from examples.web_ui.helium import home

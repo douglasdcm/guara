@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from examples.rest_api import echo_api
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 

@@ -126,7 +126,7 @@ class SetGrade(AbstractTransaction):
 Guará provides an Application object that orchestrates transactions.
 
 ```python
-from guara import Application
+from guara.application import Application
 
 eduapp = Application()
 eduapp.execute(CreateStudent, repo=repo, with_name="John")

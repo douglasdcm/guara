@@ -6,7 +6,7 @@
 from random import randrange
 from examples.unit_test.calculator.calculator import Calculator
 from examples.unit_test.calculator import operations
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 

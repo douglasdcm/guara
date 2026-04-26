@@ -99,7 +99,7 @@ class Application:
         """
         Same as the `at` method. Introduced for better readability.
 
-        Performing a transaction.
+        Performs a transaction.
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
@@ -114,7 +114,24 @@ class Application:
         """
         Same as the `at` method. Introduced for better readability.
 
-        Performing a transaction.
+        Performs a transaction.
+
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
+
+        Returns:
+            (Application)
+        """
+        return self.at(transaction, **kwargs)
+
+    def so(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+        """
+        Same as the `at` method. Introduced for better readability of transactions that
+        represent post conditions. Performs a transaction.
+
+        Example:
+            given(HasStock).when(SellProduct).so(StockDecreased).preform()
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
@@ -188,7 +205,7 @@ class Application:
             for key, value in self._kwargs.items():
                 if "secret" in key.lower():
                     value = "*****"
-                LOGGER.info(f" With paramater '{key}' set to '{value}'")
+                LOGGER.info(f" with paramater '{key}' set to '{value}'")
             self._result = await transaction
             return True
         return False

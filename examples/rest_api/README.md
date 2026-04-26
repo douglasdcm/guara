@@ -18,7 +18,7 @@ The `test_rest_api.py` script contains an automated test class using pytest. Bel
 ### Imports
 ```python
 from examples.rest_api import echo_api
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 ```
 - `echo_api` contains the API transaction definitions.

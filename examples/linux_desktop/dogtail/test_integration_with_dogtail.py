@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import mark
-from guara.transaction import Application
+from guara.application import Application
 from guara.utils import is_dry_run
 from examples.linux_desktop.dogtail.screens import setup
 from examples.linux_desktop.dogtail.screens import calculator

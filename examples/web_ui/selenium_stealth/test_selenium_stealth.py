@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pytest
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.web_ui.selenium_stealth import setup
 from examples.web_ui.selenium_stealth import home

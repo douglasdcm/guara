@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import mark
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.linux_desktop.rpa_python import setup
 from examples.linux_desktop.rpa_python import home

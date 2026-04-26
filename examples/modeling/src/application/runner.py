@@ -1,4 +1,4 @@
-from guara.transaction import Application
+from guara.application import Application
 
 
 class EducationApplication(Application):

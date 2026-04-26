@@ -1,6 +1,6 @@
 from guara import it
 from guara.abstract_transaction import AbstractTransaction
-from guara.transaction import Application
+from guara.application import Application
 
 
 class DoThat(AbstractTransaction):

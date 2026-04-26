@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pytest
-from guara.transaction import Application
+from guara.application import Application
 from types import SimpleNamespace
 from repository import Repository
 

@@ -6,7 +6,7 @@
 from pathlib import Path
 from guara import it
 from examples.web_ui.selenium.simple import home, setup
-from guara.transaction import Application
+from guara.application import Application
 from guara.utils import is_dry_run
 from selenium import webdriver
 

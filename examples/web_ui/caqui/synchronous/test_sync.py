@@ -6,7 +6,7 @@
 from pytest import mark
 from pathlib import Path
 from pytest import fixture
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.web_ui.caqui.synchronous import home, setup
 from guara.utils import is_dry_run

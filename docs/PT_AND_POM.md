@@ -110,7 +110,7 @@ class LoginTransaction(AbstractTransaction):
         return self._driver.title
 ```
 ```python
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from selenium import webdriver
 
