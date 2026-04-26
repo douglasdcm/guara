@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pyscript import document
-from guara.transaction import Application
+from guara.application import Application
 import transactions as transactions
 
 # For front-end

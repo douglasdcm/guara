@@ -33,7 +33,7 @@ def test_application_succeeds_with_no_retries():
 
 def test_application_retries_and_succeeds_before_max_retries():
     # Setup environment for 2 retries
-    with patch.dict(os.environ, {"RETRIES_ON_FAILURE": "2"}):
+    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "2"}):
         app = Application(driver=MagicMock())
 
         # We want it to fail once and succeed on the 2nd attempt (1st retry)
@@ -44,7 +44,7 @@ def test_application_retries_and_succeeds_before_max_retries():
 
 def test_application_retries_and_succeeds_on_last_attempt():
     # Setup environment for 2 retries
-    with patch.dict(os.environ, {"RETRIES_ON_FAILURE": "1"}):
+    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "1"}):
         app = Application(driver=MagicMock())
 
         # We want it to fail once and succeed on the 2nd attempt (1st retry)
@@ -55,7 +55,7 @@ def test_application_retries_and_succeeds_on_last_attempt():
 
 def test_application_raises_after_max_retries():
     # Setup environment for 1 retry
-    with patch.dict(os.environ, {"RETRIES_ON_FAILURE": "1"}):
+    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "1"}):
         app = Application(driver=MagicMock())
 
         # If it needs 3 attempts but we only allow 1 retry (2 attempts total), it should raise
@@ -67,7 +67,7 @@ def test_application_raises_after_max_retries():
 
 def test_application_succeeds_with_invalid_retry_value():
     # Setup environment for valid retry value
-    with patch.dict(os.environ, {"RETRIES_ON_FAILURE": "invalid"}):
+    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "invalid"}):
         app = Application(driver=MagicMock())
         app.at(FlakyTransaction, fail_until=1)
         assert app.result == "success"
@@ -75,7 +75,7 @@ def test_application_succeeds_with_invalid_retry_value():
 
 def test_application_succeeds_with_negative_retry_value():
     # Setup environment for negative retry value
-    with patch.dict(os.environ, {"RETRIES_ON_FAILURE": "-1"}):
+    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "-1"}):
         app = Application(driver=MagicMock())
         app.at(FlakyTransaction, fail_until=1)
         assert app.result == "success"
@@ -83,7 +83,7 @@ def test_application_succeeds_with_negative_retry_value():
 
 def test_application_fails_with_invalid_retry_value():
     # Setup environment for invalid retry value
-    with patch.dict(os.environ, {"RETRIES_ON_FAILURE": "invalid"}):
+    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "invalid"}):
         app = Application(driver=MagicMock())
         with raises(Exception) as excinfo:
             app.at(FlakyTransaction, fail_until=2)

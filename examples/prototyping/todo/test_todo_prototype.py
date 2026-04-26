@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from examples.prototyping.todo import transactions
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 

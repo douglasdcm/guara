@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from tests.performance.async_test.app import transactions
-from guara.asynchronous.transaction import Application
+from guara.asynchronous.application import Application
 from guara.asynchronous import it
 
 

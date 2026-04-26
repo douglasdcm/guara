@@ -179,7 +179,7 @@ from dogtail.procedural import run, focus
 
 from examples.linux_desktop.screens import calculator, setup
 
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 

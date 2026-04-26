@@ -5,7 +5,7 @@
 
 from pathlib import Path
 from pytest import mark
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium

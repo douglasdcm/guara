@@ -25,7 +25,7 @@ The `test_rpa.py` script contains an automated test class using pytest. Below is
 ```python
 import rpa as r
 import pytest
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.linux_desktop.rpa_python import setup
 from examples.linux_desktop.rpa_python import home

@@ -28,7 +28,7 @@ from pathlib import Path
 from pytest_asyncio import fixture
 from pytest import mark
 from guara.asynchronous.it import IsEqualTo
-from guara.asynchronous.transaction import Application
+from guara.asynchronous.application import Application
 from examples.web_ui.caqui.asynchronouos.home import GetNthLink
 from examples.web_ui.caqui.asynchronouos.setup import OpenApp, CloseApp
 from caqui.easy.capabilities import CapabilitiesBuilder

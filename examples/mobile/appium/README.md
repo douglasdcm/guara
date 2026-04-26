@@ -23,7 +23,7 @@ from pathlib import Path
 from random import randrange
 from pytest import mark
 from appium import webdriver
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from setup import OpenAppiumApp, CloseAppiumApp
 from home import SubmitTextAppium

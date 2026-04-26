@@ -62,7 +62,7 @@ class Application:
 
     def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
-        Performing a transaction.
+        Performs a transaction.
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
@@ -78,7 +78,7 @@ class Application:
         for key, value in kwargs.items():
             if "secret" in key.lower():
                 value = "*****"
-            LOGGER.info(f" With parameter '{key}' set to '{value}'")
+            LOGGER.info(f" with parameter '{key}' set to '{value}'")
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
@@ -99,7 +99,7 @@ class Application:
         """
         Same as the `at` method. Introduced for better readability.
 
-        Performing a transaction.
+        Performs a transaction.
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
@@ -114,7 +114,7 @@ class Application:
         """
         Same as the `at` method. Introduced for better readability.
 
-        Performing a transaction.
+        Performs a transaction.
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
@@ -129,7 +129,24 @@ class Application:
         """
         Same as the `at` method. Introduced for better readability.
 
-        Performing a transaction.
+        Performs a transaction.
+
+        Args:
+            transaction: (AbstractTransaction): The web transaction handler.
+            kwargs: (dict): It contains all the necessary data and parameters for the transaction.
+
+        Returns:
+            (Application)
+        """
+        return self.at(transaction, **kwargs)
+
+    def so(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+        """
+        Same as the `at` method. Introduced for better readability of transactions that
+        represent post conditions. Performs a transaction.
+
+        Example:
+            given(HasStock).when(SellProduct).so(StockDecreased)
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
@@ -144,7 +161,7 @@ class Application:
         """
         Same as the `at` method. Introduced for better readability.
 
-        Performing a transaction.
+        Performs a transaction.
 
         Args:
             transaction: (AbstractTransaction): The web transaction handler.

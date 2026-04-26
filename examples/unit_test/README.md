@@ -33,7 +33,7 @@ The `test_async_todo.py` script contains an automated test class using `pytest-a
 ### Imports
 ```python
 from examples.unit_test.async_todo_list.async_todo import AsyncToDo
-from guara.asynchronous.transaction import Application
+from guara.asynchronous.application import Application
 from pytest_asyncio import fixture
 from typing import List, Coroutine, Any
 from examples.unit_test.async_todo_list.operations import Add, Remove, ListTasks
@@ -67,7 +67,7 @@ from unittest import TestCase
 from testify import TestCase as TTC, setup
 from examples.unit_test.calculator.calculator import Calculator
 from examples.unit_test.calculator import operations
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 ```
 
@@ -90,7 +90,7 @@ The `test_todo.py` script contains automated test cases for a simple To-Do List 
 from unittest import TestCase
 from examples.unit_test.todo_list.todo import ToDo
 from examples.unit_test.todo_list import operations
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 ```
 

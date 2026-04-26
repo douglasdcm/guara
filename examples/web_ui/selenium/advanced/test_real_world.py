@@ -6,7 +6,7 @@
 from pathlib import Path
 from pytest import fixture
 from examples.web_ui.selenium.advanced import home, contact, info, setup
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from guara.utils import is_dry_run
 from selenium import webdriver

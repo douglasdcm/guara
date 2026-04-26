@@ -33,7 +33,7 @@ When the framework is in action, it follows a highly repetitive pattern. Notice 
 ```python
 from selenium import webdriver
 from pages import home, contact, info, setup
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 
 def test_sample_web_page():

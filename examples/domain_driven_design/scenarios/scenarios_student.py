@@ -6,7 +6,7 @@
 import logging
 
 from scenarios.utils import run_scenario
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from repository import Repository
 from transactions import (

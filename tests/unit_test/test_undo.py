@@ -5,7 +5,7 @@
 
 import logging
 import pytest
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from guara.transaction import AbstractTransaction
 

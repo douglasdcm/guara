@@ -5,7 +5,7 @@
 
 from pytest import mark
 from pathlib import Path
-from guara.transaction import Application
+from guara.application import Application
 from guara import it
 from examples.web_ui.browserist import setup
 from examples.web_ui.browserist import home
