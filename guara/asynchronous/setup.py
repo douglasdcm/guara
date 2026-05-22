@@ -14,13 +14,7 @@ from typing import Dict, Any
 
 class OpenApp(AbstractTransaction):
     """
-    It is the transaction for opening application.
-
-    Not Implemented as Selenium is not executed asynchronously.
-    Use your preferable asynchronous Web Driver.
-
-    Link:
-        https://github.com/douglasdcm/caqui
+    [DEPRECATED] This method is not available starting from version `0.0.11`
     """
 
     def __init__(self, driver: Any):
@@ -34,21 +28,14 @@ class OpenApp(AbstractTransaction):
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
         raise NotImplementedError(
-            """Selenium does not support asynchronous execution.\n
-            Use your preferable async WebDriver.\n
+            """Use your preferable async WebDriver.\n
             For example https://github.com/douglasdcm/caqui"""
         )
 
 
 class CloseApp(AbstractTransaction):
     """
-    It is the transaction for closing application.
-
-    Not Implemented as Selenium is not executed asynchronously.
-    Use your preferable asynchronous Web Driver.
-
-    Link:
-        https://github.com/douglasdcm/caqui
+    [DEPRECATED] This method is not available starting from version `0.0.11`
     """
 
     def __init__(self, driver: Any):
@@ -62,7 +49,6 @@ class CloseApp(AbstractTransaction):
 
     async def do(self, **kwargs: Dict[str, Any]) -> Any:
         raise NotImplementedError(
-            """Selenium does not support asynchronous execution.\n
-            Use your preferable async WebDriver.\n
+            """Use your preferable async WebDriver.\n
             For example https://github.com/douglasdcm/caqui"""
         )

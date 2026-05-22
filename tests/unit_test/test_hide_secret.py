@@ -5,8 +5,8 @@
 
 import logging
 import pytest
-from guara.transaction import Application, AbstractTransaction
-from guara.asynchronous.transaction import (
+from guara.guara import Application, AbstractTransaction
+from guara.asynchronous.guara import (
     Application as AsyncApp,
     AbstractTransaction as AsyncTransaction,
 )
