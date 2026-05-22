@@ -23,7 +23,7 @@ This variable is used to validate the flow of your automation suite without trig
 
 * **Usage**: Set to `true` to enable.
 * **Effect**: The `is_dry_run()` utility will return `True`. Transactions will skip the `.do()` implementation and a warning will be logged: 
-  > `GUARA_DRY_RUN: True. Dry run is enabled. No action was taken on drivers.`
+  > `GUARA_DRY_RUN: True. Dry run is enabled. No action on driver.`
 
 ### 2. GUARA_RETRIES_ON_FAILURE
 This variable enables automatic recovery for flaky transactions. If a transaction fails due to an exception, the `Application.at()` method will catch it and attempt to re-run the transaction.

@@ -14,11 +14,11 @@ from logging import getLogger, Logger
 LOGGER: Logger = getLogger(__name__)
 
 
-def is_dry_run():
+def is_dry_run(display_log=False):
     result = os.getenv("GUARA_DRY_RUN", "false").lower() == "true"
-    if result:
+    if result and display_log:
         LOGGER.warning(
-            f"GUARA_DRY_RUN: {result}. Dry run is enabled. No action was taken on drivers."
+            f"GUARA_DRY_RUN: {result}. Dry run is enabled. No action on driver."
         )
     return result
 

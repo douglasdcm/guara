@@ -33,7 +33,7 @@ class Application:
         """
         Stores all transactions
         """
-        if is_dry_run():
+        if is_dry_run(display_log=True):
             self._driver = None
             return
         self._driver: Any = driver

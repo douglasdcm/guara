@@ -4,8 +4,7 @@ from unittest.mock import patch
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from guara.transaction import Application, AbstractTransaction
-from guara import it
+from guara.guara import Application, AbstractTransaction, it
 
 # --- 1. Transactions ---
 
