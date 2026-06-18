@@ -111,7 +111,7 @@ class ChangeToPortuguese(AbstractTransaction):
 
 ---
 ### Complete Tutorial
-[![Watch the video](https://www.youtube.com/playlist?list=PLR5jeODwvciLaJErpM4PNXnKvLRe9Hc53)
+[![Watch the video](https://github.com/douglasdcm/guara/blob/main/docs/images/guara-demo.png?raw=true)](https://www.youtube.com/playlist?list=PLR5jeODwvciLaJErpM4PNXnKvLRe9Hc53)
 
 ### Examples
 Explore practical examples in the [examples folder](https://github.com/douglasdcm/guara/tree/main/examples).
