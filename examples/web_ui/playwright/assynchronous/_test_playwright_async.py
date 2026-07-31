@@ -37,7 +37,6 @@ class NavigateToDocs(AbstractTransaction):
         page = self._driver["page"]
         return await page.text_content("h1")
 
-
 @mark.asyncio
 async def test_sample_web_page():
     async with async_playwright() as p:
