@@ -13,7 +13,7 @@ from typing import Any, NoReturn, Union, Dict
 
 class AbstractTransaction:
     """
-    It will handle web transactions in an automated browser.
+    Manages transaction execution by leveraging an injected driver. The driver can be any external dependency, such as a webdriver, database instance, or custom object.
     """
 
     @property
