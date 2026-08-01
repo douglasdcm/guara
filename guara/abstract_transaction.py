@@ -17,7 +17,9 @@ LOGGER: Logger = getLogger(__name__)
 
 class AbstractTransaction:
     """
-    Manages transaction execution by leveraging an injected driver. The driver can be any external dependency, such as a webdriver, database instance, or custom object.
+    Manages transaction execution by leveraging an injected driver.
+    The driver can be any external dependency, such as a webdriver,
+    database instance, or custom object.
     """
 
     def __init__(self, driver: Any = None):
