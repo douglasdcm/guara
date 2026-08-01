@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -84,6 +84,8 @@ while time() - s < SECONDS:
     exit_code: int = run_test_script()
 stop_event.set()
 monitor_thread.join()
-LOGGER.info(f"""Test script finished and the metrics saved.\n
+LOGGER.info(
+    f"""Test script finished and the metrics saved.\n
     Exit Code: {exit_code}\n
-    Metrics File: {csv_output_file}""")
+    Metrics File: {csv_output_file}"""
+)
