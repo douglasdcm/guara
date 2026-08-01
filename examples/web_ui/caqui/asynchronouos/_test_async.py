@@ -7,7 +7,7 @@ from pathlib import Path
 from pytest_asyncio import fixture
 from pytest import mark
 from typing import Any, Generator
-from guara.asynchronous.it import IsEqualTo
+from guara.asynchronous.guara import it
 from guara.asynchronous.application import Application
 from examples.web_ui.caqui.asynchronouos.home import GetNthLink
 from examples.web_ui.caqui.asynchronouos.setup import OpenApp, CloseApp
@@ -80,4 +80,4 @@ class TestAsyncTransactionCaqui:
             link_index=1,
             with_session=self._session,
             connect_to_driver=SERVER_URL,
-        ).asserts(IsEqualTo, "any1.com").perform()
+        ).asserts(it.IsEqualTo, "any1.com").perform()

@@ -10,7 +10,7 @@ The framework has a default log that reports
 
 ```bash
 2026-04-15 01:19:41.635 INFO Running transaction 'Login'
-2026-04-15 01:19:41.635 INFO  with parameter 'my_secret' set to '<hidden>'
+2026-04-15 01:19:41.635 INFO  with parameter 'my_secret' set to '********'
 ```
 
 ## Log of successful operations
