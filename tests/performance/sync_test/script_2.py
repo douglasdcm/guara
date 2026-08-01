@@ -16,7 +16,6 @@ from subprocess import run, CalledProcessError
 from datetime import datetime
 from threading import Thread, Event
 
-
 LOGGER: Logger = getLogger(__name__)
 
 
@@ -85,8 +84,6 @@ while time() - s < SECONDS:
     exit_code: int = run_test_script()
 stop_event.set()
 monitor_thread.join()
-LOGGER.info(
-    f"""Test script finished and the metrics saved.\n
+LOGGER.info(f"""Test script finished and the metrics saved.\n
     Exit Code: {exit_code}\n
-    Metrics File: {csv_output_file}"""
-)
+    Metrics File: {csv_output_file}""")

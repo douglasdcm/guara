@@ -13,7 +13,6 @@ from guara.utils import get_transaction_info, is_dry_run, get_retries_on_failure
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
-
 LOGGER: Logger = getLogger(__name__)
 
 
@@ -74,11 +73,12 @@ class Application:
         self._transaction = transaction(self._driver)
         self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
-        LOGGER.info(f"Running transaction '{transaction_info}'")
         for key, value in kwargs.items():
             if "secret" in key.lower():
                 value = "*****"
-            LOGGER.info(f" with parameter '{key}' set to '{value}'")
+                kwargs[key] = value
+
+        LOGGER.info({"transaction": transaction_info, "parameteres": [{**kwargs}]})
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None

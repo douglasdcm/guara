@@ -11,7 +11,6 @@ transaction at the runtime.
 from guara.assertion import IAssertion
 from logging import getLogger, Logger
 
-
 LOGGER: Logger = getLogger(__name__)
 
 

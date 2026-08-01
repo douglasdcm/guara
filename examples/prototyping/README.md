@@ -8,6 +8,7 @@ Experiment the application:
 
 1. Start a simple Web server
 ```
+cd ./todo
 python -m http.server
 ```
 2. Access `http://localhost:8000`

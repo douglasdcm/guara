@@ -7,9 +7,4 @@ tox
 pre-commit
 requests
 psutil
-helium
-splinter
-selenium-stealth
-undetected_chromedriver
 selenium
-caqui==3.0.3

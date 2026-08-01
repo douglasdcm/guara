@@ -7,6 +7,7 @@
 The module to be used to retrieve the information of the
 transaction.
 """
+
 import os
 from typing import Any
 from logging import getLogger, Logger

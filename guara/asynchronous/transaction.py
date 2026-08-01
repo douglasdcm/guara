@@ -201,11 +201,13 @@ class Application:
         """
         transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
-            LOGGER.info(f"Running transaction '{self._transaction_name}'")
             for key, value in self._kwargs.items():
                 if "secret" in key.lower():
                     value = "*****"
-                LOGGER.info(f" with paramater '{key}' set to '{value}'")
+                    self._kwargs[key] = value
+
+            LOGGER.info({"transaction": self._transaction_name, "parameteres": [{**self._kwargs}]})
+
             self._result = await transaction
             return True
         return False

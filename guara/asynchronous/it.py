@@ -12,7 +12,6 @@ from typing import Any
 from guara.asynchronous.assertion import IAssertion
 from logging import getLogger, Logger
 
-
 LOGGER: Logger = getLogger(__name__)
 
 

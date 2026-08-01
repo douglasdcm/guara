@@ -11,7 +11,6 @@ the assertion logic to be used for validation and testing.
 from typing import Any
 from logging import getLogger, Logger
 
-
 LOGGER: Logger = getLogger(__name__)
 
 

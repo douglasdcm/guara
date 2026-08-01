@@ -7,10 +7,10 @@
 The module that has the interface for the implmentation of
 the assertion logic to be used for validation and testing.
 """
+
 from typing import Any
 from logging import getLogger, Logger
 from guara.utils import is_dry_run
-
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -54,13 +54,15 @@ class IAssertion:
         """
         if is_dry_run():
             return
-        LOGGER.info(f"Asserting '{self.__class__.__name__}'")
+
         try:
             self.asserts(actual, expected)
-            LOGGER.info(f" Actual  : {actual}")
-            LOGGER.info(f" Expected: {expected}")
+            LOGGER.info(
+                {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
+            )
         except Exception as e:
-            LOGGER.error(f" Actual  : {actual}")
-            LOGGER.error(f" Expected: {expected}")
+            LOGGER.error(
+                {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
+            )
             LOGGER.exception(str(e))
             raise
