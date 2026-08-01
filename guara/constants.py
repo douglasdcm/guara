@@ -6,4 +6,4 @@ GUARA_PACING_TIME = int(getenv("GUARA_PACING_TIME", 0))
 GUARA_RETRIES_ON_FAILURE = int(getenv("GUARA_RETRIES_ON_FAILURE", 0))
 GUARA_VERBOSE = getenv("GUARA_VERBOSE", "true").lower() == "true"
 
-SECRET_DEFAULT_VALUE = "<hidden>"
+SECRET_DEFAULT_VALUE = "********"
