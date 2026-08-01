@@ -10,7 +10,7 @@ web transactions in an automated browser.
 
 from logging import getLogger, Logger
 from typing import Any, NoReturn, Union, Dict
-from guara.utils import is_dry_run
+from guara.constants import GUARA_DRY_RUN
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -58,7 +58,7 @@ class AbstractTransaction:
         raise NotImplementedError
 
     def act(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
-        if is_dry_run():
+        if GUARA_DRY_RUN:
             return
         return self.do(**kwargs)
 
@@ -71,6 +71,6 @@ class AbstractTransaction:
         """
 
     def revert_action(self) -> NoReturn:
-        if is_dry_run():
+        if GUARA_DRY_RUN:
             return
         return self.undo()

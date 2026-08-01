@@ -11,18 +11,9 @@ transaction.
 from typing import Any
 from logging import getLogger, Logger
 
-from guara.constants import GUARA_DRY_RUN, GUARA_RETRIES_ON_FAILURE, GUARA_VERBOSE
+from guara.constants import GUARA_RETRIES_ON_FAILURE, GUARA_VERBOSE
 
 LOGGER: Logger = getLogger(__name__)
-
-
-def is_dry_run(result=GUARA_DRY_RUN):
-    if result:
-        if GUARA_VERBOSE:
-            LOGGER.warning(
-                f"GUARA_DRY_RUN: {result}. Dry run is enabled. No action was taken on drivers."
-            )
-    return result
 
 
 def get_retries_on_failure(raw_value=GUARA_RETRIES_ON_FAILURE) -> int:

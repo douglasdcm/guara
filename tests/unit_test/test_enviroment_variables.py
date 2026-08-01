@@ -1,12 +1,4 @@
-from guara.utils import is_dry_run, get_retries_on_failure
-
-
-def test_is_dry_run_enabled():
-    assert is_dry_run(True) is True
-
-
-def test_is_dry_run_disabled_by_default():
-    assert is_dry_run(False) is False
+from guara.utils import get_retries_on_failure
 
 
 def test_get_retries_on_failure_valid_int():

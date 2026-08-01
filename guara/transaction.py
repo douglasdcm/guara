@@ -9,9 +9,16 @@ This module has all the transactions.
 
 import time
 from typing import Any, Dict
-from guara.constants import GUARA_PACING_TIME, GUARA_VERBOSE, SECRET_DEFAULT_VALUE
+from guara.constants import (
+    GUARA_DISABLE_LOGS,
+    GUARA_DRY_RUN,
+    GUARA_PACING_TIME,
+    GUARA_RETRIES_ON_FAILURE,
+    GUARA_VERBOSE,
+    SECRET_DEFAULT_VALUE,
+)
 from guara.it import IAssertion
-from guara.utils import get_transaction_info, is_dry_run, get_retries_on_failure
+from guara.utils import get_transaction_info, get_retries_on_failure
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
@@ -34,9 +41,6 @@ class Application:
         """
         Stores all transactions
         """
-        if is_dry_run():
-            self._driver = None
-            return
         self._driver: Any = driver
         """
         It is the driver that has a transaction.
@@ -53,6 +57,23 @@ class Application:
         """
         The assertion logic to be used for validation.
         """
+        if GUARA_VERBOSE:
+            LOGGER.warning(
+                {
+                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
+                    "GUARA_DRY_RUN": GUARA_DRY_RUN,
+                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
+                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
+                    "GUARA_VERBOSE": GUARA_VERBOSE,
+                }
+            )
+
+        if GUARA_DRY_RUN:
+            LOGGER.warning(
+                "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
+            )
+            self._driver = None
+            return
 
     @property
     def result(self) -> Any:
@@ -97,7 +118,8 @@ class Application:
                     LOGGER.exception(str(e))
                 retries += 1
                 exception = e
-                time.sleep(GUARA_PACING_TIME)
+                if retries_on_failure > 0:
+                    time.sleep(GUARA_PACING_TIME)
 
         raise exception
 

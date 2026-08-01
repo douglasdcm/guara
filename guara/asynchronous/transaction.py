@@ -9,7 +9,14 @@ The module that has all of the transactions.
 
 from typing import Any, List, Dict, Coroutine, Union
 from guara.asynchronous.it import IAssertion
-from guara.constants import GUARA_VERBOSE, SECRET_DEFAULT_VALUE
+from guara.constants import (
+    GUARA_DISABLE_LOGS,
+    GUARA_DRY_RUN,
+    GUARA_PACING_TIME,
+    GUARA_RETRIES_ON_FAILURE,
+    GUARA_VERBOSE,
+    SECRET_DEFAULT_VALUE,
+)
 from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.asynchronous.abstract_transaction import AbstractTransaction
@@ -70,6 +77,16 @@ class Application:
         """
         The web transaction handler
         """
+        if GUARA_VERBOSE:
+            LOGGER.warning(
+                {
+                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
+                    "GUARA_DRY_RUN (not in use)": GUARA_DRY_RUN,
+                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
+                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
+                    "GUARA_VERBOSE": GUARA_VERBOSE,
+                }
+            )
 
     @property
     def result(self) -> Any:
