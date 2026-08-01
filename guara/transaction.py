@@ -6,7 +6,8 @@
 """
 This module has all the transactions.
 """
-
+import time
+import os
 from typing import Any, Dict
 from guara.it import IAssertion
 from guara.utils import get_transaction_info, is_dry_run, get_retries_on_failure
@@ -92,6 +93,7 @@ class Application:
                 LOGGER.exception(str(e))
                 retries += 1
                 exception = e
+                time.sleep(int(os.getenv("GUARA_PACING_TIME", 0)))
 
         raise exception
 

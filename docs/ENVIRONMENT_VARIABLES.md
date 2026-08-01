@@ -8,9 +8,10 @@ Guará utilizes environment variables to manage global configurations. This allo
 
 | Variable | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `GUARA_DRY_RUN` | Boolean | `false` | When enabled, logs transactions without executing driver actions. |
-| `GUARA_RETRIES_ON_FAILURE` | Integer | `0` | Defines how many times a transaction should retry before failing. |
 | `GUARA_DISABLE_LOGS` | Boolean | `false` | When enabled, logs at or bellow the level INFO are suppresed. |
+| `GUARA_DRY_RUN` | Boolean | `false` | When enabled, logs transactions without executing driver actions. |
+| `GUARA_PACING_TIME` | Integer | `0` | Defines the wait time (in seconds) between retry attempts after a transaction fails. |
+| `GUARA_RETRIES_ON_FAILURE` | Integer | `0` | Defines how many times a transaction should retry before failing. |
 | `DRY_RUN` (deprecated) | Boolean | `false` | When enabled, logs transactions without executing driver actions. |
 | `RETRIES_ON_FAILURE` (deprecated) | Integer | `0` | Defines how many times a transaction should retry before failing. |
 
