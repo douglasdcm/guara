@@ -9,6 +9,7 @@ The module that has all of the transactions.
 
 from typing import Any, List, Dict, Coroutine, Union
 from guara.asynchronous.it import IAssertion
+from guara.constants import GUARA_VERBOSE, SECRET_DEFAULT_VALUE
 from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.asynchronous.abstract_transaction import AbstractTransaction
@@ -203,10 +204,14 @@ class Application:
         if transaction:
             for key, value in self._kwargs.items():
                 if "secret" in key.lower():
-                    value = "*****"
+                    value = SECRET_DEFAULT_VALUE
                     self._kwargs[key] = value
-
-            LOGGER.info({"transaction": self._transaction_name, "parameteres": [{**self._kwargs}]})
+            if GUARA_VERBOSE:
+                LOGGER.info(
+                    {"transaction": self._transaction_name, "parameteres": [{**self._kwargs}]}
+                )
+            else:
+                LOGGER.info({"transaction": self._transaction_name})
 
             self._result = await transaction
             return True
@@ -222,9 +227,6 @@ class Application:
         Returns:
             (None)
         """
-        LOGGER.info(f"Asserting '{self._it.__name__}'")
-        LOGGER.info(f" Actual  : {self._result}")
-        LOGGER.info(f" Expected: {self._expected}")
         assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
         if assertion:
             return await assertion

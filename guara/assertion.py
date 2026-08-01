@@ -10,6 +10,7 @@ the assertion logic to be used for validation and testing.
 
 from typing import Any
 from logging import getLogger, Logger
+from guara.constants import GUARA_VERBOSE
 from guara.utils import is_dry_run
 
 LOGGER: Logger = getLogger(__name__)
@@ -57,12 +58,14 @@ class IAssertion:
 
         try:
             self.asserts(actual, expected)
-            LOGGER.info(
-                {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
-            )
+            if GUARA_VERBOSE:
+                LOGGER.info(
+                    {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
+                )
         except Exception as e:
-            LOGGER.error(
-                {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
-            )
-            LOGGER.exception(str(e))
+            if GUARA_VERBOSE:
+                LOGGER.error(
+                    {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
+                )
+                LOGGER.exception(str(e))
             raise

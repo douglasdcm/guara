@@ -4,6 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import logging
+from guara.constants import GUARA_VERBOSE, SECRET_DEFAULT_VALUE
 import pytest
 from guara.transaction import Application, AbstractTransaction
 from guara.asynchronous.transaction import (
@@ -13,10 +14,11 @@ from guara.asynchronous.transaction import (
 
 
 class DoNothing(AbstractTransaction):
-    def do(self, any_param=None, my_secret_parameter=None):
+    def do(self, any_param=None, my_secret_parameter=None, my_password=None):
         return
 
 
+@pytest.mark.skipif(GUARA_VERBOSE is False, reason="GUARA_VERBOSE is not true.")
 class TestHideSecret:
     @pytest.fixture(autouse=True, scope="function")
     def setup_method(self):
@@ -30,8 +32,14 @@ class TestHideSecret:
 
     def test_hide_when_parameter_is_secret(self, caplog):
         caplog.set_level(logging.INFO)
-        expected = "***"
+        expected = SECRET_DEFAULT_VALUE
         self._app.at(DoNothing, my_secret_parameter="foo")
+        assert expected in caplog.text
+
+    def test_hide_when_parameter_is_password(self, caplog):
+        caplog.set_level(logging.INFO)
+        expected = SECRET_DEFAULT_VALUE
+        self._app.at(DoNothing, my_password="foo")
         assert expected in caplog.text
 
 
@@ -40,6 +48,7 @@ class AsyncDoNothing(AsyncTransaction):
         return
 
 
+@pytest.mark.skipif(GUARA_VERBOSE is False, reason="GUARA_VERBOSE is not true")
 class TestAsyncHideSecret:
     @pytest.mark.asyncio
     async def test_async_dont_hide_when_parameter_is_not_secret(self, caplog):
@@ -55,6 +64,6 @@ class TestAsyncHideSecret:
         app = AsyncApp()
         caplog.set_level(logging.INFO)
         value = "buyCheese@"
-        expected = "****"
+        expected = SECRET_DEFAULT_VALUE
         await app.at(AsyncDoNothing, my_secret_parameter=value).perform()
         assert expected in caplog.text

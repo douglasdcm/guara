@@ -4,8 +4,8 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from random import randrange
-from examples.unit_test.calculator.calculator import Calculator
-from examples.unit_test.calculator import operations
+from tests.unit_test.examples.calculator.calculator import Calculator
+from tests.unit_test.examples.calculator import operations
 from guara.application import Application
 from guara import it
 

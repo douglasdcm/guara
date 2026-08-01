@@ -6,9 +6,10 @@
 """
 This module has all the transactions.
 """
+
 import time
-import os
 from typing import Any, Dict
+from guara.constants import GUARA_PACING_TIME, GUARA_VERBOSE, SECRET_DEFAULT_VALUE
 from guara.it import IAssertion
 from guara.utils import get_transaction_info, is_dry_run, get_retries_on_failure
 from logging import getLogger, Logger
@@ -75,11 +76,13 @@ class Application:
         self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
         for key, value in kwargs.items():
-            if "secret" in key.lower():
-                value = "*****"
+            if "secret" in key.lower() or "password" in key.lower():
+                value = SECRET_DEFAULT_VALUE
                 kwargs[key] = value
-
-        LOGGER.info({"transaction": transaction_info, "parameteres": [{**kwargs}]})
+        if GUARA_VERBOSE:
+            LOGGER.info({"transaction": transaction_info, "parameteres": [{**kwargs}]})
+        else:
+            LOGGER.info({"transaction": transaction_info})
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
@@ -90,10 +93,11 @@ class Application:
                 return self
             except Exception as e:
                 LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries + 1}")
-                LOGGER.exception(str(e))
+                if GUARA_VERBOSE:
+                    LOGGER.exception(str(e))
                 retries += 1
                 exception = e
-                time.sleep(int(os.getenv("GUARA_PACING_TIME", 0)))
+                time.sleep(GUARA_PACING_TIME)
 
         raise exception
 
@@ -227,6 +231,6 @@ class Application:
         """
         self._transaction_pool.reverse()
         for transaction in self._transaction_pool:
-            LOGGER.info(f"Reverting transaction '{transaction.__name__}'")
+            LOGGER.info(f"Reverting {{'transaction': {transaction.__name__}}}")
             transaction.revert_action()
         return self
