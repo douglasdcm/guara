@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -7,32 +7,25 @@
 The module to be used to retrieve the information of the
 transaction.
 """
-import os
+
 from typing import Any
 from logging import getLogger, Logger
+
+from guara.constants import GUARA_RETRIES_ON_FAILURE, GUARA_VERBOSE
 
 LOGGER: Logger = getLogger(__name__)
 
 
-def is_dry_run(display_log=False):
-    result = os.getenv("GUARA_DRY_RUN", "false").lower() == "true"
-    if result and display_log:
-        LOGGER.warning(
-            f"GUARA_DRY_RUN: {result}. Dry run is enabled. No action on driver."
-        )
-    return result
-
-
-def get_retries_on_failure() -> int:
+def get_retries_on_failure(raw_value=GUARA_RETRIES_ON_FAILURE) -> int:
     try:
         # Get the value, default to "0" if not found
-        raw_value = os.getenv("GUARA_RETRIES_ON_FAILURE", "0")
         result = int(raw_value)
 
         if result > 0:
-            LOGGER.warning(
-                f"GUARA_RETRIES_ON_FAILURE: {result}. Transactions will be retried on failure."
-            )
+            if GUARA_VERBOSE:
+                LOGGER.warning(
+                    f"GUARA_RETRIES_ON_FAILURE: {result}. Transactions will be retried on failure."
+                )
             return result
 
         # If it's 0 or negative, we treat it as "no retries"
@@ -40,10 +33,11 @@ def get_retries_on_failure() -> int:
 
     except (ValueError, TypeError):
         # If user entered "abc", log an error and default to 0 so the test can still run
-        LOGGER.warning(
-            f"Invalid GUARA_RETRIES_ON_FAILURE value: '{os.getenv('GUARA_RETRIES_ON_FAILURE')}'."
-            " Expected an integer. Defaulting to 0."
-        )
+        if GUARA_VERBOSE:
+            LOGGER.warning(
+                f"Invalid GUARA_RETRIES_ON_FAILURE value: '{GUARA_RETRIES_ON_FAILURE}'."
+                " Expected an integer. Defaulting to 0."
+            )
         return 0
 
 

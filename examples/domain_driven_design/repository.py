@@ -29,56 +29,46 @@ class Repository:
         """Create tables if they do not exist."""
         cursor = self.conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS students (
                 nui INTEGER PRIMARY KEY,
                 name TEXT,
                 course_id INTEGER,
                 status TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS courses (
                 nui INTEGER PRIMARY KEY,
                 name TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS subjects (
                 nui INTEGER PRIMARY KEY,
                 name TEXT,
                 course_id TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS grades (
                 student_id INTEGER,
                 subject_id INTEGER,
                 grade FLOAT,
                 PRIMARY KEY (student_id, subject_id, grade)
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS enrollments (
                 subject_id INTEGER,
                 student_id INTEGER,
                 PRIMARY KEY (subject_id, student_id)
             )
-        """
-        )
+        """)
 
         self.conn.commit()
 

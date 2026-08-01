@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -9,10 +9,11 @@ responsible for initializing the logger and handling command
 line arguments.
 """
 
-from os import getenv
 from logging import basicConfig, getLogger, Logger, INFO, disable
 
-if getenv("GUARA_DISABLE_LOGS", "false").lower() == "true":
+from guara.constants import GUARA_DISABLE_LOGS
+
+if GUARA_DISABLE_LOGS:
     disable(INFO)
 
 

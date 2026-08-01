@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -9,6 +9,14 @@ The module that has all of the transactions.
 
 from typing import Any, List, Dict, Coroutine, Union
 from guara.asynchronous.it import IAssertion
+from guara.constants import (
+    GUARA_DISABLE_LOGS,
+    GUARA_DRY_RUN,
+    GUARA_PACING_TIME,
+    GUARA_RETRIES_ON_FAILURE,
+    GUARA_VERBOSE,
+    SECRET_DEFAULT_VALUE,
+)
 from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.asynchronous.abstract_transaction import AbstractTransaction
@@ -69,6 +77,16 @@ class Application:
         """
         The web transaction handler
         """
+        if GUARA_VERBOSE:
+            LOGGER.warning(
+                {
+                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
+                    "GUARA_DRY_RUN (not in use)": GUARA_DRY_RUN,
+                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
+                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
+                    "GUARA_VERBOSE": GUARA_VERBOSE,
+                }
+            )
 
     @property
     def result(self) -> Any:
@@ -201,11 +219,17 @@ class Application:
         """
         transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
         if transaction:
-            LOGGER.info(f"Running transaction '{self._transaction_name}'")
             for key, value in self._kwargs.items():
                 if "secret" in key.lower():
-                    value = "*****"
-                LOGGER.info(f" with paramater '{key}' set to '{value}'")
+                    value = SECRET_DEFAULT_VALUE
+                    self._kwargs[key] = value
+            if GUARA_VERBOSE:
+                LOGGER.info(
+                    {"transaction": self._transaction_name, "parameteres": [{**self._kwargs}]}
+                )
+            else:
+                LOGGER.info({"transaction": self._transaction_name})
+
             self._result = await transaction
             return True
         return False
@@ -220,9 +244,6 @@ class Application:
         Returns:
             (None)
         """
-        LOGGER.info(f"Asserting '{self._it.__name__}'")
-        LOGGER.info(f" Actual  : {self._result}")
-        LOGGER.info(f" Expected: {self._expected}")
         assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
         if assertion:
             return await assertion
