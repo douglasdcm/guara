@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -15,7 +15,6 @@ from psutil import cpu_percent, virtual_memory, disk_usage
 from subprocess import run, CalledProcessError
 from datetime import datetime
 from threading import Thread, Event
-
 
 LOGGER: Logger = getLogger(__name__)
 

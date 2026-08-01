@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -7,16 +7,19 @@
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser.
 """
+
 from logging import getLogger, Logger
 from typing import Any, NoReturn, Union, Dict
-from guara.utils import is_dry_run
+from guara.constants import GUARA_DRY_RUN
 
 LOGGER: Logger = getLogger(__name__)
 
 
 class AbstractTransaction:
     """
-    It will handle web transactions in an automated browser.
+    Manages transaction execution by leveraging an injected driver.
+    The driver can be any external dependency, such as a webdriver,
+    database instance, or custom object.
     """
 
     def __init__(self, driver: Any = None):
@@ -55,7 +58,7 @@ class AbstractTransaction:
         raise NotImplementedError
 
     def act(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
-        if is_dry_run():
+        if GUARA_DRY_RUN:
             return
         return self.do(**kwargs)
 
@@ -66,9 +69,8 @@ class AbstractTransaction:
         Returns:
             (NoReturn)
         """
-        LOGGER.info(" Nothing to revert")
 
     def revert_action(self) -> NoReturn:
-        if is_dry_run():
+        if GUARA_DRY_RUN:
             return
         return self.undo()

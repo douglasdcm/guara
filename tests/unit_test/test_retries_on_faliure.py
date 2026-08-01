@@ -33,7 +33,7 @@ def test_application_succeeds_with_no_retries():
 
 def test_application_retries_and_succeeds_before_max_retries():
     # Setup environment for 2 retries
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "2"}):
+    with patch("guara.transaction.get_retries_on_failure", return_value=2):
         app = Application(driver=MagicMock())
 
         # We want it to fail once and succeed on the 2nd attempt (1st retry)
@@ -44,7 +44,7 @@ def test_application_retries_and_succeeds_before_max_retries():
 
 def test_application_retries_and_succeeds_on_last_attempt():
     # Setup environment for 2 retries
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "1"}):
+    with patch("guara.transaction.get_retries_on_failure", return_value=1):
         app = Application(driver=MagicMock())
 
         # We want it to fail once and succeed on the 2nd attempt (1st retry)
@@ -55,9 +55,8 @@ def test_application_retries_and_succeeds_on_last_attempt():
 
 def test_application_raises_after_max_retries():
     # Setup environment for 1 retry
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "1"}):
+    with patch("guara.transaction.get_retries_on_failure", return_value=1):
         app = Application(driver=MagicMock())
-
         # If it needs 3 attempts but we only allow 1 retry (2 attempts total), it should raise
         with raises(Exception) as excinfo:
             app.at(FlakyTransaction, fail_until=3)

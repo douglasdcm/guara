@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -13,7 +13,9 @@ from typing import Any, NoReturn, Union, Dict
 
 class AbstractTransaction:
     """
-    It will handle web transactions in an automated browser.
+    Manages transaction execution by leveraging an injected driver.
+    The driver can be any external dependency, such as a webdriver,
+    database instance, or custom object.
     """
 
     @property

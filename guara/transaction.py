@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Guara - All Rights Reserved
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
@@ -7,12 +7,20 @@
 This module has all the transactions.
 """
 
+import time
 from typing import Any, Dict
+from guara.constants import (
+    GUARA_DISABLE_LOGS,
+    GUARA_DRY_RUN,
+    GUARA_PACING_TIME,
+    GUARA_RETRIES_ON_FAILURE,
+    GUARA_VERBOSE,
+    SECRET_DEFAULT_VALUE,
+)
 from guara.it import IAssertion
-from guara.utils import get_transaction_info, is_dry_run, get_retries_on_failure
+from guara.utils import get_transaction_info, get_retries_on_failure
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
-
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -33,9 +41,6 @@ class Application:
         """
         Stores all transactions
         """
-        if is_dry_run():
-            self._driver = None
-            return
         self._driver: Any = driver
         """
         It is the driver that has a transaction.
@@ -52,6 +57,23 @@ class Application:
         """
         The assertion logic to be used for validation.
         """
+        if GUARA_VERBOSE:
+            LOGGER.warning(
+                {
+                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
+                    "GUARA_DRY_RUN": GUARA_DRY_RUN,
+                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
+                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
+                    "GUARA_VERBOSE": GUARA_VERBOSE,
+                }
+            )
+
+        if GUARA_DRY_RUN:
+            LOGGER.warning(
+                "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
+            )
+            self._driver = None
+            return
 
     @property
     def result(self) -> Any:
@@ -74,11 +96,14 @@ class Application:
         self._transaction = transaction(self._driver)
         self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
-        LOGGER.info(f"Running transaction '{transaction_info}'")
         for key, value in kwargs.items():
-            if "secret" in key.lower():
-                value = "*****"
-            LOGGER.info(f" with parameter '{key}' set to '{value}'")
+            if "secret" in key.lower() or "password" in key.lower():
+                value = SECRET_DEFAULT_VALUE
+                kwargs[key] = value
+        if GUARA_VERBOSE:
+            LOGGER.info({"transaction": transaction_info, "parameteres": [{**kwargs}]})
+        else:
+            LOGGER.info({"transaction": transaction_info})
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
@@ -89,9 +114,12 @@ class Application:
                 return self
             except Exception as e:
                 LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries + 1}")
-                LOGGER.exception(str(e))
+                if GUARA_VERBOSE:
+                    LOGGER.exception(str(e))
                 retries += 1
                 exception = e
+                if retries_on_failure > 0:
+                    time.sleep(GUARA_PACING_TIME)
 
         raise exception
 
@@ -225,6 +253,6 @@ class Application:
         """
         self._transaction_pool.reverse()
         for transaction in self._transaction_pool:
-            LOGGER.info(f"Reverting transaction '{transaction.__name__}'")
+            LOGGER.info(f"Reverting {{'transaction': {transaction.__name__}}}")
             transaction.revert_action()
         return self

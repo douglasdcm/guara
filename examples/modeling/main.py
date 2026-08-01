@@ -10,11 +10,13 @@ def main(args):
     repo = Repository()
     course = Course(1, "CS1")
     student = Student("Marcos", "876")
+    repo.save_course(course)
+    repo.save_student(student)
 
     app = EducationApplication()
     (
         app.do(EnsureCourseExists, repo=repo, course=course)
-        .do(EnsureStudentExists)
+        .do(EnsureStudentExists, repo=repo, student=student)
         .student_enrolls(EnrollStudent, repo=repo, student=student, course=course)
     )
 
