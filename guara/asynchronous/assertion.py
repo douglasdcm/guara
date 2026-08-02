@@ -11,7 +11,7 @@ the assertion logic to be used for validation and testing.
 from typing import Any
 from logging import getLogger, Logger
 
-from guara.constants import GUARA_VERBOSE
+from guara.constants import GUARA_DRY_RUN, GUARA_VERBOSE
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -60,6 +60,8 @@ class IAssertion:
         Returns:
             (None)
         """
+        if GUARA_DRY_RUN:
+            return 
         try:
             await self.asserts(actual, expected)
             if GUARA_VERBOSE:

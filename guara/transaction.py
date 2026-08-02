@@ -72,8 +72,6 @@ class Application:
             LOGGER.warning(
                 "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
             )
-            self._driver = None
-            return
 
     @property
     def result(self) -> Any:

@@ -12,8 +12,6 @@ from guara.asynchronous.it import IAssertion
 from guara.constants import (
     GUARA_DISABLE_LOGS,
     GUARA_DRY_RUN,
-    GUARA_PACING_TIME,
-    GUARA_RETRIES_ON_FAILURE,
     GUARA_VERBOSE,
     SECRET_DEFAULT_VALUE,
 )
@@ -73,7 +71,7 @@ class Application:
         """
         The expected data
         """
-        self.__transaction: AbstractTransaction
+        self._transaction: AbstractTransaction
         """
         The web transaction handler
         """
@@ -81,12 +79,16 @@ class Application:
             LOGGER.warning(
                 {
                     "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
-                    "GUARA_DRY_RUN (not in use)": GUARA_DRY_RUN,
-                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
-                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
+                    "GUARA_DRY_RUN": GUARA_DRY_RUN,
                     "GUARA_VERBOSE": GUARA_VERBOSE,
                 }
             )
+
+        if GUARA_DRY_RUN:
+            LOGGER.warning(
+                "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
+            )
+
 
     @property
     def result(self) -> Any:
@@ -106,10 +108,10 @@ class Application:
         Returns:
             (Application)
         """
-        self.__transaction = transaction(self._driver)
+        self._transaction = transaction(self._driver)
         self._kwargs = kwargs
-        self._transaction_name = get_transaction_info(self.__transaction)
-        coroutine: Coroutine[None, None, Any] = self.__transaction.do(**kwargs)
+        self._transaction_name = get_transaction_info(self._transaction)
+        coroutine: Coroutine[None, None, Any] = self._transaction.do(**kwargs)
         self._coroutines.append({self._TRANSACTION: coroutine})
         return self
 
@@ -229,6 +231,9 @@ class Application:
                 )
             else:
                 LOGGER.info({"transaction": self._transaction_name})
+
+            if GUARA_DRY_RUN:
+                return False
 
             self._result = await transaction
             return True
