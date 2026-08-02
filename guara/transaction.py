@@ -100,28 +100,36 @@ class Application:
             if "secret" in key.lower() or "password" in key.lower():
                 value = SECRET_DEFAULT_VALUE
                 kwargs[key] = value
-        if GUARA_VERBOSE:
-            LOGGER.info({"transaction": transaction_info, "parameteres": [{**kwargs}]})
-        else:
-            LOGGER.info({"transaction": transaction_info})
+
+        result_details = {"transaction": transaction_info, "parameteres": [{**kwargs}]}
 
         retries_on_failure = get_retries_on_failure()
         exception: Exception = None
-        retries: int = -1
-        while retries < retries_on_failure:
+        retries: int = 0
+        while retries <= retries_on_failure:
             try:
                 self._result = self._transaction.act(**kwargs)
+                LOGGER.info(f"Transaction '{transaction_info}' succeded.")
+
+                if GUARA_VERBOSE:
+                    result_details["return"] = self._result
+                    LOGGER.info(result_details)
+
                 return self
             except Exception as e:
-                LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries + 1}")
-                if GUARA_VERBOSE:
-                    LOGGER.exception(str(e))
-                retries += 1
                 exception = e
-                if retries_on_failure > 0:
+                retries+=1
+                LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries}")
+                if retries <= retries_on_failure:
                     time.sleep(GUARA_PACING_TIME)
 
-        raise exception
+        if exception:
+            LOGGER.error(f"Transaction '{transaction_info}' failed.")
+            if GUARA_VERBOSE:
+                result_details["return"] = str(exception)
+                LOGGER.error(result_details)
+            raise exception
+
 
     def given(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """

@@ -3,6 +3,7 @@ pytest-asyncio
 flake8
 black
 tox
+isort
 pre-commit
 psutil
 selenium

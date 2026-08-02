@@ -1,4 +1,3 @@
-import os
 import pytest
 from unittest.mock import patch
 from selenium import webdriver
@@ -46,7 +45,7 @@ def app():
 
 def test_successful_transaction_no_retries(app):
     """Tests that a normal transaction works without triggering retries"""
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "3"}):
+    with patch("guara.transaction.get_retries_on_failure", return_value=3):
         app.at(VisitGoogle)
         app.asserts(it.Contains, "Google")
 
@@ -54,8 +53,7 @@ def test_successful_transaction_no_retries(app):
 def test_failed_transaction_triggers_retries(app):
     """Tests that the retry logic actually fires when Selenium fails"""
     # We set retries to 2 (Total 3 attempts: 1 original + 2 retries)
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "2"}):
+    
+    with patch("guara.transaction.get_retries_on_failure", return_value=2):
         with pytest.raises(Exception):
             app.at(FailingTransaction)
-
-    # If you run this with -s, you will see the 'Attempt 0', 'Attempt 1' logs!
