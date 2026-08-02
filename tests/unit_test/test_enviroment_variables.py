@@ -1,12 +1,9 @@
-from guara.utils import get_retries_on_failure
+import os
 
+from pytest import mark
+from guara.constants import convert_variable_to_integer
 
-def test_get_retries_on_failure_valid_int():
-    # Note: Ensure your utility returns int or handle the string
-    assert int(get_retries_on_failure(3)) == 3
-
-
-def test_get_retries_on_failure_invalid_returns_default():
-    # Should fall back to 0 or original value
-    result = get_retries_on_failure("not-a-number")
-    assert int(result) == 0 if isinstance(result, str) else result == 0
+@mark.parametrize("value,expected", [("not-a-number", 0), ("-1",0), ("0", 0), ("1", 1)])
+def test_get_variable_returns_correct_values(value, expected):
+    os.environ["FOO"] = value
+    assert convert_variable_to_integer("FOO") == expected

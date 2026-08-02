@@ -18,7 +18,7 @@ from guara.constants import (
     SECRET_DEFAULT_VALUE,
 )
 from guara.it import IAssertion
-from guara.utils import get_transaction_info, get_retries_on_failure
+from guara.utils import get_transaction_info
 from logging import getLogger, Logger
 from guara.abstract_transaction import AbstractTransaction
 
@@ -103,7 +103,7 @@ class Application:
 
         result_details = {"transaction": transaction_info, "parameteres": [{**kwargs}]}
 
-        retries_on_failure = get_retries_on_failure()
+        retries_on_failure = GUARA_RETRIES_ON_FAILURE
         exception: Exception = None
         retries: int = 0
         while retries <= retries_on_failure:
@@ -119,8 +119,12 @@ class Application:
             except Exception as e:
                 exception = e
                 retries+=1
-                LOGGER.error(f"Transaction '{transaction_info}' failed on attempt {retries}")
-                if retries <= retries_on_failure:
+                LOGGER.error(
+                    f"Transaction '{transaction_info}' failed on attempt {retries} / {retries_on_failure + 1}."
+                )
+                LOGGER.exception(e)
+                if retries <= retries_on_failure and GUARA_PACING_TIME > 0:
+                    LOGGER.info(f"Waiting {GUARA_PACING_TIME}s for next retry.")
                     time.sleep(GUARA_PACING_TIME)
 
         if exception:
