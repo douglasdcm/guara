@@ -6,11 +6,13 @@
 from os import getenv
 
 from logging import getLogger, Logger
+
 LOGGER: Logger = getLogger(__name__)
 
 GUARA_VERBOSE = getenv("GUARA_VERBOSE", "true").lower() == "true"
 GUARA_DISABLE_LOGS = getenv("GUARA_DISABLE_LOGS", "false").lower() == "true"
 GUARA_DRY_RUN = getenv("GUARA_DRY_RUN", "false").lower() == "true"
+
 
 def convert_variable_to_integer(variable) -> int:
     env_var = getenv(variable, 0)
@@ -29,10 +31,8 @@ def convert_variable_to_integer(variable) -> int:
         return 0
 
 
-
 GUARA_PACING_TIME = convert_variable_to_integer("GUARA_PACING_TIME")
 
 GUARA_RETRIES_ON_FAILURE = convert_variable_to_integer("GUARA_RETRIES_ON_FAILURE")
 
 SECRET_DEFAULT_VALUE = "********"
-

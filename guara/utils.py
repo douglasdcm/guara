@@ -15,9 +15,6 @@ from logging import getLogger, Logger
 LOGGER: Logger = getLogger(__name__)
 
 
-
-
-
 def get_transaction_info(transaction: Any) -> str:
     """
     Retrieving the information of a transaction.

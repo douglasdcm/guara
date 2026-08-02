@@ -89,7 +89,6 @@ class Application:
                 "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
             )
 
-
     @property
     def result(self) -> Any:
         """

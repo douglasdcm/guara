@@ -116,9 +116,10 @@ class Application:
                 return self
             except Exception as e:
                 exception = e
-                retries+=1
+                retries += 1
                 LOGGER.error(
-                    f"Transaction '{transaction_info}' failed on attempt {retries} / {retries_on_failure + 1}."
+                    f"Transaction '{transaction_info}' failed on attempt"
+                    f" {retries} / {retries_on_failure + 1}."
                 )
                 LOGGER.exception(e)
                 if retries <= retries_on_failure and GUARA_PACING_TIME > 0:
@@ -131,7 +132,6 @@ class Application:
                 result_details["return"] = str(exception)
                 LOGGER.error(result_details)
             raise exception
-
 
     def given(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
         """
@@ -263,6 +263,6 @@ class Application:
         """
         self._transaction_pool.reverse()
         for transaction in self._transaction_pool:
-            LOGGER.info(f"Reverting {{'transaction': {transaction.__name__}}}")
+            LOGGER.info(f"Reverting transaction '{transaction.__name__}'")
             transaction.revert_action()
         return self

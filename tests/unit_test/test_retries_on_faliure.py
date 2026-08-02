@@ -4,7 +4,6 @@ from pytest import raises
 from guara.transaction import Application, AbstractTransaction
 
 
-
 # A mock transaction that fails N times before succeeding
 class FlakyTransaction(AbstractTransaction):
     def __init__(self, driver):
@@ -63,5 +62,3 @@ def test_application_raises_after_max_retries():
         app.at(FlakyTransaction, fail_until=3)
 
     assert "Flaky failure!" in str(excinfo.value)
-
-

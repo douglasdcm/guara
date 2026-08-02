@@ -61,7 +61,7 @@ class IAssertion:
             (None)
         """
         if GUARA_DRY_RUN:
-            return 
+            return
         try:
             await self.asserts(actual, expected)
             if GUARA_VERBOSE:
