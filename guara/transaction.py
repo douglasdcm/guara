@@ -30,33 +30,53 @@ class Application:
     This is the runner of the automation.
     """
 
-    def __init__(self, driver: Any = None):
+    def __init__(self, driver: Any = None, report_on_init=None, report_on_exit=None):
         """
         Initializing the application with a driver.
 
         Args:
             driver: (Any): This is the driver of the system being under test.
+
+            report_on_init (str): The message to be reported when the application
+             instance is initialized.
+
+            report_on_exit (str): The message to be reported when the application
+             instance is destroyed.
         """
+
         self._transaction_pool: list[AbstractTransaction] = []
         """
         Stores all transactions
         """
+
         self._driver: Any = driver
         """
         It is the driver that has a transaction.
         """
+
         self._result: Any = None
         """
         It is the result data of the last transaction.
         """
+
         self._transaction: AbstractTransaction
         """
         The web transaction handler.
         """
+
         self._assertion: IAssertion
         """
         The assertion logic to be used for validation.
         """
+
+        if report_on_init:
+            LOGGER.info(report_on_init)
+
+        self._report_on_exit: str = report_on_exit
+        """
+        The message to be reported when the application instance is destroyed.
+        """
+
         if GUARA_VERBOSE:
             LOGGER.warning(
                 {
@@ -72,6 +92,10 @@ class Application:
             LOGGER.warning(
                 "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
             )
+
+    def __del__(self):
+        if self._report_on_exit:
+            LOGGER.info(self._report_on_exit)
 
     @property
     def result(self) -> Any:

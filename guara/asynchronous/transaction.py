@@ -27,54 +27,75 @@ class Application:
     The runner of the automation.
     """
 
-    def __init__(self, driver: Any = None):
+    def __init__(self, driver: Any = None, report_on_init=None, report_on_exit=None):
         """
         Initializing the application with a driver.
 
         Args:
             driver: (Any): It is a driver that is used to interact with the system being under test.
+
+            report_on_init (str): The message to be reported when the application
+             instance is initialized.
+
+            report_on_exit (str): The message to be reported when the application
+             instance is destroyed.
         """
+
         self._driver: Any = driver
         """
         It is the driver that has a transaction.
         """
+
         self._result: Any = None
         """
         It is the result data of the last transaction.
         """
+
         self._coroutines: List[Dict[str, Coroutine[None, None, Union[Any, None]]]] = []
         """
         The list of transactions that are performed.
         """
+
         self._TRANSACTION: str = "transaction"
         """
         Transaction header
         """
+
         self._ASSERTION: str = "assertion"
         """
         Assertion header
         """
+
         self._kwargs: Dict[str, Any] = None
         """
         It contains all the necessary data and parameters for the
         transaction.
         """
+
         self._transaction_name: str = None
         """
         The name of the transaction.
         """
+
         self._it: IAssertion = None
         """
         The interface of the Assertion
         """
+
         self._expected: Any = None
         """
         The expected data
         """
+
         self._transaction: AbstractTransaction
         """
         The web transaction handler
         """
+        if report_on_init:
+            LOGGER.info(report_on_init)
+
+        self._report_on_exit = report_on_exit
+
         if GUARA_VERBOSE:
             LOGGER.warning(
                 {
@@ -88,6 +109,10 @@ class Application:
             LOGGER.warning(
                 "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
             )
+
+    def __del__(self):
+        if self._report_on_exit:
+            LOGGER.info(self._report_on_exit)
 
     @property
     def result(self) -> Any:
