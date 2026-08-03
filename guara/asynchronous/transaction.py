@@ -243,25 +243,36 @@ class Application:
         Returns:
             (bool)
         """
-        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
-        if transaction:
-            for key, value in self._kwargs.items():
-                if "secret" in key.lower():
-                    value = SECRET_DEFAULT_VALUE
-                    self._kwargs[key] = value
+
+        result_details = {}
+        try:
+            transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
+            if transaction:
+
+                for key, value in self._kwargs.items():
+                    if "secret" in key.lower():
+                        value = SECRET_DEFAULT_VALUE
+                        self._kwargs[key] = value
+
+                result_details["transaction"] = self._transaction_name
+                result_details["parameteres"] = {**self._kwargs}
+
+                if GUARA_DRY_RUN:
+                    return
+
+                self._result = await transaction
+
+                LOGGER.info(f"Transaction '{self._transaction_name}' succeded.")
+                if GUARA_VERBOSE:
+                    result_details["return"] = self._result
+                    LOGGER.info(result_details)
+
+        except Exception as e:
+            LOGGER.info(f"Transaction '{self._transaction_name}' failed.")
             if GUARA_VERBOSE:
-                LOGGER.info(
-                    {"transaction": self._transaction_name, "parameteres": [{**self._kwargs}]}
-                )
-            else:
-                LOGGER.info({"transaction": self._transaction_name})
-
-            if GUARA_DRY_RUN:
-                return False
-
-            self._result = await transaction
-            return True
-        return False
+                result_details["return"] = f"({type(e)}) '{str(e)}'"
+                LOGGER.error(LOGGER.error(result_details))
+            raise
 
     async def get_assertion(self, index: int) -> None:
         """

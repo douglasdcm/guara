@@ -36,7 +36,7 @@ class AsyncReturnWrongResult(AsyncTransaction):
 
 class TestAsyncFailedAssertions:
     @pytest.mark.asyncio
-    async def test_async_raises_exception_when_assertion_failes(self):
+    async def test_async_raises_exception_when_assertion_fails(self):
         expected = "right"
         app = AsyncApp()
         with pytest.raises(AssertionError):

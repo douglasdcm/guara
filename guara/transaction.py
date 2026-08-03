@@ -156,22 +156,18 @@ class Application:
                         f"Retry Ignored. Exception ({type(e)})"
                         f" not in retry list ({self._retry_on_exceptions})."
                     )
+                    break
 
-                    LOGGER.error(f"Transaction '{transaction_info}' failed.")
-                    if GUARA_VERBOSE:
-                        result_details["return"] = f"({type(exception)}) '{str(exception)}'"
-                        LOGGER.error(result_details)
-                    raise
-
-                retries += 1
-                LOGGER.error(
-                    f"Transaction '{transaction_info}' failed on attempt"
-                    f" {retries} / {retries_on_failure + 1}."
-                )
-                LOGGER.exception(e)
-                if retries <= retries_on_failure and GUARA_PACING_TIME > 0:
-                    LOGGER.info(f"Waiting {GUARA_PACING_TIME}s for next retry.")
-                    time.sleep(GUARA_PACING_TIME)
+                else:
+                    retries += 1
+                    LOGGER.error(
+                        f"Transaction '{transaction_info}' failed on attempt"
+                        f" {retries} / {retries_on_failure + 1}."
+                    )
+                    LOGGER.exception(e)
+                    if retries <= retries_on_failure and GUARA_PACING_TIME > 0:
+                        LOGGER.info(f"Waiting {GUARA_PACING_TIME}s for next retry.")
+                        time.sleep(GUARA_PACING_TIME)
 
         if exception:
             LOGGER.error(f"Transaction '{transaction_info}' failed.")

@@ -17,8 +17,10 @@ class Error1(Exception):
 class Error2(Exception):
     pass
 
+
 class Error3(Exception):
     pass
+
 
 class FlakyTransaction(AbstractTransaction):
     def do(self, error_number):
