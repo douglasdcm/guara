@@ -8,7 +8,7 @@ This module has all the transactions.
 """
 
 import time
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 from guara.constants import (
     GUARA_DISABLE_LOGS,
     GUARA_DRY_RUN,
@@ -25,17 +25,70 @@ from guara.abstract_transaction import AbstractTransaction
 LOGGER: Logger = getLogger(__name__)
 
 
+class NoneApplication:
+    def at(self, *args, **kwargs):
+        return self
+
+    def given(self, *args, **kwargs):
+        return self
+
+    def when(self, *args, **kwargs):
+        return self
+
+    def and_(self, *args, **kwargs):
+        return self
+
+    def so(self, *args, **kwargs):
+        return self
+
+    def execute(self, *args, **kwargs):
+        return self
+
+    def asserts(self, *args, **kwargs):
+        return self
+
+    def then(self, *args, **kwargs):
+        return self
+
+    def expects(self, *args, **kwargs):
+        return self
+
+    def undo(self, *args, **kwargs):
+        return self
+
+    @property
+    def result(self):
+        return
+
+
 class Application:
     """
     This is the runner of the automation.
     """
 
+    def __new__(
+        cls,
+        driver: Any = None,
+        report_on_init: str = None,
+        report_on_exit: str = None,
+        retry_on_exceptions: Tuple[Exception] = (Exception),
+        disabled: bool = False,
+    ):
+        """Disable the application completly (feature flagging)"""
+        if disabled:
+            LOGGER.warning("Application disabled. No action executed.")
+            return NoneApplication()
+
+        return super().__new__(cls)
+
     def __init__(
         self,
         driver: Any = None,
-        report_on_init=None,
-        report_on_exit=None,
-        retry_on_exceptions=(Exception),
+        report_on_init: str = None,
+        report_on_exit: str = None,
+        retry_on_exceptions: Tuple[Exception] = (Exception),
+        disabled: bool = False,
+        # Need to repeat the list of parameters in __new__ to enable autocomplete in VSCode (IDE)
     ):
         """
         Initializing the application with a driver.
@@ -51,6 +104,9 @@ class Application:
 
             retry_on_exceptions (tuple(Exception)): the listo fo the Exceptions
              to be retried.
+
+            disabled (bool): disable the application so that no action
+             is excuted (feature flagging).
         """
 
         self._transaction_pool: list[AbstractTransaction] = []
@@ -103,6 +159,9 @@ class Application:
             LOGGER.warning(
                 "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
             )
+
+        if disabled:
+            LOGGER.warning("Application disabled.")
 
     def __del__(self):
         if self._report_on_exit:

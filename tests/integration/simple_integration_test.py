@@ -19,6 +19,8 @@ class VisitGoogle(AbstractTransaction):
 class FailingTransaction(AbstractTransaction):
     """A transaction designed to fail by looking for a fake element"""
 
+    return_on_dry_run = Exception()
+
     def do(self, **kwargs):
         # This ID does not exist on Google, so Selenium will throw NoSuchElementException
         return self._driver.find_element(By.ID, "this-element-does-not-exist")

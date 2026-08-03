@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import logging
-from guara.constants import GUARA_VERBOSE, SECRET_DEFAULT_VALUE
+from guara.constants import GUARA_DRY_RUN, GUARA_VERBOSE, SECRET_DEFAULT_VALUE
 import pytest
 from guara.guara import Application, AbstractTransaction
 from guara.asynchronous.guara import (
@@ -48,7 +48,9 @@ class AsyncDoNothing(AsyncTransaction):
         return
 
 
-@pytest.mark.skipif(GUARA_VERBOSE is False, reason="GUARA_VERBOSE is not true")
+@pytest.mark.skipif(
+    GUARA_VERBOSE is False or GUARA_DRY_RUN is True, reason="GUARA_VERBOSE is not true"
+)
 class TestAsyncHideSecret:
     @pytest.mark.asyncio
     async def test_async_dont_hide_when_parameter_is_not_secret(self, caplog):

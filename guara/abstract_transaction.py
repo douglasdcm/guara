@@ -22,6 +22,9 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
+    return_on_dry_run = None
+    """Value returned in case dry run is enabled. Prevents break the execution."""
+
     def __init__(self, driver: Any = None):
         """
         Initializing the transaction which will allow it to interact
@@ -59,7 +62,9 @@ class AbstractTransaction:
 
     def act(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
         if GUARA_DRY_RUN:
-            return
+            if isinstance(self.return_on_dry_run, Exception):
+                raise self.return_on_dry_run
+            return self.return_on_dry_run
         return self.do(**kwargs)
 
     def undo(self):

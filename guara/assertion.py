@@ -52,19 +52,18 @@ class IAssertion:
         Raises:
             Exception: An assertion exception
         """
+        log_info = {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
         if GUARA_DRY_RUN:
+            if GUARA_VERBOSE:
+                LOGGER.info(log_info)
             return
 
         try:
             self.asserts(actual, expected)
             if GUARA_VERBOSE:
-                LOGGER.info(
-                    {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
-                )
+                LOGGER.info(log_info)
         except Exception as e:
             if GUARA_VERBOSE:
-                LOGGER.error(
-                    {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
-                )
+                LOGGER.error(log_info)
                 LOGGER.exception(str(e))
             raise

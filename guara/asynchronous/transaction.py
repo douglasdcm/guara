@@ -7,7 +7,8 @@
 The module that has all of the transactions.
 """
 
-from typing import Any, List, Dict, Coroutine, Union
+import asyncio
+from typing import Any, List, Dict, Coroutine, Tuple, Union
 from guara.asynchronous.it import IAssertion
 from guara.constants import (
     GUARA_DISABLE_LOGS,
@@ -22,12 +23,64 @@ from guara.asynchronous.abstract_transaction import AbstractTransaction
 LOGGER: Logger = getLogger(__name__)
 
 
+class NoneApplication:
+    def at(self, *args, **kwargs):
+        return self
+
+    def given(self, *args, **kwargs):
+        return self
+
+    def when(self, *args, **kwargs):
+        return self
+
+    def and_(self, *args, **kwargs):
+        return self
+
+    def so(self, *args, **kwargs):
+        return self
+
+    def asserts(self, *args, **kwargs):
+        return self
+
+    def then(self, *args, **kwargs):
+        return self
+
+    def perform(self, *args, **kwargs):
+        return asyncio.sleep(0)
+
+    @property
+    def result(self):
+        return
+
+
 class Application:
     """
     The runner of the automation.
     """
 
-    def __init__(self, driver: Any = None, report_on_init=None, report_on_exit=None):
+    def __new__(
+        cls,
+        driver: Any = None,
+        report_on_init: str = None,
+        report_on_exit: str = None,
+        retry_on_exceptions: Tuple[Exception] = (Exception),
+        disabled: bool = False,
+    ):
+        """Disable the application completly (feature flagging)"""
+        if disabled:
+            LOGGER.warning("Application disabled. No action executed.")
+            return NoneApplication()
+
+        return super().__new__(cls)
+
+    def __init__(
+        self,
+        driver: Any = None,
+        report_on_init=None,
+        report_on_exit=None,
+        disabled=False,
+        # Need to repeat the list in __new__ to enable autocomplete in VSCode (IDE)
+    ):
         """
         Initializing the application with a driver.
 
@@ -135,6 +188,12 @@ class Application:
         self._transaction = transaction(self._driver)
         self._kwargs = kwargs
         self._transaction_name = get_transaction_info(self._transaction)
+
+        if GUARA_DRY_RUN:
+            if isinstance(self._transaction.return_on_dry_run, Exception):
+                raise self._transaction.return_on_dry_run
+            return self
+
         coroutine: Coroutine[None, None, Any] = self._transaction.do(**kwargs)
         self._coroutines.append({self._TRANSACTION: coroutine})
         return self
@@ -247,25 +306,21 @@ class Application:
         result_details = {}
         try:
             transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
-            if transaction:
 
-                for key, value in self._kwargs.items():
-                    if "secret" in key.lower():
-                        value = SECRET_DEFAULT_VALUE
-                        self._kwargs[key] = value
+            for key, value in self._kwargs.items():
+                if "secret" in key.lower() or "password" in key.lower():
+                    value = SECRET_DEFAULT_VALUE
+                    self._kwargs[key] = value
 
-                result_details["transaction"] = self._transaction_name
-                result_details["parameteres"] = {**self._kwargs}
+            result_details["transaction"] = self._transaction_name
+            result_details["parameteres"] = {**self._kwargs}
 
-                if GUARA_DRY_RUN:
-                    return
+            self._result = await transaction
 
-                self._result = await transaction
-
-                LOGGER.info(f"Transaction '{self._transaction_name}' succeded.")
-                if GUARA_VERBOSE:
-                    result_details["return"] = self._result
-                    LOGGER.info(result_details)
+            LOGGER.info(f"Transaction '{self._transaction_name}' succeded.")
+            if GUARA_VERBOSE:
+                result_details["return"] = self._result
+                LOGGER.info(result_details)
 
         except Exception as e:
             LOGGER.info(f"Transaction '{self._transaction_name}' failed.")

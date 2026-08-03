@@ -14,6 +14,8 @@ from guara.asynchronous.transaction import (
 
 
 class ReturnWrongResult(AbstractTransaction):
+    return_on_dry_run = AssertionError()
+
     def do(self):
         return "wrong"
 
@@ -30,6 +32,8 @@ class TestFailedAssertions:
 
 
 class AsyncReturnWrongResult(AsyncTransaction):
+    return_on_dry_run = AssertionError()
+
     async def do(self):
         return "wrong"
 

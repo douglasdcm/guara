@@ -18,6 +18,8 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
+    return_on_dry_run = None
+
     @property
     def __name__(self) -> property:
         """

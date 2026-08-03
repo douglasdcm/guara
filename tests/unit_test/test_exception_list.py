@@ -23,6 +23,8 @@ class Error3(Exception):
 
 
 class FlakyTransaction(AbstractTransaction):
+    return_on_dry_run = Error1()
+
     def do(self, error_number):
         if error_number == 1:
             raise Error1()
