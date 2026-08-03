@@ -30,7 +30,13 @@ class Application:
     This is the runner of the automation.
     """
 
-    def __init__(self, driver: Any = None, report_on_init=None, report_on_exit=None):
+    def __init__(
+        self,
+        driver: Any = None,
+        report_on_init=None,
+        report_on_exit=None,
+        retry_on_exceptions=(Exception),
+    ):
         """
         Initializing the application with a driver.
 
@@ -42,6 +48,9 @@ class Application:
 
             report_on_exit (str): The message to be reported when the application
              instance is destroyed.
+
+            retry_on_exceptions (tuple(Exception)): the listo fo the Exceptions
+             to be retried.
         """
 
         self._transaction_pool: list[AbstractTransaction] = []
@@ -76,6 +85,8 @@ class Application:
         """
         The message to be reported when the application instance is destroyed.
         """
+
+        self._retry_on_exceptions = retry_on_exceptions
 
         if GUARA_VERBOSE:
             LOGGER.warning(
@@ -140,6 +151,18 @@ class Application:
                 return self
             except Exception as e:
                 exception = e
+                if not isinstance(e, self._retry_on_exceptions):
+                    LOGGER.warning(
+                        f"Retry Ignored. Exception ({type(e)})"
+                        f" not in retry list ({self._retry_on_exceptions})."
+                    )
+
+                    LOGGER.error(f"Transaction '{transaction_info}' failed.")
+                    if GUARA_VERBOSE:
+                        result_details["return"] = f"({type(exception)}) '{str(exception)}'"
+                        LOGGER.error(result_details)
+                    raise
+
                 retries += 1
                 LOGGER.error(
                     f"Transaction '{transaction_info}' failed on attempt"
@@ -153,7 +176,7 @@ class Application:
         if exception:
             LOGGER.error(f"Transaction '{transaction_info}' failed.")
             if GUARA_VERBOSE:
-                result_details["return"] = str(exception)
+                result_details["return"] = f"({type(exception)}) '{str(exception)}'"
                 LOGGER.error(result_details)
             raise exception
 
