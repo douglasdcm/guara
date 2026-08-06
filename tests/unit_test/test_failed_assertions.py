@@ -3,9 +3,9 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import pytest
 from guara import it
 from guara.asynchronous import it as async_it
-import pytest
 from guara.transaction import Application, AbstractTransaction
 from guara.asynchronous.transaction import (
     Application as AsyncApp,

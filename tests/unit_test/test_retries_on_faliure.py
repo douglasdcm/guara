@@ -60,12 +60,34 @@ def test_application_retries_and_succeeds_on_last_attempt():
     app.at(FlakyTransaction, fail_until=2).asserts(it.IsEqualTo, "success")
 
 
-@patch("guara.constants.GUARA_RETRIES_ON_FAILURE", 1)
+@patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 1)
 def test_application_raises_after_max_retries():
     # Setup environment for 1 retry
     app = Application()
     # If it needs 3 attempts but we only allow 1 retry (2 attempts total), it should raise
-    with raises(Exception) as excinfo:
+    with raises(Exception, match="Flaky failure!"):
         app.at(FlakyTransaction, fail_until=3)
 
-    assert "Flaky failure!" in str(excinfo.value)
+class ValidateLocalRetryRaiseException(AbstractTransaction):
+    retries_on_failure = 0
+    def do(self):
+        raise Exception("Failed!")
+
+
+@patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 100)
+def test_application_overrides_global_variable_when_local_variable_is_positive_integer(caplog):
+    app = Application()
+    with raises(Exception):
+        app.at(ValidateLocalRetryRaiseException, fail_until=3)
+
+    assert "1 / 1" in caplog.text
+
+class ValidateLocal(AbstractTransaction):
+    def do(self):
+        pass
+
+@mark.parametrize("value", ["invalid", -1, True])
+def test_transactions_returns_none_when_invalid_retry(value):
+    t = ValidateLocal()
+    t.retries_on_failure = value
+    assert t.retries_on_failure is None

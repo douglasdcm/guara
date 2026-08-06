@@ -23,7 +23,16 @@ class AbstractTransaction:
     """
 
     return_on_dry_run = None
-    """Value returned in case dry run is enabled. Prevents break the execution."""
+    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
+
+    _pacing_time = None
+    """(int) Local value in seconds to wait between retries.
+     Overrides the global variable `GUARA_PACING_TIME`."""
+
+    _retries_on_failure = None
+    """(int) Local value to retry failed executions.
+     Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
+
 
     def __init__(self, driver: Any = None):
         """
@@ -34,6 +43,33 @@ class AbstractTransaction:
             driver: (Any): It is the driver that controls the user-interface.
         """
         self._driver: Any = driver
+
+    def _handles_integer_variable(self, value):
+        try:
+            value = int(value)
+            if value < 0:
+                return None
+        except Exception:
+            return
+
+
+    @property
+    def retries_on_failure(self):
+        return self._handles_integer_variable(self._retries_on_failure)
+
+    @retries_on_failure.setter
+    def retries_on_failure(self, value):
+        self._retries_on_failure = value
+
+    @property
+    def pacing_time(self):
+        return self._handles_integer_variable(self._pacing_time)
+
+    @pacing_time.setter
+    def pacing_time(self, value):
+        self._pacing_time = value
+
+
 
     @property
     def __name__(self) -> property:

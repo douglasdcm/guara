@@ -186,8 +186,20 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
+        _pacing_time = (
+            self._transaction.pacing_time
+            if self._transaction.pacing_time is not None
+            else GUARA_PACING_TIME
+        )
+        _retries_on_failure = (
+            self._transaction.retries_on_failure
+            if self._transaction.retries_on_failure is not None
+            else GUARA_RETRIES_ON_FAILURE
+        )
+
         self._transaction_pool.append(self._transaction)
         transaction_info: str = get_transaction_info(self._transaction)
+
         for key, value in kwargs.items():
             if "secret" in key.lower() or "password" in key.lower():
                 value = SECRET_DEFAULT_VALUE
@@ -195,7 +207,7 @@ class Application:
 
         result_details = {"transaction": transaction_info, "parameteres": [{**kwargs}]}
 
-        retries_on_failure = GUARA_RETRIES_ON_FAILURE
+        retries_on_failure = _retries_on_failure
         exception: Exception = None
         retries: int = 0
         while retries <= retries_on_failure:
@@ -224,9 +236,9 @@ class Application:
                         f" {retries} / {retries_on_failure + 1}."
                     )
                     LOGGER.exception(e)
-                    if retries <= retries_on_failure and GUARA_PACING_TIME > 0:
-                        LOGGER.info(f"Waiting {GUARA_PACING_TIME}s for next retry.")
-                        time.sleep(GUARA_PACING_TIME)
+                    if retries <= retries_on_failure and _pacing_time > 0:
+                        LOGGER.info(f"Waiting {_pacing_time}s for next retry.")
+                        time.sleep(_pacing_time)
 
         if exception:
             LOGGER.error(f"Transaction '{transaction_info}' failed.")
