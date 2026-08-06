@@ -6,11 +6,14 @@
 import logging
 
 from pytest import mark
-from guara.transaction import Application, AbstractTransaction
+
 from guara.asynchronous.transaction import (
-    Application as AsyncApplication,
     AbstractTransaction as AsyncAbstractTransaction,
 )
+from guara.asynchronous.transaction import (
+    Application as AsyncApplication,
+)
+from guara.transaction import AbstractTransaction, Application
 
 
 class MyTransaction(AbstractTransaction):

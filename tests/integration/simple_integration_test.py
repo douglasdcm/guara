@@ -1,9 +1,10 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from guara.guara import Application, AbstractTransaction, it
+from guara.guara import AbstractTransaction, Application, it
 
 # --- 1. Transactions ---
 

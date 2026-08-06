@@ -3,14 +3,15 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from guara.application import Application
-from guara import it
 from repository import Repository
 from scenarios.utils import run_scenario
 from transactions import (
     CreateCourse,
     HasNotCourse,
 )
+
+from guara import it
+from guara.application import Application
 
 
 @run_scenario

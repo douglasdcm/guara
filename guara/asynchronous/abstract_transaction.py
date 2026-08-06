@@ -7,8 +7,9 @@
 It is the module where the interface of the transaction will
 handle web transactions in an automated browser.
 """
+from __future__ import annotations
 
-from typing import Any, NoReturn, Union, Dict
+from typing import Any
 
 
 class AbstractTransaction:
@@ -34,10 +35,10 @@ class AbstractTransaction:
 
         Args:
             driver: (Any): It is the driver that controls a user-interface.
-        """
+from __future__ import annotations        """
         self._driver: Any = driver
 
-    async def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
+    async def do(self, **kwargs: dict[str, Any]) -> Any:
         """
         It performs a specific transaction
 

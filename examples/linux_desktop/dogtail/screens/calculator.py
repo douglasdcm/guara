@@ -19,7 +19,7 @@ class Sum(AbstractTransaction):
     """
 
     def do(self, a, b):
-        from dogtail.rawinput import pressKey, keyNameAliases
+        from dogtail.rawinput import keyNameAliases, pressKey
 
         self._driver.child(str(a)).click()
         self._driver.child("+").click()

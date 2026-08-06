@@ -3,9 +3,10 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pyscript import document
-from guara.application import Application
 import transactions as transactions
+from pyscript import document
+
+from guara.application import Application
 
 # For front-end
 app = Application(transactions.ToDoPrototype())

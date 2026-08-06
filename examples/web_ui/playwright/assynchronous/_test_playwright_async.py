@@ -3,10 +3,11 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pytest import mark
-from guara.asynchronous.transaction import Application, AbstractTransaction
-from guara.asynchronous import it
 from playwright.async_api import async_playwright
+from pytest import mark
+
+from guara.asynchronous import it
+from guara.asynchronous.transaction import AbstractTransaction, Application
 
 
 class OpenApp(AbstractTransaction):

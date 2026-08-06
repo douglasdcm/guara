@@ -8,8 +8,8 @@ The module that has the interface for the implmentation of
 the assertion logic to be used for validation and testing.
 """
 
+from logging import Logger, getLogger
 from typing import Any
-from logging import getLogger, Logger
 
 from guara.constants import GUARA_DRY_RUN, GUARA_VERBOSE
 
@@ -81,5 +81,5 @@ class IAssertion:
                         "expected": expected,
                     }
                 )
-                LOGGER.exception(str(e))
+                LOGGER.exception(str(e)) # noqa
             raise

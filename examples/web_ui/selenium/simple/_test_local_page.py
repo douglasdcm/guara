@@ -4,11 +4,13 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from guara import it
+
+from selenium import webdriver
+
 from examples.web_ui.selenium.simple import home, setup
+from guara import it
 from guara.application import Application
 from guara.utils import is_dry_run
-from selenium import webdriver
 
 
 class TestLocalPage:

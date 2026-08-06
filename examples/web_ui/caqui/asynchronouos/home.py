@@ -3,8 +3,9 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from guara.transaction import AbstractTransaction
 from caqui import asynchronous
+
+from guara.transaction import AbstractTransaction
 
 
 class GetNthLink(AbstractTransaction):

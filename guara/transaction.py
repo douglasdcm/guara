@@ -7,8 +7,13 @@
 This module has all the transactions.
 """
 
+from __future__ import annotations
+
 import time
-from typing import Any, Dict, Tuple
+from logging import Logger, getLogger
+from typing import Any
+
+from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
     GUARA_DISABLE_LOGS,
     GUARA_DRY_RUN,
@@ -19,8 +24,6 @@ from guara.constants import (
 )
 from guara.it import IAssertion
 from guara.utils import get_transaction_info
-from logging import getLogger, Logger
-from guara.abstract_transaction import AbstractTransaction
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -69,9 +72,9 @@ class Application:
     def __new__(
         cls,
         driver: Any = None,
-        report_on_init: str = None,
-        report_on_exit: str = None,
-        retry_on_exceptions: Tuple[Exception] = (Exception),
+        report_on_init: str |None = None,
+        report_on_exit: str |None= None,
+        retry_on_exceptions: tuple[Exception] = (Exception),
         disabled: bool = False,
     ):
         """Disable the application completly (feature flagging)"""
@@ -84,9 +87,9 @@ class Application:
     def __init__(
         self,
         driver: Any = None,
-        report_on_init: str = None,
-        report_on_exit: str = None,
-        retry_on_exceptions: Tuple[Exception] = (Exception),
+        report_on_init: str | None = None,
+        report_on_exit: str | None = None,
+        retry_on_exceptions: tuple[Exception] = (Exception),
         disabled: bool = False,
         # Need to repeat the list of parameters in __new__ to enable autocomplete in VSCode (IDE)
     ):
@@ -174,7 +177,7 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def at(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Performs a transaction.
 
@@ -235,7 +238,7 @@ class Application:
                         f"Transaction '{transaction_info}' failed on attempt"
                         f" {retries} / {retries_on_failure + 1}."
                     )
-                    LOGGER.exception(e)
+                    LOGGER.exception(e) # noqa
                     if retries <= retries_on_failure and _pacing_time > 0:
                         LOGGER.info(f"Waiting {_pacing_time}s for next retry.")
                         time.sleep(_pacing_time)
@@ -243,11 +246,11 @@ class Application:
         if exception:
             LOGGER.error(f"Transaction '{transaction_info}' failed.")
             if GUARA_VERBOSE:
-                result_details["return"] = f"({type(exception)}) '{str(exception)}'"
+                result_details["return"] = f"({type(exception)}) '{exception!s}'"
                 LOGGER.error(result_details)
             raise exception
 
-    def given(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def given(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -262,7 +265,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def when(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -277,7 +280,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def and_(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def and_(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -292,7 +295,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def so(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def so(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability of transactions that
         represent post conditions. Performs a transaction.
@@ -309,7 +312,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def execute(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def execute(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -324,7 +327,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def asserts(self, assertion: IAssertion, expected: Any = None) -> "Application":
+    def asserts(self, assertion: IAssertion, expected: Any = None) -> Application:
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
@@ -340,7 +343,7 @@ class Application:
         self._assertion.validates(self._result, expected)
         return self
 
-    def expects(self, assertion: IAssertion, expected: Any = None) -> "Application":
+    def expects(self, assertion: IAssertion, expected: Any = None) -> Application:
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
@@ -354,7 +357,7 @@ class Application:
         """
         return self.asserts(assertion, expected)
 
-    def then(self, assertion: IAssertion, expected: Any = None) -> "Application":
+    def then(self, assertion: IAssertion, expected: Any = None) -> Application:
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.

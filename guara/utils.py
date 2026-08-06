@@ -8,9 +8,8 @@ The module to be used to retrieve the information of the
 transaction.
 """
 
+from logging import Logger, getLogger
 from typing import Any
-from logging import getLogger, Logger
-
 
 LOGGER: Logger = getLogger(__name__)
 

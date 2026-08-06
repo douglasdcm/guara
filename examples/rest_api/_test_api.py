@@ -4,8 +4,8 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from examples.rest_api import echo_api
-from guara.application import Application
 from guara import it
+from guara.application import Application
 
 
 class TestEchoApi:

@@ -6,6 +6,7 @@
 import os
 
 from pytest import mark
+
 from guara.constants import convert_variable_to_integer
 
 

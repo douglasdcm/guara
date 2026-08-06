@@ -4,12 +4,14 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
+
 from pytest import fixture
-from examples.web_ui.selenium.advanced import home, contact, info, setup
-from guara.application import Application
-from guara import it
-from guara.utils import is_dry_run
 from selenium import webdriver
+
+from examples.web_ui.selenium.advanced import contact, home, info, setup
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 FILE_PATH = Path(__file__).parent.resolve()
 

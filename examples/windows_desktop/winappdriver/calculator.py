@@ -1,5 +1,6 @@
-from guara.transaction import AbstractTransaction
 import logging
+
+from guara.transaction import AbstractTransaction
 
 
 class SumNumbers(AbstractTransaction):

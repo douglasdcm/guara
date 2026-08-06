@@ -1,5 +1,6 @@
-from guara.transaction import AbstractTransaction
 from src.domain.entities import Course, Student, Subject
+
+from guara.transaction import AbstractTransaction
 
 
 class CreateCourse(AbstractTransaction):

@@ -7,9 +7,11 @@
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser.
 """
+from __future__ import annotations
 
-from logging import getLogger, Logger
-from typing import Any, NoReturn, Union, Dict
+from logging import Logger, getLogger
+from typing import Any, NoReturn
+
 from guara.constants import GUARA_DRY_RUN
 
 LOGGER: Logger = getLogger(__name__)
@@ -48,8 +50,8 @@ class AbstractTransaction:
         try:
             value = int(value)
             if value < 0:
-                return None
-        except Exception:
+                return
+        except Exception: # noqa
             return
 
 
@@ -81,7 +83,7 @@ class AbstractTransaction:
         """
         return self.__class__.__name__
 
-    def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
+    def do(self, **kwargs: dict[str, Any]) -> Any:
         """
         It performs a specific transaction
 
@@ -96,7 +98,7 @@ class AbstractTransaction:
         """
         raise NotImplementedError
 
-    def act(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
+    def act(self, **kwargs: dict[str, Any]) -> Any:
         if GUARA_DRY_RUN:
             if isinstance(self.return_on_dry_run, Exception):
                 raise self.return_on_dry_run

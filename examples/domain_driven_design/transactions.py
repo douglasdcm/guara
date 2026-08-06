@@ -3,9 +3,10 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from guara.transaction import AbstractTransaction
-from repository import Repository
 from domain import Student, Subject
+from repository import Repository
+
+from guara.transaction import AbstractTransaction
 
 # =========================
 # Transactions

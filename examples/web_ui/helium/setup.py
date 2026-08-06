@@ -4,6 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from datetime import datetime
+
 from guara.transaction import AbstractTransaction
 
 
@@ -17,7 +18,7 @@ class OpenApp(AbstractTransaction):
 
     def do(self, url, headless=True):
         # Lazy import as Helium is not compatible with Python 3.7
-        from helium import start_chrome, go_to
+        from helium import go_to, start_chrome
 
         start_chrome(headless=headless)
         go_to(url)

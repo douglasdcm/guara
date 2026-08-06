@@ -19,7 +19,7 @@ class SubmitText(AbstractTransaction):
 
     def do(self, text):
         # Lazy import as Helium is not compatible with Python 3.7
-        from helium import find_all, write, click, S, Text
+        from helium import S, Text, click, find_all, write
 
         TEXT = '//*[@id="input"]'
         BUTTON_TEST = "button"

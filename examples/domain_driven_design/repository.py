@@ -10,6 +10,7 @@ SQLite-backed Repository implementation.
 
 import sqlite3
 from typing import List
+
 from domain import Course, Student
 
 

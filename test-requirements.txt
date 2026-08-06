@@ -1,9 +1,7 @@
-pytest
 pytest-asyncio
-flake8
 black
 tox
-isort
+ruff
 pre-commit
 psutil
 selenium

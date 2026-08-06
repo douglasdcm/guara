@@ -3,21 +3,22 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+import json
+import time
+from datetime import datetime, timedelta
+
+from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait as Wait
 from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
 
 # from zoneinfo import ZoneInfo
 from guara.transaction import AbstractTransaction, Application
-import json
-import time
 
 # Constants
 AIRPORTS = [

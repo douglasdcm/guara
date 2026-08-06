@@ -4,10 +4,11 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from unittest import TestCase
-from tests.unit_test.examples.todo_list.todo import ToDo
-from tests.unit_test.examples.todo_list import operations
-from guara.application import Application
+
 from guara import it
+from guara.application import Application
+from tests.unit_test.examples.todo_list import operations
+from tests.unit_test.examples.todo_list.todo import ToDo
 
 
 class TestToDo:

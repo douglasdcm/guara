@@ -4,13 +4,16 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pytest
+
 from guara import it
 from guara.asynchronous import it as async_it
-from guara.transaction import Application, AbstractTransaction
 from guara.asynchronous.transaction import (
-    Application as AsyncApp,
     AbstractTransaction as AsyncTransaction,
 )
+from guara.asynchronous.transaction import (
+    Application as AsyncApp,
+)
+from guara.transaction import AbstractTransaction, Application
 
 
 class ReturnWrongResult(AbstractTransaction):

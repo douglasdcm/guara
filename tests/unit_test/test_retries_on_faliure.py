@@ -5,10 +5,11 @@
 
 from unittest.mock import patch
 
-from pytest import raises, mark
+from pytest import mark, raises
+
 from guara import it
 from guara.constants import GUARA_DRY_RUN
-from guara.transaction import Application, AbstractTransaction
+from guara.transaction import AbstractTransaction, Application
 
 
 # A mock transaction that fails N times before succeeding
@@ -71,14 +72,14 @@ def test_application_raises_after_max_retries():
 class ValidateLocalRetryRaiseException(AbstractTransaction):
     retries_on_failure = 0
     def do(self):
-        raise Exception("Failed!")
+        raise PermissionError("Failed!")
 
 
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 100)
 def test_application_overrides_global_variable_when_local_variable_is_positive_integer(caplog):
     app = Application()
-    with raises(Exception):
-        app.at(ValidateLocalRetryRaiseException, fail_until=3)
+    with raises(PermissionError):
+        app.at(ValidateLocalRetryRaiseException)
 
     assert "1 / 1" in caplog.text
 

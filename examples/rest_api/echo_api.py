@@ -4,6 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from requests import get, post
+
 from guara.transaction import AbstractTransaction
 
 BASE_URL = "https://postman-echo.com"

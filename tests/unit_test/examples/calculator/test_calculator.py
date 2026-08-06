@@ -4,10 +4,11 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from random import randrange
-from tests.unit_test.examples.calculator.calculator import Calculator
-from tests.unit_test.examples.calculator import operations
-from guara.application import Application
+
 from guara import it
+from guara.application import Application
+from tests.unit_test.examples.calculator import operations
+from tests.unit_test.examples.calculator.calculator import Calculator
 
 
 class TestCalculator:

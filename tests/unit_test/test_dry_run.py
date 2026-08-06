@@ -6,13 +6,16 @@
 from unittest.mock import patch
 
 from pytest import mark
+
 from guara import it
-from guara.transaction import Application, AbstractTransaction
 from guara.asynchronous import it as async_it
 from guara.asynchronous.transaction import (
-    Application as AsyncApplication,
     AbstractTransaction as AsyncAbstractTransaction,
 )
+from guara.asynchronous.transaction import (
+    Application as AsyncApplication,
+)
+from guara.transaction import AbstractTransaction, Application
 
 
 class MyTransaction(AbstractTransaction):

@@ -8,8 +8,9 @@ The module that have all of the transactions needed for the
 To-Do List.
 """
 
+from typing import Dict, List
+
 from guara.asynchronous.transaction import AbstractTransaction
-from typing import List, Dict
 
 
 class Add(AbstractTransaction):

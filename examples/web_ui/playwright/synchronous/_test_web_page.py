@@ -3,11 +3,12 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pytest import fixture
-from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
-from guara.application import Application
-from guara import it
 from playwright.sync_api import sync_playwright
+from pytest import fixture
+
+from examples.web_ui.playwright.synchronous.pages import getting_started, home, setup
+from guara import it
+from guara.application import Application
 
 
 @fixture

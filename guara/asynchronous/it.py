@@ -8,9 +8,10 @@ The module that deals with the assertion and validation of a
 transaction at the runtime.
 """
 
+from logging import Logger, getLogger
 from typing import Any
+
 from guara.asynchronous.assertion import IAssertion
-from logging import getLogger, Logger
 
 LOGGER: Logger = getLogger(__name__)
 

@@ -3,12 +3,13 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pytest import mark
 from pathlib import Path
-from guara.application import Application
+
+from pytest import mark
+
+from examples.web_ui.browserist import home, setup
 from guara import it
-from examples.web_ui.browserist import setup
-from examples.web_ui.browserist import home
+from guara.application import Application
 from guara.utils import is_dry_run
 
 

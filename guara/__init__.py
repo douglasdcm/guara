@@ -9,7 +9,7 @@ responsible for initializing the logger and handling command
 line arguments.
 """
 
-from logging import basicConfig, getLogger, Logger, INFO, disable
+from logging import INFO, Logger, basicConfig, disable, getLogger
 
 from guara.constants import GUARA_DISABLE_LOGS
 

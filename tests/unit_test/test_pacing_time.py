@@ -4,6 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import mark
+
 from guara.transaction import AbstractTransaction
 
 

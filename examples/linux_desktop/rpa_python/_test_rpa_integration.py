@@ -4,10 +4,10 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import mark
-from guara.application import Application
+
+from examples.linux_desktop.rpa_python import home, setup
 from guara import it
-from examples.linux_desktop.rpa_python import setup
-from examples.linux_desktop.rpa_python import home
+from guara.application import Application
 from guara.utils import is_dry_run
 
 

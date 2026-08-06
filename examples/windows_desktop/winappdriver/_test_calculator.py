@@ -1,8 +1,9 @@
 from pytest import mark
-from guara.application import Application
+
+from examples.windows_desktop.winappdriver import calculator, setup
 from guara import it
+from guara.application import Application
 from guara.utils import is_dry_run
-from examples.windows_desktop.winappdriver import setup, calculator
 
 
 class ItShows(it.IAssertion):

@@ -3,12 +3,13 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from pytest import mark
-from guara.application import Application
-from guara import it
-from examples.web_ui.undetected_chromedriver import setup, actions
-from guara.utils import is_dry_run
 import undetected_chromedriver as uc
+from pytest import mark
+
+from examples.web_ui.undetected_chromedriver import actions, setup
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 
 @mark.skip(reason="https://github.com/ultrafunkamsterdam/undetected-chromedriver/issues/2163")

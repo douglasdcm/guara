@@ -3,9 +3,8 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+from logging import Logger, getLogger
 from os import getenv
-
-from logging import getLogger, Logger
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -15,7 +14,7 @@ GUARA_DRY_RUN = getenv("GUARA_DRY_RUN", "false").lower() == "true"
 
 
 def convert_variable_to_integer(variable) -> int:
-    env_var = getenv(variable, 0)
+    env_var = getenv(variable, "0")
     try:
         result = int(env_var)
         if result < 0:

@@ -8,7 +8,7 @@ The module that will have the class where the tasks will be
 stored.
 """
 
-from typing import List, Dict
+from typing import Dict, List
 
 
 class AsyncToDo:

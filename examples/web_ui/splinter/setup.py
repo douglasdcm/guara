@@ -4,8 +4,9 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from datetime import datetime
-from guara.transaction import AbstractTransaction
 from os import makedirs
+
+from guara.transaction import AbstractTransaction
 
 
 class OpenSplinterApp(AbstractTransaction):

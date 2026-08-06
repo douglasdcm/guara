@@ -1,5 +1,5 @@
-from guara.transaction import Application, AbstractTransaction
 from guara import it
+from guara.transaction import AbstractTransaction, Application
 
 # ===================
 # Use natual language

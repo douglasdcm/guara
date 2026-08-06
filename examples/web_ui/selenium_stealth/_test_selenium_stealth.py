@@ -4,13 +4,13 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pytest
-from guara.application import Application
-from guara import it
-from examples.web_ui.selenium_stealth import setup
-from examples.web_ui.selenium_stealth import home
-from guara.utils import is_dry_run
 from selenium import webdriver
 from selenium_stealth import stealth
+
+from examples.web_ui.selenium_stealth import home, setup
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 
 @pytest.mark.skip(reason="Selenium Stealth tests failing in pipeline.")

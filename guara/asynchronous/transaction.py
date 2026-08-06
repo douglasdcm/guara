@@ -7,8 +7,13 @@
 The module that has all of the transactions.
 """
 
+from __future__ import annotations
+
 import asyncio
-from typing import Any, List, Dict, Coroutine, Tuple, Union
+from logging import Logger, getLogger
+from typing import Any, Coroutine
+
+from guara.asynchronous.abstract_transaction import AbstractTransaction
 from guara.asynchronous.it import IAssertion
 from guara.constants import (
     GUARA_DISABLE_LOGS,
@@ -17,8 +22,6 @@ from guara.constants import (
     SECRET_DEFAULT_VALUE,
 )
 from guara.utils import get_transaction_info
-from logging import getLogger, Logger
-from guara.asynchronous.abstract_transaction import AbstractTransaction
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -61,9 +64,9 @@ class Application:
     def __new__(
         cls,
         driver: Any = None,
-        report_on_init: str = None,
-        report_on_exit: str = None,
-        retry_on_exceptions: Tuple[Exception] = (Exception),
+        report_on_init: str | None = None,
+        report_on_exit: str | None = None,
+        retry_on_exceptions: tuple[Exception] = (Exception),
         disabled: bool = False,
     ):
         """Disable the application completly (feature flagging)"""
@@ -104,7 +107,7 @@ class Application:
         It is the result data of the last transaction.
         """
 
-        self._coroutines: List[Dict[str, Coroutine[None, None, Union[Any, None]]]] = []
+        self._coroutines: list[dict[str, Coroutine[None, None, Any | None ]]] = []
         """
         The list of transactions that are performed.
         """
@@ -119,13 +122,13 @@ class Application:
         Assertion header
         """
 
-        self._kwargs: Dict[str, Any] = None
+        self._kwargs: dict[str, Any] = None
         """
         It contains all the necessary data and parameters for the
         transaction.
         """
 
-        self._transaction_name: str = None
+        self._transaction_name: str | None = None
         """
         The name of the transaction.
         """
@@ -174,7 +177,7 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def at(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Executing each transaction.
 
@@ -198,7 +201,7 @@ class Application:
         self._coroutines.append({self._TRANSACTION: coroutine})
         return self
 
-    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def when(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -213,7 +216,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def and_(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def and_(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -228,7 +231,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def so(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def so(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
         """
         Same as the `at` method. Introduced for better readability of transactions that
         represent post conditions. Performs a transaction.
@@ -245,7 +248,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def asserts(self, it: IAssertion, expected: Any) -> "Application":
+    def asserts(self, it: IAssertion, expected: Any) -> Application:
         """
         Asserting the data that is performed by the transaction
         against its expected value.
@@ -263,7 +266,7 @@ class Application:
         self._coroutines.append({self._ASSERTION: coroutine})
         return self
 
-    def then(self, it: IAssertion, expected: Any) -> "Application":
+    def then(self, it: IAssertion, expected: Any) -> Application:
         """
         Asserting the data that is performed by the transaction
         against its expected value.
@@ -277,7 +280,7 @@ class Application:
         """
         return self.asserts(it, expected)
 
-    async def perform(self) -> "Application":
+    async def perform(self) -> Application:
         """
         Executing all of the coroutines.
 
@@ -325,7 +328,7 @@ class Application:
         except Exception as e:
             LOGGER.info(f"Transaction '{self._transaction_name}' failed.")
             if GUARA_VERBOSE:
-                result_details["return"] = f"({type(e)}) '{str(e)}'"
+                result_details["return"] = f"({type(e)}) '{e!s}'"
                 LOGGER.error(LOGGER.error(result_details))
             raise
 

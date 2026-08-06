@@ -8,13 +8,15 @@ The test script for testing asynchronuous transactions on a
 To-Do List.
 """
 
-from tests.unit_test.examples.async_todo_list.async_todo import AsyncToDo
-from guara.asynchronous.application import Application
-from pytest_asyncio import fixture
-from typing import List, Coroutine, Any
-from tests.unit_test.examples.async_todo_list.operations import Add, Remove, ListTasks
-from guara.asynchronous.it import IsEqualTo, IsNotEqualTo, Contains, DoesNotContain
+from typing import Any, Coroutine, List
+
 from pytest import mark
+from pytest_asyncio import fixture
+
+from guara.asynchronous.application import Application
+from guara.asynchronous.it import Contains, DoesNotContain, IsEqualTo, IsNotEqualTo
+from tests.unit_test.examples.async_todo_list.async_todo import AsyncToDo
+from tests.unit_test.examples.async_todo_list.operations import Add, ListTasks, Remove
 
 
 class TestAsyncToDo:

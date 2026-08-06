@@ -3,9 +3,9 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from tests.performance.async_test.app import transactions
-from guara.asynchronous.application import Application
 from guara.asynchronous import it
+from guara.asynchronous.application import Application
+from tests.performance.async_test.app import transactions
 
 
 class App:

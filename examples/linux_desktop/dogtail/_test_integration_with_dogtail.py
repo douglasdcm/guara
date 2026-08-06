@@ -4,11 +4,11 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pytest import mark
+
+from examples.linux_desktop.dogtail.assertions import this
+from examples.linux_desktop.dogtail.screens import calculator, setup
 from guara.application import Application
 from guara.utils import is_dry_run
-from examples.linux_desktop.dogtail.screens import setup
-from examples.linux_desktop.dogtail.screens import calculator
-from examples.linux_desktop.dogtail.assertions import this
 
 
 @mark.skipif(not is_dry_run(), reason="Dry run is disabled")
@@ -16,8 +16,8 @@ class TestLinuxCalculatorWithDogtail:
     def setup_method(self, method):
         driver = None
         if not is_dry_run():
+            from dogtail.procedural import focus, run
             from dogtail.tree import root
-            from dogtail.procedural import run, focus
 
             # Dogtail first runs the app and then gets the application.
             # So the calculator is opened direclty in the fixture.

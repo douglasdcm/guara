@@ -4,11 +4,13 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from pytest import mark
-from guara.application import Application
-from guara import it
-from setup import OpenAppiumApp, CloseAppiumApp
+
 from home import SubmitTextAppium
+from pytest import mark
+from setup import CloseAppiumApp, OpenAppiumApp
+
+from guara import it
+from guara.application import Application
 from guara.utils import is_dry_run
 
 

@@ -3,12 +3,14 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import time
 import datetime
 import logging
-from pytest import mark
-from tests.performance.sync_test.app.app import App
+import time
+
 import psutil
+from pytest import mark
+
+from tests.performance.sync_test.app.app import App
 
 
 @mark.skip(reason="Do not run on pipelines. Run it manually on each release")

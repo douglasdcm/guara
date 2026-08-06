@@ -1,7 +1,9 @@
 from pathlib import Path
+
 from pytest import mark
-from guara.asynchronous.transaction import Application, AbstractTransaction
+
 from guara.asynchronous.it import IsEqualTo
+from guara.asynchronous.transaction import AbstractTransaction, Application
 
 
 class OpenSamplePage(AbstractTransaction):
@@ -31,7 +33,7 @@ class Submit(AbstractTransaction):
 )
 async def test_arsenic():
     # Lazy import to avoid installation the library
-    from arsenic import get_session, browsers, services
+    from arsenic import browsers, get_session, services
 
     file_path = Path(__file__).parent.parent.resolve()
     driver_file_path = Path(__file__).parent.resolve()

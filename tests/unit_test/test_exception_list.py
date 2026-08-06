@@ -7,7 +7,8 @@ import logging
 from unittest.mock import patch
 
 from pytest import raises
-from guara.transaction import Application, AbstractTransaction
+
+from guara.transaction import AbstractTransaction, Application
 
 
 class Error1(Exception):

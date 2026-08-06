@@ -8,13 +8,14 @@ The module for tracking the performance metrics of the
 library.
 """
 
-from logging import getLogger, Logger
 from csv import writer
-from time import time, sleep
-from psutil import cpu_percent, virtual_memory, disk_usage
-from subprocess import run, CalledProcessError
 from datetime import datetime
-from threading import Thread, Event
+from logging import Logger, getLogger
+from subprocess import CalledProcessError, run
+from threading import Event, Thread
+from time import sleep, time
+
+from psutil import cpu_percent, disk_usage, virtual_memory
 
 LOGGER: Logger = getLogger(__name__)
 

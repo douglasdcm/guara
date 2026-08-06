@@ -11,9 +11,11 @@ domain, and CLI interface.
 """
 
 import argparse
-from guara.application import Application
-from scenarios import scenarios_student, scenarios_subject, scenarios_course
+
 from repository import Repository
+from scenarios import scenarios_course, scenarios_student, scenarios_subject
+
+from guara.application import Application
 
 # =========================
 # CLI Use Cases

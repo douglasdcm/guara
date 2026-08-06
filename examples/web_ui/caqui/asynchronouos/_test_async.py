@@ -4,18 +4,20 @@
 # Visit: https://github.com/douglasdcm/guara
 
 from pathlib import Path
-from pytest_asyncio import fixture
-from pytest import mark
-from typing import Any, Generator
-from guara.asynchronous.guara import it
-from guara.asynchronous.application import Application
-from examples.web_ui.caqui.asynchronouos.home import GetNthLink
-from examples.web_ui.caqui.asynchronouos.setup import OpenApp, CloseApp
-from caqui.easy.options import ChromeOptionsBuilder
-from caqui.easy.capabilities import ChromeCapabilitiesBuilder
-from caqui.synchronous import get_session
-from caqui.easy.server import Server
 from time import sleep
+from typing import Any, Generator
+
+from caqui.easy.capabilities import ChromeCapabilitiesBuilder
+from caqui.easy.options import ChromeOptionsBuilder
+from caqui.easy.server import Server
+from caqui.synchronous import get_session
+from pytest import mark
+from pytest_asyncio import fixture
+
+from examples.web_ui.caqui.asynchronouos.home import GetNthLink
+from examples.web_ui.caqui.asynchronouos.setup import CloseApp, OpenApp
+from guara.asynchronous.application import Application
+from guara.asynchronous.guara import it
 
 SERVER_PORT = 9999
 SERVER_URL = f"http://localhost:{SERVER_PORT}"

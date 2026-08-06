@@ -3,9 +3,9 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from tests.performance.sync_test.app import transactions
-from guara.application import Application
 from guara import it
+from guara.application import Application
+from tests.performance.sync_test.app import transactions
 
 
 class App:

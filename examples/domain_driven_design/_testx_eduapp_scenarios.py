@@ -3,12 +3,13 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import pytest
-from guara.application import Application
 from types import SimpleNamespace
-from repository import Repository
 
-from scenarios import scenarios_student, scenarios_course, scenarios_subject
+import pytest
+from repository import Repository
+from scenarios import scenarios_course, scenarios_student, scenarios_subject
+
+from guara.application import Application
 
 
 @pytest.fixture

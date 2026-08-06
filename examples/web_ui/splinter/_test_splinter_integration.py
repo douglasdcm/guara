@@ -4,12 +4,13 @@
 # Visit: https://github.com/douglasdcm/guara
 
 import pathlib
-from guara.application import Application
-from guara import it
-from examples.web_ui.splinter import setup
-from examples.web_ui.splinter import home
-from guara.utils import is_dry_run
+
 from splinter import Browser
+
+from examples.web_ui.splinter import home, setup
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 
 class TestSplinterIntegration:

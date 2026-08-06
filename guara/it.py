@@ -8,8 +8,9 @@ The module that deals with the assertion and validation of a
 transaction at the runtime.
 """
 
+from logging import Logger, getLogger
+
 from guara.assertion import IAssertion
-from logging import getLogger, Logger
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -322,6 +323,6 @@ class HasKeyValue(IAssertion):
 
     def asserts(self, actual, expected) -> None:
         for key, value in actual.items():
-            if list(expected.keys())[0] in key and list(expected.values())[0] in value:
+            if list(expected.keys())[0] in key and list(expected.values())[0] in value: #noqa
                 return
         raise AssertionError("The expected key and value is not in the actual data.")
