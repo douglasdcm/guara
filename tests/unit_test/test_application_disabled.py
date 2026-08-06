@@ -34,7 +34,7 @@ def test_application_do_not_run_when_disabled():
         .asserts(it.IsEqualTo, "anything")
         .expects(it.IsEqualTo, "anything")
         .then(it.IsEqualTo, "anything")
-        .undo(it.IsEqualTo, "anything")
+        .undo()
         .result
     )
 
@@ -53,7 +53,7 @@ async def test_async_application_do_not_run_when_disabled():
         .and_(MyAsyncTransaction)
         .so(MyAsyncTransaction)
         .asserts(async_it.IsEqualTo, None)
-        .then(MyAsyncTransaction)
+        .then(async_it.IsEqualTo, None)
         .perform()
     )
     app.result

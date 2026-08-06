@@ -24,8 +24,6 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
-    return_on_dry_run = None
-    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
 
     _pacing_time = None
     """(int) Local value in seconds to wait between retries.
@@ -35,6 +33,11 @@ class AbstractTransaction:
     """(int) Local value to retry failed executions.
      Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
 
+    return_on_dry_run = None
+    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
+
+    retry_on_exceptions = None
+    """(tuple(Exceptions)) List of exceptions to be retried."""
 
     def __init__(self, driver: Any = None):
         """

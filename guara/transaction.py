@@ -28,61 +28,7 @@ from guara.utils import get_transaction_info
 LOGGER: Logger = getLogger(__name__)
 
 
-class NoneApplication:
-    def at(self, *args, **kwargs):
-        return self
-
-    def given(self, *args, **kwargs):
-        return self
-
-    def when(self, *args, **kwargs):
-        return self
-
-    def and_(self, *args, **kwargs):
-        return self
-
-    def so(self, *args, **kwargs):
-        return self
-
-    def execute(self, *args, **kwargs):
-        return self
-
-    def asserts(self, *args, **kwargs):
-        return self
-
-    def then(self, *args, **kwargs):
-        return self
-
-    def expects(self, *args, **kwargs):
-        return self
-
-    def undo(self, *args, **kwargs):
-        return self
-
-    @property
-    def result(self):
-        return
-
-
 class Application:
-    """
-    This is the runner of the automation.
-    """
-
-    def __new__(
-        cls,
-        driver: Any = None,
-        report_on_init: str |None = None,
-        report_on_exit: str |None= None,
-        retry_on_exceptions: tuple[Exception] = (Exception),
-        disabled: bool = False,
-    ):
-        """Disable the application completly (feature flagging)"""
-        if disabled:
-            LOGGER.warning("Application disabled. No action executed.")
-            return NoneApplication()
-
-        return super().__new__(cls)
 
     def __init__(
         self,
@@ -91,7 +37,7 @@ class Application:
         report_on_exit: str | None = None,
         retry_on_exceptions: tuple[Exception] = (Exception),
         disabled: bool = False,
-        # Need to repeat the list of parameters in __new__ to enable autocomplete in VSCode (IDE)
+        name: str | None = None,
     ):
         """
         Initializing the application with a driver.
@@ -110,8 +56,9 @@ class Application:
 
             disabled (bool): disable the application so that no action
              is excuted (feature flagging).
-        """
 
+            name (str): the name to identify the application in logs.
+        """
         self._transaction_pool: list[AbstractTransaction] = []
         """
         Stores all transactions
@@ -136,6 +83,8 @@ class Application:
         """
         The assertion logic to be used for validation.
         """
+        if name:
+            LOGGER.info(f"Application {name} running.")
 
         if report_on_init:
             LOGGER.info(report_on_init)
@@ -163,6 +112,7 @@ class Application:
                 "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
             )
 
+        self._disabled = disabled
         if disabled:
             LOGGER.warning("Application disabled.")
 
@@ -188,12 +138,16 @@ class Application:
         Returns:
             (Application)
         """
+        if self._disabled:
+            return self
+
         self._transaction = transaction(self._driver)
         _pacing_time = (
             self._transaction.pacing_time
             if self._transaction.pacing_time is not None
             else GUARA_PACING_TIME
         )
+
         _retries_on_failure = (
             self._transaction.retries_on_failure
             if self._transaction.retries_on_failure is not None
@@ -225,10 +179,13 @@ class Application:
                 return self
             except Exception as e:
                 exception = e
-                if not isinstance(e, self._retry_on_exceptions):
+                _retry_on_exceptions = (
+                    self._transaction.retry_on_exceptions or self._retry_on_exceptions
+                )
+                if not isinstance(e, _retry_on_exceptions):
                     LOGGER.warning(
                         f"Retry Ignored. Exception ({type(e)})"
-                        f" not in retry list ({self._retry_on_exceptions})."
+                        f" not in retry list ({_retry_on_exceptions})."
                     )
                     break
 
@@ -339,6 +296,9 @@ class Application:
         Returns:
             (Application)
         """
+        if self._disabled:
+            return self
+
         self._assertion = assertion()
         self._assertion.validates(self._result, expected)
         return self
@@ -378,6 +338,9 @@ class Application:
         Returns:
             (Application)
         """
+        if self._disabled:
+            return self
+
         self._transaction_pool.reverse()
         for transaction in self._transaction_pool:
             LOGGER.info(f"Reverting transaction '{transaction.__name__}'")

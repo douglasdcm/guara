@@ -26,63 +26,14 @@ from guara.utils import get_transaction_info
 LOGGER: Logger = getLogger(__name__)
 
 
-class NoneApplication:
-    def at(self, *args, **kwargs):
-        return self
-
-    def given(self, *args, **kwargs):
-        return self
-
-    def when(self, *args, **kwargs):
-        return self
-
-    def and_(self, *args, **kwargs):
-        return self
-
-    def so(self, *args, **kwargs):
-        return self
-
-    def asserts(self, *args, **kwargs):
-        return self
-
-    def then(self, *args, **kwargs):
-        return self
-
-    def perform(self, *args, **kwargs):
-        return asyncio.sleep(0)
-
-    @property
-    def result(self):
-        return
-
-
 class Application:
-    """
-    The runner of the automation.
-    """
-
-    def __new__(
-        cls,
-        driver: Any = None,
-        report_on_init: str | None = None,
-        report_on_exit: str | None = None,
-        retry_on_exceptions: tuple[Exception] = (Exception),
-        disabled: bool = False,
-    ):
-        """Disable the application completly (feature flagging)"""
-        if disabled:
-            LOGGER.warning("Application disabled. No action executed.")
-            return NoneApplication()
-
-        return super().__new__(cls)
-
     def __init__(
         self,
         driver: Any = None,
         report_on_init=None,
         report_on_exit=None,
         disabled=False,
-        # Need to repeat the list in __new__ to enable autocomplete in VSCode (IDE)
+        name = None,
     ):
         """
         Initializing the application with a driver.
@@ -147,6 +98,12 @@ class Application:
         """
         The web transaction handler
         """
+
+        self._disabled = disabled
+
+        if name:
+            LOGGER.info(f"Application {name} running.")
+
         if report_on_init:
             LOGGER.info(report_on_init)
 
@@ -188,6 +145,9 @@ class Application:
         Returns:
             (Application)
         """
+        if self._disabled:
+            return self
+        
         self._transaction = transaction(self._driver)
         self._kwargs = kwargs
         self._transaction_name = get_transaction_info(self._transaction)
@@ -260,6 +220,9 @@ class Application:
         Returns:
             (Application)
         """
+        if self._disabled:
+            return self
+
         self._it = it()
         self._expected = expected
         coroutine: Coroutine[None, None, None] = self._it.validates(self, expected)
