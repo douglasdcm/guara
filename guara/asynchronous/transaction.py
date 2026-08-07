@@ -9,7 +9,6 @@ The module that has all of the transactions.
 
 from __future__ import annotations
 
-import asyncio
 from logging import Logger, getLogger
 from typing import Any, Coroutine
 

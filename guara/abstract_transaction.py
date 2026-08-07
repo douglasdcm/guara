@@ -24,20 +24,23 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
-
-    _pacing_time = None
+    pacing_time : int | None = None
     """(int) Local value in seconds to wait between retries.
      Overrides the global variable `GUARA_PACING_TIME`."""
 
-    _retries_on_failure = None
-    """(int) Local value to retry failed executions.
+    retries_on_failure : int | None = None
+    """(int) Local value to retry failed executions. Need to be a positive integer.
      Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
 
-    return_on_dry_run = None
+    return_on_dry_run : Any | None = None
     """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
 
-    retry_on_exceptions = None
-    """(tuple(Exceptions)) List of exceptions to be retried."""
+    retry_on_exceptions : tuple[Exception] | None = None
+    """(tuple(Exceptions)) Tuple of exceptions to be retried."""
+
+    def __new__(cls, *args, **kwargs):
+        cls._validate_class_variables()
+        return super().__new__(cls)
 
     def __init__(self, driver: Any = None):
         """
@@ -49,32 +52,6 @@ class AbstractTransaction:
         """
         self._driver: Any = driver
 
-    def _handles_integer_variable(self, value):
-        try:
-            value = int(value)
-            if value < 0:
-                return
-        except Exception: # noqa
-            return
-
-
-    @property
-    def retries_on_failure(self):
-        return self._handles_integer_variable(self._retries_on_failure)
-
-    @retries_on_failure.setter
-    def retries_on_failure(self, value):
-        self._retries_on_failure = value
-
-    @property
-    def pacing_time(self):
-        return self._handles_integer_variable(self._pacing_time)
-
-    @pacing_time.setter
-    def pacing_time(self, value):
-        self._pacing_time = value
-
-
 
     @property
     def __name__(self) -> property:
@@ -85,6 +62,56 @@ class AbstractTransaction:
             (str) The name of the transaction being implemented.
         """
         return self.__class__.__name__
+
+    @classmethod
+    def _validate_class_variables(cls):
+        """Validates the class attributes assigned in the subclass."""
+        cls._validate_pacing_time()
+        cls._validate_retries_on_failure()
+        cls._validate_retry_on_eceptions()
+
+    @classmethod
+    def _validate_retry_on_eceptions(cls):
+        if cls.retry_on_exceptions is None:
+            return
+        
+        message = (
+                f"Invalid value in 'retry_on_exceptions' in transaction '{cls.__name__}'."
+                " Resetting to 'None'."
+            )
+
+        if not isinstance(cls.retry_on_exceptions, tuple):
+            LOGGER.warning(message)
+            cls.retry_on_exceptions = None
+            return
+        if not all(isinstance(e(), Exception) for e in cls.retry_on_exceptions):
+            LOGGER.warning(message)
+            cls.retry_on_exceptions = None
+            return
+
+    @classmethod
+    def _validate_retries_on_failure(cls):
+        if cls.retries_on_failure is None:
+            return
+
+        if not isinstance(cls.retries_on_failure, int) or cls.retries_on_failure < 0:
+            LOGGER.warning(
+                f"Invalid value in 'retries_on_failure' in transaction '{cls.__name__}'."
+                " Resetting to 'None'."
+            )
+            cls.retries_on_failure = None
+
+    @classmethod
+    def _validate_pacing_time(cls):
+        if cls.pacing_time is None:
+            return
+
+        if not isinstance(cls.pacing_time, int) or cls.pacing_time < 0:
+            LOGGER.warning(
+                f"Invalid value of 'pacing_time' in transaction '{cls.__name__}'."
+                " Resetting to 'None'."
+            ) 
+            cls.pacing_time = None
 
     def do(self, **kwargs: dict[str, Any]) -> Any:
         """

@@ -87,8 +87,9 @@ class ValidateLocal(AbstractTransaction):
     def do(self):
         pass
 
-@mark.parametrize("value", ["invalid", -1, True])
+@mark.parametrize("value", [("invalid",), (-1,), (True,)])
 def test_transactions_returns_none_when_invalid_retry(value):
-    t = ValidateLocal()
+    t = ValidateLocal
     t.retries_on_failure = value
+    Application().execute(t)
     assert t.retries_on_failure is None

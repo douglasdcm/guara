@@ -4,20 +4,29 @@
 # Visit: https://github.com/douglasdcm/guara
 
 
-from pytest import mark
+from pytest import raises
 
-from guara.asynchronous.transaction import (
-    Application as AsyncApplication,
-)
+from guara.abstract_transaction import AbstractTransaction
 from guara.transaction import Application
 
+class FlakyTransaction(AbstractTransaction):
+    retry_on_exceptions = (PermissionError,)
+    retries_on_failure = 2
+    def do(self, value=0):
+        if value==0:
+            raise PermissionError
+        else:
+            raise ValueError
 
 
-def test_application_logs_name_when_name_is_filled(caplog):
-    Application(name="My app")
-    assert "My app" in caplog.text
+def test_transaction_retry_exception_if_in_list(caplog):
+    with raises(PermissionError):
+        Application().execute(FlakyTransaction)
+    assert "3 / 3" in caplog.text
 
-@mark.asyncio
-async def test_application_logs_name_when_name_is_filled(caplog):
-    AsyncApplication(name="My app")
-    assert "My app" in caplog.text
+
+
+def test_transaction_do_not_retry_exception_if_not_in_list(caplog):
+    with raises(ValueError):
+        Application().execute(FlakyTransaction, value=1)
+    assert "3 / 3" not in caplog.text
