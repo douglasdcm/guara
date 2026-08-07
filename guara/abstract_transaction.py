@@ -68,10 +68,10 @@ class AbstractTransaction:
         """Validates the class attributes assigned in the subclass."""
         cls._validate_pacing_time()
         cls._validate_retries_on_failure()
-        cls._validate_retry_on_eceptions()
+        cls._validate_retry_on_exceptions()
 
     @classmethod
-    def _validate_retry_on_eceptions(cls):
+    def _validate_retry_on_exceptions(cls):
         if cls.retry_on_exceptions is None:
             return
         
@@ -84,34 +84,41 @@ class AbstractTransaction:
             LOGGER.warning(message)
             cls.retry_on_exceptions = None
             return
-        if not all(isinstance(e(), Exception) for e in cls.retry_on_exceptions):
-            LOGGER.warning(message)
-            cls.retry_on_exceptions = None
-            return
+
+        try:
+            if not all(isinstance(e(), Exception) for e in cls.retry_on_exceptions):
+                LOGGER.warning(message)
+                cls.retry_on_exceptions = None
+        except TypeError:
+                cls.retry_on_exceptions = None
 
     @classmethod
     def _validate_retries_on_failure(cls):
         if cls.retries_on_failure is None:
             return
 
-        if not isinstance(cls.retries_on_failure, int) or cls.retries_on_failure < 0:
-            LOGGER.warning(
-                f"Invalid value in 'retries_on_failure' in transaction '{cls.__name__}'."
-                " Resetting to 'None'."
-            )
-            cls.retries_on_failure = None
+        if isinstance(cls.retries_on_failure, int) and cls.retries_on_failure >= 0:
+            return
+
+        LOGGER.warning(
+            f"Invalid value in 'retries_on_failure' in transaction '{cls.__name__}'."
+            " Resetting to 'None'.")
+        cls.retries_on_failure = None
+
 
     @classmethod
     def _validate_pacing_time(cls):
         if cls.pacing_time is None:
             return
-
-        if not isinstance(cls.pacing_time, int) or cls.pacing_time < 0:
-            LOGGER.warning(
-                f"Invalid value of 'pacing_time' in transaction '{cls.__name__}'."
-                " Resetting to 'None'."
-            ) 
-            cls.pacing_time = None
+        
+        if isinstance(cls.pacing_time, int) and cls.pacing_time >= 0:
+            return
+    
+        LOGGER.warning(
+            f"Invalid value of 'pacing_time' in transaction '{cls.__name__}'."
+                                " Resetting to 'None'."
+        ) 
+        cls.pacing_time = None
 
     def do(self, **kwargs: dict[str, Any]) -> Any:
         """

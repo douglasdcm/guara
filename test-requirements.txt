@@ -5,3 +5,4 @@ ruff
 pre-commit
 psutil
 selenium
+pytest-timeout

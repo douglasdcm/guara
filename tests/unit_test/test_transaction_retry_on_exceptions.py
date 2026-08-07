@@ -4,7 +4,7 @@
 # Visit: https://github.com/douglasdcm/guara
 
 
-from pytest import raises
+from pytest import mark, raises
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.transaction import Application
@@ -30,3 +30,15 @@ def test_transaction_do_not_retry_exception_if_not_in_list(caplog):
     with raises(ValueError):
         Application().execute(FlakyTransaction, value=1)
     assert "3 / 3" not in caplog.text
+
+
+class ValidateLocal(AbstractTransaction):
+    def do(self):
+        pass
+
+@mark.parametrize("value", ["invalid", ("invalid",), (object,)])
+def test_transactions_returns_none_when_invalid_retry_on_exceptions(value):
+    t = ValidateLocal
+    t.retry_on_exceptions = value
+    Application().execute(t)
+    assert t.retry_on_exceptions is None

@@ -75,20 +75,24 @@ class ValidateLocalRetryRaiseException(AbstractTransaction):
         raise PermissionError("Failed!")
 
 
+@mark.parametrize("value", [0, 1])
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 100)
-def test_application_overrides_global_variable_when_local_variable_is_positive_integer(caplog):
-    app = Application()
+def test_transaction_overrides_retries_on_failure_when_local_variable_is_positive_integer(value,caplog):
+    t = ValidateLocalRetryRaiseException
+    t.retries_on_failure = value
     with raises(PermissionError):
-        app.at(ValidateLocalRetryRaiseException)
+        Application().at(t)
 
-    assert "1 / 1" in caplog.text
+    assert t.retries_on_failure == value
+
+    assert "1 / 100" not in caplog.text
 
 class ValidateLocal(AbstractTransaction):
     def do(self):
         pass
 
-@mark.parametrize("value", [("invalid",), (-1,), (True,)])
-def test_transactions_returns_none_when_invalid_retry(value):
+@mark.parametrize("value", ["invalid", -1, object()])
+def test_transactions_returns_none_when_invalid_retry_on_failure(value):
     t = ValidateLocal
     t.retries_on_failure = value
     Application().execute(t)

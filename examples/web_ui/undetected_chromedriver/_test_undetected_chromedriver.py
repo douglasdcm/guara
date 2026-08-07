@@ -24,7 +24,7 @@ class TestUndetectedChromeDriver:
     def teardown_method(self, method):
         self._app.at(setup.CloseBrowserTransaction)
 
-    @mark.parametrize("query", [("Guara framework",), ("undetected-chromedriver",)])
+    @mark.parametrize("query", ["Guara framework", "undetected-chromedriver"])
     def test_google_search(self, query):
 
         self._app.at(actions.SearchGoogle, query=query).asserts(
