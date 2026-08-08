@@ -7,8 +7,8 @@ from unittest import TestCase
 
 from guara import it
 from guara.application import Application
-from tests.unit_test.examples.todo_list import operations
-from tests.unit_test.examples.todo_list.todo import ToDo
+from tests.unit_test.test_unit_app_examples.todo_list import operations
+from tests.unit_test.test_unit_app_examples.todo_list.todo import ToDo
 
 
 class TestToDo:

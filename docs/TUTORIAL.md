@@ -2,7 +2,7 @@
 
 Page Transactions is primarily based on the Command Pattern (GoF), making it suitable for product development and test automation. This section is dedicated to showcasing uses of the framework.
 
-## Domain Driven Design
+## Intent Driven Design
 
 This article presents a complete example of how to build a CLI-based education platform using the Guará framework. The goal is to demonstrate how business requirements can be translated directly into executable use cases, and how those same use cases drive implementation and testing.
 Instead of separating requirements, application logic, and tests, Guará allows you to express everything through a unified approach based on transactions and fluent scenarios. This results in a system where behavior is explicit, traceable, and aligned with business intent.

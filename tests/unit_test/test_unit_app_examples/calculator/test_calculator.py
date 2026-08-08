@@ -7,8 +7,8 @@ from random import randrange
 
 from guara import it
 from guara.application import Application
-from tests.unit_test.examples.calculator import operations
-from tests.unit_test.examples.calculator.calculator import Calculator
+from tests.unit_test.test_unit_app_examples.calculator import operations
+from tests.unit_test.test_unit_app_examples.calculator.calculator import Calculator
 
 
 class TestCalculator:

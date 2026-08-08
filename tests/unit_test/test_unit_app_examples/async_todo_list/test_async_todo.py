@@ -15,8 +15,8 @@ from pytest_asyncio import fixture
 
 from guara.asynchronous.application import Application
 from guara.asynchronous.it import Contains, DoesNotContain, IsEqualTo, IsNotEqualTo
-from tests.unit_test.examples.async_todo_list.async_todo import AsyncToDo
-from tests.unit_test.examples.async_todo_list.operations import Add, ListTasks, Remove
+from tests.unit_test.test_unit_app_examples.async_todo_list.async_todo import AsyncToDo
+from tests.unit_test.test_unit_app_examples.async_todo_list.operations import Add, ListTasks, Remove
 
 
 class TestAsyncToDo:

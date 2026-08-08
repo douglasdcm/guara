@@ -38,7 +38,7 @@ class AbstractTransaction:
     retry_on_exceptions : tuple[Exception] | None = None
     """(tuple(Exceptions)) Tuple of exceptions to be retried."""
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs): # pragma: no mutate
         cls._validate_class_variables()
         return super().__new__(cls)
 

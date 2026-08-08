@@ -221,4 +221,4 @@ This approach is particularly effective for business-driven applications where c
 
 For more details, refer to the example:
 
- - [Domain Driven Design example](https://github.com/douglasdcm/guara/blob/main/examples/domain_driven_design/)
+ - [Intent Driven Design example](https://github.com/douglasdcm/guara/blob/main/examples/domain_driven_design/)

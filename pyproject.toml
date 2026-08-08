@@ -27,3 +27,10 @@ dependencies = []
 [project.urls]
 "Homepage" = "https://github.com/douglasdcm/guara"
 "Bug Tracker" = "https://github.com/douglasdcm/guara/issues"
+
+[tool.mutmut]
+source_paths = [ "guara/" ]
+pytest_add_cli_args_test_selection= [ "tests/unit_test/" ]
+
+[tool.pytest.ini_options]
+addopts = "-k unit_test"

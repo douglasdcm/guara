@@ -4,7 +4,7 @@
 
 ## modeling
 
-This section focuses on Domain-Driven Design concepts using Guará. It includes examples of Ubiquitous Language and shows how to express business rules and domain behavior through transactions and assertions, turning tests into executable business models.
+This section focuses on Intent-Driven Design concepts using Guará. It includes examples of Ubiquitous Language and shows how to express business rules and domain behavior through transactions and assertions, turning tests into executable business models.
 
 ## prototyping
 
