@@ -9,8 +9,12 @@ This module has all the transactions.
 
 from __future__ import annotations
 
+import importlib
+import inspect
 import json
+import sys
 import time
+import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from logging import Logger, getLogger
@@ -32,9 +36,26 @@ from guara.utils import get_transaction_info
 LOGGER: Logger = getLogger(__name__)
 
 
+class ReplayError(Exception):
+    """Raised when an execution history cannot be replayed."""
 
-LOGGER: Logger = getLogger(__name__)
 
+
+def _get_module_path(transaction: AbstractTransaction) -> str:
+    """Return the complete Python module path for a transaction."""
+    file_path = Path(inspect.getfile(type(transaction))).resolve()
+
+    for search_path in map(Path, sys.path):
+        try:
+            relative_path = file_path.relative_to(search_path.resolve())
+        except ValueError:
+            continue
+
+        return ".".join(relative_path.with_suffix("").parts)
+
+    raise ImportError(
+        f"Could not determine module path for {file_path}"
+    )
 
 @dataclass
 class TransactionExecution:
@@ -45,7 +66,7 @@ class TransactionExecution:
     Transaction instance itself so the history can be persisted independently
     from the current Application instance.
     """
-
+    id: str
     name: str
     module: str
     parameters: dict[str, Any] = field(default_factory=dict)
@@ -56,6 +77,7 @@ class TransactionExecution:
     result: Any = None
     exception_type: str | None = None
     exception_message: str | None = None
+    replayable: bool = True
 
     @property
     def identifier(self) -> str:
@@ -89,6 +111,27 @@ class TransactionExecution:
         """Returns the transaction execution as a dictionary."""
         return asdict(self)
 
+    @classmethod
+    def from_dict(
+        cls,
+        data: dict[str, Any],
+    ) -> TransactionExecution:
+        """Creates a transaction execution from serialized data."""
+        return cls(
+            id=data["id"],
+            name=data["name"],
+            module=data["module"],
+            parameters=data.get("parameters", {}),
+            status=data.get("status", "pending"),
+            started_at=data.get("started_at"),
+            finished_at=data.get("finished_at"),
+            attempts=data.get("attempts", 0),
+            result=data.get("result"),
+            exception_type=data.get("exception_type"),
+            exception_message=data.get("exception_message"),
+            replayable=data.get("replayable", True),
+        )
+
 
 @dataclass
 class ExecutionHistory:
@@ -96,7 +139,7 @@ class ExecutionHistory:
     Represents the complete execution history of an Application.
 
     The history is independent from the Application execution pool and can be
-    serialized to JSON for inspection, persistence, or future replay support.
+    serialized to JSON for inspection, persistence, or replay.
     """
 
     application: str | None = None
@@ -158,6 +201,40 @@ class ExecutionHistory:
             Path(path).write_text(data, encoding="utf-8")
 
         return data
+
+    @classmethod
+    def load(
+        cls,
+        source: str | Path,
+    ) -> ExecutionHistory:
+        """
+        Loads an execution history from a JSON string or file.
+
+        Args:
+            source: JSON string or path to a JSON file.
+
+        Returns:
+            The loaded execution history.
+        """
+        source_path = Path(source)
+
+        if source_path.exists():
+            data = json.loads(
+                source_path.read_text(encoding="utf-8")
+            )
+        else:
+            data = json.loads(str(source))
+
+        return cls(
+            application=data.get("application"),
+            started_at=data.get("started_at"),
+            finished_at=data.get("finished_at"),
+            status=data.get("status", "pending"),
+            transactions=[
+                TransactionExecution.from_dict(transaction)
+                for transaction in data.get("transactions", [])
+            ],
+        )
 
 
 def _utc_now() -> str:
@@ -303,6 +380,145 @@ class Application:
         """
         return self._execution_history.dump(path)
 
+    def replay(
+        self,
+        history: str | Path | ExecutionHistory,
+        parameter_overrides: dict[str, dict[str, Any]] | None = None,
+        transaction_id : str | None = None,
+    ) -> Application:
+        """
+        Replays a previously dumped execution history.
+
+        Transactions are resolved from their recorded module and class name.
+        The transactions are executed in the same order in which they were
+        originally executed.
+
+        Args:
+            history: An ExecutionHistory instance, a JSON string, or a path
+                to a dumped execution history.
+            parameter_overrides: Optional parameters used to replace masked
+                or otherwise unavailable parameters.
+
+                The key is the transaction identifier:
+
+                    {
+                        "my_module.CreateOrder": {
+                            "customer_id": 10
+                        }
+                    }
+
+        Returns:
+            The current Application instance.
+
+        Raises:
+            ReplayError: If a transaction cannot be resolved or its recorded
+                parameters cannot safely be replayed.
+        """
+        if isinstance(history, ExecutionHistory):
+            execution_history = history
+        else:
+            execution_history = ExecutionHistory.load(history)
+
+        if not execution_history.transactions:
+            return self
+
+        if transaction_id:
+            for execution in execution_history.transactions:
+                if execution.id == transaction_id:
+                    execution_history.transactions = [execution]
+                    break
+            else:
+                raise ReplayError(f"Transaction {transaction_id} not found.")
+
+        parameter_overrides = parameter_overrides or {}
+
+        for transaction_execution in execution_history.transactions:
+            if not transaction_execution.replayable:
+                raise ReplayError(
+                    f"Transaction '{transaction_execution.identifier}' "
+                    "cannot be replayed because one or more parameters "
+                    "could not be serialized."
+                )
+
+            transaction_class = self._resolve_transaction(
+                transaction_execution,
+            )
+
+            parameters = dict(transaction_execution.parameters)
+
+            overrides = parameter_overrides.get(
+                transaction_execution.identifier,
+                {},
+            )
+            parameters.update(overrides)
+
+            masked_parameters = [
+                key
+                for key, value in parameters.items()
+                if value == SECRET_DEFAULT_VALUE
+            ]
+
+            if masked_parameters:
+                raise ReplayError(
+                    f"Transaction '{transaction_execution.identifier}' "
+                    f"contains masked parameters that require explicit "
+                    f"overrides: {masked_parameters}"
+                )
+
+            LOGGER.info(
+                f"Replaying transaction "
+                f"'{transaction_execution.identifier}'."
+            )
+
+            self.at(
+                transaction_class,
+                **parameters,
+            )
+
+        return self
+
+    def _resolve_transaction(
+        self,
+        transaction_execution: TransactionExecution,
+    ) -> type[AbstractTransaction]:
+        """
+        Resolves a Transaction class from its recorded module and name.
+        """
+        try:
+            module = importlib.import_module(
+                transaction_execution.module
+            )
+        except ImportError as exception:
+            raise ReplayError(
+                f"Unable to import module "
+                f"'{transaction_execution.module}' while replaying "
+                f"'{transaction_execution.identifier}'."
+            ) from exception
+
+        try:
+            transaction_class = getattr(
+                module,
+                transaction_execution.name,
+            )
+        except AttributeError as exception:
+            raise ReplayError(
+                f"Unable to find Transaction "
+                f"'{transaction_execution.identifier}' while replaying."
+            ) from exception
+
+        if not isinstance(transaction_class, type):
+            raise ReplayError(
+                f"'{transaction_execution.identifier}' is not a class."
+            )
+
+        if not issubclass(transaction_class, AbstractTransaction):
+            raise ReplayError(
+                f"'{transaction_execution.identifier}' is not an "
+                "AbstractTransaction."
+            )
+
+        return transaction_class
+
     def at(
         self,
         transaction: AbstractTransaction,
@@ -424,6 +640,7 @@ class Application:
             self._execution_history.fail()
             raise exception
 
+
     def _create_transaction_execution(
         self,
         transaction: AbstractTransaction,
@@ -438,19 +655,26 @@ class Application:
         """
         transaction_class = type(transaction)
 
-        masked_parameters = {
-            key: (
-                SECRET_DEFAULT_VALUE
-                if self._require_masking(key)
-                else _serialize_value(value)
-            )
-            for key, value in parameters.items()
-        }
+        replayable = True
+        masked_parameters = {}
 
+        for key, value in parameters.items():
+            if self._require_masking(key):
+                masked_parameters[key] = SECRET_DEFAULT_VALUE
+                continue
+
+            try:
+                json.dumps(value)
+                masked_parameters[key] = value
+            except (TypeError, ValueError):
+                masked_parameters[key] = repr(value)
+                replayable = False
         execution = TransactionExecution(
+            id = uuid.uuid4().hex,
             name=transaction_class.__name__,
-            module=transaction_class.__module__,
+            module=_get_module_path(transaction),
             parameters=masked_parameters,
+            replayable=replayable,
         )
 
         self._execution_history.add(execution)
@@ -458,7 +682,11 @@ class Application:
         return execution
 
     def _require_masking(self, key):
-        return "secret" in key.lower() or "password" in key.lower() or "mask" in key.lower()
+        return (
+            "secret" in key.lower()
+            or "password" in key.lower()
+            or "mask" in key.lower()
+        )
 
     def given(
         self,
@@ -469,14 +697,6 @@ class Application:
         Same as the `at` method. Introduced for better readability.
 
         Performs a transaction.
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
-
-        Returns:
-            (Application)
         """
         return self.at(transaction, **kwargs)
 
@@ -489,14 +709,6 @@ class Application:
         Same as the `at` method. Introduced for better readability.
 
         Performs a transaction.
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
-
-        Returns:
-            (Application)
         """
         return self.at(transaction, **kwargs)
 
@@ -509,14 +721,6 @@ class Application:
         Same as the `at` method. Introduced for better readability.
 
         Performs a transaction.
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
-
-        Returns:
-            (Application)
         """
         return self.at(transaction, **kwargs)
 
@@ -531,14 +735,6 @@ class Application:
 
         Example:
             given(HasStock).when(SellProduct).so(StockDecreased)
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
-
-        Returns:
-            (Application)
         """
         return self.at(transaction, **kwargs)
 
@@ -549,16 +745,6 @@ class Application:
     ) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
-
-        Performs a transaction.
-
-        Args:
-            transaction: (AbstractTransaction): The web transaction handler.
-            kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
-
-        Returns:
-            (Application)
         """
         return self.at(transaction, **kwargs)
 
@@ -570,14 +756,6 @@ class Application:
         """
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
-
-        Args:
-            assertion: (IAssertion): The assertion logic to be used for validation.
-
-            expected: (Any): The expected data.
-
-        Returns:
-            (Application)
         """
         if self._disabled:
             return self
@@ -592,16 +770,7 @@ class Application:
         expected: Any = None,
     ) -> Application:
         """
-        Asserting and validating the data by implementing the
-        Strategy Pattern from the Gang of Four.
-
-        Args:
-            assertion: (IAssertion): The assertion logic to be used for validation.
-
-            expected: (Any): The expected data.
-
-        Returns:
-            (Application)
+        Asserting and validating the data.
         """
         return self.asserts(assertion, expected)
 
@@ -611,14 +780,7 @@ class Application:
         expected: Any = None,
     ) -> Application:
         """
-        Asserting and validating the data by implementing the
-        Strategy Pattern from the Gang of Four.
-
-        Args:
-            assertion: (IAssertion): The assertion logic to be used for validation.
-
-        Returns:
-            (Application)
+        Asserting and validating the data.
         """
         return self.asserts(assertion, expected)
 

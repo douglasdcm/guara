@@ -34,3 +34,6 @@ pytest_add_cli_args_test_selection= [ "tests/unit_test/" ]
 
 [tool.pytest.ini_options]
 addopts = "-k unit_test"
+
+[project.scripts]
+guara = "guara.cli.main:main"
