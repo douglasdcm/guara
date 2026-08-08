@@ -385,6 +385,8 @@ class Application:
         history: str | Path | ExecutionHistory,
         parameter_overrides: dict[str, dict[str, Any]] | None = None,
         transaction_id : str | None = None,
+        dry_run:str| None=None,
+        resume:str| bool=bool,
     ) -> Application:
         """
         Replays a previously dumped execution history.
@@ -423,9 +425,12 @@ class Application:
             return self
 
         if transaction_id:
-            for execution in execution_history.transactions:
+            for index, execution in enumerate(execution_history.transactions):
                 if execution.id == transaction_id:
-                    execution_history.transactions = [execution]
+                    if resume:
+                        execution_history.transactions = execution_history.transactions[index:]
+                    else:
+                        execution_history.transactions = [execution]
                     break
             else:
                 raise ReplayError(f"Transaction {transaction_id} not found.")
