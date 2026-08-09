@@ -136,16 +136,13 @@ A good Transaction describes an intention:
 
 ```python
 class RegisterProduct(AbstractTransaction):
-
-    def do(self, name, price):
-        ...
+    def do(self, name, price): ...
 ```
 
 rather than exposing an implementation detail as the primary abstraction:
 
 ```python
-class ClickRegisterButton(AbstractTransaction):
-    ...
+class ClickRegisterButton(AbstractTransaction): ...
 ```
 
 Low-level actions may exist when necessary, but the preferred abstraction is the meaningful operation.

@@ -24,6 +24,7 @@ class SaveFlightData(AbstractTransaction):
     Returns:
         str: A message indicating the data was saved.
     """
+
     def do(self, flights_data, history_days):
         existing_data = read_json_file("flights_data.json", [])
         current_date = datetime.now().date()
@@ -66,6 +67,7 @@ class SaveFlightData(AbstractTransaction):
         existing_data = read_json_file(flights_data)
         current_date = timedelta(days=history_days)
 
+
 # not recommended
 class SaveFlightData(AbstractTransaction):
     def do(self, **kwargs):
@@ -78,7 +80,7 @@ class SaveFlightData(AbstractTransaction):
 ```python
 class CloseBrowser(AbstractTransaction):
     def __init__(self, driver):
-        self._driver : Chrome = driver
+        self._driver: Chrome = driver
 ```
 - For a better readability of the code it is recommended to use a high-level tools instead of raw Selenium commands. In this [example](https://github.com/douglasdcm/guara/tree/main/examples/web_ui/selenium/browserist) there is the complete implementation of a test using [Browserist](https://github.com/jakob-bagterp/browserist). This is one of the transactions.
 

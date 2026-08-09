@@ -21,9 +21,8 @@ class AsyncMyTransaction(AsyncAbstractTransaction):
 
 
 class AsyncMyFailedTransaction(AsyncAbstractTransaction):
-    policy = ExecutionPolicy(
-        return_on_dry_run = PermissionError("Failed")
-    )
+    policy = ExecutionPolicy(return_on_dry_run=PermissionError("Failed"))
+
     async def do(self):
         raise PermissionError("Failed")
 
@@ -37,6 +36,9 @@ async def test_async_transaction_raises_error_when_fail():
 @mark.asyncio
 async def test_async_transaction_succeed():
     app = AsyncApplication()
-    await app.at(AsyncMyTransaction).at(AsyncMyTransaction).asserts(
-        it.IsEqualTo, "success"
-    ).perform()
+    await (
+        app.at(AsyncMyTransaction)
+        .at(AsyncMyTransaction)
+        .asserts(it.IsEqualTo, "success")
+        .perform()
+    )

@@ -20,7 +20,9 @@ from guara.application import Application
 def list_subjects(eduapp: Application, repo: Repository, args):
 
     result = (
-        eduapp.when(ListSubjects, repo=repo, course_id=args.course).asserts(it.IsNotEmpty).result
+        eduapp.when(ListSubjects, repo=repo, course_id=args.course)
+        .asserts(it.IsNotEmpty)
+        .result
     )
     print(result)
 
@@ -30,6 +32,8 @@ def create_subject(eduapp: Application, repo: Repository, args):
     (
         eduapp.given(HasCourse, repo=repo, course_id=args.course)
         .given(HasNotSubject, repo=repo, subject_name=args.name)
-        .when(CreateSubject, repo=repo, with_name=args.name, in_course_with_id=args.course)
+        .when(
+            CreateSubject, repo=repo, with_name=args.name, in_course_with_id=args.course
+        )
         .then(it.IsEqualTo, args.name)
     )

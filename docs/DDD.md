@@ -34,14 +34,15 @@ eduapp.when(CreateStudent, with_name="John").asserts(it.IsNotNone)
 
 eduapp.when(CreateCourse, with_name="Math").asserts(it.IsEqualTo, "Math")
 
-eduapp.when(CreateSubject, with_name="Algebra", in_course_with_id="C1") \
-      .asserts(it.IsEqualTo, "Algebra")
+eduapp.when(CreateSubject, with_name="Algebra", in_course_with_id="C1").asserts(
+    it.IsEqualTo, "Algebra"
+)
 
-eduapp.when(EnrollStudentInCourse, student_id="S1", course_id="C1") \
-      .asserts(it.IsTrue)
+eduapp.when(EnrollStudentInCourse, student_id="S1", course_id="C1").asserts(it.IsTrue)
 
-eduapp.when(SetGrade, student_id="S1", subject_id="SUB1", with_grade=8) \
-      .asserts(it.IsTrue)
+eduapp.when(SetGrade, student_id="S1", subject_id="SUB1", with_grade=8).asserts(
+    it.IsTrue
+)
 ```
 
 These use cases are not just tests. They define what the system must do. The implementation follows directly from them.
@@ -83,13 +84,15 @@ class Repository:
         cursor = self.conn.cursor()
         cursor.execute(
             "INSERT INTO students (nui, name, course_id) VALUES (?, ?, ?)",
-            (nui, name, course_id)
+            (nui, name, course_id),
         )
         self.conn.commit()
 
     def get_student(self, nui):
         cursor = self.conn.cursor()
-        cursor.execute("SELECT nui, name, course_id FROM students WHERE nui = ?", (nui,))
+        cursor.execute(
+            "SELECT nui, name, course_id FROM students WHERE nui = ?", (nui,)
+        )
         return cursor.fetchone()
 ```
 
@@ -99,6 +102,7 @@ Each use case is implemented as a transaction. This is where business behavior l
 
 ```python
 from guara import AbstractTransaction
+
 
 class CreateStudent(AbstractTransaction):
     def do(self, repo: Repository, with_name):
@@ -160,11 +164,15 @@ def main():
     elif args.action == "enroll_course":
         try:
             (
-                eduapp
-                .given(HasCourse, repo=repo, course=args.course)
+                eduapp.given(HasCourse, repo=repo, course=args.course)
                 .and_(HasStudent, repo=repo, student=args.student)
                 .and_(IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student)
-                .when(EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course)
+                .when(
+                    EnrollStudentInCourse,
+                    repo=repo,
+                    student_id=args.student,
+                    course_id=args.course,
+                )
                 .asserts(it.IsTrue)
             )
         except Exception as e:
@@ -187,12 +195,9 @@ def test_create_student():
 ```python
 def test_enroll_course():
     app = Application()
-    app.when(
-        EnrollStudentInCourse,
-        repo=repo,
-        student_id="S1",
-        course_id="C1"
-    ).asserts(it.IsTrue)
+    app.when(EnrollStudentInCourse, repo=repo, student_id="S1", course_id="C1").asserts(
+        it.IsTrue
+    )
 ```
 
 There is no need for a separate testing DSL. The same language is used everywhere.

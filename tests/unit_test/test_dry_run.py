@@ -52,4 +52,6 @@ async def test_async_transaction_is_not_executed_when_dry_run_is_true():
 @patch("guara.asynchronous.assertion.GUARA_DRY_RUN", True)
 async def test_async_assertion_is_not_executed_when_dry_run_is_true():
     app = AsyncApplication()
-    await app.at(MyAsyncTransaction).asserts(async_it.IsEqualTo, "wrong-vallue").perform()
+    await (
+        app.at(MyAsyncTransaction).asserts(async_it.IsEqualTo, "wrong-vallue").perform()
+    )

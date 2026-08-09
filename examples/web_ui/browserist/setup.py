@@ -49,6 +49,7 @@ class CloseApp(AbstractTransaction):
         screenshot_filename="guara-capture",
     ):
         self._driver.screenshot.complete_page(
-            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png", screenshot_destination
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png",
+            screenshot_destination,
         )
         self._driver.quit()

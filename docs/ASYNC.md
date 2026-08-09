@@ -52,19 +52,30 @@ class TestAsyncTransaction:
         self._session = get_session(self._driver_url, capabilities)
         self._app = Application(self._session)
         await self._app.at(
-            transaction=OpenApp, with_session=self._session, connect_to_driver=self._driver_url,
+            transaction=OpenApp,
+            with_session=self._session,
+            connect_to_driver=self._driver_url,
             access_url=f"file:///{file_path}/sample.html",
         ).perform()
         yield
         await self._app.at(
-            transaction=CloseApp, with_session=self._session, connect_to_driver=self._driver_url,
+            transaction=CloseApp,
+            with_session=self._session,
+            connect_to_driver=self._driver_url,
         ).perform()
 
     @mark.asyncio
     async def test_async_caqui(self, setup_test):
-        await self._app.at(
-            transaction=GetNthLink, link_index=1, with_session=self._session, connect_to_driver=self._driver_url,
-        ).asserts(IsEqualTo, "any1.com").perform()
+        await (
+            self._app.at(
+                transaction=GetNthLink,
+                link_index=1,
+                with_session=self._session,
+                connect_to_driver=self._driver_url,
+            )
+            .asserts(IsEqualTo, "any1.com")
+            .perform()
+        )
 ```
 
 Check more details [here](https://github.com/douglasdcm/guara/blob/main/examples/web_ui/caqui/asynchronouos/test_async.py)

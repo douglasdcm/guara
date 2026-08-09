@@ -33,5 +33,7 @@ class CloseSplinterApp(AbstractTransaction):
 
     def do(self, screenshot_filename="./captures/guara-capture"):
         makedirs("/tmp/captures", exist_ok=True)
-        self._driver.screenshot(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
+        self._driver.screenshot(
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png"
+        )
         self._driver.quit()

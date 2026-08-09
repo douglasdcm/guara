@@ -16,6 +16,7 @@ def test_application_logs_name_when_name_is_filled(caplog):
     Application(name="My app")
     assert "My app" in caplog.text
 
+
 @mark.asyncio
 async def test_async_application_logs_name_when_name_is_filled(caplog):
     AsyncApplication(name="My app")

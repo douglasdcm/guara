@@ -77,9 +77,13 @@ class TestAsyncTransactionCaqui:
         """
         Testing the asynchronuous pages.
         """
-        await self._app.at(
-            transaction=GetNthLink,
-            link_index=1,
-            with_session=self._session,
-            connect_to_driver=SERVER_URL,
-        ).asserts(it.IsEqualTo, "any1.com").perform()
+        await (
+            self._app.at(
+                transaction=GetNthLink,
+                link_index=1,
+                with_session=self._session,
+                connect_to_driver=SERVER_URL,
+            )
+            .asserts(it.IsEqualTo, "any1.com")
+            .perform()
+        )

@@ -121,6 +121,7 @@ class WineStoreApp:
 ```python
 from guara import AbstractTransaction
 
+
 class ListWines(AbstractTransaction):
     def do(self):
         wines = self.app.catalog.list_all()
@@ -149,11 +150,7 @@ class ViewWineDetails(AbstractTransaction):
         if not wine:
             return "Wine not found"
 
-        return {
-            "name": wine.name,
-            "price": wine.price,
-            "type": wine.type
-        }
+        return {"name": wine.name, "price": wine.price, "type": wine.type}
 ```
 
 ---
@@ -230,9 +227,7 @@ The same use cases can be executed to validate behavior:
 ```python
 in_wine_app.when(AddWineToCart, with_name="Pinot Noir", with_quantity=1)
 
-in_wine_app.when(Checkout).asserts(
-    it.Contains, "Purchase successful"
-)
+in_wine_app.when(Checkout).asserts(it.Contains, "Purchase successful")
 ```
 
 This eliminates the need to rewrite tests separately.

@@ -32,5 +32,7 @@ class TestSplinterIntegration:
 
     def test_local_page(self):
         text = "guara"
-        self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
+        self._app.at(home.SubmitTextSplinter, text=text).asserts(
+            it.IsEqualTo, f"It works! {text}!"
+        )
         self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")

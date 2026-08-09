@@ -101,6 +101,7 @@ from guara import it
 # Transactions
 # =========================
 
+
 class OpenSamplePage(AbstractTransaction):
     def do(self, file_path):
         self._driver.get(f"file:///{file_path}/sample.html")
@@ -138,6 +139,7 @@ class CloseBrowser(AbstractTransaction):
 # Test
 # =========================
 
+
 def test_sample_page():
     file_path = pathlib.Path(__file__).parent.resolve()
     app = Application(webdriver.Chrome())
@@ -151,15 +153,11 @@ def test_sample_page():
     app.at(GetTitle).asserts(it.IsEqualTo, "Sample page")
 
     # Fill input and keep value
-    typed_text = app.at(
-        FillInputWithRandomText,
-        options=text_options
-    ).result
+    typed_text = app.at(FillInputWithRandomText, options=text_options).result
 
     # Submit and validate result
     (
-        app
-        .at(SubmitForm)
+        app.at(SubmitForm)
         .at(GetResultMessage)
         .asserts(it.IsEqualTo, f"It works! {typed_text}!")
     )

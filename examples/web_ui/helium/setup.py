@@ -41,5 +41,7 @@ class CloseApp(AbstractTransaction):
 
         from helium import get_driver, kill_browser
 
-        get_driver().save_screenshot(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
+        get_driver().save_screenshot(
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png"
+        )
         kill_browser()

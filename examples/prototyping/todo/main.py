@@ -19,7 +19,7 @@ def add_task(event):
         # with the front-end
         app.at(transactions.Add, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' added"
-    except Exception as e: # noqa
+    except Exception as e:  # noqa
         document.querySelector("#output").innerText = str(e)
 
 
@@ -28,7 +28,7 @@ def remove_task(event):
         task = document.querySelector("#task").value
         app.at(transactions.Remove, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' removed"
-    except Exception as e: # noqa
+    except Exception as e:  # noqa
         document.querySelector("#output").innerText = str(e)
 
 
@@ -46,4 +46,6 @@ def get_task(event):
         index = 0
     index = int(index)
     # index = int(value) - 1
-    document.querySelector("#output").innerText = app.at(transactions.GetBy, index=index).result
+    document.querySelector("#output").innerText = app.at(
+        transactions.GetBy, index=index
+    ).result

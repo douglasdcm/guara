@@ -29,4 +29,6 @@ class DoAll(AbstractTransaction):
 
 
 def test_composite_class():
-    Application().when(DoAll, param="foo").then(it.ContainsAll, ["do that foo", "do it foo"])
+    Application().when(DoAll, param="foo").then(
+        it.ContainsAll, ["do that foo", "do it foo"]
+    )

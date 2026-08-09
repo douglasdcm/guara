@@ -41,5 +41,7 @@ class CloseAppiumApp(AbstractTransaction):
         Returns:
             None
         """
-        self._driver.save_screenshot(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
+        self._driver.save_screenshot(
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png"
+        )
         self._driver.quit()

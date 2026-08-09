@@ -35,5 +35,7 @@ class TestLocalPage:
 
     def test_local_page_selenium(self):
         text = "guara"
-        self._app.at(home.SubmitText, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
+        self._app.at(home.SubmitText, text=text).asserts(
+            it.IsEqualTo, f"It works! {text}!"
+        )
         self._app.at(home.SubmitText, text=text).asserts(it.IsNotEqualTo, "Any")

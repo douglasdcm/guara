@@ -13,7 +13,7 @@ from guara.transaction import Application
 
 class FlakyTransaction(AbstractTransaction):
     policy = ExecutionPolicy(
-        retry_on_exceptions=(PermissionError,), retries_on_failure=2
+        continue_on_exceptions=(PermissionError,), retries_on_failure=2
     )
 
     def do(self, value=0):
@@ -23,16 +23,15 @@ class FlakyTransaction(AbstractTransaction):
             raise ValueError
 
 
-def test_transaction_retry_exception_if_in_list(caplog):
-    with raises(PermissionError):
-        Application().execute(FlakyTransaction)
-    assert "3 / 3" in caplog.text
+def test_transaction_continue_exception_if_in_list(caplog):
+    Application().execute(FlakyTransaction)
+    assert "continued" in caplog.text
 
 
-def test_transaction_do_not_retry_exception_if_not_in_list(caplog):
+def test_transaction_do_not_continue_exception_if_not_in_list(caplog):
     with raises(ValueError):
         Application().execute(FlakyTransaction, value=1)
-    assert "3 / 3" not in caplog.text
+    assert "continued" not in caplog.text
 
 
 class ValidateLocal(AbstractTransaction):
@@ -41,8 +40,8 @@ class ValidateLocal(AbstractTransaction):
 
 
 @mark.parametrize("value", ["invalid", ("invalid",), (object,)])
-def test_transactions_returns_none_when_invalid_retry_on_exceptions(value):
+def test_transactions_returns_none_when_invalid_continue_on_exceptions(value):
     t = ValidateLocal
-    t.policy = ExecutionPolicy(retry_on_exceptions=value)
+    t.policy = ExecutionPolicy(continue_on_exceptions=value)
     Application().execute(t)
-    assert t.policy.retry_on_exceptions is None
+    assert t.policy.continue_on_exceptions is None

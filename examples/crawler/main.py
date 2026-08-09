@@ -123,7 +123,9 @@ class ProcessAirportData(AbstractTransaction):
             while True:
                 try:
                     more_button = Wait(self._driver, 10).until(
-                        EC.visibility_of_element_located((By.CLASS_NAME, "btn-see-more"))
+                        EC.visibility_of_element_located(
+                            (By.CLASS_NAME, "btn-see-more")
+                        )
                     )
                     self._driver.execute_script("arguments[0].click();", more_button)
                 except (TimeoutException, NoSuchElementException):
@@ -150,7 +152,9 @@ class ProcessAirportData(AbstractTransaction):
                         "origen": origen,
                         "estado": estado,
                         "fecha": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
-                        "hora_actualizacion": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                        "hora_actualizacion": datetime.now(timezone.utc).strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        ),
                     }
                 )
 
@@ -158,7 +162,7 @@ class ProcessAirportData(AbstractTransaction):
                 "status": "Success",
                 "message": "Data collected successfully",
             }
-        except Exception as e: # noqa
+        except Exception as e:  # noqa
             script_status["airports"][airport] = {"status": "Error", "message": str(e)}
         return new_flights
 
@@ -186,7 +190,7 @@ class SaveFlightData(AbstractTransaction):
         updated_data = [
             flight
             for flight in existing_data
-            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date() # noqa
+            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date()  # noqa
             >= current_date - timedelta(days=history_days)
         ]
 
@@ -231,7 +235,9 @@ def get_aena_data():
     # Instantiate Application with the driver
     app = Application(driver)
 
-    script_status = read_json_file("script_status.json", {"airports": {}, "status": None})
+    script_status = read_json_file(
+        "script_status.json", {"airports": {}, "status": None}
+    )
 
     # Open the AENA page
     app.then(OpenAenaPage)
@@ -239,7 +245,9 @@ def get_aena_data():
     # Process data for each airport
     all_flights_data = []
     for airport in AIRPORTS:
-        flights = app.then(ProcessAirportData, airport=airport, script_status=script_status).result
+        flights = app.then(
+            ProcessAirportData, airport=airport, script_status=script_status
+        ).result
         all_flights_data.extend(flights)
 
     # Save flight data and close browser

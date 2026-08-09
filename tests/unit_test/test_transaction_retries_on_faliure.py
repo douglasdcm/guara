@@ -15,8 +15,7 @@ from guara.transaction import AbstractTransaction, Application
 
 # A mock transaction that fails N times before succeeding
 class FlakyTransaction(AbstractTransaction):
-    policy = ExecutionPolicy(
-        return_on_dry_run=PermissionError("Flaky failure!"))
+    policy = ExecutionPolicy(return_on_dry_run=PermissionError("Flaky failure!"))
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -69,17 +68,21 @@ def test_application_raises_after_max_retries():
     with raises(Exception, match="Flaky failure!"):
         app.at(FlakyTransaction, fail_until=3)
 
+
 class ValidateLocalRetryRaiseException(AbstractTransaction):
-    policy = ExecutionPolicy(retries_on_failure = 0)
+    policy = ExecutionPolicy(retries_on_failure=0)
+
     def do(self):
         raise PermissionError("Failed!")
 
 
 @mark.parametrize("value", [0, 1])
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 100)
-def test_transaction_overrides_retries_on_failure_when_local_variable_is_positive_integer(value,caplog):
+def test_transaction_overrides_retries_on_failure_when_local_variable_is_positive_integer(
+    value, caplog
+):
     t = ValidateLocalRetryRaiseException
-    t.policy = ExecutionPolicy(retries_on_failure = value)
+    t.policy = ExecutionPolicy(retries_on_failure=value)
     with raises(PermissionError):
         Application().at(t)
 
@@ -87,13 +90,15 @@ def test_transaction_overrides_retries_on_failure_when_local_variable_is_positiv
 
     assert "1 / 100" not in caplog.text
 
+
 class ValidateLocal(AbstractTransaction):
     def do(self):
         pass
 
+
 @mark.parametrize("value", ["invalid", -1, object()])
 def test_transactions_returns_none_when_invalid_retry_on_failure(value):
     t = ValidateLocal
-    t.policy = ExecutionPolicy(retries_on_failure = value)
+    t.policy = ExecutionPolicy(retries_on_failure=value)
     Application().execute(t)
     assert t.policy.retries_on_failure is None

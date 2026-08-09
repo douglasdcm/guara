@@ -55,4 +55,3 @@ async def test_async_application_do_not_run_when_disabled():
         .then(async_it.IsEqualTo, None)
         .perform()
     )
-

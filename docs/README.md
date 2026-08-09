@@ -41,13 +41,14 @@ from guara.application import Application
 from guara import it
 from transactions import HasBalance, BuyAsset, UpdatePortfolio
 
+
 def main():
     finance_app = Application()
     (
-        finance_app
-        .given(HasBalance)
+        finance_app.given(HasBalance)
         .when(BuyAsset, symbol="AAPL", amount=2000)
-        .and_(UpdatePortfolio).expects(it.IsEqualTo, 20)
+        .and_(UpdatePortfolio)
+        .expects(it.IsEqualTo, 20)
     )
 ```
 
@@ -58,6 +59,7 @@ from guara.application import Application
 from guara import it
 from selenium import webdriver
 from transactions import OpenApp, ChangeToPortuguese, NavigateToInfoPage, CloseApp
+
 
 def test_sample_web_page():
     app = Application(webdriver.Chrome())
@@ -74,6 +76,7 @@ The code is encapsulated in a transaction class:
 ```python
 from guara.transaction import AbstractTransaction
 
+
 class BuyAsset(AbstractTransaction):
     def do(self, symbol, amount):
         DataBase.balance -= amount
@@ -82,6 +85,7 @@ class BuyAsset(AbstractTransaction):
 #### UI testing
 ```python
 from guara.transaction import AbstractTransaction
+
 
 class ChangeToPortuguese(AbstractTransaction):
     def do(self, **kwargs):

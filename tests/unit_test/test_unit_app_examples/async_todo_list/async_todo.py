@@ -7,6 +7,7 @@
 The module that will have the class where the tasks will be
 stored.
 """
+
 from __future__ import annotations
 
 

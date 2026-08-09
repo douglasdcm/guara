@@ -44,9 +44,12 @@ class AsyncMyTransaction(AsyncAbstractTransaction):
 async def test_async_reports_message_when_application_starts(caplog):
     caplog.set_level(logging.INFO)
     expected = "Application starts"
-    await AsyncApplication(report_on_init=expected).at(AsyncMyTransaction).at(
-        AsyncMyTransaction
-    ).perform()
+    await (
+        AsyncApplication(report_on_init=expected)
+        .at(AsyncMyTransaction)
+        .at(AsyncMyTransaction)
+        .perform()
+    )
     assert expected in caplog.text
 
 
@@ -54,7 +57,10 @@ async def test_async_reports_message_when_application_starts(caplog):
 async def test_async_reports_message_when_application_finishes(caplog):
     caplog.set_level(logging.INFO)
     expected = "Application finished"
-    await AsyncApplication(report_on_exit=expected).at(AsyncMyTransaction).at(
-        AsyncMyTransaction
-    ).perform()
+    await (
+        AsyncApplication(report_on_exit=expected)
+        .at(AsyncMyTransaction)
+        .at(AsyncMyTransaction)
+        .perform()
+    )
     assert expected in caplog.text

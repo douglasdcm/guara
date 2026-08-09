@@ -7,6 +7,7 @@
 It is the module where the AbstractTransaction will handle
 web transactions in an automated browser.
 """
+
 from __future__ import annotations
 
 from logging import Logger, getLogger
@@ -18,7 +19,6 @@ from guara.policy import ExecutionPolicy
 LOGGER: Logger = getLogger(__name__)
 
 
-
 class AbstractTransaction:
     """
     Manages transaction execution by leveraging an injected driver.
@@ -26,7 +26,7 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
-    policy : ExecutionPolicy | None = ExecutionPolicy()
+    policy: ExecutionPolicy = ExecutionPolicy()
 
     def __init__(self, driver: Any = None):
         """
@@ -37,7 +37,6 @@ class AbstractTransaction:
             driver: (Any): It is the driver that controls the user-interface.
         """
         self._driver: Any = driver
-
 
     @property
     def __name__(self) -> property:

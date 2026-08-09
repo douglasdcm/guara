@@ -81,5 +81,5 @@ class IAssertion:
                         "expected": expected,
                     }
                 )
-                LOGGER.exception(str(e)) # noqa
+                LOGGER.exception(str(e))  # noqa
             raise

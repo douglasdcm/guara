@@ -91,14 +91,17 @@ class Repository:
         """Insert a student."""
         cursor = self.conn.cursor()
         cursor.execute(
-            "INSERT INTO students (nui, name, course_id) VALUES (?, ?, ?)", (nui, name, course_id)
+            "INSERT INTO students (nui, name, course_id) VALUES (?, ?, ?)",
+            (nui, name, course_id),
         )
         self.conn.commit()
 
     def get_student(self, nui):
         """Get student by ID."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT nui, name, course_id FROM students WHERE nui = ?", (nui,))
+        cursor.execute(
+            "SELECT nui, name, course_id FROM students WHERE nui = ?", (nui,)
+        )
         raw = cursor.fetchone()
         student = Student(raw[0], raw[1])
         student.course = raw[2]
@@ -121,7 +124,9 @@ class Repository:
     def update_student_course(self, nui, course_id):
         """Update student course."""
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE students SET course_id = ? WHERE nui = ?", (course_id, nui))
+        cursor.execute(
+            "UPDATE students SET course_id = ? WHERE nui = ?", (course_id, nui)
+        )
         self.conn.commit()
 
     # =========================
@@ -161,14 +166,17 @@ class Repository:
         """Insert a subject."""
         cursor = self.conn.cursor()
         cursor.execute(
-            "INSERT INTO subjects (nui, name, course_id) VALUES (?, ?, ?)", (nui, name, course_id)
+            "INSERT INTO subjects (nui, name, course_id) VALUES (?, ?, ?)",
+            (nui, name, course_id),
         )
         self.conn.commit()
 
     def get_subject(self, nui):
         """Get subject by ID."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT nui, name, course_id FROM subjects WHERE nui = ?", (nui,))
+        cursor.execute(
+            "SELECT nui, name, course_id FROM subjects WHERE nui = ?", (nui,)
+        )
         return cursor.fetchone()
 
     def list_subjects(self):
@@ -181,7 +189,8 @@ class Repository:
         """List all subjects."""
         cursor = self.conn.cursor()
         cursor.execute(
-            "SELECT nui, name, course_id FROM subjects WHERE course_id = ?", (course_id,)
+            "SELECT nui, name, course_id FROM subjects WHERE course_id = ?",
+            (course_id,),
         )
         return cursor.fetchall()
 
@@ -194,7 +203,9 @@ class Repository:
     def update_subject_course(self, nui, course_id):
         """Update subject course."""
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE subjects SET course_id = ? WHERE nui = ?", (course_id, nui))
+        cursor.execute(
+            "UPDATE subjects SET course_id = ? WHERE nui = ?", (course_id, nui)
+        )
         self.conn.commit()
 
     # =========================
@@ -213,7 +224,9 @@ class Repository:
     def get_student_grades(self, student_id) -> Student:
         """Get course by ID."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT student_id, grade FROM grades WHERE student_id = ?", (student_id,))
+        cursor.execute(
+            "SELECT student_id, grade FROM grades WHERE student_id = ?", (student_id,)
+        )
         raws = cursor.fetchall()
         student = Student(nui=student_id)
         for raw in raws:
@@ -229,13 +242,17 @@ class Repository:
     def update_grade_student(self, nui, student_id):
         """Update student reference of a grade."""
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE grades SET student_id = ? WHERE nui = ?", (student_id, nui))
+        cursor.execute(
+            "UPDATE grades SET student_id = ? WHERE nui = ?", (student_id, nui)
+        )
         self.conn.commit()
 
     def update_grade_subject(self, nui, subject_id):
         """Update subject reference of a grade."""
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE grades SET subject_id = ? WHERE nui = ?", (subject_id, nui))
+        cursor.execute(
+            "UPDATE grades SET subject_id = ? WHERE nui = ?", (subject_id, nui)
+        )
         self.conn.commit()
 
     def update_grade(self, student_id=None, subject_id=None, grade=None):
@@ -284,7 +301,8 @@ class Repository:
         """Insert multiple enrollments."""
         cursor = self.conn.cursor()
         cursor.executemany(
-            "INSERT INTO enrollments (subject_id, student_id) VALUES (?, ?)", enrollments
+            "INSERT INTO enrollments (subject_id, student_id) VALUES (?, ?)",
+            enrollments,
         )
         self.conn.commit()
 

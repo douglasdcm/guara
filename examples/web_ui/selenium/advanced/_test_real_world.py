@@ -39,7 +39,9 @@ class TestVpmTransaction:
         content_in_english = "Content of curriculum"
         content_in_portuguese = "Conteúdo do currículo"
 
-        self._app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
+        self._app.at(home.ChangeToPortuguese).asserts(
+            it.IsEqualTo, content_in_portuguese
+        )
         self._app.at(home.ChangeToEnglish).asserts(it.IsEqualTo, content_in_english)
         self._app.at(info.NavigateTo).asserts(
             it.Contains,
@@ -53,13 +55,13 @@ class TestVpmTransaction:
             it.IsEqualTo, "Contact us. We would be happy to answer your questions."
         )
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
-        self._app.at(home.DoRestrictedSearch, text=text, wait_for=restricted_similariy).asserts(
-            it.IsEqualTo, restricted_similariy
-        )
+        self._app.at(
+            home.DoRestrictedSearch, text=text, wait_for=restricted_similariy
+        ).asserts(it.IsEqualTo, restricted_similariy)
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
-        self._app.at(home.DoExpandedSearch, text=text, wait_for=expanded_similarity).asserts(
-            it.IsEqualTo, expanded_similarity
-        )
+        self._app.at(
+            home.DoExpandedSearch, text=text, wait_for=expanded_similarity
+        ).asserts(it.IsEqualTo, expanded_similarity)
         self._app.at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)
 
 
@@ -98,32 +100,14 @@ def test_vpm_transaction_builder(setup_application):
             "This project was born from the will of its collaborators to"
             " help people to find jobs more easily."
         ),
-    ).at(
-        home.NavigateTo
-    ).asserts(
-        it.IsEqualTo, content_in_english
-    ).at(
+    ).at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english).at(
         contact.NavigateTo
     ).asserts(
         it.IsEqualTo, "Contact us. We would be happy to answer your questions."
-    ).at(
-        home.NavigateTo
-    ).asserts(
-        it.IsEqualTo, content_in_english
-    ).at(
+    ).at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english).at(
         home.DoRestrictedSearch, text=text, wait_for=restricted_similariy
-    ).asserts(
-        it.IsEqualTo, restricted_similariy
-    ).at(
-        home.NavigateTo
-    ).asserts(
+    ).asserts(it.IsEqualTo, restricted_similariy).at(home.NavigateTo).asserts(
         it.IsEqualTo, content_in_english
-    ).at(
-        home.DoExpandedSearch, text=text, wait_for=expanded_similarity
-    ).asserts(
+    ).at(home.DoExpandedSearch, text=text, wait_for=expanded_similarity).asserts(
         it.IsEqualTo, expanded_similarity
-    ).at(
-        home.NavigateTo
-    ).asserts(
-        it.IsEqualTo, content_in_english
-    )
+    ).at(home.NavigateTo).asserts(it.IsEqualTo, content_in_english)

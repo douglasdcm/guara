@@ -52,5 +52,9 @@ class TestSeleniumStealthIntegration:
 
     def test_local_page(self):
         text = "guara"
-        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.Contains, "Example Domain")
-        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(it.IsNotEqualTo, "Any")
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
+            it.Contains, "Example Domain"
+        )
+        self._app.at(home.SubmitSeleniumStealth, text=text).asserts(
+            it.IsNotEqualTo, "Any"
+        )

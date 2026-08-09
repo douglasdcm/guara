@@ -47,4 +47,8 @@ class TestAsyncFailedAssertions:
         expected = "right"
         app = AsyncApp()
         with pytest.raises(AssertionError):
-            await app.at(AsyncReturnWrongResult).asserts(async_it.IsEqualTo, expected).perform()
+            await (
+                app.at(AsyncReturnWrongResult)
+                .asserts(async_it.IsEqualTo, expected)
+                .perform()
+            )

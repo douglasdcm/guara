@@ -45,10 +45,12 @@ def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> No
                 cpu_usage: float = cpu_percent(interval=None)
                 ram_usage: float = virtual_memory().percent
                 real_disk_usage: float = disk_usage("/").percent
-                csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
+                csv_writer.writerow(
+                    [elapsed_time, cpu_usage, ram_usage, real_disk_usage]
+                )
                 file.flush()
                 sleep(interval)
-    except Exception as error: # noqa
+    except Exception as error:  # noqa
         LOGGER.error(f"Error during monitoring.\n Error: {error}")
 
 
@@ -60,7 +62,9 @@ def run_test_script() -> None:
         (None)
     """
     try:
-        process = run(["python", "tests/performance/script_2_initializer.py"], check=True)
+        process = run(
+            ["python", "tests/performance/script_2_initializer.py"], check=True
+        )
         return process.returncode
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")

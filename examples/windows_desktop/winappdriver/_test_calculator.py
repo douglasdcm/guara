@@ -29,7 +29,9 @@ class TestWindowsCalculatorWithWinAppDriver:
             from appium.options.windows import WindowsOptions
 
             options = WindowsOptions()
-            options.set_capability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App")
+            options.set_capability(
+                "app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"
+            )
             options.set_capability("platformName", "Windows")
             options.set_capability("deviceName", "WindowsPC")
             driver = webdriver.Remote(

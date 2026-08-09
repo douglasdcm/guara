@@ -51,5 +51,7 @@ class CloseApp(AbstractTransaction):
     """
 
     def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
-        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
+        self._driver.get_screenshot_as_file(
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png"
+        )
         self._driver.quit()

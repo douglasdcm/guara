@@ -71,7 +71,12 @@ def enroll_course(eduapp: Application, repo: Repository, args):
         eduapp.given(HasCourse, repo=repo, course_id=args.course)
         .and_(HasStudent, repo=repo, student_id=args.student)
         .and_(IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student)
-        .when(EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course)
+        .when(
+            EnrollStudentInCourse,
+            repo=repo,
+            student_id=args.student,
+            course_id=args.course,
+        )
         .asserts(it.IsTrue)
     )
 
@@ -102,4 +107,4 @@ def enroll_subject(eduapp: Application, repo: Repository, args):
 @run_scenario
 def calculate_gpa(eduapp: Application, repo: Repository, args):
     result = eduapp.when(CalculateGPA, repo=repo, student_id=args.student).result
-    logging.info(f"GPA: {result}") # noqa
+    logging.info(f"GPA: {result}")  # noqa

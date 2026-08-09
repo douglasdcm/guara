@@ -42,6 +42,7 @@ class DeductStock(AbstractTransaction):
     def execute(self, product, qty):
         print("Deducting stock")
 
+
 class EmitReceipt(AbstractTransaction):
     def execute(self, product, qty):
         print("Emitting receipt")
@@ -52,10 +53,7 @@ Now create the composite:
 ```python
 class SellProduct:
     def __init__(self):
-        self.steps = [
-            DeductStock,
-            EmitReceipt
-        ]
+        self.steps = [DeductStock, EmitReceipt]
 
     def execute(self, product, qty):
         for step in self.steps:
@@ -86,10 +84,7 @@ Usage:
 
 ```python
 app.when(
-    CompositeTransaction,
-    steps=[DeductStock, EmitReceipt],
-    product="Bread",
-    qty=2
+    CompositeTransaction, steps=[DeductStock, EmitReceipt], product="Bread", qty=2
 ).then(it.ContainsAll, ["all", "expecetd", "results"])
 ```
 

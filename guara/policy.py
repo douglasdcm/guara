@@ -6,13 +6,15 @@
 """
 It is the module where Policies are implemented.
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from logging import Logger, getLogger
 from typing import Any
 
 LOGGER: Logger = getLogger(__name__)
+
 
 @dataclass
 class ExecutionPolicy:
@@ -27,20 +29,26 @@ class ExecutionPolicy:
     retry_on_exceptions: tuple[type[Exception], ...] | None = None
     """(tuple(Exceptions)) Tuple of exceptions to be retried."""
 
+    abort_on_exceptions: tuple[type[Exception], ...] | None = None
+    """(tuple(Exceptions)) Tuple of exceptions that abort the execution."""
+
+    continue_on_exceptions: tuple[type[Exception], ...] | None = None
+    """(tuple(Exceptions)) Tuple of exceptions to be ignored."""
+
     return_on_dry_run: Any | None = None
     """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
 
     rollback_on_failure: bool | None = None
     """(bool) Wheter the automatic rollback of the transaction is executed."""
 
-
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
         self._validate_pacing_time()
         self._validate_retries_on_failure()
+        self._validate_continue_on_exceptions()
+        self._validate_abort_on_exceptions()
         self._validate_retry_on_exceptions()
-
-
+        self._validate_rollback_on_failure()
 
     @property
     def __name__(self) -> property:
@@ -52,14 +60,69 @@ class ExecutionPolicy:
         """
         return self.__class__.__name__
 
+    def _validate_rollback_on_failure(self):
+        if self.rollback_on_failure is None:
+            return
+
+        if isinstance(self.rollback_on_failure, bool):
+            return
+
+        LOGGER.warning(
+            f"Invalid value in 'rollback_on_failure' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+        self.rollback_on_failure = None
+
+    def _validate_continue_on_exceptions(self):
+        if self.continue_on_exceptions is None:
+            return
+
+        message = (
+            f"Invalid value in 'continue_on_exceptions' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+
+        if not isinstance(self.continue_on_exceptions, tuple):
+            LOGGER.warning(message)
+            self.continue_on_exceptions = None
+            return
+
+        try:
+            if not all(isinstance(e(), Exception) for e in self.continue_on_exceptions):
+                LOGGER.warning(message)
+                self.continue_on_exceptions = None
+        except TypeError:
+            self.continue_on_exceptions = None
+
+    def _validate_abort_on_exceptions(self):
+        if self.abort_on_exceptions is None:
+            return
+
+        message = (
+            f"Invalid value in 'abort_on_exceptions' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+
+        if not isinstance(self.abort_on_exceptions, tuple):
+            LOGGER.warning(message)
+            self.abort_on_exceptions = None
+            return
+
+        try:
+            if not all(isinstance(e(), Exception) for e in self.abort_on_exceptions):
+                LOGGER.warning(message)
+                self.abort_on_exceptions = None
+        except TypeError:
+            self.abort_on_exceptions = None
+
     def _validate_retry_on_exceptions(self):
         if self.retry_on_exceptions is None:
             return
-        
+
         message = (
-                f"Invalid value in 'retry_on_exceptions' in policy '{self.__name__}'."
-                " Resetting to 'None'."
-            )
+            f"Invalid value in 'retry_on_exceptions' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
 
         if not isinstance(self.retry_on_exceptions, tuple):
             LOGGER.warning(message)
@@ -71,7 +134,7 @@ class ExecutionPolicy:
                 LOGGER.warning(message)
                 self.retry_on_exceptions = None
         except TypeError:
-                self.retry_on_exceptions = None
+            self.retry_on_exceptions = None
 
     def _validate_retries_on_failure(self):
         if self.retries_on_failure is None:
@@ -82,21 +145,23 @@ class ExecutionPolicy:
 
         LOGGER.warning(
             f"Invalid value in 'retries_on_failure' in policy '{self.__name__}'."
-            " Resetting to 'None'.")
+            " Resetting to 'None'."
+        )
         self.retries_on_failure = None
-
 
     def _validate_pacing_time(self):
         if self.pacing_time is None:
             return
-        
+
         if isinstance(self.pacing_time, int) and self.pacing_time >= 0:
             return
-    
+
         LOGGER.warning(
             f"Invalid value of 'pacing_time' in policy '{self.__name__}'."
             " Resetting to 'None'."
-        ) 
+        )
         self.pacing_time = None
 
-
+    def to_dict(self) -> dict[str, Any]:
+        """Returns the transaction execution as a dictionary."""
+        return asdict(self)

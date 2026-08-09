@@ -32,7 +32,7 @@ class Application:
         report_on_init=None,
         report_on_exit=None,
         disabled=False,
-        name = None,
+        name=None,
     ):
         """
         Initializing the application with a driver.
@@ -57,7 +57,7 @@ class Application:
         It is the result data of the last transaction.
         """
 
-        self._coroutines: list[dict[str, Coroutine[None, None, Any | None ]]] = []
+        self._coroutines: list[dict[str, Coroutine[None, None, Any | None]]] = []
         """
         The list of transactions that are performed.
         """
@@ -133,7 +133,9 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
+    def at(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Executing each transaction.
 
@@ -146,7 +148,7 @@ class Application:
         """
         if self._disabled:
             return self
-        
+
         self._transaction = transaction(self._driver)
         self._kwargs = kwargs
         self._transaction_name = get_transaction_info(self._transaction)
@@ -160,7 +162,9 @@ class Application:
         self._coroutines.append({self._TRANSACTION: coroutine})
         return self
 
-    def when(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
+    def when(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -175,7 +179,9 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def and_(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
+    def and_(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -190,7 +196,9 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def so(self, transaction: AbstractTransaction, **kwargs: dict[str, Any]) -> Application:
+    def so(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Same as the `at` method. Introduced for better readability of transactions that
         represent post conditions. Performs a transaction.
@@ -270,7 +278,9 @@ class Application:
 
         result_details = {}
         try:
-            transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
+            transaction: Coroutine[None, None, Any] = self._coroutines[index].get(
+                self._TRANSACTION
+            )
 
             for key, value in self._kwargs.items():
                 if "secret" in key.lower() or "password" in key.lower():
@@ -304,6 +314,8 @@ class Application:
         Returns:
             (None)
         """
-        assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
+        assertion: Coroutine[None, None, None] = self._coroutines[index].get(
+            self._ASSERTION
+        )
         if assertion:
             return await assertion

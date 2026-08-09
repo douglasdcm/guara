@@ -19,7 +19,9 @@ def my_app(page: Page):
 
 def test_local_page_playwright(my_app):
     my_app.at(home.NavigateToGettingStarted).asserts(it.IsEqualTo, "Installation")
-    my_app.at(getting_started.NavigateToWritingTests).asserts(it.IsNotEqualTo, "Writing Tests")
+    my_app.at(getting_started.NavigateToWritingTests).asserts(
+        it.IsNotEqualTo, "Writing Tests"
+    )
 ```
 
 More examples [here](https://github.com/douglasdcm/guara/tree/main/examples)

@@ -36,14 +36,16 @@ from pages import home, contact, info, setup
 from guara.application import Application
 from guara import it
 
+
 def test_sample_web_page():
     app = Application(webdriver.Chrome())
-    app.at(setup.OpenApp, url="https://anyhost.com/",)
+    app.at(
+        setup.OpenApp,
+        url="https://anyhost.com/",
+    )
     app.at(home.ChangeToPortuguese).asserts(it.IsEqualTo, content_in_portuguese)
     app.at(home.ChangeToEnglish).asserts(IsEqualto, content_in_english)
-    app.at(info.NavigateTo).asserts(
-        it.Contains, "This project was born"
-    )
+    app.at(info.NavigateTo).asserts(it.Contains, "This project was born")
     app.at(setup.CloseApp)
 ```
 - `it` is the module which contains the concrete assertions.
