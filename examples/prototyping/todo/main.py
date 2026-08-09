@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-import transactions as transactions
+import transactions
 from pyscript import document
 
 from guara.application import Application
@@ -19,7 +19,7 @@ def add_task(event):
         # with the front-end
         app.at(transactions.Add, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' added"
-    except Exception as e:
+    except Exception as e: # noqa
         document.querySelector("#output").innerText = str(e)
 
 
@@ -28,7 +28,7 @@ def remove_task(event):
         task = document.querySelector("#task").value
         app.at(transactions.Remove, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' removed"
-    except Exception as e:
+    except Exception as e: # noqa
         document.querySelector("#output").innerText = str(e)
 
 

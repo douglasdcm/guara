@@ -15,7 +15,8 @@ from guara.transaction import AbstractTransaction, Application
 
 # A mock transaction that fails N times before succeeding
 class FlakyTransaction(AbstractTransaction):
-    return_on_dry_run = Exception("Flaky failure!")
+    policy = ExecutionPolicy(
+        return_on_dry_run=PermissionError("Flaky failure!"))
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -24,16 +25,14 @@ class FlakyTransaction(AbstractTransaction):
     def do(self, **kwargs):
         self.counter += 1
         if self.counter < kwargs.get("fail_until", 1):
-            raise Exception("Flaky failure!")
+            raise PermissionError("Flaky failure!")
         return "success"
 
 
 def test_application_fails_with_no_retries():
     app = Application()
-    with raises(Exception) as excinfo:
+    with raises(PermissionError, match="Flaky failure!"):
         app.at(FlakyTransaction, fail_until=2)
-
-        assert "Flaky failure!" in str(excinfo.value)
 
 
 @mark.skipif(GUARA_DRY_RUN, reason="Ignore on dry run.")
@@ -71,7 +70,7 @@ def test_application_raises_after_max_retries():
         app.at(FlakyTransaction, fail_until=3)
 
 class ValidateLocalRetryRaiseException(AbstractTransaction):
-    retries_on_failure = 0
+    policy = ExecutionPolicy(retries_on_failure = 0)
     def do(self):
         raise PermissionError("Failed!")
 
@@ -80,11 +79,11 @@ class ValidateLocalRetryRaiseException(AbstractTransaction):
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 100)
 def test_transaction_overrides_retries_on_failure_when_local_variable_is_positive_integer(value,caplog):
     t = ValidateLocalRetryRaiseException
-    t.retries_on_failure = value
+    t.policy = ExecutionPolicy(retries_on_failure = value)
     with raises(PermissionError):
         Application().at(t)
 
-    assert t.retries_on_failure == value
+    assert t.policy.retries_on_failure == value
 
     assert "1 / 100" not in caplog.text
 

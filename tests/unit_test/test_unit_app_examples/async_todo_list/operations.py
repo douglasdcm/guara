@@ -8,7 +8,7 @@ The module that have all of the transactions needed for the
 To-Do List.
 """
 
-from typing import Dict, List
+from __future__ import annotations
 
 from guara.asynchronous.transaction import AbstractTransaction
 
@@ -18,7 +18,7 @@ class Add(AbstractTransaction):
     The addition transaction
     """
 
-    async def do(self, task: str) -> List[str]:
+    async def do(self, task: str) -> list[str]:
         return await self._driver.add_task(task)
 
 
@@ -27,7 +27,7 @@ class Remove(AbstractTransaction):
     The removal transaction.
     """
 
-    async def do(self, task: str) -> List[str]:
+    async def do(self, task: str) -> list[str]:
         return await self._driver.remove_task(task)
 
 
@@ -36,7 +36,7 @@ class ListTasks(AbstractTransaction):
     The listing transaction
     """
 
-    async def do(self) -> List[str]:
+    async def do(self) -> list[str]:
         return await self._driver.list_tasks()
 
 
@@ -45,7 +45,7 @@ class PrintDict(AbstractTransaction):
     The array to object conversion transaction.
     """
 
-    async def do(self) -> Dict[str, str]:
+    async def do(self) -> dict[str, str]:
         return await self._driver.to_dict()
 
 

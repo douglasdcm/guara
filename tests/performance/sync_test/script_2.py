@@ -9,7 +9,7 @@ library.
 """
 
 from csv import writer
-from datetime import datetime
+from datetime import datetime, timezone
 from logging import Logger, getLogger
 from subprocess import CalledProcessError, run
 from threading import Event, Thread
@@ -36,19 +36,19 @@ def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> No
     """
     try:
         LOGGER.info("Monitoring System Resources...")
-        file = open(csv_file, mode="w", newline="")
-        csv_writer = writer(file)
-        csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
-        while not stop_event.is_set():
-            start_time: float = time()
-            elapsed_time: float = time() - start_time
-            cpu_usage: float = cpu_percent(interval=None)
-            ram_usage: float = virtual_memory().percent
-            real_disk_usage: float = disk_usage("/").percent
-            csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
-            file.flush()
-            sleep(interval)
-    except Exception as error:
+        with open(csv_file, mode="w", newline="") as file:
+            csv_writer = writer(file)
+            csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
+            while not stop_event.is_set():
+                start_time: float = time()
+                elapsed_time: float = time() - start_time
+                cpu_usage: float = cpu_percent(interval=None)
+                ram_usage: float = virtual_memory().percent
+                real_disk_usage: float = disk_usage("/").percent
+                csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
+                file.flush()
+                sleep(interval)
+    except Exception as error: # noqa
         LOGGER.error(f"Error during monitoring.\n Error: {error}")
 
 
@@ -68,7 +68,7 @@ def run_test_script() -> None:
 
 
 csv_output_directory: str = "./data/"
-current_time: str = datetime.now().strftime("%Y%m%d_%H%M%S")
+current_time: str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 csv_output_file: str = f"{csv_output_directory}/resource_metrics.{current_time}.csv"
 monitoring_interval: int = 1
 stop_event: Event = Event()

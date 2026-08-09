@@ -40,7 +40,7 @@ class AddGrade(AbstractTransaction):
 class EnsureStudentExists(AbstractTransaction):
     def do(self, repo, student):
         if student not in repo.students:
-            raise Exception("Student does not exist")
+            raise Exception("Student does not exist") # noqa
 
         return student
 
@@ -48,7 +48,7 @@ class EnsureStudentExists(AbstractTransaction):
 class EnsureCourseExists(AbstractTransaction):
     def do(self, repo, course):
         if course not in repo.courses:
-            raise Exception("Course does not exist")
+            raise Exception("Course does not exist") # noqa
 
         return course
 
@@ -58,7 +58,7 @@ class EnsureSubjectExists(AbstractTransaction):
         subject = next((s for s in course.subjects if s.niu == niu), None)
 
         if not subject:
-            raise Exception(f"Subject {niu} does not exist in course")
+            raise Exception(f"Subject {niu} does not exist in course") # noqa
 
         return subject
 
@@ -66,7 +66,7 @@ class EnsureSubjectExists(AbstractTransaction):
 class EnsureStudentEnrolledInCourse(AbstractTransaction):
     def do(self, student, course):
         if student.course != course:
-            raise Exception("Student is not enrolled in this course")
+            raise Exception("Student is not enrolled in this course") # noqa
 
         return True
 
@@ -74,7 +74,7 @@ class EnsureStudentEnrolledInCourse(AbstractTransaction):
 class EnsureCourseHasSubjects(AbstractTransaction):
     def do(self, course):
         if not course.subjects:
-            raise Exception("Course has no subjects")
+            raise Exception("Course has no subjects") # noqa
 
         return course.subjects
 
@@ -82,12 +82,12 @@ class EnsureCourseHasSubjects(AbstractTransaction):
 class EnsureStudentSubscribedInSubject(AbstractTransaction):
     def do(self, student, course, niu):
         if student.course != course:
-            raise Exception("Student not enrolled in course")
+            raise Exception("Student not enrolled in course") # noqa
 
         subject = next((s for s in course.subjects if s.niu == niu), None)
 
         if not subject:
-            raise Exception("Subject does not belong to student's course")
+            raise Exception("Subject does not belong to student's course") # noqa
 
         return subject
 
@@ -95,23 +95,23 @@ class EnsureStudentSubscribedInSubject(AbstractTransaction):
 class EnsureStudentCanReceiveGrade(AbstractTransaction):
     def do(self, repo, student, course, niu):
         if student not in repo.students:
-            raise Exception("Student does not exist")
+            raise Exception("Student does not exist") # noqa
 
         if course not in repo.courses:
-            raise Exception("Course does not exist")
+            raise Exception("Course does not exist") # noqa
 
         if student.course != course:
-            raise Exception("Student not enrolled in course")
+            raise Exception("Student not enrolled in course") # noqa
 
         subject = next((s for s in course.subjects if s.niu == niu), None)
 
         if not subject:
-            raise Exception("Subject not found")
+            raise Exception("Subject not found") # noqa
 
         if not subject.active:
-            raise Exception("Subject is not active")
+            raise Exception("Subject is not active") # noqa
 
         if student.locked:
-            raise Exception("Student is locked")
+            raise Exception("Student is locked") # noqa
 
         return True

@@ -31,12 +31,12 @@ class Student:
 
     def enroll_course(self, course):
         if course.canceled:
-            raise Exception("Cannot enroll in canceled course")
+            raise Exception("Cannot enroll in canceled course") # noqa
         self.course = course
 
     def add_grade(self, niu, grade):
         if self.locked:
-            raise Exception("Student is locked")
+            raise Exception("Student is locked") # noqa
 
         if grade < 0 or grade > 10:
             raise ValueError("Invalid grade")
@@ -46,7 +46,7 @@ class Student:
     def get_gpa(self):
         best_grades = []
 
-        for niu, grades in self.grades.items():
+        for niu, grades in self.grades.items(): # noqa
             best_grades.append(max(grades))
 
         if not best_grades:

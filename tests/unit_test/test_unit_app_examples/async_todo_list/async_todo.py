@@ -7,8 +7,7 @@
 The module that will have the class where the tasks will be
 stored.
 """
-
-from typing import Dict, List
+from __future__ import annotations
 
 
 class AsyncToDo:
@@ -16,12 +15,12 @@ class AsyncToDo:
         """
         Initializing the class.
         """
-        self._tasks: List[str] = []
+        self._tasks: list[str] = []
         """
         The list of the tasks
         """
 
-    async def add_task(self, task: str) -> List[str]:
+    async def add_task(self, task: str) -> list[str]:
         """
         Adding task.
 
@@ -29,12 +28,12 @@ class AsyncToDo:
             task: (str): The task to be added.
 
         Returns:
-            (List[str])
+            (list[str])
         """
         self._tasks.append(task)
         return self._tasks
 
-    async def remove_task(self, task) -> List[str]:
+    async def remove_task(self, task) -> list[str]:
         """
         Removing task.
 
@@ -42,17 +41,17 @@ class AsyncToDo:
             task: (str): The task to be removed.
 
         Returns:
-            (List[str])
+            (list[str])
         """
         self._tasks.remove(task)
         return self._tasks
 
-    async def list_tasks(self) -> List[str]:
+    async def list_tasks(self) -> list[str]:
         """
         Retrieving the list of the tasks.
 
         Returns:
-            (List[str])
+            (list[str])
         """
         return self._tasks
 
@@ -68,14 +67,14 @@ class AsyncToDo:
         """
         return self._tasks[index]
 
-    async def to_dict(self) -> Dict[str, str]:
+    async def to_dict(self) -> dict[str, str]:
         """
         Converting the list of tasks into an object.
 
         Returns:
-            (Dict[str, str])
+            (dict[str, str])
         """
-        result: Dict[str, str] = {}
+        result: dict[str, str] = {}
         for index in range(0, len(self._tasks), 1):
             result[str(index + 1)] = self._tasks[index]
         return result

@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from guara.policy import ExecutionPolicy
+
 
 class AbstractTransaction:
     """
@@ -20,6 +22,7 @@ class AbstractTransaction:
     """
 
     return_on_dry_run = None
+    policy = ExecutionPolicy()
 
     @property
     def __name__(self) -> property:

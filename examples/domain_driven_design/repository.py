@@ -3,13 +3,13 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+from __future__ import annotations
 
 """
 SQLite-backed Repository implementation.
 """
 
 import sqlite3
-from typing import List
 
 from domain import Course, Student
 
@@ -140,7 +140,7 @@ class Repository:
         cursor.execute("SELECT nui, name FROM courses WHERE nui = ?", (nui,))
         return cursor.fetchone()
 
-    def list_courses(self) -> List[Course]:
+    def list_courses(self) -> list[Course]:
         """List all courses."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT nui, name FROM courses")

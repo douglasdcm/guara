@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from guara.transaction import AbstractTransaction
 
@@ -41,5 +41,5 @@ class CloseApp(AbstractTransaction):
 
         from helium import get_driver, kill_browser
 
-        get_driver().save_screenshot(f"{screenshot_filename}-{datetime.now()}.png")
+        get_driver().save_screenshot(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
         kill_browser()

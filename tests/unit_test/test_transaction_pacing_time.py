@@ -18,7 +18,7 @@ class ValidateLocal(AbstractTransaction):
     def do(self):
         raise ValueError
 
-@mark.timeout(5)
+@mark.timeout(5 )
 @mark.parametrize("value", [0, 1])
 @patch("guara.transaction.GUARA_PACING_TIME", 3000)
 def test_transaction_overrides_pacing_time_when_local_variable_is_positive_integer(value):

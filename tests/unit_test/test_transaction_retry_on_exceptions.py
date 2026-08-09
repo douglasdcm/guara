@@ -7,11 +7,11 @@
 from pytest import mark, raises
 
 from guara.abstract_transaction import AbstractTransaction
-from guara.transaction import Application
 from guara.policy import ExecutionPolicy
+from guara.transaction import Application
+
+
 class FlakyTransaction(AbstractTransaction):
-    retry_on_exceptions = (PermissionError,)
-    retries_on_failure = 2
     policy = ExecutionPolicy(
         retry_on_exceptions = (PermissionError,),
         retries_on_failure = 2

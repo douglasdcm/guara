@@ -3,6 +3,8 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+from __future__ import annotations
+
 import logging
 
 from repository import Repository
@@ -100,4 +102,4 @@ def enroll_subject(eduapp: Application, repo: Repository, args):
 @run_scenario
 def calculate_gpa(eduapp: Application, repo: Repository, args):
     result = eduapp.when(CalculateGPA, repo=repo, student_id=args.student).result
-    logging.info(f"GPA: {result}")
+    logging.info(f"GPA: {result}") # noqa

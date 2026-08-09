@@ -3,7 +3,7 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from guara.transaction import AbstractTransaction
 
@@ -41,5 +41,5 @@ class CloseAppiumApp(AbstractTransaction):
         Returns:
             None
         """
-        self._driver.save_screenshot(f"{screenshot_filename}-{datetime.now()}.png")
+        self._driver.save_screenshot(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
         self._driver.quit()

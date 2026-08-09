@@ -5,7 +5,7 @@
 
 import json
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -149,8 +149,8 @@ class ProcessAirportData(AbstractTransaction):
                         "aerolinea": aerolinea,
                         "origen": origen,
                         "estado": estado,
-                        "fecha": datetime.now().strftime("%Y-%m-%d"),
-                        "hora_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "fecha": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                        "hora_actualizacion": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
                     }
                 )
 
@@ -158,7 +158,7 @@ class ProcessAirportData(AbstractTransaction):
                 "status": "Success",
                 "message": "Data collected successfully",
             }
-        except Exception as e:
+        except Exception as e: # noqa
             script_status["airports"][airport] = {"status": "Error", "message": str(e)}
         return new_flights
 
@@ -180,13 +180,13 @@ class SaveFlightData(AbstractTransaction):
 
     def do(self, flights_data, history_days):
         existing_data = read_json_file("flights_data.json", [])
-        current_date = datetime.now().date()
+        current_date = datetime.now(timezone.utc).date()
 
         # Filter outdated data
         updated_data = [
             flight
             for flight in existing_data
-            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date()
+            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date() # noqa
             >= current_date - timedelta(days=history_days)
         ]
 
@@ -247,7 +247,7 @@ def get_aena_data():
     app.then(CloseBrowser)
 
     # Update script status
-    script_status["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    script_status["last_run"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     script_status["status"] = "Success"
     write_json_file("script_status.json", script_status)
 

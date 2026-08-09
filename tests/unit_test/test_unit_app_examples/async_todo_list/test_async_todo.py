@@ -8,7 +8,7 @@ The test script for testing asynchronuous transactions on a
 To-Do List.
 """
 
-from typing import Any, Coroutine, List
+from typing import Any, Coroutine
 
 from pytest import mark
 from pytest_asyncio import fixture
@@ -16,7 +16,11 @@ from pytest_asyncio import fixture
 from guara.asynchronous.application import Application
 from guara.asynchronous.it import Contains, DoesNotContain, IsEqualTo, IsNotEqualTo
 from tests.unit_test.test_unit_app_examples.async_todo_list.async_todo import AsyncToDo
-from tests.unit_test.test_unit_app_examples.async_todo_list.operations import Add, ListTasks, Remove
+from tests.unit_test.test_unit_app_examples.async_todo_list.operations import (
+    Add,
+    ListTasks,
+    Remove,
+)
 
 
 class TestAsyncToDo:
@@ -46,7 +50,7 @@ class TestAsyncToDo:
             (None)
         """
         task: str = "buy cheese"
-        expected: List[str] = [task]
+        expected: list[str] = [task]
         await self._todo.at(transaction=Add, task=task).asserts(IsEqualTo, expected).perform()
 
     @mark.asyncio
@@ -61,7 +65,7 @@ class TestAsyncToDo:
             (None)
         """
         task: str = "buy cheese"
-        expected: List[str] = []
+        expected: list[str] = []
         await self._todo.at(transaction=Add, task=task).perform()
         await self._todo.at(transaction=Remove, task=task).asserts(IsEqualTo, expected).perform()
 
@@ -77,7 +81,7 @@ class TestAsyncToDo:
             (None)
         """
         task: str = "any task"
-        expected: List[str] = [task]
+        expected: list[str] = [task]
         await self._todo.at(transaction=Add, task=task).perform()
         await self._todo.at(ListTasks).asserts(IsEqualTo, expected).perform()
 
@@ -96,8 +100,8 @@ class TestAsyncToDo:
         """
         task: str = "any task"
         other_task: str = "other task"
-        expected: List[str] = [task]
-        other_expected: List[str] = [other_task]
+        expected: list[str] = [task]
+        other_expected: list[str] = [other_task]
         await self._todo.at(transaction=Add, task=task).perform()
         await self._todo.at(ListTasks).asserts(IsEqualTo, expected).perform()
         await self._todo.at(ListTasks).asserts(IsNotEqualTo, other_expected).perform()

@@ -30,6 +30,10 @@ class ExecutionPolicy:
     return_on_dry_run: Any | None = None
     """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
 
+    rollback_on_failure: bool | None = None
+    """(bool) Wheter the automatic rollback of the transaction is executed."""
+
+
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
         self._validate_pacing_time()

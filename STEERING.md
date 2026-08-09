@@ -337,9 +337,9 @@ Do not invent automatic rollback semantics.
 
 ---
 
-# 9. Transaction Configuration
+# 9. Policy Configuration
 
-Transactions may configure:
+Policies may configure:
 
 ```python
 pacing_time
@@ -350,7 +350,7 @@ retry_on_exceptions
 
 These values are class-level configuration.
 
-The current `AbstractTransaction` validates configuration when a Transaction instance is created.
+The current `ExecutionPolicy` validates configuration when a Transaction instance is created.
 
 ### pacing_time
 

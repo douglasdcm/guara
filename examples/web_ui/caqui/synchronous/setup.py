@@ -8,7 +8,7 @@ The module that is reponsible for the opening and closing
 transactions.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from guara.transaction import AbstractTransaction
 
@@ -51,5 +51,5 @@ class CloseApp(AbstractTransaction):
     """
 
     def do(self, screenshot_filename: str = "./captures/guara-capture") -> None:
-        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now()}.png")
+        self._driver.get_screenshot_as_file(f"{screenshot_filename}-{datetime.now(timezone.utc)}.png")
         self._driver.quit()

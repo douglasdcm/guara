@@ -12,6 +12,7 @@ from guara.asynchronous.transaction import (
 from guara.asynchronous.transaction import (
     Application as AsyncApplication,
 )
+from guara.policy import ExecutionPolicy
 
 
 class AsyncMyTransaction(AsyncAbstractTransaction):
@@ -20,15 +21,16 @@ class AsyncMyTransaction(AsyncAbstractTransaction):
 
 
 class AsyncMyFailedTransaction(AsyncAbstractTransaction):
-    return_on_dry_run = Exception("Failed")
-
+    policy = ExecutionPolicy(
+        return_on_dry_run = PermissionError("Failed")
+    )
     async def do(self):
-        raise Exception("Failed")
+        raise PermissionError("Failed")
 
 
 @mark.asyncio
 async def test_async_transaction_raises_error_when_fail():
-    with raises(Exception, match="Failed"):
+    with raises(PermissionError, match="Failed"):
         await AsyncApplication().at(AsyncMyFailedTransaction).perform()
 
 

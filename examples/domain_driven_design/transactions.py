@@ -3,6 +3,8 @@
 # terms of the MIT license.
 # Visit: https://github.com/douglasdcm/guara
 
+from __future__ import annotations
+
 from domain import Student, Subject
 from repository import Repository
 
@@ -57,16 +59,16 @@ class IsNotStudentEnrolledInACourse(AbstractTransaction):
     def do(self, repo: Repository, student_id):
         try:
             IsStudentEnrolledInACourse().do(repo, student_id)
-        except Exception:
+        except Exception: # noqa
             return
-        raise Exception("Student enrolled to other course")
+        raise Exception("Student enrolled to other course") # noqa
 
 
 class IsStudentEnrolledInACourse(AbstractTransaction):
     def do(self, repo: Repository, student_id):
         student = repo.get_student(student_id)
         if not student.course:
-            raise Exception("Student not enrolled to any course")
+            raise Exception("Student not enrolled to any course") # noqa
 
 
 class IsStudentEnrolledInSubject(AbstractTransaction):
@@ -74,16 +76,16 @@ class IsStudentEnrolledInSubject(AbstractTransaction):
         for raw in repo.list_enrollments_by_student(student_id, subject_id):
             if raw[1] == subject_id:
                 return
-        raise Exception("Student not enrolled to subject")
+        raise Exception("Student not enrolled to subject") # noqa
 
 
 class IsNotStudentEnrolledInSubject(AbstractTransaction):
     def do(self, repo: Repository, student_id, subject_id):
         try:
             IsStudentEnrolledInSubject().do(repo, student_id, subject_id)
-        except Exception:
+        except Exception: # noqa
             return
-        raise Exception("Student already enrolled to subject")
+        raise Exception("Student already enrolled to subject") # noqa
 
 
 class IsGradeInValidRange(AbstractTransaction):
@@ -124,13 +126,13 @@ class ListSubjects(AbstractTransaction):
 
 
 class HasCourse(AbstractTransaction):
-    def do(self, repo: Repository, course_name: str = None, course_id=None):
+    def do(self, repo: Repository, course_name: str | None = None, course_id=None):
         for cobj in repo.list_courses():
             if cobj.name == course_name:
                 return
             if cobj.nui == course_id:
                 return
-        raise Exception(f"Course {course_name} does not exist")
+        raise Exception(f"Course {course_name} does not exist") # noqa
 
 
 class HasStudent(AbstractTransaction):
@@ -141,14 +143,14 @@ class HasStudent(AbstractTransaction):
                 return
             if sobj.name == student_name:
                 return
-        raise Exception(f"Student {student_id} {student_name} does not exist")
+        raise Exception(f"Student {student_id} {student_name} does not exist") # noqa
 
 
 class IsNotStudentLocked(AbstractTransaction):
     def do(self, repo: Repository, student_id):
         student = repo.get_student(student_id)
         if student.status == "locked":
-            raise Exception("Student locked")
+            raise Exception("Student locked") # noqa
 
 
 class HasSubject(AbstractTransaction):
@@ -159,7 +161,7 @@ class HasSubject(AbstractTransaction):
                 return
             if sobj.name == subject_name:
                 return
-        raise Exception(f"Subject {subject_id} {subject_name} does not exist")
+        raise Exception(f"Subject {subject_id} {subject_name} does not exist") # noqa
 
 
 class HasNotCourse(AbstractTransaction):
@@ -170,9 +172,9 @@ class HasNotCourse(AbstractTransaction):
     def do(self, repo: Repository, course_name: str):
         try:
             HasCourse().do(repo, course_name=course_name)
-        except Exception:
+        except Exception: # noqa
             return
-        raise Exception("Course exists")
+        raise Exception("Course exists") # noqa
 
 
 class HasNotSubject(AbstractTransaction):
@@ -185,7 +187,7 @@ class HasNotSubject(AbstractTransaction):
         for raw in repo.list_subjects():
             sobj = Subject(raw[0], raw[1])
             if subject_name == sobj.name:
-                raise Exception(f"Subject {subject_name} exists")
+                raise Exception(f"Subject {subject_name} exists") # noqa
 
 
 class HasNotStudent(AbstractTransaction):
@@ -198,4 +200,4 @@ class HasNotStudent(AbstractTransaction):
         for s in repo.list_students():
             s_obj = Student(s[0], s[1])
             if student_name == s_obj.name:
-                raise Exception("Student exists")
+                raise Exception("Student exists") # noqa
