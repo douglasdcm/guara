@@ -9,6 +9,7 @@ from pytest import mark, raises
 
 from guara import it
 from guara.constants import GUARA_DRY_RUN
+from guara.policy import ExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -94,6 +95,6 @@ class ValidateLocal(AbstractTransaction):
 @mark.parametrize("value", ["invalid", -1, object()])
 def test_transactions_returns_none_when_invalid_retry_on_failure(value):
     t = ValidateLocal
-    t.retries_on_failure = value
+    t.policy = ExecutionPolicy(retries_on_failure = value)
     Application().execute(t)
-    assert t.retries_on_failure is None
+    assert t.policy.retries_on_failure is None

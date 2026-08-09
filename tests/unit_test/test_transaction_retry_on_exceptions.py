@@ -8,10 +8,14 @@ from pytest import mark, raises
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.transaction import Application
-
+from guara.policy import ExecutionPolicy
 class FlakyTransaction(AbstractTransaction):
     retry_on_exceptions = (PermissionError,)
     retries_on_failure = 2
+    policy = ExecutionPolicy(
+        retry_on_exceptions = (PermissionError,),
+        retries_on_failure = 2
+    )
     def do(self, value=0):
         if value==0:
             raise PermissionError
@@ -39,6 +43,6 @@ class ValidateLocal(AbstractTransaction):
 @mark.parametrize("value", ["invalid", ("invalid",), (object,)])
 def test_transactions_returns_none_when_invalid_retry_on_exceptions(value):
     t = ValidateLocal
-    t.retry_on_exceptions = value
+    t.policy = ExecutionPolicy(retry_on_exceptions = value)
     Application().execute(t)
-    assert t.retry_on_exceptions is None
+    assert t.policy.retry_on_exceptions is None

@@ -546,14 +546,14 @@ class Application:
         self._transaction = transaction(self._driver)
 
         _pacing_time = (
-            self._transaction.pacing_time
-            if self._transaction.pacing_time is not None
+            self._transaction.policy.pacing_time
+            if self._transaction.policy.pacing_time is not None
             else GUARA_PACING_TIME
         )
 
         _retries_on_failure = (
-            self._transaction.retries_on_failure
-            if self._transaction.retries_on_failure is not None
+            self._transaction.policy.retries_on_failure
+            if self._transaction.policy.retries_on_failure is not None
             else GUARA_RETRIES_ON_FAILURE
         )
 
@@ -608,7 +608,7 @@ class Application:
                 exception = e
 
                 _retry_on_exceptions = (
-                    self._transaction.retry_on_exceptions
+                    self._transaction.policy.retry_on_exceptions
                     or self._retry_on_exceptions
                 )
 

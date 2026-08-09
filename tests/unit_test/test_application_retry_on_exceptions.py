@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 from pytest import raises
 
+from guara.policy import ExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -24,7 +25,9 @@ class Error3(Exception):
 
 
 class FlakyTransaction(AbstractTransaction):
-    return_on_dry_run = Error1()
+    policy = ExecutionPolicy(
+        return_on_dry_run = Error1()
+    )
 
     def do(self, error_number):
         if error_number == 1:
