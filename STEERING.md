@@ -334,8 +334,7 @@ Use standard Python naming conventions.
 Use PascalCase:
 
 ```python
-class AbstractTransaction:
-    ...
+class AbstractTransaction: ...
 ```
 
 ### Functions and methods
@@ -343,8 +342,7 @@ class AbstractTransaction:
 Use snake_case:
 
 ```python
-def validate_transaction():
-    ...
+def validate_transaction(): ...
 ```
 
 ### Variables
@@ -380,8 +378,7 @@ Prefer precise types when they improve understanding.
 For example:
 
 ```python
-def process(value: str) -> bool:
-    ...
+def process(value: str) -> bool: ...
 ```
 
 Avoid adding meaningless annotations merely to increase annotation coverage.
@@ -930,15 +927,13 @@ Use descriptive test names that communicate the behavior being verified.
 Prefer:
 
 ```python
-def test_invalid_retry_count_is_reset_to_none():
-    ...
+def test_invalid_retry_count_is_reset_to_none(): ...
 ```
 
 over:
 
 ```python
-def test_retry():
-    ...
+def test_retry(): ...
 ```
 
 A test name should help a maintainer understand what behavior failed without opening the test immediately.

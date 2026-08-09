@@ -23,7 +23,7 @@ class MyTransaction(AbstractTransaction):
 
 
 def test_application_do_not_run_when_disabled():
-    app = Application(disabled=True)
+    app = Application(disable=True)
     (
         app.given(MyTransaction)
         .at(MyTransaction)

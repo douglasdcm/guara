@@ -41,6 +41,9 @@ class ExecutionPolicy:
     rollback_on_failure: bool | None = None
     """(bool) Wheter the automatic rollback of the transaction is executed."""
 
+    disable: bool | None = None
+    """(bool) Wheter the execution of the transaction is disabled."""
+
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
         self._validate_pacing_time()
@@ -49,6 +52,7 @@ class ExecutionPolicy:
         self._validate_abort_on_exceptions()
         self._validate_retry_on_exceptions()
         self._validate_rollback_on_failure()
+        self._validate_disable()
 
     @property
     def __name__(self) -> property:
@@ -59,6 +63,19 @@ class ExecutionPolicy:
             (str) The name of the policy being implemented.
         """
         return self.__class__.__name__
+
+    def _validate_disable(self):
+        if self.disable is None:
+            return
+
+        if isinstance(self.disable, bool):
+            return
+
+        LOGGER.warning(
+            f"Invalid value in 'disable' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+        self.disable = None
 
     def _validate_rollback_on_failure(self):
         if self.rollback_on_failure is None:

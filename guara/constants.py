@@ -37,5 +37,3 @@ GUARA_PACING_TIME = convert_variable_to_integer("GUARA_PACING_TIME")
 GUARA_RETRIES_ON_FAILURE = convert_variable_to_integer("GUARA_RETRIES_ON_FAILURE")
 
 SECRET_DEFAULT_VALUE = "********"
-
-

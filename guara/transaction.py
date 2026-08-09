@@ -262,7 +262,7 @@ class Application:
         retry_on_exceptions: tuple[Exception] = (Exception),
         abort_on_exceptions: tuple[Exception] = (),
         continue_on_exceptions: tuple[Exception] = (),
-        disabled: bool = False,
+        disable: bool = False,
         name: str | None = None,
     ):
         """
@@ -345,9 +345,9 @@ class Application:
                 "No action will be taken on drivers."
             )
 
-        self._disabled = disabled
+        self._disable = disable
 
-        if disabled:
+        if disable:
             LOGGER.warning("Application disabled.")
             self._execution_history.status = "skipped"
             self._execution_history.finished_at = _utc_now()
@@ -536,21 +536,24 @@ class Application:
         Returns:
             (Application)
         """
-        if self._disabled:
-            return self
-
         self._transaction = transaction(self._driver)
+
+        _disabled = (
+            self._transaction.policy.disable
+            if self._transaction.policy.disable is not None
+            else self._disable
+        )
+
+        if _disabled:
+            LOGGER.warning(
+                f"Transaction '{self._transaction}' disabled. No execution taken."
+            )
+            return self
 
         if any(v for v in self._transaction.policy.to_dict().values()):
             LOGGER.warning(
                 f"Policy for transaction '{self._transaction.__name__}': {self._transaction.policy.to_dict()}"
             )
-
-        _pacing_time = (
-            self._transaction.policy.pacing_time
-            if self._transaction.policy.pacing_time is not None
-            else GUARA_PACING_TIME
-        )
 
         _retries_on_failure = (
             self._transaction.policy.retries_on_failure
@@ -580,11 +583,10 @@ class Application:
             "parameteres": [{**kwargs}],
         }
 
-        retries_on_failure = _retries_on_failure
         exception: Exception = None
         retries: int = 0
 
-        while retries <= retries_on_failure:
+        while retries <= _retries_on_failure:
             try:
                 retries += 1
                 history.attempts = retries
@@ -639,11 +641,17 @@ class Application:
 
                 LOGGER.error(
                     f"Transaction '{transaction_info}' failed on attempt"
-                    f" {retries} / {retries_on_failure + 1}."
+                    f" {retries} / {_retries_on_failure + 1}."
                 )
                 LOGGER.exception(e)  # noqa
 
-                if retries <= retries_on_failure and _pacing_time > 0:
+                _pacing_time = (
+                    self._transaction.policy.pacing_time
+                    if self._transaction.policy.pacing_time is not None
+                    else GUARA_PACING_TIME
+                )
+
+                if retries <= _retries_on_failure:
                     LOGGER.info(f"Waiting {_pacing_time}s for next retry.")
                     time.sleep(_pacing_time)
 
@@ -781,7 +789,7 @@ class Application:
         Asserting and validating the data by implementing the
         Strategy Pattern from the Gang of Four.
         """
-        if self._disabled:
+        if self._disable:
             return self
 
         self._assertion = assertion()
@@ -815,7 +823,7 @@ class Application:
         Returns:
             (Application)
         """
-        if self._disabled:
+        if self._disable:
             return self
 
         self._transaction_pool.reverse()

@@ -5,6 +5,7 @@ from guara.transaction import Application
 
 class AnyTransaction(AbstractTransaction):
     policy = ExecutionPolicy(retry_on_exceptions=(PermissionError,), pacing_time=10)
+
     def do(self, foo=None, foo_s=None, credit_card=None):
         print("SSSS")
         return {"foo": foo, "secret": foo_s, "card": credit_card}
