@@ -1,342 +1,609 @@
-# Guará — AI Agent Steering Guide
+Yes. In that case, `STEERING.md` should behave more like an **internal maintainer/developer contract for AI agents** than a user/developer guide.
+
+The key focus should be:
+
+* how the Guará source code is organized;
+* coding conventions;
+* Python/version compatibility;
+* naming and documentation conventions;
+* test architecture and testing strategy;
+* mutation testing;
+* async/sync parity;
+* API compatibility;
+* error handling and logging;
+* repository hygiene;
+* documentation expectations;
+* how an AI should investigate an issue before changing code;
+* what it must never do;
+* architectural rules that are relevant to **maintaining the framework itself**, not teaching someone how to use Guará.
+
+I would also explicitly tell the agent that **English is the project language**, including code comments, docstrings, test names, commit-oriented descriptions, and documentation.
+
+Here is a more implementation-focused version:
+
+# Guará — Steering Instructions for AI Coding Agents
 
 ## 1. Purpose
 
-Guará is a Python framework for modeling and executing meaningful application actions through **Transactions**.
+Guará is a Python framework. This document defines the rules and conventions that AI coding agents MUST follow when modifying, fixing, extending, refactoring, testing, or documenting the Guará source code.
 
-AI agents working in this repository MUST understand the existing architecture before modifying code.
+This document is about **maintaining and evolving the Guará framework itself**.
 
-The primary goal is to evolve Guará without breaking its architectural concepts, public APIs, execution semantics, tests, documentation, or backward compatibility.
+It is NOT a guide for using Guará in external projects.
 
-Do not treat Guará as a generic test-automation library. Its Transaction model is intended to represent meaningful actions that can be used in automated testing as well as production-oriented applications.
+AI agents must prioritize:
 
-Core architectural concepts include:
+1. correctness;
+2. backward compatibility;
+3. consistency with the existing implementation;
+4. testability;
+5. maintainability;
+6. API stability;
+7. architectural consistency;
+8. minimal and focused changes.
 
-* Intent-Driven Design
-* Transactions as meaningful application actions
-* Applications as orchestration mechanisms
-* Drivers as external dependencies
-* Assertions as explicit validation mechanisms
-* Synchronous and asynchronous execution
-* Replayable execution history
-* Undo/compensation
-* Dry-run execution
-* Retry and pacing policies
-* Composable Transactions
-* Executable narratives
+Never introduce a new design simply because it is technically interesting or more modern. First understand the existing design and determine whether the requested change actually requires architectural modification.
 
 ---
 
-# 2. Golden Rules for AI Agents
+# 2. Repository Is the Source of Truth
 
-Before changing code:
+Before modifying code, inspect the repository.
 
-1. Read the relevant implementation.
-2. Read the relevant unit tests.
-3. Read the relevant documentation.
-4. Search for usages of the API being changed.
-5. Understand whether the change affects public behavior.
-6. Preserve existing architectural boundaries.
-7. Add or update tests for behavioral changes.
-8. Update documentation when public behavior changes.
-9. Do not invent APIs, classes, methods, configuration variables, or behavior.
-10. Prefer the smallest change that correctly solves the problem.
+The agent MUST NOT assume that a requested behavior already exists or that a proposed implementation is compatible with the framework.
 
-Never modify an API merely because another design would look cleaner.
+Use the following order of investigation:
 
-Existing behavior is part of the framework contract unless the task explicitly requests a breaking change.
+1. implementation;
+2. unit tests;
+3. integration tests;
+4. existing usages inside the repository;
+5. documentation;
+6. configuration files;
+7. historical or inferred behavior.
 
----
+When implementation, tests, and documentation disagree, investigate the discrepancy before changing behavior.
 
-# 3. Architectural Mental Model
-
-Guará should be understood using the following separation:
-
-```text
-Application
-    |
-    | orchestrates
-    v
-Transaction
-    |
-    | expresses intent
-    v
-Domain/Application behavior
-    |
-    | uses
-    v
-Driver / Repository / External Dependency
-```
-
-The important distinction is:
-
-```text
-Intent
-    !=
-Orchestration
-    !=
-Implementation
-```
-
-### Transaction
-
-A Transaction represents a meaningful action.
-
-Examples conceptually include:
-
-```text
-CreateUser
-RegisterProduct
-AddProductToCart
-Login
-Checkout
-CalculateTotal
-```
-
-A Transaction should express **what the application wants to accomplish**, not merely expose low-level technical operations.
-
-### Application
-
-The Application coordinates Transactions and execution flow.
-
-It should not become a dump for domain logic.
-
-### Driver
-
-A driver is an injected external dependency.
-
-It may be:
-
-* a browser driver
-* database connection
-* API client
-* repository
-* custom external service
-* another infrastructure dependency
-
-The Transaction should not unnecessarily hard-code infrastructure dependencies.
-
-### Assertion
-
-Assertions represent explicit validation of expected behavior.
-
-### Infrastructure
-
-Infrastructure implements the mechanisms required to perform the intent.
-
-The framework should preserve dependency direction and avoid coupling domain concepts directly to infrastructure details.
+Tests are especially important because they frequently define the precise behavioral contract of the framework.
 
 ---
 
-# 4. Intent-Driven Design
+# 3. Project Language
 
-Guará uses Transactions to make application behavior explicit and readable.
+The official language of the Guará codebase is **English**.
 
-A good Transaction describes an intention:
+All newly created or modified:
+
+* source-code comments;
+* docstrings;
+* test names;
+* test descriptions;
+* exception messages;
+* warning messages;
+* logging messages;
+* documentation;
+* configuration descriptions;
+* CLI messages;
+
+MUST be written in English unless there is a specific technical reason otherwise.
+
+Do not introduce Portuguese text into the framework source code.
+
+Existing Portuguese text should not be translated merely as part of an unrelated change.
+
+When modifying an existing Portuguese comment or documentation section, translate it only when the requested change already requires modifying that content.
+
+---
+
+# 4. Supported Python Version
+
+Before using new Python syntax or standard-library functionality, inspect:
+
+```text
+pyproject.toml
+```
+
+The declared Python compatibility is authoritative.
+
+Do not introduce syntax, typing features, or APIs that are unavailable in the project's supported Python versions.
+
+Prefer standard-library functionality when it is sufficient.
+
+Do not add a third-party dependency for a small utility that can reasonably be implemented using the existing Python standard library.
+
+---
+
+# 5. Repository Structure
+
+The main implementation is located under:
+
+```text
+guara/
+```
+
+Current structure:
+
+```text
+guara/
+├── abstract_transaction.py
+├── application.py
+├── assertion.py
+├── constants.py
+├── guara.py
+├── it.py
+├── transaction.py
+├── utils.py
+│
+├── asynchronous/
+│   ├── abstract_transaction.py
+│   ├── application.py
+│   ├── assertion.py
+│   ├── guara.py
+│   ├── it.py
+│   └── transaction.py
+│
+└── cli/
+    ├── main.py
+    └── commands/
+        └── replay.py
+```
+
+Tests are divided into:
+
+```text
+tests/
+├── unit_test/
+├── integration/
+└── performance/
+```
+
+Documentation is under:
+
+```text
+docs/
+```
+
+Do not create new top-level directories or architectural layers without first determining that the existing structure cannot support the requested behavior.
+
+---
+
+# 6. Main Implementation Areas
+
+Before changing a component, identify its architectural responsibility.
+
+### `abstract_transaction.py`
+
+Defines the fundamental synchronous Transaction abstraction.
+
+### `transaction.py`
+
+Contains Transaction-related concrete framework behavior.
+
+### `application.py`
+
+Contains Application-level orchestration and execution management.
+
+### `assertion.py`
+
+Contains assertion-related framework behavior.
+
+### `constants.py`
+
+Contains framework constants and environment-derived configuration.
+
+### `utils.py`
+
+Contains reusable framework utilities.
+
+Do not move unrelated functionality into `utils.py` merely because it is convenient.
+
+### `guara.py`
+
+Contains framework-level functionality exposed by the Guará package.
+
+### `it.py`
+
+Contains framework constructs related to the test/execution interface.
+
+### `asynchronous/`
+
+Contains asynchronous counterparts of framework components.
+
+### `cli/`
+
+Contains command-line adapters.
+
+CLI code must not become the location for core framework behavior.
+
+---
+
+# 7. Synchronous and Asynchronous Parity
+
+Guará contains synchronous and asynchronous implementations.
+
+Whenever modifying a synchronous framework abstraction, determine whether an equivalent asynchronous implementation exists.
+
+For example:
+
+```text
+guara/abstract_transaction.py
+guara/asynchronous/abstract_transaction.py
+```
+
+Do not blindly duplicate code between the two implementations.
+
+Instead, determine:
+
+* whether the behavior is applicable to both;
+* whether asynchronous semantics require different handling;
+* whether exceptions behave consistently;
+* whether lifecycle behavior is equivalent;
+* whether tests exist for both;
+* whether documentation promises parity.
+
+If a feature is intentionally synchronous-only, preserve that distinction.
+
+If behavior should exist in both APIs, maintain semantic parity.
+
+---
+
+# 8. Public API Stability
+
+Guará is a framework. Public APIs must be treated as contracts.
+
+Before changing:
+
+* class names;
+* method names;
+* method signatures;
+* parameters;
+* return values;
+* exception behavior;
+* import paths;
+* environment variables;
+* serialized structures;
+* CLI commands;
+* execution-history structures;
+
+search the entire repository for usages.
+
+Prefer backward-compatible changes.
+
+Do not rename or remove an existing API merely to improve naming.
+
+If a breaking change is explicitly required, identify all affected areas and update tests and documentation accordingly.
+
+---
+
+# 9. Minimal Change Principle
+
+Implement the smallest change that correctly solves the problem.
+
+Avoid unrelated:
+
+* refactoring;
+* renaming;
+* formatting;
+* dependency changes;
+* file movements;
+* architecture changes;
+* test rewrites.
+
+For example, if a bug exists in retry validation, do not refactor the entire Transaction hierarchy unless that refactoring is necessary to fix the bug.
+
+Focused changes make framework behavior easier to review and reduce regression risk.
+
+---
+
+# 10. Code Style
+
+Follow the style already established in the repository.
+
+Prefer:
+
+* explicit code;
+* descriptive names;
+* type annotations;
+* small focused methods;
+* single responsibility;
+* clear control flow;
+* standard Python idioms;
+* existing project abstractions.
+
+Avoid:
+
+* unnecessary abstractions;
+* deeply nested conditionals;
+* clever one-liners;
+* premature optimization;
+* hidden side effects;
+* duplicated logic;
+* broad exception handling;
+* unnecessary metaprogramming.
+
+Do not change formatting conventions globally as part of a functional change.
+
+---
+
+# 11. Naming Conventions
+
+Use standard Python naming conventions.
+
+### Classes
+
+Use PascalCase:
 
 ```python
-class RegisterProduct(AbstractTransaction):
-    def do(self, name, price): ...
+class AbstractTransaction:
+    ...
 ```
 
-rather than exposing an implementation detail as the primary abstraction:
+### Functions and methods
+
+Use snake_case:
 
 ```python
-class ClickRegisterButton(AbstractTransaction): ...
+def validate_transaction():
+    ...
 ```
 
-Low-level actions may exist when necessary, but the preferred abstraction is the meaningful operation.
+### Variables
 
-AI agents should favor code that allows an execution to read like an executable narrative.
+Use descriptive snake_case names:
+
+```python
+transaction_class
+execution_history
+retry_count
+```
+
+Avoid cryptic names unless they are conventional and local in scope.
+
+### Private members
+
+Use a leading underscore:
+
+```python
+self._driver
+```
+
+Do not expose an internal implementation detail as public API without a reason.
+
+---
+
+# 12. Type Annotations
+
+Use type annotations consistently.
+
+Prefer precise types when they improve understanding.
 
 For example:
 
 ```python
-given(...)
-when(...)
-then(...)
+def process(value: str) -> bool:
+    ...
 ```
 
-or equivalent Application/Transaction flows should make the business intent understandable without requiring the reader to understand implementation details.
+Avoid adding meaningless annotations merely to increase annotation coverage.
+
+When the framework intentionally accepts arbitrary external dependencies, `Any` may be appropriate.
+
+For example, the Transaction driver is intentionally generic.
+
+Do not replace meaningful generic abstractions with artificial concrete types.
 
 ---
 
-# 5. AbstractTransaction
+# 13. Docstrings
 
-The synchronous Transaction base class is located at:
+Public classes, methods, and functions should have useful docstrings when appropriate.
+
+Docstrings should describe:
+
+* purpose;
+* important parameters;
+* return value;
+* exceptions when relevant;
+* behavior that is not obvious from the implementation.
+
+Do not write docstrings that merely repeat the function name.
+
+Prefer:
+
+```python
+def act(...):
+    """
+    Executes the transaction while respecting dry-run configuration.
+    """
+```
+
+over:
+
+```python
+def act(...):
+    """Acts."""
+```
+
+Docstrings must be written in English.
+
+---
+
+# 14. Comments
+
+Comments should explain **why**, not merely **what**.
+
+Prefer:
+
+```python
+# Preserve the original parameters because execution history must
+# contain masked values without modifying the actual transaction input.
+```
+
+over:
+
+```python
+# Mask parameters.
+```
+
+Do not add comments that become incorrect if the implementation changes.
+
+Remove obsolete comments when modifying the affected code.
+
+---
+
+# 15. Formatting
+
+Follow the formatting configuration already defined by the repository.
+
+Before introducing a formatting tool or changing formatting rules, inspect:
+
+```text
+pyproject.toml
+tox.ini
+pytest.ini
+```
+
+Do not reformat unrelated files.
+
+A functional change should not produce a large formatting-only diff.
+
+If formatting is required, restrict it to the modified code whenever possible.
+
+---
+
+# 16. Imports
+
+Keep imports clean and deterministic.
+
+Prefer:
+
+1. standard library;
+2. third-party dependencies;
+3. Guará/internal imports.
+
+Avoid unused imports.
+
+Avoid wildcard imports:
+
+```python
+from module import *
+```
+
+unless the existing architecture explicitly requires them.
+
+Do not introduce circular imports to solve local problems.
+
+When a circular dependency appears, reconsider the dependency direction instead of adding import hacks.
+
+---
+
+# 17. Logging
+
+Use Python's logging infrastructure.
+
+The framework already uses:
+
+```python
+from logging import Logger, getLogger
+```
+
+and module-level loggers.
+
+Prefer logging over `print()` in framework code.
+
+Do not log sensitive values.
+
+Log messages should:
+
+* be concise;
+* provide useful diagnostic information;
+* be written in English;
+* use the appropriate logging level.
+
+Do not use warnings or errors as normal control flow.
+
+---
+
+# 18. Exception Handling
+
+Do not silently swallow exceptions.
+
+Avoid:
+
+```python
+try:
+    ...
+except Exception:
+    pass
+```
+
+unless there is a clearly documented reason.
+
+When catching an exception:
+
+* catch the narrowest meaningful type;
+* preserve useful information;
+* avoid hiding programming errors;
+* maintain the framework's existing exception semantics.
+
+Do not introduce new exception types unless there is a clear architectural need.
+
+Before changing exception behavior, inspect existing tests for expected exceptions.
+
+---
+
+# 19. Validation
+
+Validation should be deterministic and explicit.
+
+When validating configuration:
+
+1. determine the accepted values;
+2. preserve existing defaults;
+3. reject invalid values consistently;
+4. follow existing logging/error conventions;
+5. add tests for valid and invalid cases.
+
+If an invalid value currently results in a reset to `None`, do not silently change that behavior unless the task explicitly requires it.
+
+---
+
+# 20. Global State and Environment Variables
+
+Inspect:
+
+```text
+guara/constants.py
+docs/ENVIRONMENT_VARIABLES.md
+tests/unit_test/test_enviroment_variables.py
+```
+
+before changing environment-driven behavior.
+
+Avoid introducing new mutable global state.
+
+If global configuration is required, follow the existing configuration mechanism.
+
+Environment variables must:
+
+* have predictable defaults;
+* handle invalid values consistently;
+* be documented;
+* have tests.
+
+Do not duplicate environment-variable parsing throughout the codebase.
+
+---
+
+# 21. Transaction Base Class
+
+The main Transaction abstraction is:
 
 ```text
 guara/abstract_transaction.py
 ```
 
-The asynchronous counterpart is located at:
-
-```text
-guara/asynchronous/abstract_transaction.py
-```
-
-`AbstractTransaction` is the fundamental abstraction for synchronous Transactions.
-
-Its responsibilities include:
-
-* holding the injected driver
-* defining Transaction execution
-* supporting dry-run behavior
-* supporting undo/reversion
-* defining retry configuration
-* defining pacing configuration
-* validating Transaction class configuration
-* providing a Transaction name
-
-Conceptually:
-
-```text
-AbstractTransaction
-    |
-    +-- driver
-    |
-    +-- do()
-    |
-    +-- act()
-    |
-    +-- undo()
-    |
-    +-- revert_action()
-    |
-    +-- retry configuration
-    |
-    +-- pacing configuration
-    |
-    +-- dry-run configuration
-```
-
----
-
-# 6. Transaction Execution Semantics
-
-The fundamental execution method is:
-
-```python
-do(**kwargs)
-```
-
-Subclasses implement the actual Transaction behavior.
-
-`do()` is intentionally abstract-by-convention and currently raises:
-
-```python
-NotImplementedError
-```
-
-Agents MUST NOT silently change this contract.
-
-The public execution path is:
-
-```python
-act(**kwargs)
-```
-
-Its behavior is:
-
-```text
-GUARA_DRY_RUN enabled?
-    |
-    +-- yes --> return return_on_dry_run
-    |             or raise it when it is an Exception
-    |
-    +-- no --> execute do(**kwargs)
-```
-
-Therefore:
-
-* `do()` contains the actual operation.
-* `act()` controls dry-run semantics.
-* Code that bypasses `act()` may bypass framework execution behavior.
-* Do not replace calls to `act()` with `do()` unless the task explicitly requires it.
-
----
-
-# 7. Dry Run
-
-Dry-run behavior is controlled by:
-
-```python
-GUARA_DRY_RUN
-```
-
-When dry-run is enabled, `act()` does not execute `do()`.
-
-Instead:
-
-```python
-return_on_dry_run
-```
-
-is returned.
-
-If `return_on_dry_run` is an Exception, it is raised.
-
-This behavior is intentional.
-
-Do not make dry-run logic part of individual Transaction implementations unless there is a specific architectural reason.
-
-The framework should centrally control execution semantics.
-
----
-
-# 8. Undo and Reversion
-
-Transactions may define:
-
-```python
-undo()
-```
-
-to reverse actions performed by:
-
-```python
-do()
-```
-
-The framework exposes:
-
-```python
-revert_action()
-```
-
-which respects dry-run mode.
-
-Conceptually:
-
-```text
-act()
-  |
-  +-- do()
-
-revert_action()
-  |
-  +-- undo()
-```
-
-Do not assume that every Transaction is automatically reversible.
-
-A Transaction must explicitly implement meaningful compensation when reversal is possible.
-
-For production-oriented operations, consider:
-
-* partial failure
-* idempotency
-* compensation
-* transaction boundaries
-* external side effects
-
-Do not invent automatic rollback semantics.
-
----
-
-# 9. Policy Configuration
-
-Policies may configure:
+The current class contains configuration such as:
 
 ```python
 pacing_time
@@ -345,1073 +612,873 @@ return_on_dry_run
 retry_on_exceptions
 ```
 
-These values are class-level configuration.
-
-The current `ExecutionPolicy` validates configuration when a Transaction instance is created.
-
-### pacing_time
-
-Controls the local pacing interval between retries.
-
-Invalid values are reset to:
+and execution methods such as:
 
 ```python
-None
+do()
+act()
+undo()
+revert_action()
 ```
 
-Valid values are non-negative integers.
+When modifying this class, consider that it is a foundational abstraction.
 
-### retries_on_failure
+A small change can affect:
 
-Controls the local retry count.
+* all Transactions;
+* Application execution;
+* retries;
+* dry-run;
+* undo;
+* execution history;
+* tests;
+* asynchronous equivalents.
 
-Valid values are non-negative integers.
+Always inspect dependent code before changing it.
 
-Invalid values are reset to:
+---
+
+# 22. `do()` vs `act()`
+
+This distinction is important.
+
+`do()` represents the concrete Transaction implementation.
+
+`act()` represents framework-controlled execution.
+
+Current semantics include dry-run handling in `act()`.
+
+Do not bypass framework-level execution behavior accidentally by replacing:
 
 ```python
-None
+transaction.act(...)
 ```
 
-### retry_on_exceptions
-
-Defines exceptions eligible for retry.
-
-Invalid configuration is reset to:
+with:
 
 ```python
-None
+transaction.do(...)
 ```
 
-### return_on_dry_run
+unless the change explicitly requires that behavior.
 
-Defines the value returned by a Transaction when dry-run mode is active.
-
-Do not confuse this with the result of normal execution.
+When modifying either method, inspect dry-run tests and Transaction execution tests.
 
 ---
 
-# 10. Driver Injection
+# 23. Dry Run
 
-`AbstractTransaction` accepts:
+Dry-run behavior is controlled by:
 
 ```python
-driver: Any = None
+GUARA_DRY_RUN
 ```
 
-The driver is stored internally.
-
-The framework intentionally does not restrict the driver to a specific technology.
-
-This allows Transactions to work with different kinds of external dependencies.
-
-Do not introduce unnecessary coupling such as:
-
-```python
-from selenium import webdriver
-```
-
-into the Transaction base abstraction merely because one use case uses Selenium.
-
-The driver abstraction must remain generic.
-
----
-
-# 11. Transaction Naming
-
-The Transaction name is derived from the concrete class:
-
-```python
-self.__class__.__name__
-```
-
-The `__name__` property therefore represents the concrete Transaction class name.
-
-Agents modifying execution history, replay, logging, serialization, or reporting MUST consider the stability of Transaction names.
-
-Transaction names may become part of persisted execution information.
-
-Do not casually rename Transaction classes without checking:
-
-* tests
-* execution history
-* replay behavior
-* documentation
-* serialized data
-* external consumers
-
----
-
-# 12. Applications
-
-The main Application implementation is:
+Current behavior includes:
 
 ```text
-guara/application.py
-```
-
-The asynchronous implementation is:
-
-```text
-guara/asynchronous/application.py
-```
-
-Applications are responsible for orchestration.
-
-Do not move every behavior into `Application`.
-
-A useful separation is:
-
-```text
-Application
-    coordinates
-
-Transaction
-    expresses intent
-
-Driver / Repository / Adapter
-    performs infrastructure work
-```
-
-Application code should remain readable and should expose the execution narrative.
-
----
-
-# 13. Synchronous and Asynchronous APIs
-
-Guará has separate asynchronous implementations under:
-
-```text
-guara/asynchronous/
-```
-
-Important files include:
-
-```text
-abstract_transaction.py
-application.py
-assertion.py
-guara.py
-it.py
-transaction.py
-```
-
-When changing a synchronous concept, determine whether an equivalent asynchronous implementation exists.
-
-Do not automatically copy synchronous code into the asynchronous package.
-
-First understand:
-
-* whether semantics are equivalent
-* whether execution is awaitable
-* how exceptions propagate
-* how retry behavior works
-* how Application state is handled
-* how assertions are executed
-
-If a feature is expected to exist in both APIs, maintain semantic consistency while respecting their execution models.
-
----
-
-# 14. Composite Transactions
-
-Guará supports composite Transactions.
-
-Relevant documentation:
-
-```text
-docs/COMPOSITE_TRANSACTION.md
-```
-
-A Composite Transaction combines multiple meaningful operations.
-
-Do not flatten Composite Transactions into unrelated low-level operations.
-
-The composition should preserve:
-
-* execution order
-* meaningful intent
-* error behavior
-* execution history
-* undo semantics where applicable
-
----
-
-# 15. Assertions
-
-Assertion implementation:
-
-```text
-guara/assertion.py
-```
-
-Asynchronous implementation:
-
-```text
-guara/asynchronous/assertion.py
-```
-
-Assertions are separate from Transactions.
-
-Do not turn every Transaction into an assertion.
-
-A Transaction performs an action.
-
-An Assertion verifies a condition.
-
-Keep these responsibilities distinct.
-
----
-
-# 16. CLI
-
-The CLI implementation is located under:
-
-```text
-guara/cli/
-```
-
-Current structure includes:
-
-```text
-guara/cli/main.py
-guara/cli/commands/replay.py
-```
-
-The CLI is an adapter around existing Guará functionality.
-
-The CLI should NOT become the place where core execution logic is implemented.
-
-Preferred structure:
-
-```text
-CLI
+act()
  |
- +-- parse arguments
+ +-- dry run
+ |     |
+ |     +-- Exception -> raise it
+ |     +-- other value -> return it
  |
- +-- invoke existing Guará APIs
- |
- +-- translate result to CLI output / exit code
+ +-- normal execution -> do()
 ```
 
-Use `argparse` consistently with the existing implementation.
+Do not duplicate dry-run logic throughout Transactions.
 
-Keep `main()` thin.
-
-CLI output and application logging should remain conceptually separate.
-
-When modifying CLI behavior, verify:
-
-* command parsing
-* exit codes
-* invalid arguments
-* successful execution
-* failure execution
-* replay behavior
-* package entry points
+Framework-wide behavior belongs in the framework execution layer.
 
 ---
 
-# 17. Replay
+# 24. Retry and Pacing
 
-Guará supports replaying dumped execution information.
+Retry behavior is cross-cutting framework behavior.
 
-Replay functionality is located under:
-
-```text
-guara/cli/commands/replay.py
-```
-
-Execution history and replay are important framework features.
-
-When changing Transaction identification or execution serialization, verify replay compatibility.
-
-Replay requires enough information to identify and reconstruct the original Transaction.
-
-Do not use short class names when the system requires a complete importable module path.
-
-For class identification, prefer the complete qualified path:
+When modifying:
 
 ```text
-package.module.ClassName
+pacing_time
+retries_on_failure
+retry_on_exceptions
 ```
 
-over:
+inspect:
 
 ```text
-ClassName
+tests/unit_test/test_transaction_pacing_time.py
+tests/unit_test/test_transaction_retries_on_faliure.py
+tests/unit_test/test_transaction_retry_on_exceptions.py
+tests/unit_test/test_application_retry_on_exceptions.py
 ```
 
-When implementing module-path behavior, use Python's actual module metadata rather than assuming the file name or package structure.
+Test:
+
+* valid configuration;
+* invalid configuration;
+* boundary values;
+* exception filtering;
+* number of retries;
+* final failure;
+* pacing behavior;
+* interaction with dry-run when applicable.
+
+Do not test only the happy path.
 
 ---
 
-# 18. Execution History
+# 25. Undo and Reversion
 
-Execution history is part of the framework behavior.
+When modifying:
 
-Relevant implementation is primarily associated with:
-
-```text
-guara/application.py
+```python
+undo()
+revert_action()
 ```
 
-and tests such as:
+inspect:
+
+```text
+tests/unit_test/test_undo.py
+docs/UNDO.md
+```
+
+Preserve the distinction between:
+
+```text
+action
+reversal request
+dry-run behavior
+```
+
+Do not assume every Transaction is reversible.
+
+Do not invent automatic rollback semantics.
+
+---
+
+# 26. Execution History and Serialization
+
+Execution history is a compatibility-sensitive area.
+
+When changing history-related code, inspect:
 
 ```text
 tests/unit_test/test_application_history_dump.py
 ```
 
-History may be used by:
+and all code involved in:
 
-* debugging
-* reporting
-* replay
-* auditing
-* execution analysis
+* history creation;
+* serialization;
+* masking;
+* replay;
+* persistence;
+* Transaction identification.
 
-Changes to execution-history structures should therefore be treated as potentially breaking changes.
+Sensitive values must not be persisted or logged accidentally.
 
-When modifying history:
-
-1. inspect serialization
-2. inspect dump behavior
-3. inspect replay
-4. inspect tests
-5. inspect sensitive-data masking
-6. preserve backward compatibility when possible
-
-Sensitive parameters must not accidentally be persisted in clear text.
-
----
-
-# 19. Environment Configuration
-
-Global behavior may be controlled through environment variables.
-
-Relevant files:
+If a Transaction class needs to be identified for replay, use a stable fully qualified module path where required:
 
 ```text
-guara/constants.py
-docs/ENVIRONMENT_VARIABLES.md
-tests/unit_test/test_enviroment_variables.py
+package.module.ClassName
 ```
 
-Do not introduce hard-coded environment behavior inside unrelated classes.
-
-If an environment variable is required:
-
-1. define it consistently
-2. document it
-3. add tests
-4. preserve existing defaults
-5. consider invalid values
+Do not assume a class name alone is sufficient.
 
 ---
 
-# 20. Tests
+# 27. Replay
 
-Tests are a first-class part of the Guará architecture.
+Replay is implemented under:
 
-Main test areas:
+```text
+guara/cli/commands/replay.py
+```
+
+Although replay is exposed through the CLI, its behavior depends on framework execution information.
+
+When changing:
+
+* Transaction identification;
+* execution history;
+* parameter serialization;
+* module paths;
+* import behavior;
+
+inspect replay behavior.
+
+Do not fix replay by introducing special cases that violate the framework's general model.
+
+---
+
+# 28. CLI Boundaries
+
+The CLI is an adapter.
+
+Core framework logic should remain outside:
+
+```text
+guara/cli/
+```
+
+CLI code should primarily:
+
+1. parse input;
+2. call framework APIs;
+3. format results;
+4. return appropriate exit status.
+
+Do not duplicate Application or Transaction behavior inside CLI commands.
+
+---
+
+# 29. Testing Philosophy
+
+Tests are part of the framework's specification.
+
+A test should verify **behavior**, not merely implementation details.
+
+Prefer:
+
+```python
+assert result == expected
+```
+
+or observable state/behavior assertions over assertions that a private implementation detail happened to be called.
+
+Mock only where isolation requires it.
+
+Do not mock everything.
+
+Over-mocking can make tests pass while the actual framework behavior is broken.
+
+---
+
+# 30. Unit Tests
+
+Unit tests are located under:
 
 ```text
 tests/unit_test/
-tests/integration/
-tests/performance/
 ```
 
-Unit tests cover framework behavior including:
+Use unit tests for:
 
-```text
-test_dry_run.py
-test_undo.py
-test_transaction_pacing_time.py
-test_transaction_retries_on_faliure.py
-test_transaction_retry_on_exceptions.py
-test_transaction_composite.py
-test_application_history_dump.py
-test_application_retry_on_exceptions.py
-```
+* validation;
+* state transitions;
+* retry logic;
+* dry-run;
+* undo;
+* parameter handling;
+* utility functions;
+* Application behavior;
+* Transaction behavior;
+* exception behavior.
 
-When modifying behavior, find the existing test that describes the behavior before writing a new implementation.
+Tests should be focused and deterministic.
 
-Preferred process:
+Avoid dependencies on:
 
-```text
-Understand existing test
-        |
-        v
-Identify expected behavior
-        |
-        v
-Modify implementation
-        |
-        v
-Add/update focused tests
-        |
-        v
-Run broader test suite
-```
+* network;
+* real browsers;
+* real external services;
+* system-specific state;
 
-Do not delete or weaken tests merely because they make implementation changes inconvenient.
+unless the test is explicitly an integration or performance test.
 
 ---
 
-# 21. Mutation Testing
+# 31. Integration Tests
 
-The repository contains:
+Integration tests are located under:
+
+```text
+tests/integration/
+```
+
+Use them when multiple Guará components need to work together.
+
+Do not move every unit test into integration tests merely because it is easier.
+
+Keep fast deterministic behavior in unit tests whenever possible.
+
+---
+
+# 32. Performance Tests
+
+Performance tests are located under:
+
+```text
+tests/performance/
+```
+
+Do not use performance tests to validate ordinary functional behavior.
+
+Do not modify performance tests simply to make functional tests pass.
+
+Performance changes should be intentional and measurable.
+
+---
+
+# 33. Test Naming
+
+Use descriptive test names that communicate the behavior being verified.
+
+Prefer:
+
+```python
+def test_invalid_retry_count_is_reset_to_none():
+    ...
+```
+
+over:
+
+```python
+def test_retry():
+    ...
+```
+
+A test name should help a maintainer understand what behavior failed without opening the test immediately.
+
+Test code is part of the project's documentation.
+
+---
+
+# 34. Edge Cases
+
+When fixing or implementing behavior, consider at least:
+
+* `None`;
+* empty values;
+* zero;
+* negative values;
+* incorrect types;
+* boundary values;
+* repeated execution;
+* exceptions;
+* partial failures;
+* dry-run;
+* retry configuration;
+* asynchronous execution when applicable.
+
+Do not add speculative behavior merely because an edge case exists.
+
+Test behavior that is part of the intended contract.
+
+---
+
+# 35. Mutation Testing
+
+The repository contains mutation-testing support:
 
 ```text
 mutation.sh
 ```
 
-and tests are expected to provide meaningful behavioral coverage.
+Mutation testing is used to identify weaknesses in the test suite.
 
-When adding functionality, avoid tests that only verify implementation details.
+When implementing a bug fix, write a test that would fail against the broken implementation.
 
-Prefer tests that fail when the intended behavior is broken.
+Do not create tests that only execute a line.
 
-Mutation testing should be considered when determining whether a feature is genuinely covered.
+A good test should detect a meaningful mutation of the behavior.
 
-A high line coverage number does not necessarily mean the behavior is adequately tested.
-
----
-
-# 22. Performance Tests
-
-Performance tests live under:
-
-```text
-tests/performance/
-```
-
-Do not modify performance tests as a shortcut to make functional tests pass.
-
-Performance-related changes should be evaluated independently from correctness changes.
-
----
-
-# 23. Documentation
-
-Documentation lives under:
-
-```text
-docs/
-```
-
-Important architectural documents include:
-
-```text
-DDD.md
-MODELING.md
-PT_AND_POM.md
-THE_PATTERN_EXPLAINED.md
-TRANSACTION_QUICK_REF.md
-COMPOSITE_TRANSACTION.md
-UNDO.md
-ASYNC.md
-OTHER_DRIVERS.md
-BEST_PRACTICES.md
-```
-
-Before changing architecture, read the relevant documentation.
-
-When changing public behavior, update documentation when appropriate.
-
-Documentation is part of the framework contract.
-
-Do not allow implementation and documentation to describe different APIs.
-
----
-
-# 24. Page Transactions and Page Objects
-
-Guará supports the Page Transaction approach and integrates concepts related to Page Objects.
-
-Relevant documentation:
-
-```text
-docs/PT_AND_POM.md
-```
-
-Page Objects should primarily represent UI structure and interaction primitives.
-
-Transactions should represent meaningful operations.
-
-Prefer:
-
-```text
-Page Object
-    |
-    | provides UI interaction primitives
-    v
-Transaction
-    |
-    | expresses meaningful operation
-    v
-Application
-```
-
-Do not put complete application workflows into Page Objects merely because the workflow happens through a UI.
-
----
-
-# 25. DDD and Layering
-
-Guará should preserve clear boundaries between layers.
-
-A useful conceptual model is:
-
-```text
-Presentation / CLI / UI
-          |
-          v
-      Application
-          |
-          v
-       Domain
-          |
-          v
-   Ports / Interfaces
-          |
-          v
-     Adapters
-          |
-          v
- Infrastructure
-```
-
-The exact project structure does not have to mirror this diagram literally.
-
-The important principle is dependency direction.
-
-Domain/application concepts should not unnecessarily depend on concrete infrastructure.
-
-Avoid creating circular dependencies.
-
----
-
-# 26. Business Logic
-
-Do not turn Transactions into giant business-logic classes.
-
-A Transaction may coordinate domain behavior, but complex domain rules should remain appropriately separated.
-
-Avoid:
+For example, if a bug involves:
 
 ```python
-class HugeTransaction(AbstractTransaction):
-    def do(self):
-        # validation
-        # database access
-        # HTTP calls
-        # business rules
-        # formatting
-        # logging
-        # retries
-        # persistence
-        # reporting
-        # everything else
+value >= 0
 ```
 
-Prefer clear separation of responsibilities.
-
-The Transaction should remain the meaningful entry point for the action.
-
----
-
-# 27. Error Handling
-
-Do not catch exceptions merely to hide failures.
-
-Preserve meaningful exception information.
-
-When implementing retry behavior, distinguish between:
-
-```text
-recoverable failure
-        vs.
-non-recoverable failure
-```
-
-Retry configuration should be explicit.
-
-Consider:
-
-* exception type
-* retry count
-* pacing
-* side effects
-* idempotency
-* partial execution
-* final exception propagation
-
-Never add broad exception handling such as:
+the test should distinguish that behavior from:
 
 ```python
-except Exception:
-    pass
+value > 0
 ```
 
-unless there is an explicitly documented reason.
+when the boundary is part of the contract.
 
 ---
 
-# 28. State Management
+# 36. Regression Tests
 
-Be careful with mutable state in:
+Every bug fix should normally have a regression test.
 
-* Application
-* Transaction
-* execution history
-* retry logic
-* asynchronous execution
-* replay
-
-Do not introduce global mutable state when instance or execution state is more appropriate.
-
-When changing state transitions, inspect tests involving:
-
-* Application enter/exit
-* execution status
-* execution history
-* retries
-* failures
-* replay
-
----
-
-# 29. Backward Compatibility
-
-Guará is a framework.
-
-Framework code has consumers.
-
-Therefore, API changes must be treated more carefully than changes to an internal application.
-
-Before changing:
-
-* method signatures
-* class names
-* import paths
-* environment variables
-* serialization formats
-* execution-history structures
-* CLI commands
-* return values
-* exception behavior
-
-search the entire repository for usages.
-
-Prefer backward-compatible solutions when possible.
-
-If a breaking change is required, document it explicitly.
-
----
-
-# 30. Python Style
-
-Follow the existing Python project conventions.
-
-Prefer:
-
-* type hints
-* clear names
-* small focused methods
-* explicit behavior
-* docstrings for public APIs
-* standard-library solutions when sufficient
-* existing project abstractions over duplicated implementations
-
-Avoid unnecessary abstractions.
-
-Avoid premature optimization.
-
-Avoid introducing dependencies for functionality that can reasonably be implemented using the existing stack.
-
----
-
-# 31. Type Hints
-
-Use modern type hints consistent with the project's supported Python versions.
-
-Before introducing a syntax feature, inspect:
+The preferred pattern is:
 
 ```text
-pyproject.toml
+bug
+ |
+ v
+minimal reproducer
+ |
+ v
+regression test
+ |
+ v
+implementation fix
+ |
+ v
+existing test suite
 ```
 
-and the project's configured Python compatibility.
+Do not fix a bug without verifying the original failure when practical.
 
-Do not introduce syntax unsupported by the project's declared Python versions.
-
-Type hints should describe actual behavior rather than merely making static analysis happy.
+The regression test should describe the expected behavior, not reproduce an implementation detail.
 
 ---
 
-# 32. Logging
+# 37. Tests Must Not Be Weakened
 
-Use the existing logging mechanism.
+Never:
 
-Avoid:
+* remove a failing test just because the implementation changed;
+* make assertions less strict to make tests pass;
+* skip a test without a documented reason;
+* replace behavioral assertions with `assert True`;
+* mock the component under test so aggressively that the bug disappears.
 
-```python
-print(...)
-```
+If an existing test conflicts with an intentionally changed public contract, update it deliberately and explain the contract change.
 
-inside framework implementation code.
+---
 
-Logging should provide useful diagnostic information without leaking secrets.
+# 38. Test Isolation
 
-Do not log sensitive parameters.
+Tests should be independent.
 
-When changing logging behavior, inspect:
+Avoid relying on execution order.
+
+Avoid shared mutable state between tests.
+
+When environment variables are modified:
+
+* isolate the change;
+* restore the original state;
+* use the existing testing mechanisms.
+
+When global framework configuration is modified, ensure subsequent tests are not affected.
+
+---
+
+# 39. Async Tests
+
+Asynchronous behavior must be tested using the project's existing async testing approach.
+
+Inspect:
 
 ```text
+tests/unit_test/test_async_transaction.py
+tests/unit_test/test_asynchronous_it.py
+tests/integration/
+```
+
+when changing asynchronous functionality.
+
+Do not convert asynchronous tests into synchronous tests merely to simplify implementation.
+
+---
+
+# 40. Documentation Changes
+
+Documentation must remain synchronized with public framework behavior.
+
+Relevant documentation includes:
+
+```text
+docs/TRANSACTION_QUICK_REF.md
+docs/ASYNC.md
+docs/UNDO.md
+docs/COMPOSITE_TRANSACTION.md
+docs/ENVIRONMENT_VARIABLES.md
 docs/LOGS.md
+docs/DEBUG.md
+docs/MIGRATE_CODE.md
+```
+
+When changing public behavior, determine whether documentation must change.
+
+Do not rewrite unrelated documentation.
+
+Documentation changes must be written in English.
+
+---
+
+# 41. Dependency Management
+
+Before adding a dependency:
+
+1. check whether the standard library already provides the functionality;
+2. check whether an existing dependency already provides it;
+3. inspect `pyproject.toml`;
+4. consider package size and compatibility;
+5. consider whether the dependency is appropriate for a framework.
+
+Do not add dependencies casually.
+
+Do not introduce a dependency solely to simplify a few lines of internal code.
+
+---
+
+# 42. Security and Sensitive Data
+
+Framework code may handle execution parameters and history.
+
+Never expose sensitive values through:
+
+* logs;
+* exceptions;
+* test output;
+* execution history;
+* debugging output;
+* CLI output.
+
+Inspect existing masking behavior before modifying parameter handling.
+
+Relevant tests include:
+
+```text
 tests/unit_test/test_hide_secret.py
 ```
 
----
-
-# 33. Sensitive Data
-
-Guará can store execution information.
-
-Therefore, sensitive data must be handled carefully.
-
-Never introduce logging or history persistence that exposes:
-
-* passwords
-* authentication tokens
-* API keys
-* secrets
-* credentials
-* other explicitly sensitive parameters
-
-When changing parameter serialization, inspect the existing masking behavior first.
+Security behavior must be preserved during refactoring.
 
 ---
 
-# 34. Repository Structure
+# 43. Generated and Temporary Files
 
-Important repository areas:
+Do not commit generated artifacts, caches, or local development files.
+
+Be especially careful with:
 
 ```text
-guara/
-    abstract_transaction.py
-    application.py
-    assertion.py
-    constants.py
-    guara.py
-    it.py
-    transaction.py
-    utils.py
-
-    asynchronous/
-        abstract_transaction.py
-        application.py
-        assertion.py
-        guara.py
-        it.py
-        transaction.py
-
-    cli/
-        main.py
-        commands/
-            replay.py
-
-docs/
-tests/
-    unit_test/
-    integration/
-    performance/
+__pycache__/
+*.pyc
+temporary files
+coverage artifacts
+mutation-testing artifacts
+local IDE files
 ```
 
-Do not create new top-level architectural layers without first understanding why the existing structure is insufficient.
+Respect the repository's `.gitignore`.
+
+Do not modify generated files unless the task explicitly requires it.
 
 ---
 
-# 35. Source of Truth
+# 44. Existing Experimental Code
 
-When investigating behavior, prioritize sources in this order:
+The repository may contain experimental or temporary files.
 
-1. Existing implementation
-2. Existing tests
-3. Public API usage inside the repository
-4. Architecture documentation
-5. README / quick references
-6. Historical assumptions
+Examples may include:
 
-If documentation conflicts with implementation and tests, investigate the discrepancy before changing either.
+```text
+tmp.py
+dump.txt
+gemini.txt
+```
 
-Never assume documentation is automatically more correct than executable behavior.
+Do not automatically treat every file in the repository as part of the public architecture.
+
+Before modifying an unfamiliar file, determine whether it is:
+
+* production implementation;
+* test;
+* documentation;
+* experiment;
+* generated artifact;
+* temporary development file.
+
+Do not expand experimental code into the main architecture without explicit justification.
 
 ---
 
-# 36. AI Agent Workflow
+# 45. Refactoring
 
-For every non-trivial task, follow this workflow.
+Refactoring is allowed when it improves the implementation without unintentionally changing behavior.
 
-## Step 1 — Understand
+Before refactoring:
 
-Identify:
+1. identify the current behavior;
+2. identify tests covering it;
+3. identify public APIs;
+4. identify dependencies;
+5. refactor incrementally;
+6. run tests after the change.
 
-```text
-What is being requested?
-Which component owns the behavior?
-Is the behavior public?
-Does synchronous code have an async counterpart?
-Does the CLI depend on it?
-Does replay depend on it?
-Does execution history depend on it?
+Avoid large rewrites when a local refactoring is sufficient.
+
+Do not combine architectural refactoring with an unrelated bug fix unless necessary.
+
+---
+
+# 46. Code Duplication
+
+Avoid unnecessary duplication, especially between:
+
+* synchronous and asynchronous implementations;
+* validation methods;
+* retry logic;
+* serialization;
+* CLI commands.
+
+However, do not abstract code solely because two pieces look similar.
+
+An abstraction is justified when the shared behavior is stable and the abstraction improves correctness or maintainability.
+
+Prefer clear duplication over an incorrect or overly complex abstraction.
+
+---
+
+# 47. Internal vs Public APIs
+
+A leading underscore generally indicates an internal implementation detail:
+
+```python
+_validate_class_variables()
+_driver
 ```
 
-## Step 2 — Search
+Do not make private methods public without considering compatibility and architecture.
 
-Search for:
+Likewise, do not rely on private methods from unrelated modules unless the existing design explicitly does so.
+
+When modifying private behavior, still search for repository-wide usage because private APIs may have become de facto dependencies.
+
+---
+
+# 48. AI Investigation Procedure
+
+For every issue, follow this procedure.
+
+### Phase 1 — Locate
+
+Find:
+
+* relevant implementation;
+* related classes;
+* related methods;
+* tests;
+* documentation;
+* configuration;
+* usages.
+
+### Phase 2 — Understand
+
+Determine:
 
 ```text
-class
-method
-imports
-usages
-tests
-documentation
-configuration
-serialization
-CLI commands
+What does the code currently do?
+What behavior is expected?
+What is the smallest difference between them?
+Which public contracts are affected?
 ```
 
-## Step 3 — Model
+### Phase 3 — Reproduce
 
-Before coding, describe internally:
+If possible, reproduce the issue with the smallest example.
+
+For a bug:
 
 ```text
-Current behavior
-Desired behavior
-Affected components
-Potential compatibility risks
-Required tests
+current behavior -> failing test
 ```
 
-## Step 4 — Implement
+### Phase 4 — Implement
 
-Make the smallest coherent change.
+Make the smallest correct change.
 
-Do not refactor unrelated code unless required.
+### Phase 5 — Test
 
-## Step 5 — Test
+Run:
 
-Run focused tests first.
+1. new/modified tests;
+2. related unit tests;
+3. broader test suite when appropriate.
 
-Then run the relevant broader test suite.
-
-## Step 6 — Review
+### Phase 6 — Review
 
 Check:
 
-```text
-API compatibility
-Architecture
-Tests
-Async parity
-CLI impact
-Replay impact
-History impact
-Documentation
-Security
-```
-
-## Step 7 — Explain
-
-When presenting the change, clearly state:
-
-* what changed
-* why
-* which files changed
-* tests added/updated
-* compatibility considerations
+* API compatibility;
+* sync/async parity;
+* error behavior;
+* logging;
+* security;
+* documentation;
+* formatting;
+* unrelated changes.
 
 ---
 
-# 37. Refactoring Rules
+# 49. Before Creating a New Class
 
-Refactoring is allowed when it improves maintainability without changing behavior.
+Do not create a class simply because the code can be organized into one.
 
-However:
+Before adding a class, ask:
 
-```text
-Refactoring != redesign
-```
+1. Does an existing abstraction already represent this responsibility?
+2. Is the new abstraction part of the public API?
+3. Does it introduce a new architectural concept?
+4. Will it be reusable?
+5. Does it simplify the design?
+6. Can the behavior be implemented within an existing abstraction?
 
-Do not redesign architecture during a bug fix unless the existing architecture prevents a correct solution.
-
-Avoid unrelated changes such as:
-
-* renaming unrelated classes
-* formatting the entire repository
-* moving files without necessity
-* changing public APIs
-* replacing libraries
-* rewriting tests
-* introducing new abstractions
-
-Keep pull requests and commits conceptually focused.
+Prefer existing framework abstractions when appropriate.
 
 ---
 
-# 38. Do Not Invent Missing Behavior
+# 50. Before Changing a Method Signature
 
-If the repository does not demonstrate that an API exists, do not assume it exists.
-
-For example, do not invent:
+Before changing:
 
 ```python
-transaction.execute()
-transaction.rollback()
-application.replay()
-application.status()
+def method(...):
 ```
 
-unless those APIs are actually present or explicitly requested.
+search for:
 
-Search the repository first.
+* direct calls;
+* subclasses;
+* overrides;
+* tests;
+* mocks;
+* documentation;
+* CLI usage;
+* asynchronous counterparts.
 
-If a requested behavior requires a new API, design it based on existing architectural patterns rather than guessing.
+Method signatures are API contracts.
+
+Do not add parameters simply because they make one implementation easier.
 
 ---
 
-# 39. When Multiple Designs Are Possible
+# 51. Before Removing Code
 
-Prefer the design that:
+Before deleting code:
 
-1. preserves the existing public API
-2. fits existing architecture
-3. requires fewer changes
-4. has clear tests
-5. preserves synchronous/asynchronous semantics
-6. maintains replay/history compatibility
-7. keeps intent separate from implementation
-8. avoids unnecessary dependencies
+1. search for references;
+2. inspect tests;
+3. inspect documentation;
+4. determine whether it is public;
+5. determine whether it is part of serialization/replay;
+6. determine whether the asynchronous equivalent depends on it.
 
-Do not choose an architecture merely because it is fashionable.
+Dead-code assumptions must be verified, not guessed.
 
 ---
 
-# 40. Production-Oriented Design
+# 52. Pull Request / Change Quality
 
-Although Guará is heavily useful for automated testing, its abstractions should remain useful for production-oriented applications.
+A high-quality framework change should have:
 
-When designing new functionality, consider:
+* a focused scope;
+* a clear behavioral reason;
+* tests;
+* minimal unrelated changes;
+* consistent naming;
+* consistent formatting;
+* English documentation/messages;
+* preserved API behavior unless intentionally changed.
 
-* application boundaries
-* domain behavior
-* dependency inversion
-* repositories
-* external services
-* transaction boundaries
-* idempotency
-* retries
-* timeouts
-* partial failure
-* compensation
-* observability
-* state management
+Avoid giant diffs.
 
-However, do not over-engineer a feature before the actual requirement exists.
-
-Use the simplest architecture that preserves the framework's long-term design.
+A reviewer should be able to understand why each modified line is necessary.
 
 ---
 
-# 41. Important Architectural Principle
+# 53. What AI Agents Must Not Do
 
-The central Guará concept is:
+AI agents MUST NOT:
 
-```text
-A Transaction is a meaningful action,
-not merely a technical operation.
-```
-
-The framework should allow an application to be understood through its actions.
-
-Prefer:
-
-```text
-Register Product
-Sell Product
-Create Customer
-Checkout
-Login
-```
-
-over exposing implementation details as the primary application vocabulary.
-
-The implementation may involve:
-
-```text
-HTTP
-database
-browser
-filesystem
-API
-message queue
-```
-
-but those are infrastructure details.
-
-The Transaction expresses the intent.
+* invent framework APIs;
+* silently change public behavior;
+* remove tests to make the suite pass;
+* weaken assertions;
+* swallow exceptions;
+* add unnecessary dependencies;
+* introduce Portuguese into new framework content;
+* rewrite unrelated modules;
+* perform broad formatting changes unnecessarily;
+* introduce architecture without evidence;
+* bypass existing abstractions without understanding them;
+* duplicate existing framework functionality;
+* ignore the asynchronous implementation when relevant;
+* ignore execution-history/replay implications when relevant;
+* expose sensitive values;
+* use `print()` as framework logging;
+* modify generated artifacts unnecessarily;
+* assume documentation is correct without checking implementation and tests;
+* assume implementation is correct without checking tests.
 
 ---
 
-# 42. Definition of Done
+# 54. Preferred Decision Hierarchy
 
-A change is not complete merely because the code works locally.
-
-For a meaningful framework change, verify:
+When choosing between implementations, prioritize:
 
 ```text
-[ ] Existing behavior understood
+1. Existing public contract
+2. Existing tests
+3. Existing architecture
+4. Simplicity
+5. Maintainability
+6. Performance
+7. New abstractions
+```
+
+Do not sacrifice compatibility or correctness for theoretical elegance.
+
+---
+
+# 55. Definition of Done
+
+A framework change is considered complete only when applicable items below have been considered:
+
+```text
 [ ] Relevant implementation inspected
 [ ] Relevant tests inspected
-[ ] Public API impact considered
-[ ] Synchronous behavior considered
-[ ] Asynchronous behavior considered
-[ ] CLI impact considered when applicable
-[ ] Replay impact considered when applicable
-[ ] Execution history impact considered when applicable
-[ ] Sensitive data exposure considered
-[ ] Unit tests added/updated
-[ ] Integration tests considered
-[ ] Documentation updated when necessary
+[ ] Existing usages searched
+[ ] Public API impact evaluated
+[ ] Synchronous implementation considered
+[ ] Asynchronous implementation considered when applicable
+[ ] Retry behavior considered when applicable
+[ ] Dry-run behavior considered when applicable
+[ ] Undo behavior considered when applicable
+[ ] Execution history considered when applicable
+[ ] Replay considered when applicable
+[ ] Sensitive data handling considered
+[ ] Regression test added for bug fixes
+[ ] Boundary/edge cases tested
+[ ] Existing tests preserved
+[ ] Mutation resistance considered
+[ ] Documentation updated when public behavior changed
+[ ] English used for new project content
+[ ] No unnecessary dependency introduced
 [ ] No unrelated refactoring introduced
-[ ] Existing tests pass
+[ ] Formatting consistent with repository
+[ ] Existing test suite passes
 ```
 
 ---
 
-# 43. Final Rule for AI Agents
+# 56. Final Instruction
 
-Before changing Guará, understand the intent behind the abstraction.
+The Guará framework should evolve through **small, evidence-based, test-driven changes**.
 
-Do not optimize only for:
+Before writing code, understand the existing code.
 
-```text
-"make this code pass"
-```
+Before changing behavior, understand the tests.
 
-Optimize for:
+Before changing an API, search its consumers.
 
-```text
-"make the requested behavior correct while preserving
-Guará's architectural language, public contracts,
-testability, readability, and long-term evolution."
-```
+Before creating an abstraction, understand the existing abstractions.
 
-When uncertain, inspect the repository before making assumptions.
+Before fixing a bug, create or identify a regression scenario.
 
-The existing code, tests, documentation, and public APIs are the primary evidence for how Guará is intended to work.
+Before refactoring, preserve the behavioral contract.
 
-This version is intentionally written as **agent instructions rather than general project documentation**: it tells an AI what to inspect, what not to assume, where the important implementation lives, and which architectural invariants it must preserve.
+The goal of an AI coding agent is not merely to produce code that works for the immediate request.
+
+The goal is to produce code that **belongs in the Guará framework**.

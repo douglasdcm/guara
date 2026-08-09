@@ -1,11 +1,18 @@
 import argparse
 
 from guara.cli.commands.replay import replay
-
+from guara.constants import VERSION
 
 def create_parser():
     parser = argparse.ArgumentParser(
         description="Guara CLI tool for managing and executing transactions."
+    )
+
+    parser.add_argument(
+        "-V", "--version", 
+        action="version", 
+        version=f"Guará {VERSION}",
+        help="Inform Guará version."
     )
 
     # Create subparsers to handle commands like 'replay'

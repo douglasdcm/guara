@@ -1,10 +1,12 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from logging import Logger, getLogger
 from os import getenv
+
+VERSION = "0.0.25"
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -35,3 +37,5 @@ GUARA_PACING_TIME = convert_variable_to_integer("GUARA_PACING_TIME")
 GUARA_RETRIES_ON_FAILURE = convert_variable_to_integer("GUARA_RETRIES_ON_FAILURE")
 
 SECRET_DEFAULT_VALUE = "********"
+
+

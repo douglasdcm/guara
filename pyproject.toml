@@ -10,7 +10,7 @@ exclude = ["examples*", ".vscode", ".git*", "dist*", "*pytest*", "docs*"]
 name = "guara"
 version = "0.0.25"
 authors = [
-  { name="Douglas Cardoso", email="noemail@noemail.com" },
+  { name="Douglas Cardoso", email="29078346+douglasdcm@users.noreply.github.com" },
 ]
 description = "Framework to build UI test automation in Page Transactions pattern"
 readme = "README.md"

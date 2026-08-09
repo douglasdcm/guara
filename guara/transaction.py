@@ -1,7 +1,7 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 This module has all the transactions.
@@ -31,6 +31,7 @@ from guara.constants import (
     SECRET_DEFAULT_VALUE,
 )
 from guara.it import IAssertion
+from guara.policy import ExecutionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
@@ -66,6 +67,7 @@ class TransactionExecution:
     """
 
     id: str
+    policy: ExecutionPolicy
     name: str
     module: str
     parameters: dict[str, Any] = field(default_factory=dict)
@@ -129,6 +131,7 @@ class TransactionExecution:
             exception_type=data.get("exception_type"),
             exception_message=data.get("exception_message"),
             replayable=data.get("replayable", True),
+            policy=data.get("policy", ExecutionPolicy()),
         )
 
 
@@ -695,6 +698,7 @@ class Application:
             module=_get_module_path(transaction),
             parameters=masked_parameters,
             replayable=replayable,
+            policy=self._transaction.policy,
         )
 
         self._execution_history.add(execution)
