@@ -31,7 +31,7 @@ from guara.constants import (
     SECRET_DEFAULT_VALUE,
 )
 from guara.it import IAssertion
-from guara.policy import ExecutionPolicy
+from guara.policy import ExecutionPolicy, TransactionExecutionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
@@ -67,7 +67,7 @@ class TransactionExecution:
     """
 
     id: str
-    policy: ExecutionPolicy
+    policy: TransactionExecutionPolicy
     name: str
     module: str
     parameters: dict[str, Any] = field(default_factory=dict)
@@ -131,7 +131,7 @@ class TransactionExecution:
             exception_type=data.get("exception_type"),
             exception_message=data.get("exception_message"),
             replayable=data.get("replayable", True),
-            policy=data.get("policy", ExecutionPolicy()),
+            policy=data.get("policy", TransactionExecutionPolicy()),
         )
 
 
@@ -259,11 +259,8 @@ class Application:
         driver: Any = None,
         report_on_init: str | None = None,
         report_on_exit: str | None = None,
-        retry_on_exceptions: tuple[Exception] = (Exception),
-        abort_on_exceptions: tuple[Exception] = (),
-        continue_on_exceptions: tuple[Exception] = (),
-        disable: bool = False,
         name: str | None = None,
+        policy: ExecutionPolicy | None = None,
     ):
         """
         Initializing the application with a driver.
@@ -324,9 +321,9 @@ class Application:
         The message to be reported when the application instance is destroyed.
         """
 
-        self._retry_on_exceptions = retry_on_exceptions
-        self._abort_on_exceptions = abort_on_exceptions
-        self._continue_on_exceptions = continue_on_exceptions
+        if not policy:
+            policy = ExecutionPolicy()
+        self._policy = policy
 
         if GUARA_VERBOSE:
             LOGGER.warning(
@@ -345,9 +342,9 @@ class Application:
                 "No action will be taken on drivers."
             )
 
-        self._disable = disable
+        self._disable = policy.disable
 
-        if disable:
+        if self._disable:
             LOGGER.warning("Application disabled.")
             self._execution_history.status = "skipped"
             self._execution_history.finished_at = _utc_now()
@@ -610,8 +607,10 @@ class Application:
 
                 _continue_on_exceptions = (
                     self._transaction.policy.continue_on_exceptions
-                    or self._continue_on_exceptions
+                    or self._policy.continue_on_exceptions
+                    or ()
                 )
+
                 if isinstance(e, _continue_on_exceptions):
                     LOGGER.warning(
                         f"Transaction '{transaction.__name__}' continued on Exception ({type(e)})"
@@ -620,7 +619,8 @@ class Application:
 
                 _abort_on_exceptions = (
                     self._transaction.policy.abort_on_exceptions
-                    or self._abort_on_exceptions
+                    or self._policy.abort_on_exceptions
+                    or ()
                 )
                 if isinstance(e, _abort_on_exceptions):
                     LOGGER.error(
@@ -630,7 +630,8 @@ class Application:
 
                 _retry_on_exceptions = (
                     self._transaction.policy.retry_on_exceptions
-                    or self._retry_on_exceptions
+                    or self._policy.retry_on_exceptions
+                    or (Exception,)
                 )
                 if not isinstance(e, _retry_on_exceptions):
                     LOGGER.warning(
@@ -646,9 +647,10 @@ class Application:
                 LOGGER.exception(e)  # noqa
 
                 _pacing_time = (
+                    # TODO replace if by or
                     self._transaction.policy.pacing_time
-                    if self._transaction.policy.pacing_time is not None
-                    else GUARA_PACING_TIME
+                    or self._transaction.policy.pacing_time
+                    or GUARA_PACING_TIME
                 )
 
                 if retries <= _retries_on_failure:
@@ -665,7 +667,10 @@ class Application:
                 LOGGER.error(result_details)
 
             self._execution_history.fail()
-            if self._transaction.policy.rollback_on_failure:
+            if (
+                self._transaction.policy.rollback_on_failure
+                or self._policy.rollback_on_failure
+            ):
                 LOGGER.warning(
                     f"Rolling back transaction '{self._transaction.__name__}'."
                 )

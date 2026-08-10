@@ -9,13 +9,15 @@ from pytest import mark, raises
 
 from guara import it
 from guara.constants import GUARA_DRY_RUN
-from guara.policy import ExecutionPolicy
+from guara.policy import TransactionExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
 # A mock transaction that fails N times before succeeding
 class FlakyTransaction(AbstractTransaction):
-    policy = ExecutionPolicy(return_on_dry_run=PermissionError("Flaky failure!"))
+    policy = TransactionExecutionPolicy(
+        return_on_dry_run=PermissionError("Flaky failure!")
+    )
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -70,7 +72,7 @@ def test_application_raises_after_max_retries():
 
 
 class ValidateLocalRetryRaiseException(AbstractTransaction):
-    policy = ExecutionPolicy(retries_on_failure=0)
+    policy = TransactionExecutionPolicy(retries_on_failure=0)
 
     def do(self):
         raise PermissionError("Failed!")
@@ -82,7 +84,7 @@ def test_transaction_overrides_retries_on_failure_when_local_variable_is_positiv
     value, caplog
 ):
     t = ValidateLocalRetryRaiseException
-    t.policy = ExecutionPolicy(retries_on_failure=value)
+    t.policy = TransactionExecutionPolicy(retries_on_failure=value)
     with raises(PermissionError):
         Application().at(t)
 
@@ -99,6 +101,6 @@ class ValidateLocal(AbstractTransaction):
 @mark.parametrize("value", ["invalid", -1, object()])
 def test_transactions_returns_none_when_invalid_retry_on_failure(value):
     t = ValidateLocal
-    t.policy = ExecutionPolicy(retries_on_failure=value)
+    t.policy = TransactionExecutionPolicy(retries_on_failure=value)
     Application().execute(t)
     assert t.policy.retries_on_failure is None

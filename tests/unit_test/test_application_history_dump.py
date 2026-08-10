@@ -1,10 +1,12 @@
 from guara.abstract_transaction import AbstractTransaction
-from guara.policy import ExecutionPolicy
+from guara.policy import TransactionExecutionPolicy
 from guara.transaction import Application
 
 
 class AnyTransaction(AbstractTransaction):
-    policy = ExecutionPolicy(retry_on_exceptions=(PermissionError,), pacing_time=10)
+    policy = TransactionExecutionPolicy(
+        retry_on_exceptions=(PermissionError,), pacing_time=10
+    )
 
     def do(self, foo=None, foo_s=None, credit_card=None):
         print("SSSS")

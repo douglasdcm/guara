@@ -15,4 +15,4 @@ from guara.constants import convert_variable_to_integer
 )
 def test_get_variable_returns_correct_values(value, expected):
     os.environ["FOO"] = value
-    assert convert_variable_to_integer("FOO") == expected
+    assert convert_variable_to_integer("FOO", True) == expected

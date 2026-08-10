@@ -31,7 +31,7 @@ class Application:
         driver: Any = None,
         report_on_init=None,
         report_on_exit=None,
-        disabled=False,
+        disable=False,
         name=None,
     ):
         """
@@ -98,7 +98,7 @@ class Application:
         The web transaction handler
         """
 
-        self._disabled = disabled
+        self._disabled = disable
 
         if name:
             LOGGER.info(f"Application {name} running.")

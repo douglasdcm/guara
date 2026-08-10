@@ -14,7 +14,7 @@ from logging import Logger, getLogger
 from typing import Any, NoReturn
 
 from guara.constants import GUARA_DRY_RUN
-from guara.policy import ExecutionPolicy
+from guara.policy import TransactionExecutionPolicy
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -26,7 +26,7 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
-    policy: ExecutionPolicy = ExecutionPolicy()
+    policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
 
     def __init__(self, driver: Any = None):
         """

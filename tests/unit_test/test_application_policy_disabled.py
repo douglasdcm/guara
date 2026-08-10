@@ -14,6 +14,7 @@ from guara.asynchronous.transaction import (
 from guara.asynchronous.transaction import (
     Application as AsyncApplication,
 )
+from guara.policy import ExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -23,7 +24,7 @@ class MyTransaction(AbstractTransaction):
 
 
 def test_application_do_not_run_when_disabled():
-    app = Application(disable=True)
+    app = Application(policy=ExecutionPolicy(disable=True))
     (
         app.given(MyTransaction)
         .at(MyTransaction)
@@ -45,7 +46,7 @@ class MyAsyncTransaction(AsyncAbstractTransaction):
 
 @mark.asyncio
 async def test_async_application_do_not_run_when_disabled():
-    app = AsyncApplication(disabled=True)
+    app = AsyncApplication(disable=True)
     (
         await app.at(MyAsyncTransaction)
         .when(MyAsyncTransaction)

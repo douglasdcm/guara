@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from pytest import raises
 
-from guara.policy import ExecutionPolicy
+from guara.policy import ExecutionPolicy, TransactionExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -25,7 +25,7 @@ class Error3(Exception):
 
 
 class FlakyTransaction(AbstractTransaction):
-    policy = ExecutionPolicy(return_on_dry_run=Error1())
+    policy = TransactionExecutionPolicy(return_on_dry_run=Error1())
 
     def do(self, error_number):
         if error_number == 1:
@@ -36,7 +36,7 @@ class FlakyTransaction(AbstractTransaction):
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 3)
 def test_application_retry_when_exception_in_list(caplog):
     caplog.set_level(logging.INFO)
-    app = Application(retry_on_exceptions=(Error1))
+    app = Application(ExecutionPolicy(retry_on_exceptions=(Error1)))
     with raises(Error1):
         assert app.at(FlakyTransaction, error_number=1) is None
         assert "attempt 4 / 4" in caplog.text
@@ -45,7 +45,7 @@ def test_application_retry_when_exception_in_list(caplog):
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 3)
 def test_application_not_retry_when_exception_not_in_list(caplog):
     caplog.set_level(logging.INFO)
-    app = Application(retry_on_exceptions=(Error2, Error3))
+    app = Application(ExecutionPolicy(retry_on_exceptions=(Error2, Error3)))
     with raises(Error1):
         app.at(FlakyTransaction, error_number=1)
         assert "attempt" not in caplog.text

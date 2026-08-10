@@ -18,14 +18,6 @@ LOGGER: Logger = getLogger(__name__)
 
 @dataclass
 class ExecutionPolicy:
-    pacing_time: int | None = None
-    """(int) Local value in seconds to wait between retries.
-     Overrides the global variable `GUARA_PACING_TIME`."""
-
-    retries_on_failure: int | None = None
-    """(int) Local value to retry failed executions. Need to be a positive integer.
-     Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
-
     retry_on_exceptions: tuple[type[Exception], ...] | None = None
     """(tuple(Exceptions)) Tuple of exceptions to be retried."""
 
@@ -35,19 +27,14 @@ class ExecutionPolicy:
     continue_on_exceptions: tuple[type[Exception], ...] | None = None
     """(tuple(Exceptions)) Tuple of exceptions to be ignored."""
 
-    return_on_dry_run: Any | None = None
-    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
-
     rollback_on_failure: bool | None = None
-    """(bool) Wheter the automatic rollback of the transaction is executed."""
+    """(bool) Wheter the automatic rollbacks of the transactions are executed."""
 
     disable: bool | None = None
-    """(bool) Wheter the execution of the transaction is disabled."""
+    """(bool) Wheter the executions of the application is disabled."""
 
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
-        self._validate_pacing_time()
-        self._validate_retries_on_failure()
         self._validate_continue_on_exceptions()
         self._validate_abort_on_exceptions()
         self._validate_retry_on_exceptions()
@@ -152,6 +139,66 @@ class ExecutionPolicy:
                 self.retry_on_exceptions = None
         except TypeError:
             self.retry_on_exceptions = None
+
+    def to_dict(self) -> dict[str, Any]:
+        """Returns the transaction execution as a dictionary."""
+        return asdict(self)
+
+
+@dataclass
+class TransactionExecutionPolicy(ExecutionPolicy):
+    pacing_time: int | None = None
+    """(int) Local value in seconds to wait between retries.
+     Overrides the global variable `GUARA_PACING_TIME`."""
+
+    retries_on_failure: int | None = None
+    """(int) Local value to retry failed executions. Need to be a positive integer.
+     Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
+
+    return_on_dry_run: Any | None = None
+    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
+
+    def __post_init__(self):
+        """Validates the class attributes assigned in the subclass."""
+        super().__post_init__()
+        self._validate_pacing_time()
+        self._validate_retries_on_failure()
+
+    @property
+    def __name__(self) -> property:
+        """
+        The name of the policy
+
+        Returns:
+            (str) The name of the policy being implemented.
+        """
+        return self.__class__.__name__
+
+    def _validate_disable(self):
+        if self.disable is None:
+            return
+
+        if isinstance(self.disable, bool):
+            return
+
+        LOGGER.warning(
+            f"Invalid value in 'disable' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+        self.disable = None
+
+    def _validate_rollback_on_failure(self):
+        if self.rollback_on_failure is None:
+            return
+
+        if isinstance(self.rollback_on_failure, bool):
+            return
+
+        LOGGER.warning(
+            f"Invalid value in 'rollback_on_failure' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+        self.rollback_on_failure = None
 
     def _validate_retries_on_failure(self):
         if self.retries_on_failure is None:
