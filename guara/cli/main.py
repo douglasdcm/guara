@@ -1,6 +1,5 @@
 import argparse
 
-from guara.cli.commands.dump import dump_history
 from guara.cli.commands.replay import replay
 from guara.constants import VERSION
 
@@ -52,8 +51,7 @@ def create_parser():
         "--driver",
         type=str,
         help=(
-            "Python path to the driver class or factory. "
-            "Example: drivers:create_driver"
+            "Python path to the driver class or factory. Example: drivers:create_driver"
         ),
     )
 

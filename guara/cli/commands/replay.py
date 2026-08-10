@@ -1,4 +1,5 @@
 import importlib
+
 from guara.transaction import Application
 
 
@@ -17,11 +18,11 @@ def load_driver(path: str):
         factory = getattr(module, factory_name)
     except AttributeError as exc:
         raise ValueError(
-            f"Driver factory '{factory_name}' was not found "
-            f"in module '{module_name}'."
+            f"Driver factory '{factory_name}' was not found in module '{module_name}'."
         ) from exc
 
     return factory()
+
 
 def replay(args):
     driver = load_driver(args.driver) if args.driver else None

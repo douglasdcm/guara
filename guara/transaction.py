@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
@@ -39,6 +39,14 @@ LOGGER: Logger = getLogger(__name__)
 
 class ReplayError(Exception):
     """Raised when an execution history cannot be replayed."""
+
+
+class PreconditionError(Exception):
+    """Raised when a pre-conditon cannot be executed."""
+
+
+class PosconditionError(Exception):
+    """Raised when a pos-conditon cannot be executed."""
 
 
 def _get_module_path(transaction: AbstractTransaction) -> str:
@@ -261,6 +269,8 @@ class Application:
         report_on_exit: str | None = None,
         name: str | None = None,
         policy: ExecutionPolicy | None = None,
+        preconditions: list[(Callable, dict)] | None = None,
+        posconditions: list[(Callable, dict)] | None = None,
     ):
         """
         Initializing the application with a driver.
@@ -274,18 +284,25 @@ class Application:
             report_on_exit (str): The message to be reported when the application
              instance is destroyed.
 
-            retry_on_exceptions (tuple(Exception)): the listo fo the Exceptions
+            name (str): the name to identify the application in logs.
+
+            policy (ExecutionPolicy): the policy to control how the application is executed.
              to be retried.
 
-            disabled (bool): disable the application so that no action
-             is excuted (feature flagging).
+            preconditions (list[(Callable, dict)]): list of callables with parameters to be executed
+             before the transactions.
 
-            name (str): the name to identify the application in logs.
+            posconditions (list[(Callable, dict)]): list of callables with parameters to be executed
+             after the transactions.
+
         """
         self._transaction_pool: list[AbstractTransaction] = []
         """
         Stores all transactions.
         """
+
+        self._preconditions = preconditions
+        self._posconditions = posconditions
 
         self._execution_history = ExecutionHistory(application=name)
         self._execution_history.start()
@@ -532,6 +549,13 @@ class Application:
         Returns:
             (Application)
         """
+        if self._preconditions:
+            try:
+                for precondition, parameters in self._preconditions:
+                    precondition(**parameters)
+            except (TypeError, ValueError) as e:
+                raise PreconditionError(f"Invalid pre-condition: {e}")
+
         self._transaction = transaction(self._driver)
 
         _disabled = (
@@ -598,6 +622,13 @@ class Application:
                     LOGGER.info(result_details)
 
                 self._execution_history.succeed()
+
+                if self._posconditions:
+                    try:
+                        for poscondition, parameters in self._posconditions:
+                            poscondition(**parameters)
+                    except (TypeError, ValueError) as e:
+                        raise PosconditionError(f"Invalid pos-condition: {e}")
 
                 return self
 
