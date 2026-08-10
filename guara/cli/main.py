@@ -41,14 +41,8 @@ def create_parser():
         help="Specific transaction identifier or execution hash to target.",
     )
     replay_parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Simulate the replay execution without invoking actual drivers.",
-    )
-    replay_parser.add_argument(
         "-r",
         "--resume",
-        # type=bool,
         action="store_true",
         help="Resume the replay execution from a specific transaction or execution ID.",
     )

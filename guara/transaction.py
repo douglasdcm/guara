@@ -384,7 +384,6 @@ class Application:
         history: str | Path | ExecutionHistory,
         parameter_overrides: dict[str, dict[str, Any]] | None = None,
         transaction_id: str | None = None,
-        dry_run: str | None = None,
         resume: bool = True,
     ) -> Application:
         """
@@ -646,10 +645,7 @@ class Application:
                 )
                 LOGGER.exception(e)  # noqa
 
-                _pacing_time = (
-                    self._transaction.policy.pacing_time
-                    or GUARA_PACING_TIME
-                )
+                _pacing_time = self._transaction.policy.pacing_time or GUARA_PACING_TIME
 
                 if retries <= _retries_on_failure:
                     LOGGER.info(f"Waiting {_pacing_time}s for next retry.")
