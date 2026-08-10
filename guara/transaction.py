@@ -385,7 +385,7 @@ class Application:
         parameter_overrides: dict[str, dict[str, Any]] | None = None,
         transaction_id: str | None = None,
         dry_run: str | None = None,
-        resume: str | bool = bool,
+        resume: bool = True,
     ) -> Application:
         """
         Replays a previously dumped execution history.
@@ -577,7 +577,7 @@ class Application:
 
         result_details = {
             "transaction": transaction_info,
-            "parameteres": [{**kwargs}],
+            "parameters": [{**kwargs}],
         }
 
         exception: Exception = None
@@ -647,9 +647,7 @@ class Application:
                 LOGGER.exception(e)  # noqa
 
                 _pacing_time = (
-                    # TODO replace if by or
                     self._transaction.policy.pacing_time
-                    or self._transaction.policy.pacing_time
                     or GUARA_PACING_TIME
                 )
 
