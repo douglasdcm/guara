@@ -9,6 +9,7 @@ This module has all the transactions.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 import importlib
 import inspect
 import json
@@ -31,7 +32,7 @@ from guara.constants import (
     SECRET_DEFAULT_VALUE,
 )
 from guara.it import IAssertion
-from guara.policy import ExecutionPolicy, TransactionExecutionPolicy
+from guara.policy import ApplicationExecutionPolicy, TransactionExecutionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
@@ -268,7 +269,7 @@ class Application:
         report_on_init: str | None = None,
         report_on_exit: str | None = None,
         name: str | None = None,
-        policy: ExecutionPolicy | None = None,
+        execution_policy: ApplicationExecutionPolicy | None = None,
         preconditions: list[(Callable, dict)] | None = None,
         posconditions: list[(Callable, dict)] | None = None,
     ):
@@ -338,9 +339,9 @@ class Application:
         The message to be reported when the application instance is destroyed.
         """
 
-        if not policy:
-            policy = ExecutionPolicy()
-        self._policy = policy
+        if not execution_policy:
+            execution_policy = ApplicationExecutionPolicy()
+        self._policy = execution_policy
 
         if GUARA_VERBOSE:
             LOGGER.warning(
@@ -359,7 +360,7 @@ class Application:
                 "No action will be taken on drivers."
             )
 
-        self._disable = policy.disable
+        self._disable = execution_policy.disable
 
         if self._disable:
             LOGGER.warning("Application disabled.")
@@ -549,18 +550,26 @@ class Application:
         Returns:
             (Application)
         """
-        if self._preconditions:
-            try:
-                for precondition, parameters in self._preconditions:
+        _preconditions = (
+            transaction.preconditions
+            if transaction.preconditions is not None
+            else self._preconditions
+        )
+        if _preconditions:
+            for precondition, parameters in _preconditions:
+                # Preconditions in transactions should be set as strings
+                # to avoid 'undefined' method error
+                if isinstance(precondition, str):
+                    method = getattr(transaction, precondition)
+                    method(self=transaction, **parameters)
+                else:
                     precondition(**parameters)
-            except (TypeError, ValueError) as e:
-                raise PreconditionError(f"Invalid pre-condition: {e}")
 
         self._transaction = transaction(self._driver)
 
         _disabled = (
-            self._transaction.policy.disable
-            if self._transaction.policy.disable is not None
+            self._transaction.execution_policy.disable
+            if self._transaction.execution_policy.disable is not None
             else self._disable
         )
 
@@ -570,14 +579,14 @@ class Application:
             )
             return self
 
-        if any(v for v in self._transaction.policy.to_dict().values()):
+        if any(v for v in self._transaction.execution_policy.to_dict().values()):
             LOGGER.warning(
-                f"Policy for transaction '{self._transaction.__name__}': {self._transaction.policy.to_dict()}"
+                f"Policy for transaction '{self._transaction.__name__}': {self._transaction.execution_policy.to_dict()}"
             )
 
         _retries_on_failure = (
-            self._transaction.policy.retries_on_failure
-            if self._transaction.policy.retries_on_failure is not None
+            self._transaction.execution_policy.retries_on_failure
+            if self._transaction.execution_policy.retries_on_failure is not None
             else GUARA_RETRIES_ON_FAILURE
         )
 
@@ -636,7 +645,7 @@ class Application:
                 exception = e
 
                 _continue_on_exceptions = (
-                    self._transaction.policy.continue_on_exceptions
+                    self._transaction.execution_policy.continue_on_exceptions
                     or self._policy.continue_on_exceptions
                     or ()
                 )
@@ -648,7 +657,7 @@ class Application:
                     return self._result
 
                 _abort_on_exceptions = (
-                    self._transaction.policy.abort_on_exceptions
+                    self._transaction.execution_policy.abort_on_exceptions
                     or self._policy.abort_on_exceptions
                     or ()
                 )
@@ -659,7 +668,7 @@ class Application:
                     raise
 
                 _retry_on_exceptions = (
-                    self._transaction.policy.retry_on_exceptions
+                    self._transaction.execution_policy.retry_on_exceptions
                     or self._policy.retry_on_exceptions
                     or (Exception,)
                 )
@@ -676,7 +685,11 @@ class Application:
                 )
                 LOGGER.exception(e)  # noqa
 
-                _pacing_time = self._transaction.policy.pacing_time or GUARA_PACING_TIME
+                _pacing_time = (
+                    self._transaction.execution_policy.pacing_time
+                    if self._transaction.execution_policy.pacing_time is not None
+                    else GUARA_PACING_TIME
+                )
 
                 if retries <= _retries_on_failure:
                     LOGGER.info(f"Waiting {_pacing_time}s for next retry.")
@@ -692,10 +705,12 @@ class Application:
                 LOGGER.error(result_details)
 
             self._execution_history.fail()
-            if (
-                self._transaction.policy.rollback_on_failure
-                or self._policy.rollback_on_failure
-            ):
+            _rollback = (
+                self._transaction.execution_policy.rollback_on_failure
+                if self._transaction.execution_policy.rollback_on_failure is not None
+                else self._policy.rollback_on_failure
+            )
+            if _rollback:
                 LOGGER.warning(
                     f"Rolling back transaction '{self._transaction.__name__}'."
                 )
@@ -736,7 +751,7 @@ class Application:
             module=_get_module_path(transaction),
             parameters=masked_parameters,
             replayable=replayable,
-            policy=self._transaction.policy,
+            policy=self._transaction.execution_policy,
         )
 
         self._execution_history.add(execution)

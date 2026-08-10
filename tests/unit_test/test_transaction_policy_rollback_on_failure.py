@@ -7,7 +7,7 @@
 from pytest import mark, raises
 
 from guara import LOGGER
-from guara.policy import TransactionExecutionPolicy
+from guara.policy import ApplicationExecutionPolicy, TransactionExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -21,16 +21,26 @@ class ValidateLocal(AbstractTransaction):
 
 def test_transaction_run_automatic_rollback_when_policy_rollback_is_true(caplog):
     t = ValidateLocal
-    t.policy = TransactionExecutionPolicy(rollback_on_failure=True)
+    t.execution_policy = TransactionExecutionPolicy(rollback_on_failure=True)
     with raises(ValueError):
         Application().at(t)
     assert "rollback!" in caplog.text
 
 
+def test_transaction_rollback_overrides_application_rollback(caplog):
+    t = ValidateLocal
+    t.execution_policy = TransactionExecutionPolicy(rollback_on_failure=False)
+    with raises(ValueError):
+        Application(
+            execution_policy=ApplicationExecutionPolicy(rollback_on_failure=True)
+        ).at(t)
+    assert "rollback!" not in caplog.text
+
+
 @mark.parametrize("value", ["invalid", -1, object()])
 def test_transactions_returns_none_when_invalid_rollback_value(value):
     t = ValidateLocal
-    t.policy = TransactionExecutionPolicy(rollback_on_failure=value)
+    t.execution_policy = TransactionExecutionPolicy(rollback_on_failure=value)
     with raises(ValueError):
         Application().execute(t)
-    assert t.policy.rollback_on_failure is None
+    assert t.execution_policy.rollback_on_failure is None

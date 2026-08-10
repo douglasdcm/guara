@@ -23,7 +23,7 @@ class AbstractTransaction:
     """
 
     return_on_dry_run = None
-    policy = TransactionExecutionPolicy()
+    execution_policy = TransactionExecutionPolicy()
 
     @property
     def __name__(self) -> property:

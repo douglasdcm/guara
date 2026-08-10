@@ -10,8 +10,9 @@ web transactions in an automated browser.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from logging import Logger, getLogger
-from typing import Any, NoReturn
+from typing import Any, Callable, NoReturn
 
 from guara.constants import GUARA_DRY_RUN
 from guara.policy import TransactionExecutionPolicy
@@ -26,7 +27,9 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
-    policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
+    execution_policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
+    preconditions: list[(Callable, dict)] | None = None
+    posconditions: list[(Callable, dict)] | None = None
 
     def __init__(self, driver: Any = None):
         """
@@ -37,6 +40,29 @@ class AbstractTransaction:
             driver: (Any): It is the driver that controls the user-interface.
         """
         self._driver: Any = driver
+
+    def __post_init__(self):
+        """Validates the class attributes assigned in the subclass."""
+        self._validate_conditions(self.preconditions, condition_type = "pre-condition")
+        self._validate_conditions(self.posconditions, condition_type = "pos-condition")
+
+    def _validate_conditions(self, conditions, condition_type):
+        if conditions is None:
+            return
+
+        _MINIMUM_ITEMS = 1
+        if isinstance(conditions, list):
+            for precondition in conditions:
+                if len(conditions) > _MINIMUM_ITEMS:
+                    # String is allowed in case the precondition is defined inside the Transaction
+                    if isinstance(precondition[0], callable) or isinstance(precondition[0], str):
+                        if len(conditions) == _MINIMUM_ITEMS:
+                            return
+                        if len(conditions) == _MINIMUM_ITEMS +1:
+                            if isinstance(precondition[1], dict):
+                                return
+            else:
+                raise TypeError(f"Invalid {condition_type} or post-condition ({type(conditions)})")
 
     @property
     def __name__(self) -> property:
@@ -65,9 +91,9 @@ class AbstractTransaction:
 
     def act(self, **kwargs: dict[str, Any]) -> Any:
         if GUARA_DRY_RUN:
-            if isinstance(self.policy.return_on_dry_run, Exception):
-                raise self.policy.return_on_dry_run
-            return self.policy.return_on_dry_run
+            if isinstance(self.execution_policy.return_on_dry_run, Exception):
+                raise self.execution_policy.return_on_dry_run
+            return self.execution_policy.return_on_dry_run
         return self.do(**kwargs)
 
     def undo(self):

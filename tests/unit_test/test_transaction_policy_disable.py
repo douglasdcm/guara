@@ -6,7 +6,7 @@
 
 from pytest import mark, raises
 
-from guara.policy import ExecutionPolicy, TransactionExecutionPolicy
+from guara.policy import ApplicationExecutionPolicy, TransactionExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -17,28 +17,28 @@ class ValidateLocal(AbstractTransaction):
 
 def test_transaction_run_when_policy_disable_is_false():
     t = ValidateLocal
-    t.policy = TransactionExecutionPolicy(disable=False)
+    t.execution_policy = TransactionExecutionPolicy(disable=False)
     with raises(ValueError):
         Application().at(t)
 
 
 def test_transaction_doesnt_run_when_policy_disable_is_true(caplog):
     t = ValidateLocal
-    t.policy = TransactionExecutionPolicy(disable=True)
+    t.execution_policy = TransactionExecutionPolicy(disable=True)
     Application().at(t)
     assert "disable" in caplog.text
 
 
-def test_transaction_disable_superseeds_application_disable(caplog):
+def test_transaction_disable_overrides_application_disable(caplog):
     t = ValidateLocal
-    t.policy = TransactionExecutionPolicy(disable=True)
-    Application(ExecutionPolicy(disable=False)).at(t)
+    t.execution_policy = TransactionExecutionPolicy(disable=True)
+    Application(ApplicationExecutionPolicy(disable=False)).at(t)
 
 
 @mark.parametrize("value", ["invalid", -1, object()])
 def test_transactions_returns_none_when_invalid_disable_value(value):
     t = ValidateLocal
-    t.policy = TransactionExecutionPolicy(disable=value)
+    t.execution_policy = TransactionExecutionPolicy(disable=value)
     with raises(ValueError):
         Application().execute(t)
-    assert t.policy.disable is None
+    assert t.execution_policy.disable is None

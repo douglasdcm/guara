@@ -35,5 +35,5 @@ def test_application_runs_precontions_before_transactions():
 
 @mark.parametrize("value", ["invalid", ("invalid",), (object, "invalid")])
 def test_application_fails_when_invalid_precontions(value):
-    with raises(PreconditionError):
+    with raises((ValueError, TypeError)):
         Application(preconditions=[value]).execute(MyTransaction)

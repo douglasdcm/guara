@@ -154,8 +154,8 @@ class Application:
         self._transaction_name = get_transaction_info(self._transaction)
 
         if GUARA_DRY_RUN:
-            if isinstance(self._transaction.policy.return_on_dry_run, Exception):
-                raise self._transaction.policy.return_on_dry_run
+            if isinstance(self._transaction.execution_policy.return_on_dry_run, Exception):
+                raise self._transaction.execution_policy.return_on_dry_run
             return self
 
         coroutine: Coroutine[None, None, Any] = self._transaction.do(**kwargs)
