@@ -21,7 +21,9 @@ class AsyncMyTransaction(AsyncAbstractTransaction):
 
 
 class AsyncMyFailedTransaction(AsyncAbstractTransaction):
-    execution_policy = TransactionExecutionPolicy(return_on_dry_run=PermissionError("Failed"))
+    execution_policy = TransactionExecutionPolicy(
+        return_on_dry_run=PermissionError("Failed")
+    )
 
     async def do(self):
         raise PermissionError("Failed")

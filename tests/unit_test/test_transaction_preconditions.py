@@ -4,16 +4,16 @@
 # Visit: https://guara.readthedocs.io/en/latest/
 
 
+from typing import ClassVar
+
 from pytest import mark, raises
 
-from guara import LOGGER
-from guara.policy import ApplicationExecutionPolicy, TransactionExecutionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
 class ValidateLocal(AbstractTransaction):
     # Must set the method name as string to avoid 'undefined' method error
-    preconditions = [("ensure_connection_open", {"connection": "sqlite"})]
+    preconditions: ClassVar = [("ensure_connection_open", {"connection": "sqlite"})]
 
     def do(self):
         raise ValueError
@@ -41,9 +41,10 @@ def test_transaction_run_preconditions_when_preconditions_outside_transaction():
 def simple_precondition():
     raise PermissionError
 
+
 def test_transaction_precondition_overrides_application_preconditions():
-    with raises(ValueError):
-        Application(preconditions=[(simple_precondition,)]).at(ValueError)
+    with raises(ConnectionError):
+        Application(preconditions=[(simple_precondition,)]).at(ValidateLocal)
 
 
 @mark.parametrize("value", ["invalid", -1, object(), ("func", 0), (0, {"0": 0})])
@@ -52,4 +53,3 @@ def test_transaction_preconditions_fails_when_invalid_preconditions(value):
     with raises((ValueError, TypeError)):
         t.preconditions = value
         Application().at(t)
-

@@ -7,7 +7,7 @@
 from pytest import mark, raises
 
 from guara.abstract_transaction import AbstractTransaction
-from guara.transaction import Application, PreconditionError
+from guara.transaction import Application
 
 
 def ensure_database_connection(connection):

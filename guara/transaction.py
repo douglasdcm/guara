@@ -9,7 +9,6 @@ This module has all the transactions.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 import importlib
 import inspect
 import json
