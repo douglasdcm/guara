@@ -43,6 +43,7 @@ class ApplicationExecutionPolicy:
         self._validate_retry_on_exceptions()
         self._validate_rollback_on_failure()
         self._validate_disable()
+        self._validate_dry_run()
 
     @property
     def __name__(self) -> property:
@@ -53,6 +54,19 @@ class ApplicationExecutionPolicy:
             (str) The name of the policy being implemented.
         """
         return self.__class__.__name__
+
+    def _validate_dry_run(self):
+        if self.dry_run is None:
+            return
+
+        if isinstance(self.dry_run, bool):
+            return
+
+        LOGGER.warning(
+            f"Invalid value in 'dry_run' in policy '{self.__name__}'."
+            " Resetting to 'None'."
+        )
+        self.dry_run = None
 
     def _validate_disable(self):
         if self.disable is None:
