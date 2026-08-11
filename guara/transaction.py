@@ -270,7 +270,7 @@ class Application:
         name: str | None = None,
         execution_policy: ApplicationExecutionPolicy | None = None,
         preconditions: list[(Callable, dict)] | None = None,
-        posconditions: list[(Callable, dict)] | None = None,
+        postconditions: list[(Callable, dict)] | None = None,
     ):
         """
         Initializing the application with a driver.
@@ -292,7 +292,7 @@ class Application:
             preconditions (list[(Callable, dict)]): list of callables with parameters to be executed
              before the transactions.
 
-            posconditions (list[(Callable, dict)]): list of callables with parameters to be executed
+            postconditions (list[(Callable, dict)]): list of callables with parameters to be executed
              after the transactions.
 
         """
@@ -302,7 +302,7 @@ class Application:
         """
 
         self._preconditions = preconditions
-        self._posconditions = posconditions
+        self._postconditions = postconditions
 
         self._execution_history = ExecutionHistory(application=name)
         self._execution_history.start()
@@ -631,12 +631,21 @@ class Application:
 
                 self._execution_history.succeed()
 
-                if self._posconditions:
-                    try:
-                        for poscondition, parameters in self._posconditions:
-                            poscondition(**parameters)
-                    except (TypeError, ValueError) as e:
-                        raise PosconditionError(f"Invalid pos-condition: {e}")
+                _postconditions = (
+                    self._transaction.postconditions
+                    if self._transaction.postconditions is not None
+                    else self._postconditions
+                )
+
+                if _postconditions:
+                    for postcondition, parameters in _postconditions:
+                        # postconditions in transactions should be set as strings
+                        # to avoid 'undefined' method error
+                        if isinstance(postcondition, str):
+                            method = getattr(transaction, postcondition)
+                            method(self=transaction, **parameters)
+                        else:
+                            postcondition(**parameters)
 
                 return self
 

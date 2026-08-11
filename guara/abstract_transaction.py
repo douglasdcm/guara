@@ -28,7 +28,7 @@ class AbstractTransaction:
 
     execution_policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
     preconditions: list[(Callable, dict)] | None = None
-    posconditions: list[(Callable, dict)] | None = None
+    postconditions: list[(Callable, dict)] | None = None
 
     def __init__(self, driver: Any = None):
         """
@@ -43,7 +43,7 @@ class AbstractTransaction:
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
         self._validate_conditions(self.preconditions, condition_type="pre-condition")
-        self._validate_conditions(self.posconditions, condition_type="pos-condition")
+        self._validate_conditions(self.postconditions, condition_type="pos-condition")
 
     def _validate_conditions(self, conditions, condition_type):
         if conditions is None:
