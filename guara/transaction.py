@@ -338,6 +338,7 @@ class Application:
         """
 
         self._dry_run = None
+        self._disable = None
 
         if not execution_policy:
             execution_policy = ApplicationExecutionPolicy()
@@ -345,13 +346,6 @@ class Application:
 
         if GUARA_VERBOSE:
             LOGGER.warning("GUARA_VERBOSE enabled.")
-
-        self._disable = execution_policy.disable
-
-        if self._disable:
-            LOGGER.warning("Application disabled.")
-            self._execution_history.status = "skipped"
-            self._execution_history.finished_at = _utc_now()
 
     def __del__(self):
         if self._report_on_exit:
@@ -569,13 +563,13 @@ class Application:
                 else:
                     precondition(**parameters)
 
-        _disabled = (
+        self._disable = (
             self._transaction.execution_policy.disable
             if self._transaction.execution_policy.disable is not None
-            else self._disable
+            else self._policy.disable
         )
 
-        if _disabled:
+        if self._disable:
             LOGGER.warning(
                 f"Transaction '{self._transaction}' disabled. No execution taken."
             )

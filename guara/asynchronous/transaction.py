@@ -98,7 +98,7 @@ class Application:
         The web transaction handler
         """
 
-        self._disabled = disable
+        self._disable = disable
         self._dry_run = dry_run
 
         if name:
@@ -136,7 +136,7 @@ class Application:
         Returns:
             (Application)
         """
-        if self._disabled:
+        if self._disable:
             return self
 
         self._transaction = transaction(self._driver)
@@ -222,7 +222,7 @@ class Application:
         Returns:
             (Application)
         """
-        if self._disabled:
+        if self._disable:
             return self
 
         self._it = it()
