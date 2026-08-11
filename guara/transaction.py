@@ -23,7 +23,6 @@ from typing import Any, Callable
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
-    GUARA_DISABLE_LOGS,
     GUARA_DRY_RUN,
     GUARA_PACING_TIME,
     GUARA_RETRIES_ON_FAILURE,
@@ -338,26 +337,14 @@ class Application:
         The message to be reported when the application instance is destroyed.
         """
 
+        self._dry_run = None
+
         if not execution_policy:
             execution_policy = ApplicationExecutionPolicy()
         self._policy = execution_policy
 
         if GUARA_VERBOSE:
-            LOGGER.warning(
-                {
-                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
-                    "GUARA_DRY_RUN": GUARA_DRY_RUN,
-                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
-                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
-                    "GUARA_VERBOSE": GUARA_VERBOSE,
-                }
-            )
-
-        if GUARA_DRY_RUN:
-            LOGGER.warning(
-                "GUARA_DRY_RUN: True. Dry run is enabled. "
-                "No action will be taken on drivers."
-            )
+            LOGGER.warning("GUARA_VERBOSE enabled.")
 
         self._disable = execution_policy.disable
 
@@ -549,6 +536,24 @@ class Application:
         Returns:
             (Application)
         """
+        self._transaction = transaction(self._driver)
+
+        self._dry_run = (
+            self._transaction.execution_policy.dry_run
+            if self._transaction.execution_policy.dry_run is not None
+            else self._policy.dry_run
+            if self._policy.dry_run
+            else GUARA_DRY_RUN
+        )
+        if self._dry_run:
+            LOGGER.warning("Dry run is enabled. No action will be taken on drivers.")
+            if isinstance(
+                self._transaction.execution_policy.return_on_dry_run, Exception
+            ):
+                raise self._transaction.execution_policy.return_on_dry_run
+            self._result = self._transaction.execution_policy.return_on_dry_run
+            return self
+
         _preconditions = (
             transaction.preconditions
             if transaction.preconditions is not None
@@ -563,8 +568,6 @@ class Application:
                     method(self=transaction, **parameters)
                 else:
                     precondition(**parameters)
-
-        self._transaction = transaction(self._driver)
 
         _disabled = (
             self._transaction.execution_policy.disable
@@ -878,6 +881,9 @@ class Application:
         """
         if self._disable:
             return self
+
+        if self._dry_run:
+            return
 
         self._transaction_pool.reverse()
 

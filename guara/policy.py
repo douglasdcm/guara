@@ -33,6 +33,9 @@ class ApplicationExecutionPolicy:
     disable: bool | None = None
     """(bool) Wheter the executions of the application is disabled."""
 
+    dry_run: bool | None = None
+    """(bool) Wheter the executions of the application hits the driver (False) or not (True)."""
+
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
         self._validate_continue_on_exceptions()

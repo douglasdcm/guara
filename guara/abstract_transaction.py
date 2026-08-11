@@ -13,7 +13,6 @@ from __future__ import annotations
 from logging import Logger, getLogger
 from typing import Any, Callable, NoReturn
 
-from guara.constants import GUARA_DRY_RUN
 from guara.policy import TransactionExecutionPolicy
 
 LOGGER: Logger = getLogger(__name__)
@@ -94,10 +93,6 @@ class AbstractTransaction:
         raise NotImplementedError
 
     def act(self, **kwargs: dict[str, Any]) -> Any:
-        if GUARA_DRY_RUN:
-            if isinstance(self.execution_policy.return_on_dry_run, Exception):
-                raise self.execution_policy.return_on_dry_run
-            return self.execution_policy.return_on_dry_run
         return self.do(**kwargs)
 
     def undo(self):
@@ -109,6 +104,4 @@ class AbstractTransaction:
         """
 
     def revert_action(self) -> NoReturn:
-        if GUARA_DRY_RUN:
-            return
         return self.undo()

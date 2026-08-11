@@ -23,7 +23,6 @@ class MyTransaction(AbstractTransaction):
         return "success"
 
 
-@patch("guara.abstract_transaction.GUARA_DRY_RUN", True)
 @patch("guara.transaction.GUARA_DRY_RUN", True)
 def test_transaction_is_not_executed_when_dry_run_is_true():
     app = Application()

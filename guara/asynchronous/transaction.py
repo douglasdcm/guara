@@ -15,7 +15,6 @@ from typing import Any, Coroutine
 from guara.asynchronous.abstract_transaction import AbstractTransaction
 from guara.asynchronous.it import IAssertion
 from guara.constants import (
-    GUARA_DISABLE_LOGS,
     GUARA_DRY_RUN,
     GUARA_VERBOSE,
     SECRET_DEFAULT_VALUE,
@@ -32,6 +31,7 @@ class Application:
         report_on_init=None,
         report_on_exit=None,
         disable=False,
+        dry_run=False,
         name=None,
     ):
         """
@@ -99,6 +99,7 @@ class Application:
         """
 
         self._disabled = disable
+        self._dry_run = dry_run
 
         if name:
             LOGGER.info(f"Application {name} running.")
@@ -109,18 +110,7 @@ class Application:
         self._report_on_exit = report_on_exit
 
         if GUARA_VERBOSE:
-            LOGGER.warning(
-                {
-                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
-                    "GUARA_DRY_RUN": GUARA_DRY_RUN,
-                    "GUARA_VERBOSE": GUARA_VERBOSE,
-                }
-            )
-
-        if GUARA_DRY_RUN:
-            LOGGER.warning(
-                "GUARA_DRY_RUN: True. Dry run is enabled. No action will be taken on drivers."
-            )
+            LOGGER.warning("GUARA_VERBOSE enabled.")
 
     def __del__(self):
         if self._report_on_exit:
@@ -153,7 +143,10 @@ class Application:
         self._kwargs = kwargs
         self._transaction_name = get_transaction_info(self._transaction)
 
-        if GUARA_DRY_RUN:
+        self._dry_run = self._dry_run if self._dry_run else GUARA_DRY_RUN
+
+        if self._dry_run:
+            LOGGER.warning("Dry run is enabled. No action will be taken on drivers.")
             if isinstance(
                 self._transaction.execution_policy.return_on_dry_run, Exception
             ):
