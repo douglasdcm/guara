@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
@@ -268,8 +268,6 @@ class Application:
         report_on_exit: str | None = None,
         name: str | None = None,
         execution_policy: ApplicationExecutionPolicy | None = None,
-        preconditions: list[(Callable, dict)] | None = None,
-        postconditions: list[(Callable, dict)] | None = None,
     ):
         """
         Initializing the application with a driver.
@@ -288,20 +286,11 @@ class Application:
             policy (ExecutionPolicy): the policy to control how the application is executed.
              to be retried.
 
-            preconditions (list[(Callable, dict)]): list of callables with parameters to be executed
-             before the transactions.
-
-            postconditions (list[(Callable, dict)]): list of callables with parameters to be executed
-             after the transactions.
-
         """
         self._transaction_pool: list[AbstractTransaction] = []
         """
         Stores all transactions.
         """
-
-        self._preconditions = preconditions
-        self._postconditions = postconditions
 
         self._execution_history = ExecutionHistory(application=name)
         self._execution_history.start()
@@ -607,21 +596,6 @@ class Application:
             self._result = self._transaction.execution_policy.return_on_dry_run
             return self
 
-        _preconditions = (
-            transaction.preconditions
-            if transaction.preconditions is not None
-            else self._preconditions
-        )
-        if _preconditions:
-            for precondition, parameters in _preconditions:
-                # Preconditions in transactions should be set as strings
-                # to avoid 'undefined' method error
-                if isinstance(precondition, str):
-                    method = getattr(transaction, precondition)
-                    method(self=transaction, **parameters)
-                else:
-                    precondition(**parameters)
-
         self._disable = (
             self._transaction.execution_policy.disable
             if self._transaction.execution_policy.disable is not None
@@ -686,22 +660,6 @@ class Application:
                     LOGGER.info(result_details)
 
                 self._execution_history.succeed()
-
-                _postconditions = (
-                    self._transaction.postconditions
-                    if self._transaction.postconditions is not None
-                    else self._postconditions
-                )
-
-                if _postconditions:
-                    for postcondition, parameters in _postconditions:
-                        # postconditions in transactions should be set as strings
-                        # to avoid 'undefined' method error
-                        if isinstance(postcondition, str):
-                            method = getattr(transaction, postcondition)
-                            method(self=transaction, **parameters)
-                        else:
-                            postcondition(**parameters)
 
                 return self
 

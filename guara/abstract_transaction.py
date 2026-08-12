@@ -11,7 +11,7 @@ web transactions in an automated browser.
 from __future__ import annotations
 
 from logging import Logger, getLogger
-from typing import Any, Callable, ClassVar, NoReturn
+from typing import Any, ClassVar, NoReturn
 
 from guara.policy import TransactionExecutionPolicy
 
@@ -28,8 +28,6 @@ class AbstractTransaction:
     requires: ClassVar = []
     ensures: ClassVar = []
     execution_policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
-    preconditions: list[(Callable, dict)] | None = None
-    postconditions: list[(Callable, dict)] | None = None
 
     def __init__(self, driver: Any = None):
         """
@@ -40,34 +38,6 @@ class AbstractTransaction:
             driver: (Any): It is the driver that controls the user-interface.
         """
         self._driver: Any = driver
-
-    def __post_init__(self):
-        """Validates the class attributes assigned in the subclass."""
-        self._validate_conditions(self.preconditions, condition_type="pre-condition")
-        self._validate_conditions(self.postconditions, condition_type="pos-condition")
-
-    def _validate_conditions(self, conditions, condition_type):
-        if conditions is None:
-            return
-
-        _MINIMUM_ITEMS = 1
-        if isinstance(conditions, list):
-            for precondition in conditions:
-                # String is allowed in case the precondition is defined inside the Transaction
-                if (
-                    len(conditions) > _MINIMUM_ITEMS
-                    and isinstance(precondition[0], callable)
-                    or isinstance(precondition[0], str)
-                ):
-                    if len(conditions) == _MINIMUM_ITEMS:
-                        return
-                    if len(conditions) == _MINIMUM_ITEMS + 1 and isinstance(
-                        precondition[1], dict
-                    ):
-                        return
-            raise TypeError(
-                f"Invalid {condition_type} or post-condition ({type(conditions)})"
-            )
 
     @property
     def __name__(self) -> property:

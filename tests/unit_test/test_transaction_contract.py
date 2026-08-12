@@ -51,7 +51,7 @@ class CreateProduct(AbstractTransaction):
         return True
 
 
-def test_transaction_run_required_preconditions_before_main_operation():
+def test_transaction_run_requires_and_ensures_as_contract_in_main_operation():
     Application().at(
         CreateProduct, name="foo", price=100, minimum_stock=10, sold_by_weight=False
     ).expects(it.IsTrue)
