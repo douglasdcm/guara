@@ -351,6 +351,60 @@ class Application:
         if self._report_on_exit:
             LOGGER.info(self._report_on_exit)
 
+    def _execute_contract(self, kwargs, contract):
+        sig = inspect.signature(contract.do)
+        valid_keys = sig.parameters.keys()
+        filtered_k = {key: value for key, value in kwargs.items() if key in valid_keys}
+        contract(self._driver).do(**filtered_k)
+
+    def _create_transaction_execution(
+        self,
+        transaction: AbstractTransaction,
+        parameters: dict[str, Any],
+        transaction_info: str,
+    ) -> TransactionExecution:
+        """
+        Creates and registers an execution-history entry.
+
+        Sensitive parameters are masked before they are stored in history.
+        The original transaction parameters remain untouched until execution.
+        """
+        transaction_class = type(transaction)
+
+        replayable = True
+        masked_parameters = {}
+
+        for key, value in parameters.items():
+            if self._require_masking(key):
+                masked_parameters[key] = SECRET_DEFAULT_VALUE
+                continue
+
+            try:
+                json.dumps(value)
+                masked_parameters[key] = value
+            except (TypeError, ValueError):
+                masked_parameters[key] = repr(value)
+                replayable = False
+        execution = TransactionExecution(
+            id=uuid.uuid4().hex,
+            name=transaction_class.__name__,
+            module=_get_module_path(transaction),
+            parameters=masked_parameters,
+            replayable=replayable,
+            policy=self._transaction.execution_policy,
+        )
+
+        self._execution_history.add(execution)
+
+        return execution
+
+    def _require_masking(self, key):
+        return (
+            "secret" in key.lower()
+            or "password" in key.lower()
+            or "mask" in key.lower()
+        )
+
     @property
     def result(self) -> Any:
         """
@@ -531,6 +585,11 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
+        for required in self._transaction.requires:
+            self._execute_contract(kwargs, required)
+
+        for ensured in self._transaction.ensures:
+            self._execute_contract(kwargs, ensured)
 
         self._dry_run = (
             self._transaction.execution_policy.dry_run
@@ -721,54 +780,6 @@ class Application:
                 )
                 self._transaction.undo()
             raise exception
-
-    def _create_transaction_execution(
-        self,
-        transaction: AbstractTransaction,
-        parameters: dict[str, Any],
-        transaction_info: str,
-    ) -> TransactionExecution:
-        """
-        Creates and registers an execution-history entry.
-
-        Sensitive parameters are masked before they are stored in history.
-        The original transaction parameters remain untouched until execution.
-        """
-        transaction_class = type(transaction)
-
-        replayable = True
-        masked_parameters = {}
-
-        for key, value in parameters.items():
-            if self._require_masking(key):
-                masked_parameters[key] = SECRET_DEFAULT_VALUE
-                continue
-
-            try:
-                json.dumps(value)
-                masked_parameters[key] = value
-            except (TypeError, ValueError):
-                masked_parameters[key] = repr(value)
-                replayable = False
-        execution = TransactionExecution(
-            id=uuid.uuid4().hex,
-            name=transaction_class.__name__,
-            module=_get_module_path(transaction),
-            parameters=masked_parameters,
-            replayable=replayable,
-            policy=self._transaction.execution_policy,
-        )
-
-        self._execution_history.add(execution)
-
-        return execution
-
-    def _require_masking(self, key):
-        return (
-            "secret" in key.lower()
-            or "password" in key.lower()
-            or "mask" in key.lower()
-        )
 
     def given(
         self,

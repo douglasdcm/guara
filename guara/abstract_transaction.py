@@ -11,7 +11,7 @@ web transactions in an automated browser.
 from __future__ import annotations
 
 from logging import Logger, getLogger
-from typing import Any, Callable, NoReturn
+from typing import Any, Callable, ClassVar, NoReturn
 
 from guara.policy import TransactionExecutionPolicy
 
@@ -25,6 +25,8 @@ class AbstractTransaction:
     database instance, or custom object.
     """
 
+    requires: ClassVar = []
+    ensures: ClassVar = []
     execution_policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
     preconditions: list[(Callable, dict)] | None = None
     postconditions: list[(Callable, dict)] | None = None
