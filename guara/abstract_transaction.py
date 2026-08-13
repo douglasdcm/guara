@@ -23,20 +23,29 @@ class AbstractTransaction:
     Manages transaction execution by leveraging an injected driver.
     The driver can be any external dependency, such as a webdriver,
     database instance, or custom object.
+
+    Args:
+        driver: (Any): It is the driver that controls the user-interface.
+
+        requires: list[AbstractTransaction]: A state required by the transaction before execution.
+
+        ensures: list[AbstractTransaction]: A state ensured by the transaction after execution.
+
+        execution_policy: TransactionExecutionPolicy: Defined how the transaction is executed.
+
+    Documentation: https://guara.readthedocs.io/en/latest/
     """
 
-    requires: ClassVar = []
-    ensures: ClassVar = []
+    requires: list[AbstractTransaction] = []
+    """A state required by the transaction before execution."""
+
+    ensures: list[AbstractTransaction] = []
+    """A state ensured by the transaction after execution."""
+
     execution_policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
+    """Defined how the transaction is executed."""
 
     def __init__(self, driver: Any = None):
-        """
-        Initializing the transaction which will allow it to interact
-        with the driver.
-
-        Args:
-            driver: (Any): It is the driver that controls the user-interface.
-        """
         self._driver: Any = driver
 
     @property

@@ -54,6 +54,7 @@ def create_parser():
             "Python path to the driver class or factory. Example: drivers:create_driver"
         ),
     )
+    return parser
 
 
 def main():

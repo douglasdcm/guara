@@ -2,6 +2,7 @@ from guara.abstract_transaction import AbstractTransaction
 from guara.policy import TransactionExecutionPolicy
 from guara.transaction import Application
 
+DUMP_FILE = "./dump.json"
 
 class AnyTransaction(AbstractTransaction):
     execution_policy = TransactionExecutionPolicy(
@@ -18,9 +19,9 @@ def test_app_dump():
         .execute(AnyTransaction, foo="foo", foo_s="123qwerty")
         .execute(AnyTransaction, credit_card="oiuy")
     )
-    assert app.dump_history("./dump.txt") is not None
+    assert app.dump_history(DUMP_FILE) is not None
 
 
 def test_app_replay():
     app = Application()
-    assert app.replay("./dump.txt") is not None
+    assert app.replay(DUMP_FILE) is not None

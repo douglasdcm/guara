@@ -20,10 +20,24 @@ class AbstractTransaction:
     Manages transaction execution by leveraging an injected driver.
     The driver can be any external dependency, such as a webdriver,
     database instance, or custom object.
+
+    Args:
+        driver (Any): It is the driver that controls the user-interface.
+        
+        return_on_dry_run (bool): Wheter the executions of the application hits the
+         driver (False) or not (True).
+
+        execution_policy (TransactionExecutionPolicy): Defines how the transaction is executed.
+
+    Documentation: https://guara.readthedocs.io/en/latest/
+
     """
 
     return_on_dry_run = None
+    """(bool) Wheter the executions of the application hits the driver (False) or not (True)."""
+
     execution_policy = TransactionExecutionPolicy()
+    """Defines how the transaction is executed."""
 
     @property
     def __name__(self) -> property:
@@ -34,12 +48,12 @@ class AbstractTransaction:
 
     def __init__(self, driver: Any = None):
         """
-                Initializing the transaction which will allow it to interact
-                with the driver.
+        Initializing the transaction which will allow it to interact
+        with the driver.
 
-                Args:
-                    driver: (Any): It is the driver that controls a user-interface.
-        from __future__ import annotations"""
+        Args:
+            driver: (Any): It is the driver that controls a user-interface.
+        """
         self._driver: Any = driver
 
     async def do(self, **kwargs: dict[str, Any]) -> Any:

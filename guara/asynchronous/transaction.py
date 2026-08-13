@@ -109,9 +109,6 @@ class Application:
 
         self._report_on_exit = report_on_exit
 
-        if GUARA_VERBOSE:
-            LOGGER.warning("GUARA_VERBOSE enabled.")
-
     def __del__(self):
         if self._report_on_exit:
             LOGGER.info(self._report_on_exit)

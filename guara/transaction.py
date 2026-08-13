@@ -9,6 +9,7 @@ This module has all the transactions.
 
 from __future__ import annotations
 
+import copy
 import importlib
 import inspect
 import json
@@ -273,7 +274,7 @@ class Application:
         Initializing the application with a driver.
 
         Args:
-            driver: (Any): This is the driver of the system being under test.
+            driver (Any): This is the driver of the system being under test.
 
             report_on_init (str): The message to be reported when the application
              instance is initialized.
@@ -286,6 +287,7 @@ class Application:
             policy (ExecutionPolicy): the policy to control how the application is executed.
              to be retried.
 
+        Documentation: https://guara.readthedocs.io/en/latest/
         """
         self._transaction_pool: list[AbstractTransaction] = []
         """
@@ -333,9 +335,6 @@ class Application:
             execution_policy = ApplicationExecutionPolicy()
         self._policy = execution_policy
 
-        if GUARA_VERBOSE:
-            LOGGER.warning("GUARA_VERBOSE enabled.")
-
     def __del__(self):
         if self._report_on_exit:
             LOGGER.info(self._report_on_exit)
@@ -344,7 +343,7 @@ class Application:
         sig = inspect.signature(contract.do)
         valid_keys = sig.parameters.keys()
         filtered_k = {key: value for key, value in kwargs.items() if key in valid_keys}
-        contract(self._driver).do(**filtered_k)
+        Application(self._driver).execute(contract, **filtered_k)
 
     def _create_transaction_execution(
         self,
@@ -574,11 +573,6 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
-        for required in self._transaction.requires:
-            self._execute_contract(kwargs, required)
-
-        for ensured in self._transaction.ensures:
-            self._execute_contract(kwargs, ensured)
 
         self._dry_run = (
             self._transaction.execution_policy.dry_run
@@ -608,6 +602,9 @@ class Application:
             )
             return self
 
+        for required in self._transaction.requires:
+            self._execute_contract(kwargs, required)
+
         if any(v for v in self._transaction.execution_policy.to_dict().values()):
             LOGGER.warning(
                 f"Policy for transaction '{self._transaction.__name__}': {self._transaction.execution_policy.to_dict()}"
@@ -631,14 +628,15 @@ class Application:
 
         history.start()
 
+        masked_parameters = copy.copy(kwargs)
         for key, value in kwargs.items():
             if self._require_masking(key):
                 value = SECRET_DEFAULT_VALUE
-                kwargs[key] = value
+                masked_parameters[key] = value
 
         result_details = {
             "transaction": transaction_info,
-            "parameters": [{**kwargs}],
+            "parameters": [{**masked_parameters}],
         }
 
         exception: Exception = None
@@ -660,6 +658,10 @@ class Application:
                     LOGGER.info(result_details)
 
                 self._execution_history.succeed()
+
+
+                for ensured in self._transaction.ensures:
+                    self._execute_contract(kwargs, ensured)
 
                 return self
 
