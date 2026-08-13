@@ -31,7 +31,7 @@ from guara.constants import (
     SECRET_DEFAULT_VALUE,
 )
 from guara.it import IAssertion
-from guara.policy import ApplicationExecutionPolicy, TransactionExecutionPolicy
+from guara.policy import ApplicationPolicy, TransactionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
@@ -75,7 +75,7 @@ class TransactionExecution:
     """
 
     id: str
-    policy: TransactionExecutionPolicy
+    policy: TransactionPolicy
     name: str
     module: str
     parameters: dict[str, Any] = field(default_factory=dict)
@@ -139,7 +139,7 @@ class TransactionExecution:
             exception_type=data.get("exception_type"),
             exception_message=data.get("exception_message"),
             replayable=data.get("replayable", True),
-            policy=data.get("policy", TransactionExecutionPolicy()),
+            policy=data.get("policy", TransactionPolicy()),
         )
 
 
@@ -268,7 +268,7 @@ class Application:
         report_on_init: str | None = None,
         report_on_exit: str | None = None,
         name: str | None = None,
-        execution_policy: ApplicationExecutionPolicy | None = None,
+        execution_policy: ApplicationPolicy | None = None,
     ):
         """
         Initializing the application with a driver.
@@ -332,7 +332,7 @@ class Application:
         self._disable = None
 
         if not execution_policy:
-            execution_policy = ApplicationExecutionPolicy()
+            execution_policy = ApplicationPolicy()
         self._policy = execution_policy
 
     def __del__(self):
@@ -658,7 +658,6 @@ class Application:
                     LOGGER.info(result_details)
 
                 self._execution_history.succeed()
-
 
                 for ensured in self._transaction.ensures:
                     self._execute_contract(kwargs, ensured)

@@ -1,11 +1,12 @@
 from guara.abstract_transaction import AbstractTransaction
-from guara.policy import TransactionExecutionPolicy
+from guara.policy import TransactionPolicy
 from guara.transaction import Application
 
 DUMP_FILE = "./dump.json"
 
+
 class AnyTransaction(AbstractTransaction):
-    execution_policy = TransactionExecutionPolicy(
+    execution_policy = TransactionPolicy(
         retry_on_exceptions=(PermissionError,), pacing_time=10
     )
 

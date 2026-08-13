@@ -6,7 +6,7 @@
 
 from pytest import raises
 
-from guara.policy import ApplicationExecutionPolicy
+from guara.policy import ApplicationPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -21,5 +21,5 @@ class MyTransaction(AbstractTransaction):
 def test_application_revert_all_transactions_when_rollback_enabled():
     with raises(ConnectionAbortedError):
         Application(
-            execution_policy=ApplicationExecutionPolicy(rollback_on_failure=True)
+            execution_policy=ApplicationPolicy(rollback_on_failure=True)
         ).execute(MyTransaction)

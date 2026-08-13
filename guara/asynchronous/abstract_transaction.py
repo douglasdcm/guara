@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from guara.policy import TransactionExecutionPolicy
+from guara.policy import TransactionPolicy
 
 
 class AbstractTransaction:
@@ -23,7 +23,7 @@ class AbstractTransaction:
 
     Args:
         driver (Any): It is the driver that controls the user-interface.
-        
+
         return_on_dry_run (bool): Wheter the executions of the application hits the
          driver (False) or not (True).
 
@@ -36,7 +36,7 @@ class AbstractTransaction:
     return_on_dry_run = None
     """(bool) Wheter the executions of the application hits the driver (False) or not (True)."""
 
-    execution_policy = TransactionExecutionPolicy()
+    execution_policy = TransactionPolicy()
     """Defines how the transaction is executed."""
 
     @property

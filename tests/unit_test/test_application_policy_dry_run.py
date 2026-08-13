@@ -16,12 +16,12 @@ from guara.asynchronous.transaction import (
 from guara.asynchronous.transaction import (
     Application as AsyncApplication,
 )
-from guara.policy import ApplicationExecutionPolicy, TransactionExecutionPolicy
+from guara.policy import ApplicationPolicy, TransactionPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
 class MyTransaction(AbstractTransaction):
-    execution_policy = TransactionExecutionPolicy(return_on_dry_run="anything")
+    execution_policy = TransactionPolicy(return_on_dry_run="anything")
 
     def do(self):
         raise PermissionError()
@@ -29,7 +29,7 @@ class MyTransaction(AbstractTransaction):
 
 @patch("guara.transaction.GUARA_DRY_RUN", False)
 def test_application_do_not_hit_driver_when_dry_run_enabled():
-    app = Application(execution_policy=ApplicationExecutionPolicy(dry_run=True))
+    app = Application(execution_policy=ApplicationPolicy(dry_run=True))
     (
         app.given(MyTransaction)
         .at(MyTransaction)

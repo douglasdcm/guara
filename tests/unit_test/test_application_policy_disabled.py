@@ -14,7 +14,7 @@ from guara.asynchronous.transaction import (
 from guara.asynchronous.transaction import (
     Application as AsyncApplication,
 )
-from guara.policy import ApplicationExecutionPolicy
+from guara.policy import ApplicationPolicy
 from guara.transaction import AbstractTransaction, Application
 
 
@@ -24,7 +24,7 @@ class MyTransaction(AbstractTransaction):
 
 
 def test_application_do_not_run_when_disabled():
-    app = Application(execution_policy=ApplicationExecutionPolicy(disable=True))
+    app = Application(execution_policy=ApplicationPolicy(disable=True))
     (
         app.given(MyTransaction)
         .at(MyTransaction)

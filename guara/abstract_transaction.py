@@ -11,9 +11,9 @@ web transactions in an automated browser.
 from __future__ import annotations
 
 from logging import Logger, getLogger
-from typing import Any, ClassVar, NoReturn
+from typing import Any, NoReturn
 
-from guara.policy import TransactionExecutionPolicy
+from guara.policy import TransactionPolicy
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -36,13 +36,13 @@ class AbstractTransaction:
     Documentation: https://guara.readthedocs.io/en/latest/
     """
 
-    requires: list[AbstractTransaction] = []
+    requires: list[AbstractTransaction] = []  # noqa
     """A state required by the transaction before execution."""
 
-    ensures: list[AbstractTransaction] = []
+    ensures: list[AbstractTransaction] = []  # noqa
     """A state ensured by the transaction after execution."""
 
-    execution_policy: TransactionExecutionPolicy = TransactionExecutionPolicy()
+    execution_policy: TransactionPolicy = TransactionPolicy()
     """Defined how the transaction is executed."""
 
     def __init__(self, driver: Any = None):

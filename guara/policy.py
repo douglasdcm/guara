@@ -17,7 +17,7 @@ LOGGER: Logger = getLogger(__name__)
 
 
 @dataclass
-class ApplicationExecutionPolicy:
+class ApplicationPolicy:
     retry_on_exceptions: tuple[type[Exception], ...] | None = None
     """(tuple(Exceptions)) Tuple of exceptions to be retried."""
 
@@ -163,7 +163,7 @@ class ApplicationExecutionPolicy:
 
 
 @dataclass
-class TransactionExecutionPolicy(ApplicationExecutionPolicy):
+class TransactionPolicy(ApplicationPolicy):
     pacing_time: int | None = None
     """(int) Local value in seconds to wait between retries.
      Overrides the global variable `GUARA_PACING_TIME`."""
