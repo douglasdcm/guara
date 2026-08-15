@@ -1,8 +1,7 @@
-pytest
 pytest-asyncio
-flake8
-black
 tox
+ruff
 pre-commit
 psutil
 selenium
+pytest-timeout

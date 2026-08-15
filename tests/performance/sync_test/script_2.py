@@ -1,20 +1,21 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 The module for tracking the performance metrics of the
 library.
 """
 
-from logging import getLogger, Logger
 from csv import writer
-from time import time, sleep
-from psutil import cpu_percent, virtual_memory, disk_usage
-from subprocess import run, CalledProcessError
-from datetime import datetime
-from threading import Thread, Event
+from datetime import datetime, timezone
+from logging import Logger, getLogger
+from subprocess import CalledProcessError, run
+from threading import Event, Thread
+from time import sleep, time
+
+from psutil import cpu_percent, disk_usage, virtual_memory
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -35,19 +36,21 @@ def monitor_resources(csv_file: str, stop_event: Event, interval: int = 1) -> No
     """
     try:
         LOGGER.info("Monitoring System Resources...")
-        file = open(csv_file, mode="w", newline="")
-        csv_writer = writer(file)
-        csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
-        while not stop_event.is_set():
-            start_time: float = time()
-            elapsed_time: float = time() - start_time
-            cpu_usage: float = cpu_percent(interval=None)
-            ram_usage: float = virtual_memory().percent
-            real_disk_usage: float = disk_usage("/").percent
-            csv_writer.writerow([elapsed_time, cpu_usage, ram_usage, real_disk_usage])
-            file.flush()
-            sleep(interval)
-    except Exception as error:
+        with open(csv_file, mode="w", newline="") as file:
+            csv_writer = writer(file)
+            csv_writer.writerow(["Time (s)", "CPU (%)", "RAM (%)", "Disk (%)"])
+            while not stop_event.is_set():
+                start_time: float = time()
+                elapsed_time: float = time() - start_time
+                cpu_usage: float = cpu_percent(interval=None)
+                ram_usage: float = virtual_memory().percent
+                real_disk_usage: float = disk_usage("/").percent
+                csv_writer.writerow(
+                    [elapsed_time, cpu_usage, ram_usage, real_disk_usage]
+                )
+                file.flush()
+                sleep(interval)
+    except Exception as error:  # noqa
         LOGGER.error(f"Error during monitoring.\n Error: {error}")
 
 
@@ -59,7 +62,9 @@ def run_test_script() -> None:
         (None)
     """
     try:
-        process = run(["python", "tests/performance/script_2_initializer.py"], check=True)
+        process = run(
+            ["python", "tests/performance/script_2_initializer.py"], check=True
+        )
         return process.returncode
     except CalledProcessError as error:
         LOGGER.error(f"Error occurred while running the test script.\nError: {error}")
@@ -67,7 +72,7 @@ def run_test_script() -> None:
 
 
 csv_output_directory: str = "./data/"
-current_time: str = datetime.now().strftime("%Y%m%d_%H%M%S")
+current_time: str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 csv_output_file: str = f"{csv_output_directory}/resource_metrics.{current_time}.csv"
 monitoring_interval: int = 1
 stop_event: Event = Event()

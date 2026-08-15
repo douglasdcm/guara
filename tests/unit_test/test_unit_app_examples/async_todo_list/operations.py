@@ -1,0 +1,58 @@
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://guara.readthedocs.io/en/latest/
+
+"""
+The module that have all of the transactions needed for the
+To-Do List.
+"""
+
+from __future__ import annotations
+
+from guara.asynchronous.transaction import AbstractTransaction
+
+
+class Add(AbstractTransaction):
+    """
+    The addition transaction
+    """
+
+    async def do(self, task: str) -> list[str]:
+        return await self._driver.add_task(task)
+
+
+class Remove(AbstractTransaction):
+    """
+    The removal transaction.
+    """
+
+    async def do(self, task: str) -> list[str]:
+        return await self._driver.remove_task(task)
+
+
+class ListTasks(AbstractTransaction):
+    """
+    The listing transaction
+    """
+
+    async def do(self) -> list[str]:
+        return await self._driver.list_tasks()
+
+
+class PrintDict(AbstractTransaction):
+    """
+    The array to object conversion transaction.
+    """
+
+    async def do(self) -> dict[str, str]:
+        return await self._driver.to_dict()
+
+
+class GetBy(AbstractTransaction):
+    """
+    The transaction which will get a specific task by its index.
+    """
+
+    async def do(self, index: int) -> str:
+        return await self._driver.get_by_index(index)

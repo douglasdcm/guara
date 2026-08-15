@@ -1,0 +1,54 @@
+# Copyright (C) 2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://guara.readthedocs.io/en/latest/
+
+import pytest
+
+from guara import it
+from guara.asynchronous import it as async_it
+from guara.asynchronous.transaction import (
+    AbstractTransaction as AsyncTransaction,
+)
+from guara.asynchronous.transaction import (
+    Application as AsyncApp,
+)
+from guara.transaction import AbstractTransaction, Application
+
+
+class ReturnWrongResult(AbstractTransaction):
+    return_on_dry_run = AssertionError()
+
+    def do(self):
+        return "wrong"
+
+
+class TestFailedAssertions:
+    @pytest.fixture(autouse=True, scope="function")
+    def setup_method(self):
+        self._app = Application()
+
+    def test_raise_exception_when_assertion_fails(self):
+        expected = "right"
+        with pytest.raises(AssertionError):
+            self._app.at(ReturnWrongResult).asserts(it.IsEqualTo, expected)
+
+
+class AsyncReturnWrongResult(AsyncTransaction):
+    return_on_dry_run = AssertionError()
+
+    async def do(self):
+        return "wrong"
+
+
+class TestAsyncFailedAssertions:
+    @pytest.mark.asyncio
+    async def test_async_raises_exception_when_assertion_fails(self):
+        expected = "right"
+        app = AsyncApp()
+        with pytest.raises(AssertionError):
+            await (
+                app.at(AsyncReturnWrongResult)
+                .asserts(async_it.IsEqualTo, expected)
+                .perform()
+            )

@@ -12,7 +12,8 @@ from selenium import webdriver
 
 class OpenApp(AbstractTransaction):
     def do(
-        self, url: str,
+        self,
+        url: str,
     ) -> str:
         self._driver.get(url)
         return self._driver.title
@@ -25,7 +26,10 @@ class CloseApp(AbstractTransaction):
 
 def test_canonical():
     google = Application(webdriver.Chrome())
-    google.when(OpenApp, url="http://www.google.com",).asserts(it.IsEqualTo,"Google")
+    google.when(
+        OpenApp,
+        url="http://www.google.com",
+    ).asserts(it.IsEqualTo, "Google")
     google.execute(CloseApp)
 ```
 
@@ -47,12 +51,12 @@ class Search(AbstractTransaction):
     def do(self, text):
         # Sends the received text to the textbox in the UI
         self._driver.find_element(By.NAME, "q").send_keys(text)
-        
+
         # Click the button to search
         self._driver.find_element(By.NAME, "btnK").click()
-        
+
         # Waits the next page appears and returns the label of the first tab "All".
-        # It will be used by assertions in the next sessions.  
+        # It will be used by assertions in the next sessions.
         return self._driver.find_element(
             By.CSS_SELECTOR, ".Ap1Qsc > a:nth-child(1) > div:nth-child(1)"
         ).text
@@ -76,6 +80,7 @@ from guara.application import Application
 
 # Imports the module with the strategies to asset the result
 from guara import it
+
 
 @pytest.fixture
 def google():
@@ -110,7 +115,6 @@ def test_google_search(google: Application):
     # is passed to `at` and the result is asserted by `asserts` with
     # the strategy `it.IsEqualTo`
     google.at(home.Search, text="guara").asserts(it.IsEqualTo, "All")
-
 ```
 - `class Application`: is the runner of the automation. It receives the `driver` and passes it hand by hand to transactions.
 - `def at`: receives the transaction created on `home.py` and its parameters. Notice the usage of the module name `home` to make the readability of the statement as plain English. The parameters are passed explicitly for the same purpose. So the `google.at(home.Search, text="guara")` is read `Google at home [page] search [for] text "guara"`. The terms `page` and `for` could be added to the implementation to make it more explicit, like `google.at(homePage.Search, for_text="guara")`. This is a decision the tester may make while developing the transactions. 

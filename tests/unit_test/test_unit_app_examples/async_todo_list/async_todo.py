@@ -1,0 +1,81 @@
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://guara.readthedocs.io/en/latest/
+
+"""
+The module that will have the class where the tasks will be
+stored.
+"""
+
+from __future__ import annotations
+
+
+class AsyncToDo:
+    def __init__(self):
+        """
+        Initializing the class.
+        """
+        self._tasks: list[str] = []
+        """
+        The list of the tasks
+        """
+
+    async def add_task(self, task: str) -> list[str]:
+        """
+        Adding task.
+
+        Args:
+            task: (str): The task to be added.
+
+        Returns:
+            (list[str])
+        """
+        self._tasks.append(task)
+        return self._tasks
+
+    async def remove_task(self, task) -> list[str]:
+        """
+        Removing task.
+
+        Args:
+            task: (str): The task to be removed.
+
+        Returns:
+            (list[str])
+        """
+        self._tasks.remove(task)
+        return self._tasks
+
+    async def list_tasks(self) -> list[str]:
+        """
+        Retrieving the list of the tasks.
+
+        Returns:
+            (list[str])
+        """
+        return self._tasks
+
+    async def get_by_index(self, index: int) -> str:
+        """
+        Retrieving a task at a specific index.
+
+        Args:
+            index: (int): The index of the task.
+
+        Returns:
+            (str)
+        """
+        return self._tasks[index]
+
+    async def to_dict(self) -> dict[str, str]:
+        """
+        Converting the list of tasks into an object.
+
+        Returns:
+            (dict[str, str])
+        """
+        result: dict[str, str] = {}
+        for index in range(0, len(self._tasks), 1):
+            result[str(index + 1)] = self._tasks[index]
+        return result

@@ -1,13 +1,14 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from pytest import mark
-from guara.application import Application
-from guara import it
-from guara.utils import is_dry_run
 from screens import calculator, setup
+
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 
 class ItShows(it.IAssertion):
@@ -28,8 +29,8 @@ class TestLinuxCalculatorWithPyautogui:
     def setup_method(self, method):
         driver = None
         if not is_dry_run():
+            from dogtail.procedural import focus, run
             from dogtail.tree import root
-            from dogtail.procedural import run, focus
 
             app_name = "gnome-calculator"
             run(app_name)

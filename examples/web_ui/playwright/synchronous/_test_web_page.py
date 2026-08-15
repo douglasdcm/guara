@@ -1,13 +1,14 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from pytest import fixture
-from examples.web_ui.playwright.synchronous.pages import home, setup, getting_started
-from guara.application import Application
-from guara import it
 from playwright.sync_api import sync_playwright
+from pytest import fixture
+
+from examples.web_ui.playwright.synchronous.pages import getting_started, home, setup
+from guara import it
+from guara.application import Application
 
 
 @fixture
@@ -34,4 +35,6 @@ def setup_method(page):
 def test_local_page_playwright(setup_method):
     dev_page: Application = setup_method
     dev_page.at(home.NavigateToGettingStarted).asserts(it.IsEqualTo, "Installation")
-    dev_page.at(getting_started.NavigateToWritingTests).asserts(it.IsNotEqualTo, "Writing Tests")
+    dev_page.at(getting_started.NavigateToWritingTests).asserts(
+        it.IsNotEqualTo, "Writing Tests"
+    )

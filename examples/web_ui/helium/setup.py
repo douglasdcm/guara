@@ -1,9 +1,10 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from datetime import datetime
+from datetime import datetime, timezone
+
 from guara.transaction import AbstractTransaction
 
 
@@ -17,7 +18,7 @@ class OpenApp(AbstractTransaction):
 
     def do(self, url, headless=True):
         # Lazy import as Helium is not compatible with Python 3.7
-        from helium import start_chrome, go_to
+        from helium import go_to, start_chrome
 
         start_chrome(headless=headless)
         go_to(url)
@@ -40,5 +41,7 @@ class CloseApp(AbstractTransaction):
 
         from helium import get_driver, kill_browser
 
-        get_driver().save_screenshot(f"{screenshot_filename}-{datetime.now()}.png")
+        get_driver().save_screenshot(
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png"
+        )
         kill_browser()

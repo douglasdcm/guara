@@ -1,16 +1,20 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 import logging
-from guara.constants import GUARA_VERBOSE, SECRET_DEFAULT_VALUE
+
 import pytest
-from guara.guara import Application, AbstractTransaction
+
 from guara.asynchronous.guara import (
-    Application as AsyncApp,
     AbstractTransaction as AsyncTransaction,
 )
+from guara.asynchronous.guara import (
+    Application as AsyncApp,
+)
+from guara.constants import GUARA_DRY_RUN, GUARA_VERBOSE, SECRET_DEFAULT_VALUE
+from guara.guara import AbstractTransaction, Application
 
 
 class DoNothing(AbstractTransaction):
@@ -48,7 +52,9 @@ class AsyncDoNothing(AsyncTransaction):
         return
 
 
-@pytest.mark.skipif(GUARA_VERBOSE is False, reason="GUARA_VERBOSE is not true")
+@pytest.mark.skipif(
+    GUARA_VERBOSE is False or GUARA_DRY_RUN is True, reason="GUARA_VERBOSE is not true"
+)
 class TestAsyncHideSecret:
     @pytest.mark.asyncio
     async def test_async_dont_hide_when_parameter_is_not_secret(self, caplog):

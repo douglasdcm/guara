@@ -6,11 +6,13 @@ The framework has a default log that reports
 * reverted transation, if any
 * erros in transactions and assertions
 
-**Note**: the value of parameters with `secret` or `password` in their names is hidden in the logs by default
+**Note**: the value of parameters with `secret`, `password` or `mask` in their names is hidden in the logs by default
 
 ```bash
 2026-04-15 01:19:41.635 INFO Running transaction 'Login'
-2026-04-15 01:19:41.635 INFO  with parameter 'my_secret' set to '********'
+2026-04-15 01:19:41.636 INFO  with parameter 'my_secret' set to '********'
+2026-04-15 01:19:41.637 INFO  with parameter 'password_user' set to '********'
+2026-04-15 01:19:41.638 INFO  with parameter 'need_masking_it' set to '********'
 ```
 
 ## Log of successful operations

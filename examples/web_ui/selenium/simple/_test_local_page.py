@@ -1,14 +1,16 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from pathlib import Path
-from guara import it
+
+from selenium import webdriver
+
 from examples.web_ui.selenium.simple import home, setup
+from guara import it
 from guara.application import Application
 from guara.utils import is_dry_run
-from selenium import webdriver
 
 
 class TestLocalPage:
@@ -33,5 +35,7 @@ class TestLocalPage:
 
     def test_local_page_selenium(self):
         text = "guara"
-        self._app.at(home.SubmitText, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
+        self._app.at(home.SubmitText, text=text).asserts(
+            it.IsEqualTo, f"It works! {text}!"
+        )
         self._app.at(home.SubmitText, text=text).asserts(it.IsNotEqualTo, "Any")

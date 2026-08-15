@@ -39,10 +39,9 @@ Each transaction:
 With Guará, you can express workflows using a structured, readable syntax:
 
 ```python
-app.given(UserLoggedIn) \
-   .when(Search, product="notebook") \
-   .then(ReportChart) \
-   .expects(IsEqualTo, 1)
+app.given(UserLoggedIn).when(Search, product="notebook").then(ReportChart).expects(
+    IsEqualTo, 1
+)
 ````
 
 This approach provides:
@@ -60,10 +59,9 @@ To fully align code with business thinking, you can extend the framework into a 
 For example, in a financial context:
 
 ```python
-fin_app.account_with(HasBalance) \
-       .execute(BuyAsset, symbol="AAPL", amount=2000) \
-       .settles(UpdatePortfolio) \
-       .reconciles(ExpectedPortfolio, 20)
+fin_app.account_with(HasBalance).execute(BuyAsset, symbol="AAPL", amount=2000).settles(
+    UpdatePortfolio
+).reconciles(ExpectedPortfolio, 20)
 ```
 
 This version expresses:
@@ -156,6 +154,7 @@ Below is a simplified example of extending the framework for a financial domain:
 ```python
 from guara.transaction import Application, AbstractTransaction
 from guara import it
+
 
 class FinancialApplication(Application):
     def __init__(self, driver=None):

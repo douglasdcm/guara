@@ -1,14 +1,18 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 It is the module where the interface of the transaction will
 handle web transactions in an automated browser.
 """
 
-from typing import Any, NoReturn, Union, Dict
+from __future__ import annotations
+
+from typing import Any
+
+from guara.policy import TransactionPolicy
 
 
 class AbstractTransaction:
@@ -16,7 +20,24 @@ class AbstractTransaction:
     Manages transaction execution by leveraging an injected driver.
     The driver can be any external dependency, such as a webdriver,
     database instance, or custom object.
+
+    Args:
+        driver (Any): It is the driver that controls the user-interface.
+
+        return_on_dry_run (bool): Wheter the executions of the application hits the
+         driver (False) or not (True).
+
+        execution_policy (TransactionPolicy): Defines how the transaction is executed.
+
+    Documentation: https://guara.readthedocs.io/en/latest/
+
     """
+
+    return_on_dry_run = None
+    """(bool) Wheter the executions of the application hits the driver (False) or not (True)."""
+
+    execution_policy = TransactionPolicy()
+    """Defines how the transaction is executed."""
 
     @property
     def __name__(self) -> property:
@@ -35,7 +56,7 @@ class AbstractTransaction:
         """
         self._driver: Any = driver
 
-    async def do(self, **kwargs: Dict[str, Any]) -> Union[Any, NoReturn]:
+    async def do(self, **kwargs: dict[str, Any]) -> Any:
         """
         It performs a specific transaction
 

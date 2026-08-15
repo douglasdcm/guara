@@ -1,44 +1,18 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 The module to be used to retrieve the information of the
 transaction.
 """
 
+from logging import Logger, getLogger
+from os import getenv
 from typing import Any
-from logging import getLogger, Logger
-
-from guara.constants import GUARA_RETRIES_ON_FAILURE, GUARA_VERBOSE
 
 LOGGER: Logger = getLogger(__name__)
-
-
-def get_retries_on_failure(raw_value=GUARA_RETRIES_ON_FAILURE) -> int:
-    try:
-        # Get the value, default to "0" if not found
-        result = int(raw_value)
-
-        if result > 0:
-            if GUARA_VERBOSE:
-                LOGGER.warning(
-                    f"GUARA_RETRIES_ON_FAILURE: {result}. Transactions will be retried on failure."
-                )
-            return result
-
-        # If it's 0 or negative, we treat it as "no retries"
-        return 0
-
-    except (ValueError, TypeError):
-        # If user entered "abc", log an error and default to 0 so the test can still run
-        if GUARA_VERBOSE:
-            LOGGER.warning(
-                f"Invalid GUARA_RETRIES_ON_FAILURE value: '{GUARA_RETRIES_ON_FAILURE}'."
-                " Expected an integer. Defaulting to 0."
-            )
-        return 0
 
 
 def get_transaction_info(transaction: Any) -> str:
@@ -52,3 +26,20 @@ def get_transaction_info(transaction: Any) -> str:
         string
     """
     return f"{transaction.__name__}"
+
+
+def convert_variable_to_integer(variable, verbose) -> int:
+    env_var = getenv(variable, "0")
+    try:
+        result = int(env_var)
+        if result < 0:
+            raise ValueError
+        return result
+
+    except (ValueError, TypeError):
+        if verbose:
+            LOGGER.warning(
+                f"Invalid {variable} value: '{env_var}'."
+                " Expected a positive integer. Defaulting to 0."
+            )
+        return 0

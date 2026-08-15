@@ -1,16 +1,17 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from pytest import mark
 from pathlib import Path
-from pytest import fixture
-from guara.application import Application
-from guara import it
-from examples.web_ui.caqui.synchronous import home, setup
-from guara.utils import is_dry_run
+
+from pytest import fixture, mark
 from selenium import webdriver
+
+from examples.web_ui.caqui.synchronous import home, setup
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 
 @mark.skipif(not is_dry_run(), reason="Dry run is disabled")

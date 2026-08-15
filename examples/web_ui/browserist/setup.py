@@ -1,9 +1,10 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from datetime import datetime
+from datetime import datetime, timezone
+
 from guara.transaction import AbstractTransaction
 
 
@@ -48,6 +49,7 @@ class CloseApp(AbstractTransaction):
         screenshot_filename="guara-capture",
     ):
         self._driver.screenshot.complete_page(
-            f"{screenshot_filename}-{datetime.now()}.png", screenshot_destination
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png",
+            screenshot_destination,
         )
         self._driver.quit()

@@ -1,12 +1,14 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 import logging
+
 import pytest
-from guara.application import Application
+
 from guara import it
+from guara.application import Application
 from guara.transaction import AbstractTransaction
 
 
@@ -50,5 +52,5 @@ class TestUndo:
         expected = "posted"
         self._app.at(Post).asserts(it.IsEqualTo, expected)
 
-    def test_transactions_are_executed_in_reverse_order(self, caplog):
+    def test_transactions_are_executed_in_reverse_order(self):
         self._app.at(Get, any_param="any").at(Post).at(Update)

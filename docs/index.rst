@@ -10,12 +10,14 @@ Welcome to guara's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   WHAT_IS_NEW
    README
-   TUTORIAL
    QUICK_REF
-   UNDO
-   LOGS
+   TUTORIAL
+   NEW_FEATURES
    ENVIRONMENT_VARIABLES
+   LOGS
+   UNDO
    BEST_PRACTICES
    FAQ
    CHATGPT_ASSISTANCE

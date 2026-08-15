@@ -1,11 +1,12 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
+import transactions
 from pyscript import document
+
 from guara.application import Application
-import transactions as transactions
 
 # For front-end
 app = Application(transactions.ToDoPrototype())
@@ -18,7 +19,7 @@ def add_task(event):
         # with the front-end
         app.at(transactions.Add, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' added"
-    except Exception as e:
+    except Exception as e:  # noqa
         document.querySelector("#output").innerText = str(e)
 
 
@@ -27,7 +28,7 @@ def remove_task(event):
         task = document.querySelector("#task").value
         app.at(transactions.Remove, task=task)
         document.querySelector("#output").innerText = f"Task '{task}' removed"
-    except Exception as e:
+    except Exception as e:  # noqa
         document.querySelector("#output").innerText = str(e)
 
 
@@ -45,4 +46,6 @@ def get_task(event):
         index = 0
     index = int(index)
     # index = int(value) - 1
-    document.querySelector("#output").innerText = app.at(transactions.GetBy, index=index).result
+    document.querySelector("#output").innerText = app.at(
+        transactions.GetBy, index=index
+    ).result

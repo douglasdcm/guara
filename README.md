@@ -33,13 +33,14 @@ from guara.application import Application
 from guara import it
 from transactions import HasBalance, BuyAsset, UpdatePortfolio
 
+
 def main():
     finance_app = Application()
     (
-        finance_app
-        .given(HasBalance)
+        finance_app.given(HasBalance)
         .when(BuyAsset, symbol="AAPL", amount=2000)
-        .and_(UpdatePortfolio).expects(it.IsEqualTo, 20)
+        .and_(UpdatePortfolio)
+        .expects(it.IsEqualTo, 20)
     )
 ```
 
@@ -50,6 +51,7 @@ from guara.application import Application
 from guara import it
 from selenium import webdriver
 from transactions import OpenApp, ChangeToPortuguese, NavigateToInfoPage, CloseApp
+
 
 def test_sample_web_page():
     app = Application(webdriver.Chrome())

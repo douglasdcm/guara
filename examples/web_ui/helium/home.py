@@ -1,7 +1,7 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from guara.transaction import AbstractTransaction
 
@@ -19,7 +19,7 @@ class SubmitText(AbstractTransaction):
 
     def do(self, text):
         # Lazy import as Helium is not compatible with Python 3.7
-        from helium import find_all, write, click, S, Text
+        from helium import S, Text, click, find_all, write
 
         TEXT = '//*[@id="input"]'
         BUTTON_TEST = "button"

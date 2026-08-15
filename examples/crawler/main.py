@@ -1,23 +1,24 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
+import json
+import time
+from datetime import datetime, timedelta, timezone
+
+from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait as Wait
 from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
 
 # from zoneinfo import ZoneInfo
 from guara.transaction import AbstractTransaction, Application
-import json
-import time
 
 # Constants
 AIRPORTS = [
@@ -122,7 +123,9 @@ class ProcessAirportData(AbstractTransaction):
             while True:
                 try:
                     more_button = Wait(self._driver, 10).until(
-                        EC.visibility_of_element_located((By.CLASS_NAME, "btn-see-more"))
+                        EC.visibility_of_element_located(
+                            (By.CLASS_NAME, "btn-see-more")
+                        )
                     )
                     self._driver.execute_script("arguments[0].click();", more_button)
                 except (TimeoutException, NoSuchElementException):
@@ -148,8 +151,10 @@ class ProcessAirportData(AbstractTransaction):
                         "aerolinea": aerolinea,
                         "origen": origen,
                         "estado": estado,
-                        "fecha": datetime.now().strftime("%Y-%m-%d"),
-                        "hora_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "fecha": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                        "hora_actualizacion": datetime.now(timezone.utc).strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        ),
                     }
                 )
 
@@ -157,7 +162,7 @@ class ProcessAirportData(AbstractTransaction):
                 "status": "Success",
                 "message": "Data collected successfully",
             }
-        except Exception as e:
+        except Exception as e:  # noqa
             script_status["airports"][airport] = {"status": "Error", "message": str(e)}
         return new_flights
 
@@ -179,13 +184,13 @@ class SaveFlightData(AbstractTransaction):
 
     def do(self, flights_data, history_days):
         existing_data = read_json_file("flights_data.json", [])
-        current_date = datetime.now().date()
+        current_date = datetime.now(timezone.utc).date()
 
         # Filter outdated data
         updated_data = [
             flight
             for flight in existing_data
-            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date()
+            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date()  # noqa
             >= current_date - timedelta(days=history_days)
         ]
 
@@ -230,7 +235,9 @@ def get_aena_data():
     # Instantiate Application with the driver
     app = Application(driver)
 
-    script_status = read_json_file("script_status.json", {"airports": {}, "status": None})
+    script_status = read_json_file(
+        "script_status.json", {"airports": {}, "status": None}
+    )
 
     # Open the AENA page
     app.then(OpenAenaPage)
@@ -238,7 +245,9 @@ def get_aena_data():
     # Process data for each airport
     all_flights_data = []
     for airport in AIRPORTS:
-        flights = app.then(ProcessAirportData, airport=airport, script_status=script_status).result
+        flights = app.then(
+            ProcessAirportData, airport=airport, script_status=script_status
+        ).result
         all_flights_data.extend(flights)
 
     # Save flight data and close browser
@@ -246,7 +255,7 @@ def get_aena_data():
     app.then(CloseBrowser)
 
     # Update script status
-    script_status["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    script_status["last_run"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     script_status["status"] = "Success"
     write_json_file("script_status.json", script_status)
 

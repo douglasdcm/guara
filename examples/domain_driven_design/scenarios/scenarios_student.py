@@ -1,31 +1,34 @@
 # Copyright (C) 2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
+
+from __future__ import annotations
 
 import logging
 
-from scenarios.utils import run_scenario
-from guara.application import Application
-from guara import it
 from repository import Repository
+from scenarios.utils import run_scenario
 from transactions import (
+    CalculateGPA,
     CreateStudent,
-    HasCourse,
     EnrollStudentInCourse,
     EnrollStudentInSubject,
+    HasCourse,
+    HasNotStudent,
     HasStudent,
     HasSubject,
-    HasNotStudent,
     IsGradeInValidRange,
+    IsNotStudentEnrolledInACourse,
     IsNotStudentEnrolledInSubject,
     IsNotStudentLocked,
     IsStudentEnrolledInACourse,
     IsStudentEnrolledInSubject,
     SetGrade,
-    CalculateGPA,
-    IsNotStudentEnrolledInACourse,
 )
+
+from guara import it
+from guara.application import Application
 
 logging.getLogger(__name__)
 
@@ -68,7 +71,12 @@ def enroll_course(eduapp: Application, repo: Repository, args):
         eduapp.given(HasCourse, repo=repo, course_id=args.course)
         .and_(HasStudent, repo=repo, student_id=args.student)
         .and_(IsNotStudentEnrolledInACourse, repo=repo, student_id=args.student)
-        .when(EnrollStudentInCourse, repo=repo, student_id=args.student, course_id=args.course)
+        .when(
+            EnrollStudentInCourse,
+            repo=repo,
+            student_id=args.student,
+            course_id=args.course,
+        )
         .asserts(it.IsTrue)
     )
 
@@ -99,4 +107,4 @@ def enroll_subject(eduapp: Application, repo: Repository, args):
 @run_scenario
 def calculate_gpa(eduapp: Application, repo: Repository, args):
     result = eduapp.when(CalculateGPA, repo=repo, student_id=args.student).result
-    logging.info(f"GPA: {result}")
+    logging.info(f"GPA: {result}")  # noqa

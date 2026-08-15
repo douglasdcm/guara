@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 Education Platform CLI using Guará
@@ -11,9 +11,11 @@ domain, and CLI interface.
 """
 
 import argparse
-from guara.application import Application
-from scenarios import scenarios_student, scenarios_subject, scenarios_course
+
 from repository import Repository
+from scenarios import scenarios_course, scenarios_student, scenarios_subject
+
+from guara.application import Application
 
 # =========================
 # CLI Use Cases
@@ -48,44 +50,44 @@ def main():
     if args.action == "create_student":
         try:
             scenarios_student.create_student(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
 
     elif args.action == "create_course":
         try:
             scenarios_course.create_course(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
     elif args.action == "create_subject":
         try:
             scenarios_subject.create_subject(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
     elif args.action == "enroll_course":
         try:
             scenarios_student.enroll_course(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
 
     elif args.action == "enroll_subject":
         try:
             scenarios_student.enroll_subject(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
     elif args.action == "set_grade":
         try:
             scenarios_student.set_grade(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
     elif args.action == "gpa":
         try:
             scenarios_student.calculate_gpa(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
     elif args.action == "list_subjects":
         try:
             scenarios_subject.list_subjects(eduapp, repo, args)
-        except Exception:
+        except Exception:  # noqa
             pass
 
 

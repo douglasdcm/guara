@@ -51,8 +51,9 @@ Examples:
 Now, describe the behavior using Guará syntax.
 
 ```python
-app.when(SellProduct, product_name="Bread", quantity=2) \
-   .asserts(it.IsEqualTo, "Sale completed")
+app.when(SellProduct, product_name="Bread", quantity=2).asserts(
+    it.IsEqualTo, "Sale completed"
+)
 ```
 
 At this point:
@@ -70,6 +71,7 @@ Create transactions that simply call the existing procedural code.
 
 ```python
 from guara import AbstractTransaction
+
 
 class SellProduct(AbstractTransaction):
     def do(self, stock, product_name, quantity):
@@ -95,10 +97,7 @@ Move shared data (like stock) into an application object.
 ```python
 class BakeryApp:
     def __init__(self):
-        self.stock = {
-            "Bread": 10,
-            "Cake": 5
-        }
+        self.stock = {"Bread": 10, "Cake": 5}
 ```
 
 Update transaction:
@@ -120,8 +119,9 @@ Use the same use cases as tests.
 ```python
 app = Application(BakeryApp())
 
-app.when(SellProduct, product_name="Bread", quantity=2) \
-   .asserts(it.IsEqualTo, "Sale completed")
+app.when(SellProduct, product_name="Bread", quantity=2).asserts(
+    it.IsEqualTo, "Sale completed"
+)
 ```
 
 At this point:
@@ -192,12 +192,11 @@ class SellProduct(AbstractTransaction):
 Move from simple calls to fluent scenarios:
 
 ```python
-app \
-  .given(HasStock, product_name=product_name, quantity=quantity) \
-  .when(SellProduct, product_name="Bread", quantity=2) \
-  .asserts(it.IsEqualTo, "Sale completed") \
-  .when(EmitBill, product_name="Bread", quantity=2) \
-  .asserts(it.Contains, "Bill emitted")
+app.given(HasStock, product_name=product_name, quantity=quantity).when(
+    SellProduct, product_name="Bread", quantity=2
+).asserts(it.IsEqualTo, "Sale completed").when(
+    EmitBill, product_name="Bread", quantity=2
+).asserts(it.Contains, "Bill emitted")
 ```
 
 Now your code:

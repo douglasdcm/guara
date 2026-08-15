@@ -1,15 +1,16 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 import pathlib
-from guara.application import Application
-from guara import it
-from examples.web_ui.splinter import setup
-from examples.web_ui.splinter import home
-from guara.utils import is_dry_run
+
 from splinter import Browser
+
+from examples.web_ui.splinter import home, setup
+from guara import it
+from guara.application import Application
+from guara.utils import is_dry_run
 
 
 class TestSplinterIntegration:
@@ -31,5 +32,7 @@ class TestSplinterIntegration:
 
     def test_local_page(self):
         text = "guara"
-        self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
+        self._app.at(home.SubmitTextSplinter, text=text).asserts(
+            it.IsEqualTo, f"It works! {text}!"
+        )
         self._app.at(home.SubmitTextSplinter, text=text).asserts(it.IsNotEqualTo, "Any")

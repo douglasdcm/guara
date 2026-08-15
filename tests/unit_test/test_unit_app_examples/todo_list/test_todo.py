@@ -1,0 +1,84 @@
+# Copyright (C) 2025-2026 Guara - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the MIT license.
+# Visit: https://guara.readthedocs.io/en/latest/
+
+from unittest import TestCase
+
+from guara import it
+from guara.application import Application
+from tests.unit_test.test_unit_app_examples.todo_list import operations
+from tests.unit_test.test_unit_app_examples.todo_list.todo import ToDo
+
+
+class TestToDo:
+    def setup_method(self, method):
+        self._todo = Application(ToDo())
+
+    def test_add_task(self):
+        task = "buy cheese"
+        expected = [task]
+        self._todo.at(operations.Add, task=task).asserts(it.IsEqualTo, expected)
+
+    def test_remove_task(self):
+        task = "buy cheese"
+        expected = []
+        self._todo.at(operations.Add, task=task)
+        self._todo.at(operations.Remove, task=task).asserts(it.IsEqualTo, expected)
+
+    def test_list_tasks(self):
+        task = "any task"
+        expected = [task]
+        self._todo.at(operations.Add, task=task)
+        self._todo.at(operations.ListTasks).asserts(it.IsEqualTo, expected)
+
+    def test_list_tasks_many_assertions(self):
+        task = "buy cheese"
+        task_2 = "buy apple"
+        task_3 = "buy orange"
+        expected = [task, task_2, task_3]
+        self._todo.at(operations.Add, task=task)
+        self._todo.at(operations.Add, task=task_2)
+        self._todo.at(operations.Add, task=task_3)
+
+        sub_set = [task, task_3]
+        result = self._todo.at(operations.ListTasks).result
+        it.HasSubset().validates(result, sub_set)
+        it.IsSortedAs().validates(result, expected)
+
+        key_value = {"1": task}
+        self._todo.at(operations.PrintDict).asserts(it.HasKeyValue, key_value)
+
+        task = "buy watermelon"
+        index = 3
+        pattern = "(.*)melon"
+        self._todo.at(operations.Add, task=task)
+        self._todo.at(operations.GetBy, index=index).asserts(it.MatchesRegex, pattern)
+
+
+class TestToTestCase(TestCase):
+    def setUp(self):
+        self._todo = Application(ToDo())
+
+    def test_list_tasks_many_assertions(self):
+        task = "buy cheese"
+        task_2 = "buy apple"
+        task_3 = "buy orange"
+        expected = [task, task_2, task_3]
+        self._todo.at(operations.Add, task=task)
+        self._todo.at(operations.Add, task=task_2)
+        self._todo.at(operations.Add, task=task_3)
+
+        sub_set = [task, task_3]
+        result = self._todo.at(operations.ListTasks).result
+        it.HasSubset().validates(result, sub_set)
+        it.IsSortedAs().validates(result, expected)
+
+        key_value = {"1": task}
+        self._todo.at(operations.PrintDict).asserts(it.HasKeyValue, key_value)
+
+        task = "buy watermelon"
+        index = 3
+        pattern = "(.*)melon"
+        self._todo.at(operations.Add, task=task)
+        self._todo.at(operations.GetBy, index=index).asserts(it.MatchesRegex, pattern)

@@ -42,6 +42,7 @@ class Get(AbstractTransaction):
 
     # It not necessary to implement the `undo` in this case
 
+
 class Post(AbstractTransaction):
     def do(self, any_param):
         # Stores the parameter in a instance variable to be used by `undo` later
@@ -65,6 +66,7 @@ class TestUndo:
 
     def test_get_post_are_executed_in_reverse_order(self):
         self._app.at(Get, any_param="any").at(Post, any_param="any")
+
 
 # Output
 #

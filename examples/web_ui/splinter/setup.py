@@ -1,11 +1,12 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from datetime import datetime
-from guara.transaction import AbstractTransaction
+from datetime import datetime, timezone
 from os import makedirs
+
+from guara.transaction import AbstractTransaction
 
 
 class OpenSplinterApp(AbstractTransaction):
@@ -32,5 +33,7 @@ class CloseSplinterApp(AbstractTransaction):
 
     def do(self, screenshot_filename="./captures/guara-capture"):
         makedirs("/tmp/captures", exist_ok=True)
-        self._driver.screenshot(f"{screenshot_filename}-{datetime.now()}.png")
+        self._driver.screenshot(
+            f"{screenshot_filename}-{datetime.now(timezone.utc)}.png"
+        )
         self._driver.quit()

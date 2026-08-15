@@ -1,10 +1,10 @@
-import os
-import pytest
 from unittest.mock import patch
+
+import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from guara.guara import Application, AbstractTransaction, it
+from guara.guara import AbstractTransaction, Application, it
 
 # --- 1. Transactions ---
 
@@ -19,6 +19,8 @@ class VisitGoogle(AbstractTransaction):
 
 class FailingTransaction(AbstractTransaction):
     """A transaction designed to fail by looking for a fake element"""
+
+    return_on_dry_run = Exception()
 
     def do(self, **kwargs):
         # This ID does not exist on Google, so Selenium will throw NoSuchElementException
@@ -44,18 +46,16 @@ def app():
 # --- 3. The Tests ---
 
 
+@patch("guara.constants.GUARA_RETRIES_ON_FAILURE", 3)
 def test_successful_transaction_no_retries(app):
     """Tests that a normal transaction works without triggering retries"""
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "3"}):
-        app.at(VisitGoogle)
-        app.asserts(it.Contains, "Google")
+    app.at(VisitGoogle)
+    app.asserts(it.Contains, "Google")
 
 
+@patch("guara.constants.GUARA_RETRIES_ON_FAILURE", 2)
 def test_failed_transaction_triggers_retries(app):
     """Tests that the retry logic actually fires when Selenium fails"""
     # We set retries to 2 (Total 3 attempts: 1 original + 2 retries)
-    with patch.dict(os.environ, {"GUARA_RETRIES_ON_FAILURE": "2"}):
-        with pytest.raises(Exception):
-            app.at(FailingTransaction)
-
-    # If you run this with -s, you will see the 'Attempt 0', 'Attempt 1' logs!
+    with pytest.raises(Exception):  # noqa
+        app.at(FailingTransaction)

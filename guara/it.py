@@ -1,15 +1,16 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 The module that deals with the assertion and validation of a
 transaction at the runtime.
 """
 
+from logging import Logger, getLogger
+
 from guara.assertion import IAssertion
-from logging import getLogger, Logger
 
 LOGGER: Logger = getLogger(__name__)
 
@@ -122,7 +123,9 @@ class HasLength(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        assert len(actual) == expected, f"Expected length {expected} but got {len(actual)}"
+        assert len(actual) == expected, (
+            f"Expected length {expected} but got {len(actual)}"
+        )
 
 
 class Contains(IAssertion):
@@ -163,7 +166,9 @@ class ContainsAny(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        assert any(item in actual for item in expected), f"None of {expected} found in {actual}"
+        assert any(item in actual for item in expected), (
+            f"None of {expected} found in {actual}"
+        )
 
 
 class IsGreaterThan(IAssertion):
@@ -191,7 +196,9 @@ class IsBetween(IAssertion):
 
     def asserts(self, actual, expected):
         low, high = expected
-        assert low <= actual <= high, f"Expected between {low} and {high} but got {actual}"
+        assert low <= actual <= high, (
+            f"Expected between {low} and {high} but got {actual}"
+        )
 
 
 class IsCloseTo(IAssertion):
@@ -201,7 +208,9 @@ class IsCloseTo(IAssertion):
 
     def asserts(self, actual, expected):
         value, tolerance = expected
-        assert abs(actual - value) <= tolerance, f"{actual} not within {tolerance} of {value}"
+        assert abs(actual - value) <= tolerance, (
+            f"{actual} not within {tolerance} of {value}"
+        )
 
 
 class StartsWith(IAssertion):
@@ -210,7 +219,9 @@ class StartsWith(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        assert str(actual).startswith(expected), f"'{actual}' does not start with '{expected}'"
+        assert str(actual).startswith(expected), (
+            f"'{actual}' does not start with '{expected}'"
+        )
 
 
 class EndsWith(IAssertion):
@@ -219,7 +230,9 @@ class EndsWith(IAssertion):
     """
 
     def asserts(self, actual, expected):
-        assert str(actual).endswith(expected), f"'{actual}' does not end with '{expected}'"
+        assert str(actual).endswith(expected), (
+            f"'{actual}' does not end with '{expected}'"
+        )
 
 
 class MatchesRegex(IAssertion):
@@ -230,7 +243,9 @@ class MatchesRegex(IAssertion):
     def asserts(self, actual, expected):
         import re
 
-        assert re.search(expected, str(actual)), f"'{actual}' does not match regex '{expected}'"
+        assert re.search(expected, str(actual)), (
+            f"'{actual}' does not match regex '{expected}'"
+        )
 
 
 class IsBlank(IAssertion):
@@ -322,6 +337,6 @@ class HasKeyValue(IAssertion):
 
     def asserts(self, actual, expected) -> None:
         for key, value in actual.items():
-            if list(expected.keys())[0] in key and list(expected.values())[0] in value:
+            if list(expected.keys())[0] in key and list(expected.values())[0] in value:  # noqa
                 return
         raise AssertionError("The expected key and value is not in the actual data.")

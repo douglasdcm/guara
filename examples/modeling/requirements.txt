@@ -1,3 +1,2 @@
 guara
 pytest
-black

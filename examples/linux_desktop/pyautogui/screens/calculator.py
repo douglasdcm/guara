@@ -1,9 +1,10 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from constants import BASE_PATH
+
 from guara.transaction import AbstractTransaction
 
 
@@ -26,14 +27,14 @@ class Divide(AbstractTransaction):
         return f"{BASE_PATH}{button_name}.png"
 
     def _click_buton(self, button, CONFIDENCE):
-        from pyautogui import locateOnScreen, click
+        from pyautogui import click, locateOnScreen
 
         button = locateOnScreen(button, confidence=CONFIDENCE)
         click(button)
 
     def do(self, a, b):
-        BUTTON_1 = self._get_button_path(f"button_{str(a)}")
-        BUTTON_2 = self._get_button_path(f"button_{str(b)}")
+        BUTTON_1 = self._get_button_path(f"button_{a!s}")
+        BUTTON_2 = self._get_button_path(f"button_{b!s}")
         # The tool confuses "+" and "÷", but this example does not worry about it
         BUTTON_DIVIDE = self._get_button_path("button_sum")
         BUTTON_EQUALS = self._get_button_path("button_equals")

@@ -1,13 +1,13 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from pathlib import Path
-from guara.application import Application
+
+from examples.web_ui.helium import home, setup
 from guara import it
-from examples.web_ui.helium import setup
-from examples.web_ui.helium import home
+from guara.application import Application
 
 
 class TestHeliumIntegration:
@@ -25,5 +25,7 @@ class TestHeliumIntegration:
 
     def test_local_page(self):
         text = "guara"
-        self._app.at(home.SubmitText, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
+        self._app.at(home.SubmitText, text=text).asserts(
+            it.IsEqualTo, f"It works! {text}!"
+        )
         self._app.at(home.SubmitText, text=text).asserts(it.IsNotEqualTo, "Any")

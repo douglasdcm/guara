@@ -25,7 +25,6 @@ from guara import it
 
 
 class App:
-
     def __init__(self):
         self._todo = Application(transactions.ToDoPrototype())
 
@@ -92,7 +91,6 @@ if __name__ == "__main__":
                 )
             )
             f.flush()
-
 ```
 
 ## Load

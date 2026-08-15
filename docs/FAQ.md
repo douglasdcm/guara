@@ -28,9 +28,11 @@ class DoThat(AbstractTransaction):
     def do(self, **kwargs):
         return f"do that {kwargs.get('param')}"
 
+
 class DoIt(AbstractTransaction):
     def do(self, **kwargs):
         return f"do it {kwargs.get('param')}"
+
 
 # Composite class
 class DoAll(AbstractTransaction):
@@ -42,7 +44,10 @@ class DoAll(AbstractTransaction):
             results.append(result)
         return results
 
-Application().when(DoAll, param="foo").then(it.ContainsAll, ["do that foo", "do it foo"])
+
+Application().when(DoAll, param="foo").then(
+    it.ContainsAll, ["do that foo", "do it foo"]
+)
 ```
 
 ## Q: Does Guará support all Gherkin verbs?
@@ -52,9 +57,9 @@ Application().when(DoAll, param="foo").then(it.ContainsAll, ["do that foo", "do 
 ```python
 # Example (conceptual)
 if app.execute(ActionA).result == "foo" or app.execute(ActionB).result == "bla":
-   app.when(ActionC).asserts(it.IsTrue)
+    app.when(ActionC).asserts(it.IsTrue)
 else:
-   app.when(ActionD).asserts(it.IsTrue)
+    app.when(ActionD).asserts(it.IsTrue)
 ```
 
 ## Q: Does Guará only support Gherkin verbs?

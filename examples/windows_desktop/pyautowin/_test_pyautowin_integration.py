@@ -1,13 +1,14 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from pytest import mark
-from guara.application import Application
+
+from examples.windows_desktop.pyautowin import home, setup
 from guara import it
+from guara.application import Application
 from guara.utils import is_dry_run
-from examples.windows_desktop.pyautowin import setup, home
 
 
 @mark.skipif(not is_dry_run(), reason="Dry run is disabled")

@@ -1,92 +1,117 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 The module that has all of the transactions.
 """
 
-from typing import Any, List, Dict, Coroutine, Union
+from __future__ import annotations
+
+from logging import Logger, getLogger
+from typing import Any, Coroutine
+
+from guara.asynchronous.abstract_transaction import AbstractTransaction
 from guara.asynchronous.it import IAssertion
 from guara.constants import (
-    GUARA_DISABLE_LOGS,
     GUARA_DRY_RUN,
-    GUARA_PACING_TIME,
-    GUARA_RETRIES_ON_FAILURE,
     GUARA_VERBOSE,
     SECRET_DEFAULT_VALUE,
 )
 from guara.utils import get_transaction_info
-from logging import getLogger, Logger
-from guara.asynchronous.abstract_transaction import AbstractTransaction
 
 LOGGER: Logger = getLogger(__name__)
 
 
 class Application:
-    """
-    The runner of the automation.
-    """
-
-    def __init__(self, driver: Any = None):
+    def __init__(
+        self,
+        driver: Any = None,
+        report_on_init=None,
+        report_on_exit=None,
+        disable=False,
+        dry_run=False,
+        name=None,
+    ):
         """
         Initializing the application with a driver.
 
         Args:
             driver: (Any): It is a driver that is used to interact with the system being under test.
+
+            report_on_init (str): The message to be reported when the application
+             instance is initialized.
+
+            report_on_exit (str): The message to be reported when the application
+             instance is destroyed.
         """
+
         self._driver: Any = driver
         """
         It is the driver that has a transaction.
         """
+
         self._result: Any = None
         """
         It is the result data of the last transaction.
         """
-        self._coroutines: List[Dict[str, Coroutine[None, None, Union[Any, None]]]] = []
+
+        self._coroutines: list[dict[str, Coroutine[None, None, Any | None]]] = []
         """
         The list of transactions that are performed.
         """
+
         self._TRANSACTION: str = "transaction"
         """
         Transaction header
         """
+
         self._ASSERTION: str = "assertion"
         """
         Assertion header
         """
-        self._kwargs: Dict[str, Any] = None
+
+        self._kwargs: dict[str, Any] = None
         """
         It contains all the necessary data and parameters for the
         transaction.
         """
-        self._transaction_name: str = None
+
+        self._transaction_name: str | None = None
         """
         The name of the transaction.
         """
+
         self._it: IAssertion = None
         """
         The interface of the Assertion
         """
+
         self._expected: Any = None
         """
         The expected data
         """
-        self.__transaction: AbstractTransaction
+
+        self._transaction: AbstractTransaction
         """
         The web transaction handler
         """
-        if GUARA_VERBOSE:
-            LOGGER.warning(
-                {
-                    "GUARA_DISABLE_LOGS": GUARA_DISABLE_LOGS,
-                    "GUARA_DRY_RUN (not in use)": GUARA_DRY_RUN,
-                    "GUARA_PACING_TIME": GUARA_PACING_TIME,
-                    "GUARA_RETRIES_ON_FAILURE": GUARA_RETRIES_ON_FAILURE,
-                    "GUARA_VERBOSE": GUARA_VERBOSE,
-                }
-            )
+
+        self._disable = disable
+        self._dry_run = dry_run
+
+        if name:
+            LOGGER.info(f"Application {name} running.")
+
+        if report_on_init:
+            LOGGER.info(report_on_init)
+
+        self._report_on_exit = report_on_exit
+
+    def __del__(self):
+        if self._report_on_exit:
+            LOGGER.info(self._report_on_exit)
 
     @property
     def result(self) -> Any:
@@ -95,7 +120,9 @@ class Application:
         """
         return self._result
 
-    def at(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def at(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Executing each transaction.
 
@@ -106,14 +133,30 @@ class Application:
         Returns:
             (Application)
         """
-        self.__transaction = transaction(self._driver)
+        if self._disable:
+            return self
+
+        self._transaction = transaction(self._driver)
         self._kwargs = kwargs
-        self._transaction_name = get_transaction_info(self.__transaction)
-        coroutine: Coroutine[None, None, Any] = self.__transaction.do(**kwargs)
+        self._transaction_name = get_transaction_info(self._transaction)
+
+        self._dry_run = self._dry_run if self._dry_run else GUARA_DRY_RUN
+
+        if self._dry_run:
+            LOGGER.warning("Dry run is enabled. No action will be taken on drivers.")
+            if isinstance(
+                self._transaction.execution_policy.return_on_dry_run, Exception
+            ):
+                raise self._transaction.execution_policy.return_on_dry_run
+            return self
+
+        coroutine: Coroutine[None, None, Any] = self._transaction.do(**kwargs)
         self._coroutines.append({self._TRANSACTION: coroutine})
         return self
 
-    def when(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def when(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -128,7 +171,9 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def and_(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def and_(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Same as the `at` method. Introduced for better readability.
 
@@ -143,7 +188,9 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def so(self, transaction: AbstractTransaction, **kwargs: Dict[str, Any]) -> "Application":
+    def so(
+        self, transaction: AbstractTransaction, **kwargs: dict[str, Any]
+    ) -> Application:
         """
         Same as the `at` method. Introduced for better readability of transactions that
         represent post conditions. Performs a transaction.
@@ -160,7 +207,7 @@ class Application:
         """
         return self.at(transaction, **kwargs)
 
-    def asserts(self, it: IAssertion, expected: Any) -> "Application":
+    def asserts(self, it: IAssertion, expected: Any) -> Application:
         """
         Asserting the data that is performed by the transaction
         against its expected value.
@@ -172,13 +219,16 @@ class Application:
         Returns:
             (Application)
         """
+        if self._disable:
+            return self
+
         self._it = it()
         self._expected = expected
         coroutine: Coroutine[None, None, None] = self._it.validates(self, expected)
         self._coroutines.append({self._ASSERTION: coroutine})
         return self
 
-    def then(self, it: IAssertion, expected: Any) -> "Application":
+    def then(self, it: IAssertion, expected: Any) -> Application:
         """
         Asserting the data that is performed by the transaction
         against its expected value.
@@ -192,7 +242,7 @@ class Application:
         """
         return self.asserts(it, expected)
 
-    async def perform(self) -> "Application":
+    async def perform(self) -> Application:
         """
         Executing all of the coroutines.
 
@@ -217,22 +267,33 @@ class Application:
         Returns:
             (bool)
         """
-        transaction: Coroutine[None, None, Any] = self._coroutines[index].get(self._TRANSACTION)
-        if transaction:
+
+        result_details = {}
+        try:
+            transaction: Coroutine[None, None, Any] = self._coroutines[index].get(
+                self._TRANSACTION
+            )
+
             for key, value in self._kwargs.items():
-                if "secret" in key.lower():
+                if "secret" in key.lower() or "password" in key.lower():
                     value = SECRET_DEFAULT_VALUE
                     self._kwargs[key] = value
-            if GUARA_VERBOSE:
-                LOGGER.info(
-                    {"transaction": self._transaction_name, "parameteres": [{**self._kwargs}]}
-                )
-            else:
-                LOGGER.info({"transaction": self._transaction_name})
+
+            result_details["transaction"] = self._transaction_name
+            result_details["parameteres"] = {**self._kwargs}
 
             self._result = await transaction
-            return True
-        return False
+
+            LOGGER.info(f"Transaction '{self._transaction_name}' succeded.")
+            if GUARA_VERBOSE:
+                LOGGER.info(result_details)
+
+        except Exception as e:
+            LOGGER.info(f"Transaction '{self._transaction_name}' failed.")
+            if GUARA_VERBOSE:
+                result_details["return"] = f"({type(e)}) '{e!s}'"
+                LOGGER.error(LOGGER.error(result_details))
+            raise
 
     async def get_assertion(self, index: int) -> None:
         """
@@ -244,6 +305,8 @@ class Application:
         Returns:
             (None)
         """
-        assertion: Coroutine[None, None, None] = self._coroutines[index].get(self._ASSERTION)
+        assertion: Coroutine[None, None, None] = self._coroutines[index].get(
+            self._ASSERTION
+        )
         if assertion:
             return await assertion

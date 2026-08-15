@@ -1,15 +1,16 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 """
 The module that has the interface for the implmentation of
 the assertion logic to be used for validation and testing.
 """
 
+from logging import Logger, getLogger
 from typing import Any
-from logging import getLogger, Logger
+
 from guara.constants import GUARA_DRY_RUN, GUARA_VERBOSE
 
 LOGGER: Logger = getLogger(__name__)
@@ -52,19 +53,22 @@ class IAssertion:
         Raises:
             Exception: An assertion exception
         """
+        log_info = {
+            "assertion": self.__class__.__name__,
+            "actual": actual,
+            "expected": expected,
+        }
         if GUARA_DRY_RUN:
+            if GUARA_VERBOSE:
+                LOGGER.info(log_info)
             return
 
         try:
             self.asserts(actual, expected)
             if GUARA_VERBOSE:
-                LOGGER.info(
-                    {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
-                )
+                LOGGER.info(log_info)
         except Exception as e:
             if GUARA_VERBOSE:
-                LOGGER.error(
-                    {"assertion": self.__class__.__name__, "actual": actual, "expected": expected}
-                )
-                LOGGER.exception(str(e))
+                LOGGER.error(log_info)
+                LOGGER.exception(str(e))  # noqa
             raise

@@ -1,12 +1,10 @@
 # Copyright (C) 2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from scenarios.utils import run_scenario
-from guara.application import Application
-from guara import it
 from repository import Repository
+from scenarios.utils import run_scenario
 from transactions import (
     CreateSubject,
     HasCourse,
@@ -14,12 +12,17 @@ from transactions import (
     ListSubjects,
 )
 
+from guara import it
+from guara.application import Application
+
 
 @run_scenario
 def list_subjects(eduapp: Application, repo: Repository, args):
 
     result = (
-        eduapp.when(ListSubjects, repo=repo, course_id=args.course).asserts(it.IsNotEmpty).result
+        eduapp.when(ListSubjects, repo=repo, course_id=args.course)
+        .asserts(it.IsNotEmpty)
+        .result
     )
     print(result)
 
@@ -29,6 +32,8 @@ def create_subject(eduapp: Application, repo: Repository, args):
     (
         eduapp.given(HasCourse, repo=repo, course_id=args.course)
         .given(HasNotSubject, repo=repo, subject_name=args.name)
-        .when(CreateSubject, repo=repo, with_name=args.name, in_course_with_id=args.course)
+        .when(
+            CreateSubject, repo=repo, with_name=args.name, in_course_with_id=args.course
+        )
         .then(it.IsEqualTo, args.name)
     )

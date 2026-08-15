@@ -1,14 +1,15 @@
 # Copyright (C) 2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
+
+from types import SimpleNamespace
 
 import pytest
-from guara.application import Application
-from types import SimpleNamespace
 from repository import Repository
+from scenarios import scenarios_course, scenarios_student, scenarios_subject
 
-from scenarios import scenarios_student, scenarios_course, scenarios_subject
+from guara.application import Application
 
 
 @pytest.fixture

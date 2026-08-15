@@ -1,12 +1,13 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
-from pytest import mark
-from guara.asynchronous.transaction import Application, AbstractTransaction
-from guara.asynchronous import it
 from playwright.async_api import async_playwright
+from pytest import mark
+
+from guara.asynchronous import it
+from guara.asynchronous.transaction import AbstractTransaction, Application
 
 
 class OpenApp(AbstractTransaction):

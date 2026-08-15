@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -26,7 +25,7 @@ author = "Douglas Cardoso"
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "0.0.24"
+release = "0.0.25"
 
 
 # -- General configuration ---------------------------------------------------

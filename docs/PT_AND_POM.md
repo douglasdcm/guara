@@ -67,6 +67,7 @@ In POM, page objects represent pages. In PT, we focus on **transactions** (user 
 ```python
 from selenium.webdriver.common.by import By
 
+
 class LoginPage:
     def __init__(self, driver):
         self.driver = driver
@@ -99,6 +100,7 @@ def test_login():
 ```python
 from guara.transaction import AbstractTransaction
 
+
 class LoginTransaction(AbstractTransaction):
     def __init__(self, driver):
         super().__init__(driver)
@@ -114,11 +116,14 @@ from guara.application import Application
 from guara import it
 from selenium import webdriver
 
+
 def test_login():
     driver = webdriver.Chrome()
     app = Application(driver)
 
-    app.at(LoginTransaction, username="user1", password="password1").asserts(it.Contains, "Dashboard")
+    app.at(LoginTransaction, username="user1", password="password1").asserts(
+        it.Contains, "Dashboard"
+    )
 ```
 
 ---

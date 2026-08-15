@@ -1,14 +1,16 @@
 # Copyright (C) 2025-2026 Guara - All Rights Reserved
 # You may use, distribute and modify this code under the
 # terms of the MIT license.
-# Visit: https://github.com/douglasdcm/guara
+# Visit: https://guara.readthedocs.io/en/latest/
 
 from pathlib import Path
-from pytest import mark
-from guara.application import Application
-from guara import it
-from setup import OpenAppiumApp, CloseAppiumApp
+
 from home import SubmitTextAppium
+from pytest import mark
+from setup import CloseAppiumApp, OpenAppiumApp
+
+from guara import it
+from guara.application import Application
 from guara.utils import is_dry_run
 
 
@@ -43,5 +45,7 @@ class TestAppiumIntegration:
 
     def test_local_page(self):
         text = "guara"
-        self._app.at(SubmitTextAppium, text=text).asserts(it.IsEqualTo, f"It works! {text}!")
+        self._app.at(SubmitTextAppium, text=text).asserts(
+            it.IsEqualTo, f"It works! {text}!"
+        )
         self._app.at(SubmitTextAppium, text=text).asserts(it.IsNotEqualTo, "Any")

@@ -4,10 +4,10 @@ As `Page Transactions` pattern is a new term. ChatGPT will not find a reference 
 1. Go to [ChatGPT](https://chatgpt.com/) page and login with your account. Create a new one if necessary.
 2. Paste the following statements in the ChatGPT prompt
 ```text
-Imagine you are a test automation engineer with more than 20 years of experience.
+Imagine you are a software *[test automation | developer]* engineer with more than 20 years of experience.
 Your task is:
 
-* Read the documentation of the test framework https://guara.readthedocs.io/en/latest/
+* Read the documentation of Python framework https://guara.readthedocs.io/en/latest/
 * Explain in one paragraph what you understood about the framework
 ```
 Here is a possible output
@@ -24,6 +24,16 @@ pluggable assertion strategies (`IAssertion`), allowing flexible and
 extensible verification logic, and overall the framework promotes highly
 readable, maintainable, and scalable test code that can be applied beyond
 UI automation, including APIs and asynchronous workflows.
+
+----
+
+Guará is a lightweight Python framework that bridges the gap between
+technical execution and Domain-Driven Design (DDD) by using a fluent
+interface for creating executable, "living documentation" that mirrors
+business workflows. It employs an execution engine based on semantic
+keywords—given, when, then—to orchestrate small, reusable transactions,
+shifting focus away from brittle, micro-action-based testing.
+Read the full documentation at guara.readthedocs.io.
 ```
 3. Check its understanding and continue
 4. Now that ChatGPT knows about the new pattern. Ask it to organize your code using this prompt
@@ -101,6 +111,7 @@ from guara import it
 # Transactions
 # =========================
 
+
 class OpenSamplePage(AbstractTransaction):
     def do(self, file_path):
         self._driver.get(f"file:///{file_path}/sample.html")
@@ -138,6 +149,7 @@ class CloseBrowser(AbstractTransaction):
 # Test
 # =========================
 
+
 def test_sample_page():
     file_path = pathlib.Path(__file__).parent.resolve()
     app = Application(webdriver.Chrome())
@@ -151,15 +163,11 @@ def test_sample_page():
     app.at(GetTitle).asserts(it.IsEqualTo, "Sample page")
 
     # Fill input and keep value
-    typed_text = app.at(
-        FillInputWithRandomText,
-        options=text_options
-    ).result
+    typed_text = app.at(FillInputWithRandomText, options=text_options).result
 
     # Submit and validate result
     (
-        app
-        .at(SubmitForm)
+        app.at(SubmitForm)
         .at(GetResultMessage)
         .asserts(it.IsEqualTo, f"It works! {typed_text}!")
     )
