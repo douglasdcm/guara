@@ -1,4 +1,4 @@
-# 🍷 Modeling Use Cases as Code with Guará
+# Modeling Use Cases as Code with Guará
 
 ## Introduction
 
@@ -14,7 +14,7 @@ This approach turns your use cases into the **source of truth for your system**.
 
 ---
 
-## 🧠 Use Cases in Guará Style
+## Use Cases in Guará Style
 
 In Guará, behavior is expressed through a fluent and readable syntax:
 
@@ -34,7 +34,7 @@ This structure focuses entirely on **user intent**, not implementation details.
 
 ---
 
-## 🔁 From Use Cases to Production Code
+## From Use Cases to Production Code
 
 Each transaction used in a use case becomes a **concrete class in your production code**.
 
@@ -62,7 +62,7 @@ There is no gap between **requirement and implementation**.
 
 ---
 
-## 🏗 Example: Wine Store Implementation
+## Example: Wine Store Implementation
 
 Below is a simple example of how the wine store can be implemented following the use cases.
 
@@ -114,7 +114,7 @@ class WineStoreApp:
 
 ---
 
-## 🔧 Transaction Examples
+## Transaction Examples
 
 ### ListWines
 
@@ -220,7 +220,7 @@ class Checkout(AbstractTransaction):
 
 ---
 
-## 🧪 Using Use Cases as Tests
+## Using Use Cases as Tests
 
 The same use cases can be executed to validate behavior:
 
@@ -234,7 +234,7 @@ This eliminates the need to rewrite tests separately.
 
 ---
 
-## 🔄 One Language, Multiple Purposes
+## One Language, Multiple Purposes
 
 Guará enables a unified approach:
 
@@ -246,7 +246,7 @@ Guará enables a unified approach:
 
 ---
 
-## 🚀 Benefits
+## Benefits
 
 * Single source of truth
 * High readability
@@ -256,7 +256,7 @@ Guará enables a unified approach:
 
 ---
 
-## 📌 Conclusion
+## Conclusion
 
 Guará allows you to model your system using **use cases that are directly executable**.
 
@@ -270,7 +270,7 @@ There is no separation between **what the system should do** and **how it is imp
 
 ---
 
-## 💡 Final Thought
+## Final Thought
 
 If a new requirement appears, you simply write:
 

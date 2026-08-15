@@ -104,13 +104,25 @@ class ChangeToPortuguese(AbstractTransaction):
 ### 2. **Flexible Assertions**
 - Use built-in assertions like `it.IsEqualTo`, `it.Contains`, and more to validate outcomes.
 
-### 3. **Cross-Driver Compatibility**
+### 3. **Policies**
+- `Policy` for controlling transaction execution behavior..
+
+### 4. **Contracts**
+- Transactions can declare conditions that must be satisfied before and after execution.
+
+### 5. **Masking sensitive data**
+- Sensitive data in parameters partially named as `secret`, `password` or `mask` are masked in logs.
+
+### 6. **Command Line (CLI)**
+- Guará provides a command-line interface for managing and executing transaction workflows.
+
+### 7. **Cross-Driver Compatibility**
 - Works with Selenium and can be adapted to other web drivers.
 
-### 4. **Asynchronous Execution**
+### 8. **Asynchronous Execution**
 - Supports asynchronous operations for modern web applications.
 
-### 5. **ChatGPT Assistance**
+### 9. **ChatGPT Assistance**
 - Leverage AI to generate or debug transactions.
 
 ---

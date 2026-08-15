@@ -2,6 +2,7 @@
 module-path = "guara"
 timeout = 60.0
 excluded-modules = []
+test-runner = "command"
 test-command = "python -m pytest -k unit"
 
 [cosmic-ray.distributor]

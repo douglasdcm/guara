@@ -10,7 +10,7 @@ The `Application` class is the execution engine of Guará. It orchestrates trans
 APP_QUICK_REF
 ```
 
-## Transaction – Quick Guide
+## Transaction Quick Guide
 
 The Transaction is the core abstraction used to define actions in Guará. A transaction represents a single, reusable unit of behavior, such as clicking a button, creating a user, calling an API, or applying business logic.
 
@@ -28,4 +28,35 @@ Assertions in Guará validate the outcome of transactions using a consistent int
 :maxdepth: 1
 
 ASSERTION_QUICK_REF
+```
+
+## Policies Quick Reference
+
+Policy centralizes application and transaction executions configuration such as pacing, retries, retryable exceptions, and dry-run behavior.
+
+```{toctree}
+:maxdepth: 1
+
+POLICIES_QUICK_REF
+```
+
+## Contract Quick Reference
+
+Transactions can declare conditions that must be satisfied before execution. This establishes an explicit contract around the transaction without mixing the contract itself with its implementation.
+
+```{toctree}
+:maxdepth: 1
+
+CONTRACT_QUICK_REF
+```
+
+## Execution History Quick Reference
+
+It is possible to record and replay the history of the executions.
+
+```{toctree}
+:maxdepth: 1
+
+RECORD_QUICK_REF
+CLI_QUICK_REF
 ```

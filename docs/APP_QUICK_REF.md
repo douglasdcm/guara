@@ -17,6 +17,7 @@
 | when    | Alias of `at`, used for main actions            |
 | and_    | Alias of `at`, used to chain additional actions |
 | execute | Alias of `at`, generic execution method         |
+| so      | Alias of `at`, assertion using transaction      |
 
 ---
 

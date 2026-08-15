@@ -83,7 +83,6 @@ class TransactionExecution:
     started_at: str | None = None
     finished_at: str | None = None
     attempts: int = 0
-    result: Any = None
     exception_type: str | None = None
     exception_message: str | None = None
     replayable: bool = True
@@ -101,7 +100,6 @@ class TransactionExecution:
     def succeed(self, result: Any) -> None:
         """Marks the transaction execution as successful."""
         self.status = "succeeded"
-        self.result = result
         self.finished_at = _utc_now()
 
     def fail(self, exception: Exception) -> None:
@@ -135,7 +133,6 @@ class TransactionExecution:
             started_at=data.get("started_at"),
             finished_at=data.get("finished_at"),
             attempts=data.get("attempts", 0),
-            result=data.get("result"),
             exception_type=data.get("exception_type"),
             exception_message=data.get("exception_message"),
             replayable=data.get("replayable", True),
@@ -284,7 +281,7 @@ class Application:
 
             name (str): the name to identify the application in logs.
 
-            policy (ExecutionPolicy): the policy to control how the application is executed.
+            policy (TransactionPolicy): the policy to control how the application is executed.
              to be retried.
 
         Documentation: https://guara.readthedocs.io/en/latest/

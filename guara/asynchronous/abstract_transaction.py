@@ -27,7 +27,7 @@ class AbstractTransaction:
         return_on_dry_run (bool): Wheter the executions of the application hits the
          driver (False) or not (True).
 
-        execution_policy (TransactionExecutionPolicy): Defines how the transaction is executed.
+        execution_policy (TransactionPolicy): Defines how the transaction is executed.
 
     Documentation: https://guara.readthedocs.io/en/latest/
 

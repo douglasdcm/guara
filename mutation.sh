@@ -1,5 +1,8 @@
-cosmic-ray init tutorial.toml tutorial.sqlite
-cosmic-ray --verbosity=INFO baseline tutorial.toml
-cr-report tutorial.sqlite --show-pending
-cosmic-ray exec tutorial.toml tutorial.sqlite
-cr-html tutorial.sqlite > report.html
+#! bash
+set -x
+rm -rf mutation.sqlite
+cosmic-ray init mutation.toml mutation.sqlite
+cosmic-ray --verbosity=INFO baseline mutation.toml
+cr-report mutation.sqlite --show-pending
+cosmic-ray exec mutation.toml mutation.sqlite
+cr-html mutation.sqlite > report.html

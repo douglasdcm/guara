@@ -31,7 +31,7 @@ class AbstractTransaction:
 
         ensures: list[AbstractTransaction]: A state ensured by the transaction after execution.
 
-        execution_policy: TransactionExecutionPolicy: Defined how the transaction is executed.
+        execution_policy: TransactionPolicy: Defined how the transaction is executed.
 
     Documentation: https://guara.readthedocs.io/en/latest/
     """

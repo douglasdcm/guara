@@ -1,7 +1,9 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 22.3.0
+  - repo: local
     hooks:
-      - id: black
-        args: [--line-length=100]
-        language_version: python3
+      - id: linter
+        name: Run Linter via Makefile
+        entry: make linter
+        language: system
+        files: \.(py)$
+        pass_filenames: false
