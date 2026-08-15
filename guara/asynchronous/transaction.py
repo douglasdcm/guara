@@ -286,7 +286,6 @@ class Application:
 
             LOGGER.info(f"Transaction '{self._transaction_name}' succeded.")
             if GUARA_VERBOSE:
-                result_details["return"] = self._result
                 LOGGER.info(result_details)
 
         except Exception as e:

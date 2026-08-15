@@ -4,13 +4,13 @@
 Previously recorded executions can be replayed using the Guará CLI.
 
 ```bash
-guara replay -f execution.json
+PYTHONPATH=$(pwd) guara replay -f execution.json
 ```
 
 A specific execution can be selected:
 
 ```bash
-guara replay -f execution.json -i <execution-id>
+PYTHONPATH=$(pwd) guara replay -f execution.json -i <execution-id>
 ```
 
 ## Resume
@@ -18,7 +18,7 @@ guara replay -f execution.json -i <execution-id>
 A replay can resume from a specific transaction or execution identifier.
 
 ```bash
-guara replay \
+PYTHONPATH=$(pwd) guara replay \
     -f execution.json \
     -i <execution-id> \
     --resume
@@ -31,7 +31,7 @@ This is useful when previous transactions have already completed and should not 
 A driver can be supplied when replaying an execution.
 
 ```bash
-guara replay \
+PYTHONPATH=$(pwd) guara replay \
     -f execution.json \
     -d drivers:create_driver
 ```
@@ -78,7 +78,7 @@ Replay options:
 Example:
 
 ```bash
-guara replay \
+PYTHONPATH=$(pwd) guara replay \
     --file execution.json \
     --id 8f4c2a \
     --resume \

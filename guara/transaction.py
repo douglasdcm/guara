@@ -651,7 +651,6 @@ class Application:
                 LOGGER.info(f"Transaction '{transaction_info}' succeded.")
 
                 if GUARA_VERBOSE:
-                    result_details["return"] = self._result
                     LOGGER.info(result_details)
 
                 self._execution_history.succeed()
