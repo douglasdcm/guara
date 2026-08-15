@@ -9,9 +9,6 @@ The application simulates the control of grades for university students. It us u
 python3.12 -m venv venv
 source venv/bin/activate
 
-# format
-black -l 100 .
-
 # run test
 python -m pytest
 

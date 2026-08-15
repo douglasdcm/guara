@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: psf/black@stable
+      
+      - name: Run Ruff Lint and Fixes
+        uses: astral-sh/ruff-action@v3
         with:
-            options: "--check -l 100"
+          args: "check"

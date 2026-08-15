@@ -1,5 +1,4 @@
 pytest-asyncio
-black
 tox
 ruff
 pre-commit
