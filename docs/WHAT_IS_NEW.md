@@ -1,4 +1,8 @@
 # What's New
+## 0.0.26
+TBD
+
+
 ## 0.0.25
 
 This release introduces a major evolution of Guará's execution model, with new capabilities for **transaction control, execution policies, contracts, dry runs, execution history, replay, and application-level orchestration**.
