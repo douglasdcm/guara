@@ -30,21 +30,21 @@ class FlakyTransaction(AbstractTransaction):
         return "success"
 
 
-def test_application_fails_with_no_retries():
+def test_transaction_fails_with_no_retries():
     app = Application()
     with raises(PermissionError, match="Flaky failure!"):
         app.at(FlakyTransaction, fail_until=2)
 
 
 @mark.skipif(GUARA_DRY_RUN, reason="Ignore on dry run.")
-def test_application_succeeds_with_no_retries():
+def test_transaction_succeeds_with_no_retries():
     app = Application()
     app.at(FlakyTransaction, fail_until=1).asserts(it.IsEqualTo, "success")
 
 
 @mark.skipif(GUARA_DRY_RUN, reason="Ignore on dry run.")
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 3)
-def test_application_retries_and_succeeds_before_max_retries():
+def test_transaction_retries_and_succeeds_before_max_retries():
     # Setup environment for 2 retries
     app = Application()
 
@@ -54,7 +54,7 @@ def test_application_retries_and_succeeds_before_max_retries():
 
 @mark.skipif(GUARA_DRY_RUN, reason="Ignore on dry run.")
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 1)
-def test_application_retries_and_succeeds_on_last_attempt():
+def test_transaction_retries_and_succeeds_on_last_attempt():
     # Setup environment for 2 retries
     app = Application()
 
@@ -63,7 +63,7 @@ def test_application_retries_and_succeeds_on_last_attempt():
 
 
 @patch("guara.transaction.GUARA_RETRIES_ON_FAILURE", 1)
-def test_application_raises_after_max_retries():
+def test_transaction_raises_after_max_retries():
     # Setup environment for 1 retry
     app = Application()
     # If it needs 3 attempts but we only allow 1 retry (2 attempts total), it should raise

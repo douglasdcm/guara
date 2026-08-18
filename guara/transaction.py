@@ -607,11 +607,12 @@ class Application:
                 f"Policy for transaction '{self._transaction.__name__}': {self._transaction.execution_policy.to_dict()}"
             )
 
-        _retries_on_failure = (
-            self._transaction.execution_policy.retries_on_failure
-            if self._transaction.execution_policy.retries_on_failure is not None
-            else GUARA_RETRIES_ON_FAILURE
-        )
+        if self._transaction.execution_policy.retries_on_failure is not None:
+            _retries_on_failure = self._transaction.execution_policy.retries_on_failure
+        elif self._policy.retries_on_failure is not None:
+            _retries_on_failure = self._policy.retries_on_failure
+        else:
+            _retries_on_failure = GUARA_RETRIES_ON_FAILURE
 
         self._transaction_pool.append(self._transaction)
 
@@ -704,11 +705,12 @@ class Application:
                 )
                 LOGGER.exception(e)  # noqa
 
-                _pacing_time = (
-                    self._transaction.execution_policy.pacing_time
-                    if self._transaction.execution_policy.pacing_time is not None
-                    else GUARA_PACING_TIME
-                )
+                if self._transaction.execution_policy.pacing_time is not None:
+                    _pacing_time = self._transaction.execution_policy.pacing_time
+                elif self._policy.pacing_time is not None:
+                    _pacing_time = self._policy.pacing_time
+                else:
+                    _pacing_time = GUARA_PACING_TIME
 
                 if retries <= _retries_on_failure:
                     LOGGER.info(f"Waiting {_pacing_time}s for next retry.")
