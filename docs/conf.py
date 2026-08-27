@@ -25,7 +25,7 @@ author = "Douglas Cardoso"
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "0.0.26"
+release = "0.0.26rc1"
 
 
 # -- General configuration ---------------------------------------------------
