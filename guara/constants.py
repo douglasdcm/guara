@@ -10,7 +10,7 @@ from guara.utils import convert_variable_to_integer
 
 LOGGER: Logger = getLogger(__name__)
 
-VERSION = "0.0.25"
+VERSION = "0.0.26"
 GUARA_VERBOSE = getenv("GUARA_VERBOSE", "true").lower() == "true"
 GUARA_DISABLE_LOGS = getenv("GUARA_DISABLE_LOGS", "false").lower() == "true"
 GUARA_DRY_RUN = getenv("GUARA_DRY_RUN", "false").lower() == "true"

@@ -1,4 +1,21 @@
 # What's New
+## 0.0.26
+This release improves the validation of transaction contracts (`requires` and `ensures`) to allow users to return truthy values in positive paths and falsy values in negative paths.
+
+```python
+class MyContract(AbstractTransaction):
+    def do(self, param):
+        return object() if param > 10 else None
+
+
+class MainTransaction(AbstractTransaction):
+    requires = [MyContract]
+
+    def do(self, param): ...
+```
+
+If the contract is violated then a `ContractError` exception is raised.
+
 ## 0.0.25
 
 This release introduces a major evolution of Guará's execution model, with new capabilities for **transaction control, execution policies, contracts, dry runs, execution history, replay, and application-level orchestration**.

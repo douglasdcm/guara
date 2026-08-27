@@ -10,7 +10,7 @@ from pytest import raises
 
 from guara import it
 from guara.policy import ApplicationPolicy, TransactionPolicy
-from guara.transaction import AbstractTransaction, Application
+from guara.transaction import AbstractTransaction, Application, ContractError
 
 
 class Error(Exception):
@@ -27,23 +27,27 @@ class IsUserLoggedIn(AbstractTransaction):
     def do(self, r: Repository):
         if not r.loggedin:
             raise Error("not logged in")
+        return True
 
 
 class IsManager(AbstractTransaction):
     def do(self, r: Repository):
         if not r.manager:
             Error("not manager")
+        return True
 
 
 class AreValidValuesToRegistreProduct(AbstractTransaction):
     def do(self, minimum_stock, r):
         assert minimum_stock is not None
+        return True
 
 
 class HasNotRegistredProduct(AbstractTransaction):
     def do(self, r: Repository):
         if r.product:
             raise Error("product already exist")
+        return True
 
 
 class ProductExists(AbstractTransaction):
@@ -51,6 +55,7 @@ class ProductExists(AbstractTransaction):
         assert name is not None
         if not r.product:
             raise Error("product not exist")
+        return object()
 
 
 class CreateProduct(AbstractTransaction):
@@ -189,3 +194,81 @@ def test_application_do_not_run_ensures_and_requires_when_dry_run():
         .then(it.IsEqualTo, "anything")
         .undo()
     )
+
+
+class ContractWithNoParameter(AbstractTransaction):
+    def do(self, param1):
+        return param1 == "foo"
+
+
+class MainTransaction(AbstractTransaction):
+    requires: ClassVar = [ContractWithNoParameter]
+
+    def do(self, param1, param2, **kwrags):
+        return True
+
+
+def test_contract_ignores_exceeding_parameters():
+    app = Application()
+    (app.execute(MainTransaction, param1="foo", param2="bla", extra_param="nay"))
+
+
+def test_contract_ignores_exceeding_parameters_and_raise_exception():
+    with raises(ContractError):
+        app = Application()
+        (app.execute(MainTransaction, param1="jojo", param2="bla", extra_param="nay"))
+
+
+class ContractWithParameter(AbstractTransaction):
+    def do(self, param10, param11, param12):
+        return True
+
+
+class MyMainTransactionWithoutParams(AbstractTransaction):
+    requires: ClassVar = [ContractWithParameter]
+
+    def do(self):
+        return True
+
+
+def test_contract_complains_about_missing_parameter():
+    with raises(TypeError):
+        app = Application()
+        (app.execute(MyMainTransactionWithoutParams))
+
+
+class MainTransactionWithKwargs(AbstractTransaction):
+    requires: ClassVar = [ContractWithParameter]
+
+    def do(self, **kwargs):
+        return True
+
+
+def test_contract_complains_about_kwargs_in_main_transaction():
+    with raises(TypeError):
+        app = Application()
+        (app.execute(MainTransactionWithKwargs, foo="foo", bla="bla", jo="jo"))
+
+
+def test_contract_works_when_kwargs_sent_in_main_transaction():
+    app = Application()
+    (app.execute(MainTransactionWithKwargs, param10="foo", param11="bla", param12="jo"))
+
+
+def test_transaction_with_kwargs_compains_when_missing_paramter_shared_by_contracts():
+    with raises(TypeError):
+        app = Application()
+        (app.execute(MainTransactionWithKwargs, param10="foo", param11="bla"))
+
+
+class MainTransactionWithNamedParams(AbstractTransaction):
+    requires: ClassVar = [ContractWithParameter]
+
+    def do(self, parama, paramb, paramc):
+        return True
+
+
+def test_transaction_with_named_params_compains_when_missing_paramter_shared_by_contracts():
+    with raises(TypeError):
+        app = Application()
+        (app.execute(MainTransactionWithNamedParams, parama="foo", paramb="bla"))
