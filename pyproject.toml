@@ -8,7 +8,7 @@ exclude = ["examples*", ".vscode", ".git*", "dist*", "*pytest*", "docs*"]
 
 [project]
 name = "guara"
-version = "0.0.26"
+version = "0.0.26rc2"
 authors = [
   { name="Douglas Cardoso", email="29078346+douglasdcm@users.noreply.github.com" },
 ]
