@@ -1,3 +1,4 @@
+dump.json
 report.html
 *.sqlite
 **/*.db

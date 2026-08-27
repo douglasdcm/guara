@@ -49,6 +49,10 @@ class PosconditionError(Exception):
     """Raised when a pos-conditon cannot be executed."""
 
 
+class ContractError(Exception):
+    """Raised when contracts in transaction `requires` or `ensures` are violated."""
+
+
 def _get_module_path(transaction: AbstractTransaction) -> str:
     """Return the complete Python module path for a transaction."""
     file_path = Path(inspect.getfile(type(transaction))).resolve()
@@ -340,7 +344,10 @@ class Application:
         sig = inspect.signature(contract.do)
         valid_keys = sig.parameters.keys()
         filtered_k = {key: value for key, value in kwargs.items() if key in valid_keys}
-        Application(self._driver).execute(contract, **filtered_k)
+        if not Application(self._driver).execute(contract, **filtered_k).result:
+            raise ContractError(
+                f"Contract '{contract.__name__}' violated. Ensure it returns a truthy value for positive paths."
+            )
 
     def _create_transaction_execution(
         self,
@@ -570,6 +577,19 @@ class Application:
             (Application)
         """
         self._transaction = transaction(self._driver)
+
+        # Validate transaction parameters before execute it
+        try:
+            # Retrieve the expected function signature
+            sig = inspect.signature(self._transaction.do)
+            # .bind() throws a TypeError immediately if parameters don't match
+            bound_args = sig.bind(**kwargs)
+            # (Optional) Apply default values to the bound arguments dictionary
+            bound_args.apply_defaults()
+        except TypeError as e:
+            raise TypeError(
+                f"Transaction '{self._transaction.__name__}' failed ({e!s})"
+            )
 
         self._dry_run = (
             self._transaction.execution_policy.dry_run
