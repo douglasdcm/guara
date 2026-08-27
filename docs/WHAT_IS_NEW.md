@@ -1,5 +1,5 @@
 # What's New
-## 0.0.26rc1
+## 0.0.26rc2
 This release improves the validation of transaction contracts (`requires` and `ensures`) to allow users to return truthy values in positive paths and falsy values in negative paths.
 
 ```python
