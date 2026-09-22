@@ -340,14 +340,12 @@ class Application:
         if self._report_on_exit:
             LOGGER.info(self._report_on_exit)
 
-    def _execute_contract(self, kwargs, contract):
-        sig = inspect.signature(contract.do)
-        valid_keys = sig.parameters.keys()
-        filtered_k = {key: value for key, value in kwargs.items() if key in valid_keys}
-        if not Application(self._driver).execute(contract, **filtered_k).result:
-            raise ContractError(
-                f"Contract '{contract.__name__}' violated. Ensure it returns a truthy value for positive paths."
-            )
+    def _execute_contract_requires(self, kwargs, contract):
+        filtered_k = {key: value for key, value in kwargs.items()}
+        Application(self._driver).execute(contract, **filtered_k)
+
+    def _execute_contract_ensures(self, contract):
+        Application(self._driver).execute(contract, result=self.result)
 
     def _create_transaction_execution(
         self,
@@ -620,7 +618,7 @@ class Application:
             return self
 
         for required in self._transaction.requires:
-            self._execute_contract(kwargs, required)
+            self._execute_contract_requires(kwargs, required)
 
         if any(v for v in self._transaction.execution_policy.to_dict().values()):
             LOGGER.warning(
@@ -676,7 +674,7 @@ class Application:
                 self._execution_history.succeed()
 
                 for ensured in self._transaction.ensures:
-                    self._execute_contract(kwargs, ensured)
+                    self._execute_contract_ensures(ensured)
 
                 return self
 

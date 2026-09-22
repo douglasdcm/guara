@@ -10,7 +10,7 @@ from pytest import raises
 
 from guara import it
 from guara.policy import ApplicationPolicy, TransactionPolicy
-from guara.transaction import AbstractTransaction, Application, ContractError
+from guara.transaction import AbstractTransaction, Application
 
 
 class Error(Exception):
@@ -24,38 +24,44 @@ class Repository:
 
 
 class IsUserLoggedIn(AbstractTransaction):
-    def do(self, r: Repository):
+    def do(self, r: Repository, **kwargs):
         if not r.loggedin:
             raise Error("not logged in")
         return True
 
 
 class IsManager(AbstractTransaction):
-    def do(self, r: Repository):
+    def do(self, r: Repository, **kwargs):
         if not r.manager:
             Error("not manager")
         return True
 
 
 class AreValidValuesToRegistreProduct(AbstractTransaction):
-    def do(self, minimum_stock, r):
+    def do(self, minimum_stock, **kwargs):
         assert minimum_stock is not None
         return True
 
 
 class HasNotRegistredProduct(AbstractTransaction):
-    def do(self, r: Repository):
+    def do(self, r: Repository, **kwargs):
         if r.product:
             raise Error("product already exist")
         return True
 
 
 class ProductExists(AbstractTransaction):
-    def do(self, name, r: Repository):
+    def do(self, name, r: Repository, **kwargs):
         assert name is not None
         if not r.product:
             raise Error("product not exist")
         return object()
+
+
+class ProductNotNone(AbstractTransaction):
+    def do(self, product=None, **kwargs):
+        for v in kwargs.values():
+            assert v is not None
 
 
 class CreateProduct(AbstractTransaction):
@@ -79,7 +85,7 @@ def test_transaction_run_requires_as_contract_in_main_operation():
 
 
 class IsUserLoggedInRaisesError(AbstractTransaction):
-    def do(self):
+    def do(self, **kwargs):
         raise Error
 
 
@@ -104,7 +110,7 @@ def test_transaction_run_ensures_as_contract_in_main_operation():
     t = CreateProduct
     t.requires = []
     t.ensures = [
-        ProductExists,
+        ProductNotNone,
     ]
 
     Application().at(
@@ -113,7 +119,7 @@ def test_transaction_run_ensures_as_contract_in_main_operation():
 
 
 class ProductExistsRaisesError(AbstractTransaction):
-    def do(self, name, r: Repository):
+    def do(self, **kwargs):
         raise Error
 
 
@@ -137,7 +143,7 @@ def test_transaction_raises_error_when_run_ensures():
 
 class CreateProductWithInnerContract(AbstractTransaction):
     requires: ClassVar = [IsManager]
-    ensures: ClassVar = [ProductExists]
+    ensures: ClassVar = [ProductNotNone]
 
     def do(self, name, price, minimum_stock, sold_by_weight, r: Repository):
         r.product = True
@@ -197,8 +203,9 @@ def test_application_do_not_run_ensures_and_requires_when_dry_run():
 
 
 class ContractWithNoParameter(AbstractTransaction):
-    def do(self, param1):
-        return param1 == "foo"
+    def do(self, param1, **kwargs):
+        if not param1 == "foo":
+            raise Error
 
 
 class MainTransaction(AbstractTransaction):
@@ -214,7 +221,7 @@ def test_contract_ignores_exceeding_parameters():
 
 
 def test_contract_ignores_exceeding_parameters_and_raise_exception():
-    with raises(ContractError):
+    with raises(Error):
         app = Application()
         (app.execute(MainTransaction, param1="jojo", param2="bla", extra_param="nay"))
 
