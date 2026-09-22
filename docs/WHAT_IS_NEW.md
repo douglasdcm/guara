@@ -1,4 +1,28 @@
 # What's New
+## 0.0.26rc3
+In this release the `requires` contracts raise exception when receives undefined parameters.
+Tip: Add `**kwargs` to `do` method to allow an arbitrary number of parameters. Example:
+```python
+class ProductNotNone(AbstractTransaction):
+    def do(self, product=None, **kwargs):
+        for k, v in kwargs.items():
+            assert v is not None
+```
+The `ensures` contracts now validate the output of the main transaction. In the following example the contract `ProductIsNotNone` ensures the result of `CreateProduct` is not `None`:
+```python
+class ProductIsNotNone(AbstractTransaction):
+    def do(self, **kwargs):
+        for v in kwargs.values():
+            assert v is not None
+
+
+class CreateProduct(AbstractTransaction):
+    ensures: ClassVar = [ProductIsNotNone]
+
+    def do(self, name):
+        return DB.create.product(name)
+```
+
 ## 0.0.26rc2
 This release improves the validation of transaction contracts (`requires` and `ensures`) to allow users to return truthy values in positive paths and falsy values in negative paths.
 
