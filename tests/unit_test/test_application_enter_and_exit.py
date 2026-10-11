@@ -31,7 +31,8 @@ def test_reports_message_when_application_starts(caplog):
 def test_reports_message_when_application_finishes(caplog):
     caplog.set_level(logging.INFO)
     expected = "Application finished"
-    Application(report_on_exit=expected).at(MyTransaction).at(MyTransaction)
+    with Application(report_on_exit=expected) as app:
+        app.at(MyTransaction).at(MyTransaction)
     assert expected in caplog.text
 
 

@@ -10,8 +10,15 @@ install:
 	pre-commit install
 
 ## Run the unit tests
+# If the first argument is "test"...
+ifeq ($(firstword $(MAKECMDGOALS)),test)
+  # Extract everything after "test" as arguments
+  TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # Turn those arguments into do-nothing phony targets so Make doesn't throw errors
+  $(eval $(TEST_ARGS):;@:)
+endif
 test:
-	tox -e unittest
+	tox -e unittest -- ./tests $(TEST_ARGS)
 
 ## Run the linter check via tox
 linter:
@@ -27,7 +34,7 @@ all: install tox
 ## Display this help text
 help:
 	@echo "  make install             - Setup venv and install dependencies"
-	@echo "  make test                - Run unit tests using pytest"
+	@echo "  make test                - Run unit tests using pytest. E.g: make test -- -k 'foo'"
 	@echo "  make linter              - Run linter via tox"
 	@echo "  make tox                 - Run entire test and linter suite via tox"
 	@echo "  make all                 - Run all commands"

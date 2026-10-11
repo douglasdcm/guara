@@ -20,7 +20,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
@@ -35,6 +35,27 @@ from guara.policy import ApplicationPolicy, TransactionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
+
+
+@dataclass
+class RollbackResult:
+    """Stores the outcome of a rollback operation."""
+
+    succeeded: list[str] = field(default_factory=list)
+    failed: list[str] = field(default_factory=list)
+    errors: dict[str, str] = field(default_factory=dict)
+
+    @property
+    def successful(self) -> bool:
+        """Returns whether all rollback operations succeeded."""
+        return not self.failed
+
+    def to_dict(self) -> dict[str, Any]:
+        """Returns the rollback result as a dictionary."""
+        return {
+            "succeeded": self.succeeded.copy(),
+            "failed": self.failed.copy(),
+        }
 
 
 class ReplayError(Exception):
@@ -291,6 +312,7 @@ class Application:
         Stores all transactions.
         """
 
+        self._undo_stack: list[AbstractTransaction] = []
         self._execution_history = ExecutionHistory(application=name)
         self._execution_history.start()
 
@@ -303,6 +325,9 @@ class Application:
         """
         It is the result data of the last transaction.
         """
+
+        if name:
+            LOGGER.info(f"Application {name} running.")
 
         self._transaction: AbstractTransaction
         """
@@ -328,13 +353,23 @@ class Application:
         self._dry_run = None
         self._disable = None
 
-        if not execution_policy:
-            execution_policy = ApplicationPolicy()
-        self._policy = execution_policy
+        self._policy = execution_policy or ApplicationPolicy()
 
-    def __del__(self):
+    def __enter__(self) -> Self:
+        """Enables deterministic application lifecycle management."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: object,
+    ) -> bool:
+        """Logs the application exit message when leaving the context."""
         if self._report_on_exit:
             LOGGER.info(self._report_on_exit)
+
+        return False
 
     def _execute_contract(self, kwargs, contract):
         sig = inspect.signature(contract.do)
@@ -646,6 +681,7 @@ class Application:
                 history.attempts = retries
 
                 self._result = self._transaction.act(**kwargs)
+                self._undo_stack.append(self._transaction)
 
                 history.succeed(self._result)
 
@@ -834,23 +870,48 @@ class Application:
         """
         return self.asserts(assertion, expected)
 
-    def undo(self):
+    def clear_undo_stack(self) -> None:
+        """Clears the undo stack without reverting its transactions."""
+        self._undo_stack.clear()
+
+    def undo(self) -> dict[str, list[str]]:
         """
-        Reverts the actions performed by the `do` method when applicable.
+        Reverts actions in reverse order of execution.
+
+        Each transaction is attempted independently. A failed rollback does
+        not prevent subsequent transactions from being reverted.
 
         Returns:
-            (Application)
+            A dictionary containing the names of succeeded and failed
+            rollback operations.
         """
-        if self._disable:
-            return self
 
-        if self._dry_run:
-            return
+        result = RollbackResult()
 
-        self._transaction_pool.reverse()
+        if self._disable or self._dry_run:
+            return result.to_dict()
 
-        for transaction in self._transaction_pool:
-            LOGGER.info(f"Reverting transaction '{transaction.__name__}'")
-            transaction.revert_action()
+        while self._undo_stack:
+            transaction = self._undo_stack.pop()
+            transaction_name = type(transaction).__name__
 
-        return self
+            try:
+                LOGGER.info(f"Reverting transaction '{transaction_name}'.")
+                transaction.revert_action()
+                result.succeeded.append(transaction_name)
+
+            except Exception as exception:
+                result.failed.append(transaction_name)
+                result.errors[transaction_name] = (
+                    f"{type(exception).__name__}: {exception}"
+                )
+
+                LOGGER.critical(
+                    "Rollback failed for transaction '%s': %s: %s",
+                    transaction_name,
+                    type(exception).__name__,
+                    exception,
+                    exc_info=True,
+                )
+
+        return result.to_dict()
