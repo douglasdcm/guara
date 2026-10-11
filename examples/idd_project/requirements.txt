@@ -1,0 +1,8 @@
+click
+guara
+PySide6
+sqlalchemy
+alembic
+scikit-surprise
+numpy<2
+pandas

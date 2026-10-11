@@ -190,7 +190,7 @@ class SaveFlightData(AbstractTransaction):
         updated_data = [
             flight
             for flight in existing_data
-            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date()  # noqa
+            if datetime.strptime(flight["fecha"], "%Y-%m-%d").date()
             >= current_date - timedelta(days=history_days)
         ]
 

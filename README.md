@@ -5,7 +5,7 @@
 Guará is a Python framework for **business logic expression**.
 It allows you to write production code and tests as **executable domain language**, combining:
 
-* Business Logic Language → expresses domain behavior using Ubiquitous Language (DDD)
+* Business Logic Language → expresses domain behavior using Ubiquitous Language
 * Test Framework → orchestrates scenarios using Given / When / Then
 
 Instead of focusing only on technical assertions, Guará enables you to describe **business scenarios as code**, making production code and tests readable by developers and domain experts.
