@@ -729,7 +729,7 @@ class Application:
                 retries += 1
                 history.attempts = retries
 
-                self._result = transaction.act(**kwargs)
+                self._result = transaction.do(**kwargs)
                 self._undo_stack.append(transaction)
 
                 history.succeed(self._result)
