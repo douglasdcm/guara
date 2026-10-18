@@ -17,7 +17,7 @@ ifeq ($(firstword $(MAKECMDGOALS)),test)
   # Turn those arguments into do-nothing phony targets so Make doesn't throw errors
   $(eval $(TEST_ARGS):;@:)
 endif
-test:
+test: linter
 	tox -e unittest -- ./tests $(TEST_ARGS)
 
 ## Run the linter check via tox

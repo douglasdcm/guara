@@ -649,7 +649,7 @@ class Application:
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
             kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
+            for the transaction.
 
         Returns:
             (Application)
@@ -782,10 +782,10 @@ class Application:
                     break
 
                 LOGGER.error(
-                    f"Transaction '{transaction_info}' failed on attempt"
-                    f" {retries} / {_retries_on_failure + 1}."
+                    f"Transaction '{transaction_info}' failed on attempt "
+                    f"{retries} / {_retries_on_failure + 1}. "
+                    f"Error: {type(e).__name__}: {e}"
                 )
-                LOGGER.exception(e)  # noqa
 
                 if transaction.execution_policy.pacing_time is not None:
                     _pacing_time = transaction.execution_policy.pacing_time
@@ -806,6 +806,7 @@ class Application:
             if GUARA_VERBOSE:
                 result_details["return"] = f"({type(exception)}) '{exception!s}'"
                 LOGGER.error(result_details)
+                LOGGER.info(self.dump_history())
 
             self._execution_history.fail()
             _rollback = (
