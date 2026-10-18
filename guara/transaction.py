@@ -357,7 +357,6 @@ class Application:
         if name:
             LOGGER.info(f"Application {name} running.")
 
-        self._transaction: AbstractTransaction
         """
         The web transaction handler.
         """
@@ -448,7 +447,7 @@ class Application:
             module=_get_module_path(transaction),
             parameters=masked_parameters,
             replayable=replayable,
-            policy=self._transaction.execution_policy,
+            policy=transaction.execution_policy,
         )
 
         self._execution_history.add(execution)
@@ -655,57 +654,53 @@ class Application:
         Returns:
             (Application)
         """
-        self._transaction = transaction(self._driver)
+        transaction = transaction(self._driver)
 
         self._dry_run = (
-            self._transaction.execution_policy.dry_run
-            if self._transaction.execution_policy.dry_run is not None
+            transaction.execution_policy.dry_run
+            if transaction.execution_policy.dry_run is not None
             else self._policy.dry_run
             if self._policy.dry_run
             else GUARA_DRY_RUN
         )
         if self._dry_run:
             LOGGER.warning("Dry run is enabled. No action will be taken on drivers.")
-            if isinstance(
-                self._transaction.execution_policy.return_on_dry_run, Exception
-            ):
-                raise self._transaction.execution_policy.return_on_dry_run
-            self._result = self._transaction.execution_policy.return_on_dry_run
+            if isinstance(transaction.execution_policy.return_on_dry_run, Exception):
+                raise transaction.execution_policy.return_on_dry_run
+            self._result = transaction.execution_policy.return_on_dry_run
             return self
 
         self._disable = (
-            self._transaction.execution_policy.disable
-            if self._transaction.execution_policy.disable is not None
+            transaction.execution_policy.disable
+            if transaction.execution_policy.disable is not None
             else self._policy.disable
         )
 
         if self._disable:
-            LOGGER.warning(
-                f"Transaction '{self._transaction}' disabled. No execution taken."
-            )
+            LOGGER.warning(f"Transaction '{transaction}' disabled. No execution taken.")
             return self
 
-        for required in self._transaction.requires:
+        for required in transaction.requires:
             self._execute_contract(kwargs, required)
 
-        if any(v for v in self._transaction.execution_policy.to_dict().values()):
+        if any(v for v in transaction.execution_policy.to_dict().values()):
             LOGGER.warning(
-                f"Policy for transaction '{self._transaction.__name__}': {self._transaction.execution_policy.to_dict()}"
+                f"Policy for transaction '{transaction.__name__}': {transaction.execution_policy.to_dict()}"
             )
 
-        if self._transaction.execution_policy.retries_on_failure is not None:
-            _retries_on_failure = self._transaction.execution_policy.retries_on_failure
+        if transaction.execution_policy.retries_on_failure is not None:
+            _retries_on_failure = transaction.execution_policy.retries_on_failure
         elif self._policy.retries_on_failure is not None:
             _retries_on_failure = self._policy.retries_on_failure
         else:
             _retries_on_failure = GUARA_RETRIES_ON_FAILURE
 
-        self._transaction_pool.append(self._transaction)
+        self._transaction_pool.append(transaction)
 
-        transaction_info: str = get_transaction_info(self._transaction)
+        transaction_info: str = get_transaction_info(transaction)
 
         history = self._create_transaction_execution(
-            self._transaction,
+            transaction,
             kwargs,
             transaction_info,
         )
@@ -731,8 +726,8 @@ class Application:
                 retries += 1
                 history.attempts = retries
 
-                self._result = self._transaction.act(**kwargs)
-                self._undo_stack.append(self._transaction)
+                self._result = transaction.act(**kwargs)
+                self._undo_stack.append(transaction)
 
                 history.succeed(self._result)
 
@@ -743,7 +738,7 @@ class Application:
 
                 self._execution_history.succeed()
 
-                for ensured in self._transaction.ensures:
+                for ensured in transaction.ensures:
                     self._execute_contract(kwargs, ensured)
 
                 return self
@@ -752,7 +747,7 @@ class Application:
                 exception = e
 
                 _continue_on_exceptions = (
-                    self._transaction.execution_policy.continue_on_exceptions
+                    transaction.execution_policy.continue_on_exceptions
                     or self._policy.continue_on_exceptions
                     or ()
                 )
@@ -764,7 +759,7 @@ class Application:
                     return self._result
 
                 _abort_on_exceptions = (
-                    self._transaction.execution_policy.abort_on_exceptions
+                    transaction.execution_policy.abort_on_exceptions
                     or self._policy.abort_on_exceptions
                     or ()
                 )
@@ -775,7 +770,7 @@ class Application:
                     raise
 
                 _retry_on_exceptions = (
-                    self._transaction.execution_policy.retry_on_exceptions
+                    transaction.execution_policy.retry_on_exceptions
                     or self._policy.retry_on_exceptions
                     or (Exception,)
                 )
@@ -792,8 +787,8 @@ class Application:
                 )
                 LOGGER.exception(e)  # noqa
 
-                if self._transaction.execution_policy.pacing_time is not None:
-                    _pacing_time = self._transaction.execution_policy.pacing_time
+                if transaction.execution_policy.pacing_time is not None:
+                    _pacing_time = transaction.execution_policy.pacing_time
                 elif self._policy.pacing_time is not None:
                     _pacing_time = self._policy.pacing_time
                 else:
@@ -814,15 +809,13 @@ class Application:
 
             self._execution_history.fail()
             _rollback = (
-                self._transaction.execution_policy.rollback_on_failure
-                if self._transaction.execution_policy.rollback_on_failure is not None
+                transaction.execution_policy.rollback_on_failure
+                if transaction.execution_policy.rollback_on_failure is not None
                 else self._policy.rollback_on_failure
             )
             if _rollback:
-                LOGGER.warning(
-                    f"Rolling back transaction '{self._transaction.__name__}'."
-                )
-                self._transaction.undo()
+                LOGGER.warning(f"Rolling back transaction '{transaction.__name__}'.")
+                transaction.undo()
             raise exception
 
     def given(
