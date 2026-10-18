@@ -20,7 +20,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, TypeVar
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
@@ -35,6 +35,10 @@ from guara.policy import ApplicationPolicy, TransactionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
+
+# Create a TypeVar bound to the Transaction class
+# as it is not possible to import Self in Python 3.8
+TypeTransaction = TypeVar("TypeTransaction", bound="AbstractTransaction")
 
 
 @dataclass
@@ -355,7 +359,7 @@ class Application:
 
         self._policy = execution_policy or ApplicationPolicy()
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> TypeTransaction:
         """Enables deterministic application lifecycle management."""
         return self
 
@@ -371,11 +375,20 @@ class Application:
 
         return False
 
-    def _execute_contract(self, kwargs, contract):
-        sig = inspect.signature(contract.do)
-        valid_keys = sig.parameters.keys()
-        filtered_k = {key: value for key, value in kwargs.items() if key in valid_keys}
-        Application(self._driver).execute(contract, **filtered_k)
+    def _execute_contract(
+        self, kwargs: dict[str, Any], contract: AbstractTransaction
+    ) -> None:
+        """Executes a contract within the current application context."""
+        signature = inspect.signature(contract.do)
+        valid_parameters = signature.parameters.keys()
+        filtered_parameters = {
+            key: value for key, value in kwargs.items() if key in valid_parameters
+        }
+
+        # The contracts are technical guardrails that does have the same semantic
+        # of business transactions. The current Transaction class, and not new Contract class,
+        # is used for simplicity
+        Application().execute(contract, **filtered_parameters)
 
     def _create_transaction_execution(
         self,
