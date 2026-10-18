@@ -11,9 +11,9 @@ from __future__ import annotations
 
 import copy
 import importlib
+import importlib.util
 import inspect
 import json
-import sys
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -75,18 +75,42 @@ class PosconditionError(Exception):
 
 
 def _get_module_path(transaction: AbstractTransaction) -> str:
-    """Return the complete Python module path for a transaction."""
-    file_path = Path(inspect.getfile(type(transaction))).resolve()
+    """Return the importable, fully qualified module name for a transaction.
 
-    for search_path in map(Path, sys.path):
-        try:
-            relative_path = file_path.relative_to(search_path.resolve())
-        except ValueError:
-            continue
+    The class's ``__module__`` metadata is the canonical identifier. Filesystem
+    paths are intentionally not used because they are unreliable for installed
+    packages, virtual environments, and modules outside ``sys.path`` roots.
 
-        return ".".join(relative_path.with_suffix("").parts)
+    Raises:
+        ImportError: If the class does not expose a valid, importable module.
+    """
+    transaction_class = type(transaction)
+    module_name = getattr(transaction_class, "__module__", None)
 
-    raise ImportError(f"Could not determine module path for {file_path}")
+    if not isinstance(module_name, str) or not module_name.strip():
+        raise ImportError(
+            f"Cannot determine module name for transaction "
+            f"'{transaction_class.__qualname__}': invalid __module__ metadata."
+        )
+
+    module_name = module_name.strip()
+    try:
+        module_spec = importlib.util.find_spec(module_name)
+    except (ImportError, ValueError, AttributeError) as exception:
+        raise ImportError(
+            f"Cannot resolve module '{module_name}' for transaction "
+            f"'{transaction_class.__qualname__}'. Ensure the module is "
+            "importable and its __module__ metadata is correct."
+        ) from exception
+
+    if module_spec is None:
+        raise ImportError(
+            f"Module '{module_name}' for transaction "
+            f"'{transaction_class.__qualname__}' is not importable. "
+            "Ensure the module is installed and available on Python's import path."
+        )
+
+    return module_name
 
 
 @dataclass
@@ -571,13 +595,22 @@ class Application:
         """
         Resolves a Transaction class from its recorded module and name.
         """
-        try:
-            module = importlib.import_module(transaction_execution.module)
-        except ImportError as exception:
+        module_name = transaction_execution.module
+        identifier = transaction_execution.identifier
+
+        if not isinstance(module_name, str) or not module_name.strip():
             raise ReplayError(
-                f"Unable to import module "
-                f"'{transaction_execution.module}' while replaying "
-                f"'{transaction_execution.identifier}'."
+                f"Unable to replay '{identifier}': the recorded module "
+                f"identifier is invalid ({module_name!r})."
+            )
+
+        try:
+            module = importlib.import_module(module_name)
+        except (ImportError, ValueError) as exception:
+            raise ReplayError(
+                f"Unable to import module '{module_name}' while replaying "
+                f"'{identifier}'. Verify that the module is installed, "
+                "importable, and has not been renamed or moved."
             ) from exception
 
         try:
@@ -587,16 +620,21 @@ class Application:
             )
         except AttributeError as exception:
             raise ReplayError(
-                f"Unable to find Transaction "
-                f"'{transaction_execution.identifier}' while replaying."
+                f"Unable to find transaction class '{transaction_execution.name}' "
+                f"in module '{module_name}' while replaying '{identifier}'. "
+                "Verify that the class has not been renamed or moved."
             ) from exception
 
         if not isinstance(transaction_class, type):
-            raise ReplayError(f"'{transaction_execution.identifier}' is not a class.")
+            raise ReplayError(
+                f"Resolved object '{identifier}' is not a class "
+                f"(got {type(transaction_class).__name__})."
+            )
 
         if not issubclass(transaction_class, AbstractTransaction):
             raise ReplayError(
-                f"'{transaction_execution.identifier}' is not an AbstractTransaction."
+                f"Resolved class '{identifier}' does not inherit from "
+                "AbstractTransaction."
             )
 
         return transaction_class
