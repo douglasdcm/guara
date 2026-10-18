@@ -296,15 +296,18 @@ def _utc_now() -> str:
 
 
 def _serialize_value(value: Any) -> Any:
-    """
-    Converts values that are not directly JSON serializable into a safe
-    representation for execution history.
-    """
-    try:
-        json.dumps(value)
+    """Converts values into JSON-compatible representations."""
+    if value is None or isinstance(value, (str, int, float, bool)):
         return value
-    except (TypeError, ValueError):
-        return repr(value)
+
+    if isinstance(value, (dict, list)):
+        try:
+            json.dumps(value)
+            return value
+        except (TypeError, ValueError):
+            return repr(value)
+
+    return repr(value)
 
 
 class Application:
