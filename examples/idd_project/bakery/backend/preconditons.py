@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import ClassVar
 
 from bakery.backend.constants import SESSION_FILE
+from bakery.backend.contracts import EntityIsNotNone
 from bakery.backend.entities import User
 from bakery.backend.exceptions import (
     BusinessError,
@@ -68,31 +69,27 @@ class IsEnoughMoneyToBuy(AbstractTransaction):
             product = self._driver.get_product_by_id(item.id)
             to_pay = product.price * item.quantity
             to_pay_with_discount = to_pay - (to_pay * discount)
-        assert money + card >= to_pay_with_discount, (
-            f"Quantia não é suficiente para pagar a compra de R$ {to_pay_with_discount} [Insufficient money to buy]"
-        )
+        assert (
+            money + card >= to_pay_with_discount
+        ), f"Quantia não é suficiente para pagar a compra de R$ {to_pay_with_discount} [Insufficient money to buy]"
 
 
 class AreValidValuesToSell(AbstractTransaction):
     def do(self, quantity=0):
-        assert quantity > 0, (
-            "Quantidade precisa ser acima de 0 [Money need to be grater than 0]"
-        )
+        assert quantity > 0, "Quantidade precisa ser acima de 0 [Money need to be grater than 0]"
 
 
 class AreValidValuesToPay(AbstractTransaction):
     def do(self, money=0, card=0):
-        assert money > 0 or card > 0, (
-            "Quantia tem que ser acima de R$ 0.00 [Money need to be grater than 0]"
-        )
+        assert (
+            money > 0 or card > 0
+        ), "Quantia tem que ser acima de R$ 0.00 [Money need to be grater than 0]"
 
 
 class AreValidValuesToRegistreProduct(AbstractTransaction):
     def do(self, price=0, minimum_stock=0):
         assert price > 0, "Preço tem que ser acima de R$ 0.00"
-        assert minimum_stock > 0, (
-            "Estoque mínimo precisa ser acima de 0 [Minimum stock is 0]"
-        )
+        assert minimum_stock > 0, "Estoque mínimo precisa ser acima de 0 [Minimum stock is 0]"
 
 
 class AreValidValuesToCreateUser(AbstractTransaction):
@@ -103,22 +100,20 @@ class AreValidValuesToCreateUser(AbstractTransaction):
             None,
             "",
         ], "Nome do usuário não pode ser vazio [Name can not be empty]"
-        assert len(name) <= MAX_NAME_CHAR, (
-            f"Nome do usuário não pode ter mais do que {MAX_NAME_CHAR} caracteres [Name exceeded maximum value]"
-        )
+        assert (
+            len(name) <= MAX_NAME_CHAR
+        ), f"Nome do usuário não pode ter mais do que {MAX_NAME_CHAR} caracteres [Name exceeded maximum value]"
         assert secret not in [
             None,
             "",
         ], "Senha do usuário não pode ser vazia [Password can not be empty]"
-        assert len(secret) >= MIN_SECRET_CHAR, (
-            f"Senha do usuário precisa ter {MIN_SECRET_CHAR} caracteres no mínimo"
-        )
+        assert (
+            len(secret) >= MIN_SECRET_CHAR
+        ), f"Senha do usuário precisa ter {MIN_SECRET_CHAR} caracteres no mínimo"
         assert role.lower() in [
             "atendente",
             "gerente",
-        ], (
-            "Função do usuário precisa ser Atendente ou Gerente [Ned to be manager or assistent]"
-        )
+        ], "Função do usuário precisa ser Atendente ou Gerente [Ned to be manager or assistent]"
 
 
 class IsRegistredProduct(AbstractTransaction):
@@ -137,13 +132,10 @@ class HasNotRegistredProduct(AbstractTransaction):
     def do(self, name):
         for product in self._driver.list_products():
             if product.name.lower() == name.lower():
-                raise DuplicateProduct(
-                    "Produto já cadastrado [Product already registred]"
-                )
+                raise DuplicateProduct("Produto já cadastrado [Product already registred]")
 
 
 class HasNotCustomer(AbstractTransaction):
-    requires: ClassVar = [IsUserLoggedIn]
 
     def do(self, name, phone):
         if self._driver.get_customer_by_name(name):
@@ -154,9 +146,7 @@ class HasProductInStock(AbstractTransaction):
     def do(self, product_name, quantity):
         product = self._driver.get_product_by_name(product_name)
         if product.stock < quantity:
-            raise InsufficientStock(
-                f"Estoque insuficiente: {product.stock} [Low stock]"
-            )
+            raise InsufficientStock(f"Estoque insuficiente: {product.stock} [Low stock]")
 
 
 class IsProductInValidExpirationDate(AbstractTransaction):
@@ -181,6 +171,8 @@ class IsValidRole(AbstractTransaction):
 
 
 class IsNotUserLoggedIn(AbstractTransaction):
+    requires: ClassVar = [EntityIsNotNone]
+
     def do(self, username):
         user = self._driver.get_user_by_name(username)
         if user.logged_in is True:

@@ -81,14 +81,10 @@ class SalesPage(QWidget):
                 delivery=None,
             )
 
-            self.summary.addItem(
-                f"{self.product.currentText()} x {self.quantity.value()}"
-            )
+            self.summary.addItem(f"{self.product.currentText()} x {self.quantity.value()}")
             self.total.setText(f"TOTAL: R$ {sale.total:.2f}")
 
-            QMessageBox.information(
-                self, "Sucesso [Success]", "Venda registrada [Sold]"
-            )
+            QMessageBox.information(self, "Sucesso [Success]", "Venda registrada [Sold]")
 
         except Exception as error:  # noqa
             QMessageBox.warning(self, "Erro [Error]", str(error))

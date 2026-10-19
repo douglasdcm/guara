@@ -123,20 +123,14 @@ class Repository:
 
     def update_user_by_name(self, user: User):
         with session_scope() as session:
-            model = (
-                session.query(UserModel)
-                .filter_by(username=user.name, role=user.role)
-                .first()
-            )
+            model = session.query(UserModel).filter_by(username=user.name, role=user.role).first()
             model.logged_in = user.logged_in
             session.flush()
             return self._convert_to_user(model)
 
     def add_user(self, user: User):
         with session_scope() as session:
-            user = UserModel(
-                id=user.id, username=user.name, role=user.role, secret=user.secret
-            )
+            user = UserModel(id=user.id, username=user.name, role=user.role, secret=user.secret)
             session.add(user)
 
     # =========================
@@ -357,9 +351,7 @@ class Repository:
     def add_withdrawal(self, withdrawal):
         with session_scope() as session:
             cash_register = self.get_open_cash_register()
-            model = WithdrawalsModel(
-                cash_register_id=cash_register.id, withdrawal=withdrawal
-            )
+            model = WithdrawalsModel(cash_register_id=cash_register.id, withdrawal=withdrawal)
             session.add(model)
             return self._convert_to_withdrawl(model)
 

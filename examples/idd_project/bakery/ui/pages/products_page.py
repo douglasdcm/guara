@@ -56,7 +56,5 @@ class ProductsPage(QWidget):
         self.dialog = dialog
 
         if dialog.exec():
-            QMessageBox.information(
-                self, "Sucesso [Success]", "Produto criado [Created]"
-            )
+            QMessageBox.information(self, "Sucesso [Success]", "Produto criado [Created]")
             self.refresh()

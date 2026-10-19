@@ -12,6 +12,7 @@ from guara.transaction import Application
 def scenario_login_user(username, secret):
     LOGGER.info("Login user")
     app = Application(DB)
+    app.given(preconditons.IsNotUserLoggedIn, username=username)
     return (
         app.when(transactions.AuthenticateUser, username=username, secret=secret)
         .then(it.IsNotNone)
@@ -22,6 +23,12 @@ def scenario_login_user(username, secret):
 def scenario_open_cash(initial):
     LOGGER.info("Opening cash register")
     app = Application(DB)
+    app.given(
+        preconditons.IsUserLoggedIn,
+    )
+    app.given(
+        preconditons.IsNotOpenCashRegister,
+    )
     (
         app.when(
             transactions.OpenCashRegister,
@@ -32,6 +39,10 @@ def scenario_open_cash(initial):
 
 def scenario_register_batch(product, quantity, expiration):
     app = Application(DB)
+    app.given(
+        preconditons.IsUserLoggedIn,
+    )
+    app.given(preconditons.IsRegistredProduct, name=product)
     (
         app.execute(
             transactions.RegisterBatch,
@@ -40,25 +51,39 @@ def scenario_register_batch(product, quantity, expiration):
             expiration_date=datetime.strptime(expiration, "%Y-%m-%d").date(),
         )
     )
+    app.so(preconditons.IsOpenCashRegister)
 
 
 def scenario_close_cash(role):
     app = Application(DB)
+    app.given(preconditons.IsUserLoggedIn)
+    app.given(preconditons.IsManager)
+    app.given(preconditons.IsOpenCashRegister)
     return app.execute(transactions.CloseCashRegister).result
 
 
 def scenario_sangria_withdraw_cash(amount):
     app = Application(DB)
+    app.given(preconditons.IsUserLoggedIn)
+    # app.given(
+    # preconditons.IsManager
+    # )
+    app.given(preconditons.IsOpenCashRegister)
     (app.when(transactions.WithdrawCash, amount=amount).expects(it.IsEqualTo, amount))
 
 
 def scenario_list_products():
     app = Application(DB)
+    app.given(preconditons.IsOpenCashRegister)
+    app.given(preconditons.IsUserLoggedIn)
     return app.when(transactions.ListProducts).expects(it.IsNotNone).result
 
 
 def scenario_list_users():
     app = Application(DB)
+    app.given(preconditons.IsUserLoggedIn)
+    app.given(preconditons.IsManager)
+
     result = app.when(transactions.ListUsers).expects(it.IsNotNone).result
     app.dump_history("dump.json")
     return result
@@ -66,17 +91,36 @@ def scenario_list_users():
 
 def scenario_list_customers():
     app = Application(DB)
+    app.given(preconditons.IsUserLoggedIn)
+    app.given(preconditons.IsManager)
     return app.when(transactions.ListCustomers).expects(it.IsNotNone).result
 
 
 def scenario_list_sales():
     app = Application(DB)
+    app.given(preconditons.IsUserLoggedIn)
+    app.given(preconditons.IsManager)
     return app.when(transactions.ListSales).expects(it.IsNotNone).result
 
 
 def scenario_sell(product_id, quantity, customer_id, delivery):
     app = Application(DB)
     try:
+        app.given(
+            preconditons.IsUserLoggedIn,
+        )
+        app.given(
+            preconditons.IsOpenCashRegister,
+        )
+        app.given(
+            preconditons.AreValidValuesToSell,
+            quantity=quantity,
+        )
+        app.given(preconditons.IsRegistredProduct, id_=product_id)
+        # # It is not necessary to check the stock given that the customer is in front of the
+        # # cashier with all the products in hand
+        # # .and_(preconditons.HasProductInStock, product_name=product, quantity=quantity)
+        app.given(preconditons.IsProductInValidExpirationDate, product_id=product_id)
         result = (
             app.when(
                 transactions.RegisterSale,
@@ -106,11 +150,15 @@ def scenario_sell(product_id, quantity, customer_id, delivery):
 def scenario_pay_sale(sale_id, money, card, delivery):
     app = Application(DB)
     try:
-        result = (
-            app.when(transactions.Pay, money=money, card=card)
-            .expects(it.IsNotNone)
-            .result
+        app.given(
+            preconditons.IsUserLoggedIn,
         )
+        app.given(
+            preconditons.IsOpenCashRegister,
+        )
+        app.given(preconditons.AreValidValuesToPay, money=money, card=card)
+        app.given(preconditons.IsEnoughMoneyToBuy, money=money, card=card, sale_id=sale_id)
+        result = app.when(transactions.Pay, money=money, card=card).expects(it.IsNotNone).result
         return result
     except Exception as e:
         LOGGER.error(str(e))
@@ -132,9 +180,7 @@ def scenario_recommend_products(customer_id, product_id):
             for recommendation in recommendations:
                 name = recommendation[0].name
                 try:
-                    app.given(
-                        preconditons.HasProductInStock, product_name=name, quantity=1
-                    )
+                    app.given(preconditons.HasProductInStock, product_name=name, quantity=1)
                     return name
                 except Exception:  # noqa
                     pass
@@ -142,6 +188,7 @@ def scenario_recommend_products(customer_id, product_id):
 
 def scenario_create_customer(name, phone):
     app = Application(DB)
+    app.given(preconditons.IsUserLoggedIn)
     (
         app.and_(preconditons.HasNotCustomer, name=name, phone=phone).execute(
             transactions.RegisterCustomer, name=name, phone=phone
@@ -152,6 +199,13 @@ def scenario_create_customer(name, phone):
 def scenario_add_stock(product, quantity):
     app = Application(DB)
     LOGGER.info("Adding product to stock")
+    app.given(
+        preconditons.IsUserLoggedIn,
+    )
+    app.given(
+        preconditons.IsManager,
+    )
+    app.given(preconditons.IsRegistredProduct, name=product)
     return (
         app.when(transactions.AddStock, product_name=product, quantity=quantity)
         .expects(IsGreatherThanOrEqualTo, quantity)
@@ -162,16 +216,25 @@ def scenario_add_stock(product, quantity):
 def scenario_update_price(name, price):
     app = Application(DB)
     LOGGER.info("Updating price")
-    (
-        app.when(transactions.UpdateProductPrice, name=name, price=price).then(
-            it.IsNotNone
-        )
+    app.given(
+        preconditons.IsUserLoggedIn,
     )
+    app.given(
+        preconditons.IsManager,
+    )
+    app.given(preconditons.IsRegistredProduct, name=name)
+    (app.when(transactions.UpdateProductPrice, name=name, price=price).then(it.IsNotNone))
 
 
 def scenario_create_product(name, price, minimum_stock, weight):
     app = Application(DB)
     LOGGER.info("Creating product")
+    app.given(preconditons.IsUserLoggedIn)
+    app.given(preconditons.IsManager)
+    app.given(
+        preconditons.AreValidValuesToRegistreProduct, price=price, minimum_stock=minimum_stock
+    )
+    app.given(preconditons.HasNotRegistredProduct, name=name)
     (
         app.when(
             transactions.CreateProduct,
@@ -186,6 +249,13 @@ def scenario_create_product(name, price, minimum_stock, weight):
 def scenario_create_user(name, secret, role):
     app = Application(DB)
     LOGGER.info("Creating user")
+    app.given(
+        preconditons.AreValidValuesToCreateUser,
+        name=name,
+        secret=secret,
+        role=role,
+    )
+    app.given(preconditons.IsNotUserCreatedYet, name=name)
     (
         app.when(
             transactions.CreateUser,

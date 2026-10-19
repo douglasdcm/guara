@@ -294,9 +294,7 @@ class TestExpiration:
         assert len(DB.list_batches()) == 1
 
     def test_should_show_expiring_product(self, runner):
-        expiration = (
-            datetime.now(tz=timezone.utc).date() + timedelta(days=3)
-        ).isoformat()
+        expiration = (datetime.now(tz=timezone.utc).date() + timedelta(days=3)).isoformat()
         runner.invoke(
             cli,
             [
@@ -749,9 +747,7 @@ class TestMissingScenarios:
         ranking = {}
         for sale in DB.list_sales():
             for item in sale.items:
-                ranking[item.product_id] = (
-                    ranking.get(item.product_id, 0) + item.quantity
-                )
+                ranking[item.product_id] = ranking.get(item.product_id, 0) + item.quantity
 
         ordered = sorted(ranking.items(), key=lambda item: item[1], reverse=True)
 
@@ -774,9 +770,7 @@ class TestMissingScenarios:
         )
         runner.invoke(cli, ["add-stock", "--product", "Produto", "--quantity", "2"])
 
-        runner.invoke(
-            cli, ["sell", "--product", "Produto", "--quantity", "2", "--money", "100"]
-        )
+        runner.invoke(cli, ["sell", "--product", "Produto", "--quantity", "2", "--money", "100"])
 
         total_revenue = get_total_sales()
 
@@ -969,9 +963,7 @@ class TestPermissions:
 
 
 class TestPermissionEdgeCases:
-    def test_should_block_price_update_for_non_existing_product(
-        self, runner: CliRunner
-    ):
+    def test_should_block_price_update_for_non_existing_product(self, runner: CliRunner):
         result = runner.invoke(
             cli,
             ["update-price", "--name", "Inexistente", "--price", "50"],

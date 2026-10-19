@@ -4,6 +4,7 @@ from surprise import dump
 
 from bakery.backend import preconditons
 from bakery.backend.constants import SESSION_FILE
+from bakery.backend.contracts import EntityIsNotNone
 from bakery.backend.entities import Product, Sale, SaleItem, User
 from bakery.backend.exceptions import BusinessError
 from bakery.backend.preconditons import IsManager, IsUserLoggedIn
@@ -17,10 +18,7 @@ from guara.abstract_transaction import AbstractTransaction
 
 
 class CreateUser(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.AreValidValuesToCreateUser,
-        preconditons.IsNotUserCreatedYet,
-    ]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -38,12 +36,7 @@ class CreateUser(AbstractTransaction):
 
 
 class CreateProduct(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsManager,
-        preconditons.AreValidValuesToRegistreProduct,
-        preconditons.HasNotRegistredProduct,
-    ]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -62,11 +55,6 @@ class CreateProduct(AbstractTransaction):
 
 
 class UpdateProductPrice(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsManager,
-        preconditons.IsRegistredProduct,
-    ]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -79,12 +67,6 @@ class UpdateProductPrice(AbstractTransaction):
 
 
 class AddStock(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsManager,
-        preconditons.IsRegistredProduct,
-    ]
-
     def __init__(self, driver=None):
         super().__init__(driver)
         self._driver: Repository
@@ -97,10 +79,7 @@ class AddStock(AbstractTransaction):
 
 
 class RegisterBatch(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsRegistredProduct,
-    ]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -124,16 +103,7 @@ class RegisterCustomer(AbstractTransaction):
 
 
 class RegisterSale(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsOpenCashRegister,
-        preconditons.AreValidValuesToSell,
-        preconditons.IsRegistredProduct,
-        # # It is not necessary to check the stock given that the customer is in front of the
-        # # cashier with all the products in hand
-        # # .and_(preconditons.HasProductInStock, product_name=product, quantity=quantity)
-        preconditons.IsProductInValidExpirationDate,
-    ]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -184,12 +154,6 @@ class RegisterSale(AbstractTransaction):
 
 
 class Pay(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsOpenCashRegister,
-        preconditons.AreValidValuesToPay,
-        preconditons.IsEnoughMoneyToBuy,
-    ]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -257,11 +221,7 @@ class UpdateProductRating(AbstractTransaction):
 
 
 class OpenCashRegister(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsNotOpenCashRegister,
-    ]
-    ensures: ClassVar = [preconditons.IsOpenCashRegister]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -272,10 +232,7 @@ class OpenCashRegister(AbstractTransaction):
 
 
 class WithdrawCash(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsOpenCashRegister,
-    ]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -286,12 +243,6 @@ class WithdrawCash(AbstractTransaction):
 
 
 class CloseCashRegister(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsManager,
-        preconditons.IsOpenCashRegister,
-    ]
-
     def __init__(self, driver=None):
         super().__init__(driver)
         self._driver: Repository
@@ -306,9 +257,7 @@ class CloseCashRegister(AbstractTransaction):
 
 
 class AuthenticateUser(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsNotUserLoggedIn,
-    ]
+    requires: ClassVar = [EntityIsNotNone]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -328,10 +277,6 @@ class AuthenticateUser(AbstractTransaction):
 
 
 class ListProducts(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsOpenCashRegister,
-    ]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -342,10 +287,6 @@ class ListProducts(AbstractTransaction):
 
 
 class ListUsers(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsManager,
-    ]
 
     def __init__(self, driver=None):
         super().__init__(driver)
@@ -356,8 +297,6 @@ class ListUsers(AbstractTransaction):
 
 
 class ListCustomers(AbstractTransaction):
-    requires: ClassVar = [IsUserLoggedIn, IsManager]
-
     def __init__(self, driver=None):
         super().__init__(driver)
         self._driver: Repository
@@ -367,10 +306,6 @@ class ListCustomers(AbstractTransaction):
 
 
 class ListSales(AbstractTransaction):
-    requires: ClassVar = [
-        preconditons.IsUserLoggedIn,
-        preconditons.IsManager,
-    ]
 
     def __init__(self, driver=None):
         super().__init__(driver)

@@ -2,7 +2,8 @@
 
 # Instalação [Installation]
 ```bash
-python 3.11 -m venv venv
+python3.11 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt -r test-requirements.txt
 PYTHONPATH=$(pwd) python scripts/create_database.py
 ```
@@ -53,4 +54,9 @@ Commands:
   sangria
   sell
   update-price
+```
+
+# Testes [Tests]
+```bash
+python -m pytest
 ```

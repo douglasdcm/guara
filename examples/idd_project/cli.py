@@ -161,9 +161,7 @@ def close_cash(role):
     try:
         result = scenario_close_cash(role)
 
-        click.echo(
-            f"Fechamento realizado. Total vendido: R$ {result['total_sales']:.2f}"
-        )
+        click.echo(f"Fechamento realizado. Total vendido: R$ {result['total_sales']:.2f}")
     except BusinessError as error:
         click.echo(str(error))
 

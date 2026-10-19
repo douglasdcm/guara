@@ -296,11 +296,7 @@ def handle_user_input(user_input):
     try:
         result = user_input
         result = app.when(SanitizeInput, user_input=result).expects(it.IsNotNone).result
-        result = (
-            app.when(RetreiveRelevantProducts, user_input=result)
-            .expects(it.IsNotNone)
-            .result
-        )
+        result = app.when(RetreiveRelevantProducts, user_input=result).expects(it.IsNotNone).result
 
         result = (
             app.when(RetreiveSalesPromptUsingTools, user_input=result, products=result)
@@ -308,11 +304,7 @@ def handle_user_input(user_input):
             .result
         )
 
-        result = (
-            app.when(CallClaudeWithTools, sales_prompt=result)
-            .expects(it.IsNotNone)
-            .result
-        )
+        result = app.when(CallClaudeWithTools, sales_prompt=result).expects(it.IsNotNone).result
 
         result = app.when(ParseJson, raw=result).expects(it.IsNotNone).result
 

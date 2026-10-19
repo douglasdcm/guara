@@ -21,11 +21,7 @@ class IsGreatherThanOrEqualTo(IAssertion):
 
 
 def low_stock_products():
-    return [
-        product
-        for product in DB.list_products()
-        if product.stock < product.minimum_stock
-    ]
+    return [product for product in DB.list_products() if product.stock < product.minimum_stock]
 
 
 def expiring_batches(days=3):
