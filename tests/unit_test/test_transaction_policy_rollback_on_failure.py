@@ -12,8 +12,8 @@ from guara.transaction import AbstractTransaction, Application
 
 
 class ValidateLocal(AbstractTransaction):
-    def do(self):
-        raise ValueError
+    def do(self, password="SuperstrongPass123@"):
+        raise ValueError("Invalid value.")
 
     def undo(self):
         LOGGER.info("rollback!")
@@ -23,7 +23,7 @@ def test_transaction_run_automatic_rollback_when_policy_rollback_is_true(caplog)
     t = ValidateLocal
     t.execution_policy = TransactionPolicy(rollback_on_failure=True)
     with raises(ValueError):
-        Application().at(t)
+        Application().at(t, password="MySuperPass@qwerty321@")
     assert "rollback!" in caplog.text
 
 

@@ -11,16 +11,16 @@ from __future__ import annotations
 
 import copy
 import importlib
+import importlib.util
 import inspect
 import json
-import sys
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 
 from guara.abstract_transaction import AbstractTransaction
 from guara.constants import (
@@ -35,6 +35,31 @@ from guara.policy import ApplicationPolicy, TransactionPolicy
 from guara.utils import get_transaction_info
 
 LOGGER: Logger = getLogger(__name__)
+
+# Create a TypeVar bound to the Transaction class
+# as it is not possible to import Self in Python 3.8
+TypeTransaction = TypeVar("TypeTransaction", bound="AbstractTransaction")
+
+
+@dataclass
+class RollbackResult:
+    """Stores the outcome of a rollback operation."""
+
+    succeeded: list[str] = field(default_factory=list)
+    failed: list[str] = field(default_factory=list)
+    errors: dict[str, str] = field(default_factory=dict)
+
+    @property
+    def successful(self) -> bool:
+        """Returns whether all rollback operations succeeded."""
+        return not self.failed
+
+    def to_dict(self) -> dict[str, Any]:
+        """Returns the rollback result as a dictionary."""
+        return {
+            "succeeded": self.succeeded.copy(),
+            "failed": self.failed.copy(),
+        }
 
 
 class ReplayError(Exception):
@@ -54,18 +79,42 @@ class ContractError(Exception):
 
 
 def _get_module_path(transaction: AbstractTransaction) -> str:
-    """Return the complete Python module path for a transaction."""
-    file_path = Path(inspect.getfile(type(transaction))).resolve()
+    """Return the importable, fully qualified module name for a transaction.
 
-    for search_path in map(Path, sys.path):
-        try:
-            relative_path = file_path.relative_to(search_path.resolve())
-        except ValueError:
-            continue
+    The class's ``__module__`` metadata is the canonical identifier. Filesystem
+    paths are intentionally not used because they are unreliable for installed
+    packages, virtual environments, and modules outside ``sys.path`` roots.
 
-        return ".".join(relative_path.with_suffix("").parts)
+    Raises:
+        ImportError: If the class does not expose a valid, importable module.
+    """
+    transaction_class = type(transaction)
+    module_name = getattr(transaction_class, "__module__", None)
 
-    raise ImportError(f"Could not determine module path for {file_path}")
+    if not isinstance(module_name, str) or not module_name.strip():
+        raise ImportError(
+            f"Cannot determine module name for transaction "
+            f"'{transaction_class.__qualname__}': invalid __module__ metadata."
+        )
+
+    module_name = module_name.strip()
+    try:
+        module_spec = importlib.util.find_spec(module_name)
+    except (ImportError, ValueError, AttributeError) as exception:
+        raise ImportError(
+            f"Cannot resolve module '{module_name}' for transaction "
+            f"'{transaction_class.__qualname__}'. Ensure the module is "
+            "importable and its __module__ metadata is correct."
+        ) from exception
+
+    if module_spec is None:
+        raise ImportError(
+            f"Module '{module_name}' for transaction "
+            f"'{transaction_class.__qualname__}' is not importable. "
+            "Ensure the module is installed and available on Python's import path."
+        )
+
+    return module_name
 
 
 @dataclass
@@ -251,15 +300,18 @@ def _utc_now() -> str:
 
 
 def _serialize_value(value: Any) -> Any:
-    """
-    Converts values that are not directly JSON serializable into a safe
-    representation for execution history.
-    """
-    try:
-        json.dumps(value)
+    """Converts values into JSON-compatible representations."""
+    if value is None or isinstance(value, (str, int, float, bool)):
         return value
-    except (TypeError, ValueError):
-        return repr(value)
+
+    if isinstance(value, (dict, list)):
+        try:
+            json.dumps(value)
+            return value
+        except (TypeError, ValueError):
+            return repr(value)
+
+    return repr(value)
 
 
 class Application:
@@ -295,6 +347,7 @@ class Application:
         Stores all transactions.
         """
 
+        self._undo_stack: list[AbstractTransaction] = []
         self._execution_history = ExecutionHistory(application=name)
         self._execution_history.start()
 
@@ -308,7 +361,9 @@ class Application:
         It is the result data of the last transaction.
         """
 
-        self._transaction: AbstractTransaction
+        if name:
+            LOGGER.info(f"Application {name} running.")
+
         """
         The web transaction handler.
         """
@@ -332,17 +387,41 @@ class Application:
         self._dry_run = None
         self._disable = None
 
-        if not execution_policy:
-            execution_policy = ApplicationPolicy()
-        self._policy = execution_policy
+        self._policy = execution_policy or ApplicationPolicy()
 
-    def __del__(self):
+    def __enter__(self) -> TypeTransaction:
+        """Enables deterministic application lifecycle management."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: object,
+    ) -> bool:
+        """Logs the application exit message when leaving the context."""
         if self._report_on_exit:
             LOGGER.info(self._report_on_exit)
 
     def _execute_contract_requires(self, kwargs, contract):
         filtered_k = {key: value for key, value in kwargs.items()}
         Application(self._driver).execute(contract, **filtered_k)
+        return False
+
+    def _execute_contract(
+        self, kwargs: dict[str, Any], contract: AbstractTransaction
+    ) -> None:
+        """Executes a contract within the current application context."""
+        signature = inspect.signature(contract.do)
+        valid_parameters = signature.parameters.keys()
+        filtered_parameters = {
+            key: value for key, value in kwargs.items() if key in valid_parameters
+        }
+
+        # The contracts are technical guardrails that does have the same semantic
+        # of business transactions. The current Transaction class, and not new Contract class,
+        # is used for simplicity
+        Application().execute(contract, **filtered_parameters)
 
     def _execute_contract_ensures(self, contract):
         Application(self._driver).execute(contract, result=self.result)
@@ -381,7 +460,7 @@ class Application:
             module=_get_module_path(transaction),
             parameters=masked_parameters,
             replayable=replayable,
-            policy=self._transaction.execution_policy,
+            policy=transaction.execution_policy,
         )
 
         self._execution_history.add(execution)
@@ -528,13 +607,22 @@ class Application:
         """
         Resolves a Transaction class from its recorded module and name.
         """
-        try:
-            module = importlib.import_module(transaction_execution.module)
-        except ImportError as exception:
+        module_name = transaction_execution.module
+        identifier = transaction_execution.identifier
+
+        if not isinstance(module_name, str) or not module_name.strip():
             raise ReplayError(
-                f"Unable to import module "
-                f"'{transaction_execution.module}' while replaying "
-                f"'{transaction_execution.identifier}'."
+                f"Unable to replay '{identifier}': the recorded module "
+                f"identifier is invalid ({module_name!r})."
+            )
+
+        try:
+            module = importlib.import_module(module_name)
+        except (ImportError, ValueError) as exception:
+            raise ReplayError(
+                f"Unable to import module '{module_name}' while replaying "
+                f"'{identifier}'. Verify that the module is installed, "
+                "importable, and has not been renamed or moved."
             ) from exception
 
         try:
@@ -544,16 +632,21 @@ class Application:
             )
         except AttributeError as exception:
             raise ReplayError(
-                f"Unable to find Transaction "
-                f"'{transaction_execution.identifier}' while replaying."
+                f"Unable to find transaction class '{transaction_execution.name}' "
+                f"in module '{module_name}' while replaying '{identifier}'. "
+                "Verify that the class has not been renamed or moved."
             ) from exception
 
         if not isinstance(transaction_class, type):
-            raise ReplayError(f"'{transaction_execution.identifier}' is not a class.")
+            raise ReplayError(
+                f"Resolved object '{identifier}' is not a class "
+                f"(got {type(transaction_class).__name__})."
+            )
 
         if not issubclass(transaction_class, AbstractTransaction):
             raise ReplayError(
-                f"'{transaction_execution.identifier}' is not an AbstractTransaction."
+                f"Resolved class '{identifier}' does not inherit from "
+                "AbstractTransaction."
             )
 
         return transaction_class
@@ -569,12 +662,12 @@ class Application:
         Args:
             transaction: (AbstractTransaction): The web transaction handler.
             kwargs: (dict): It contains all the necessary data and parameters
-             for the transaction.
+            for the transaction.
 
         Returns:
             (Application)
         """
-        self._transaction = transaction(self._driver)
+        transaction = transaction(self._driver)
 
         # Validate transaction parameters before execute it
         try:
@@ -590,54 +683,50 @@ class Application:
             )
 
         self._dry_run = (
-            self._transaction.execution_policy.dry_run
-            if self._transaction.execution_policy.dry_run is not None
+            transaction.execution_policy.dry_run
+            if transaction.execution_policy.dry_run is not None
             else self._policy.dry_run
             if self._policy.dry_run
             else GUARA_DRY_RUN
         )
         if self._dry_run:
             LOGGER.warning("Dry run is enabled. No action will be taken on drivers.")
-            if isinstance(
-                self._transaction.execution_policy.return_on_dry_run, Exception
-            ):
-                raise self._transaction.execution_policy.return_on_dry_run
-            self._result = self._transaction.execution_policy.return_on_dry_run
+            if isinstance(transaction.execution_policy.return_on_dry_run, Exception):
+                raise transaction.execution_policy.return_on_dry_run
+            self._result = transaction.execution_policy.return_on_dry_run
             return self
 
         self._disable = (
-            self._transaction.execution_policy.disable
-            if self._transaction.execution_policy.disable is not None
+            transaction.execution_policy.disable
+            if transaction.execution_policy.disable is not None
             else self._policy.disable
         )
 
         if self._disable:
-            LOGGER.warning(
-                f"Transaction '{self._transaction}' disabled. No execution taken."
-            )
+            LOGGER.warning(f"Transaction '{transaction}' disabled. No execution taken.")
             return self
 
-        for required in self._transaction.requires:
-            self._execute_contract_requires(kwargs, required)
+        for required in transaction.requires:
+            self._execute_contract(kwargs, required)
 
-        if any(v for v in self._transaction.execution_policy.to_dict().values()):
+        if any(v for v in transaction.execution_policy.to_dict().values()):
             LOGGER.warning(
-                f"Policy for transaction '{self._transaction.__name__}': {self._transaction.execution_policy.to_dict()}"
+                f"Policy for transaction '{transaction.__name__}': {transaction.execution_policy.to_dict()}"
             )
 
-        if self._transaction.execution_policy.retries_on_failure is not None:
-            _retries_on_failure = self._transaction.execution_policy.retries_on_failure
+        if transaction.execution_policy.retries_on_failure is not None:
+            _retries_on_failure = transaction.execution_policy.retries_on_failure
         elif self._policy.retries_on_failure is not None:
             _retries_on_failure = self._policy.retries_on_failure
         else:
             _retries_on_failure = GUARA_RETRIES_ON_FAILURE
 
-        self._transaction_pool.append(self._transaction)
+        self._transaction_pool.append(transaction)
 
-        transaction_info: str = get_transaction_info(self._transaction)
+        transaction_info: str = get_transaction_info(transaction)
 
         history = self._create_transaction_execution(
-            self._transaction,
+            transaction,
             kwargs,
             transaction_info,
         )
@@ -663,7 +752,8 @@ class Application:
                 retries += 1
                 history.attempts = retries
 
-                self._result = self._transaction.act(**kwargs)
+                self._result = transaction.do(**kwargs)
+                self._undo_stack.append(transaction)
 
                 history.succeed(self._result)
 
@@ -674,8 +764,8 @@ class Application:
 
                 self._execution_history.succeed()
 
-                for ensured in self._transaction.ensures:
-                    self._execute_contract_ensures(ensured)
+                for ensured in transaction.ensures:
+                    self._execute_contract(kwargs, ensured)
 
                 return self
 
@@ -683,7 +773,7 @@ class Application:
                 exception = e
 
                 _continue_on_exceptions = (
-                    self._transaction.execution_policy.continue_on_exceptions
+                    transaction.execution_policy.continue_on_exceptions
                     or self._policy.continue_on_exceptions
                     or ()
                 )
@@ -695,7 +785,7 @@ class Application:
                     return self._result
 
                 _abort_on_exceptions = (
-                    self._transaction.execution_policy.abort_on_exceptions
+                    transaction.execution_policy.abort_on_exceptions
                     or self._policy.abort_on_exceptions
                     or ()
                 )
@@ -706,7 +796,7 @@ class Application:
                     raise
 
                 _retry_on_exceptions = (
-                    self._transaction.execution_policy.retry_on_exceptions
+                    transaction.execution_policy.retry_on_exceptions
                     or self._policy.retry_on_exceptions
                     or (Exception,)
                 )
@@ -718,13 +808,13 @@ class Application:
                     break
 
                 LOGGER.error(
-                    f"Transaction '{transaction_info}' failed on attempt"
-                    f" {retries} / {_retries_on_failure + 1}."
+                    f"Transaction '{transaction_info}' failed on attempt "
+                    f"{retries} / {_retries_on_failure + 1}. "
+                    f"Error: {type(e).__name__}: {e}"
                 )
-                LOGGER.exception(e)  # noqa
 
-                if self._transaction.execution_policy.pacing_time is not None:
-                    _pacing_time = self._transaction.execution_policy.pacing_time
+                if transaction.execution_policy.pacing_time is not None:
+                    _pacing_time = transaction.execution_policy.pacing_time
                 elif self._policy.pacing_time is not None:
                     _pacing_time = self._policy.pacing_time
                 else:
@@ -742,18 +832,17 @@ class Application:
             if GUARA_VERBOSE:
                 result_details["return"] = f"({type(exception)}) '{exception!s}'"
                 LOGGER.error(result_details)
+                LOGGER.info(self.dump_history())
 
             self._execution_history.fail()
             _rollback = (
-                self._transaction.execution_policy.rollback_on_failure
-                if self._transaction.execution_policy.rollback_on_failure is not None
+                transaction.execution_policy.rollback_on_failure
+                if transaction.execution_policy.rollback_on_failure is not None
                 else self._policy.rollback_on_failure
             )
             if _rollback:
-                LOGGER.warning(
-                    f"Rolling back transaction '{self._transaction.__name__}'."
-                )
-                self._transaction.undo()
+                LOGGER.warning(f"Rolling back transaction '{transaction.__name__}'.")
+                transaction.undo()
             raise exception
 
     def given(
@@ -852,23 +941,48 @@ class Application:
         """
         return self.asserts(assertion, expected)
 
-    def undo(self):
+    def clear_undo_stack(self) -> None:
+        """Clears the undo stack without reverting its transactions."""
+        self._undo_stack.clear()
+
+    def undo(self) -> dict[str, list[str]]:
         """
-        Reverts the actions performed by the `do` method when applicable.
+        Reverts actions in reverse order of execution.
+
+        Each transaction is attempted independently. A failed rollback does
+        not prevent subsequent transactions from being reverted.
 
         Returns:
-            (Application)
+            A dictionary containing the names of succeeded and failed
+            rollback operations.
         """
-        if self._disable:
-            return self
 
-        if self._dry_run:
-            return
+        result = RollbackResult()
 
-        self._transaction_pool.reverse()
+        if self._disable or self._dry_run:
+            return result.to_dict()
 
-        for transaction in self._transaction_pool:
-            LOGGER.info(f"Reverting transaction '{transaction.__name__}'")
-            transaction.revert_action()
+        while self._undo_stack:
+            transaction = self._undo_stack.pop()
+            transaction_name = type(transaction).__name__
 
-        return self
+            try:
+                LOGGER.info(f"Reverting transaction '{transaction_name}'.")
+                transaction.revert_action()
+                result.succeeded.append(transaction_name)
+
+            except Exception as exception:
+                result.failed.append(transaction_name)
+                result.errors[transaction_name] = (
+                    f"{type(exception).__name__}: {exception}"
+                )
+
+                LOGGER.critical(
+                    "Rollback failed for transaction '%s': %s: %s",
+                    transaction_name,
+                    type(exception).__name__,
+                    exception,
+                    exc_info=True,
+                )
+
+        return result.to_dict()
