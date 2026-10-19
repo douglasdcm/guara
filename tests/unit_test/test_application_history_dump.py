@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from guara.abstract_transaction import AbstractTransaction
 from guara.policy import TransactionPolicy
 from guara.transaction import Application
@@ -21,6 +23,25 @@ def test_app_dump():
         .execute(AnyTransaction, credit_card="oiuy")
     )
     assert app.dump_history(DUMP_FILE) is not None
+
+@dataclass
+class EntityWithSensitiveData:
+    password : str = "foo123"
+    secret :str = "bla123"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(password='***', secret='***')"
+
+def test_app_dump_hide_sentivive_data():
+    app = (
+        Application()
+        .execute(AnyTransaction, foo=EntityWithSensitiveData())
+    )
+    actual = app.dump_history()
+    assert "password" in actual
+    assert "secret" in actual
+    assert "foo123" not in actual
+    assert "bla123" not in actual
 
 
 def test_app_replay():

@@ -408,21 +408,6 @@ class Application:
         Application(self._driver).execute(contract, **filtered_k)
         return False
 
-    def _execute_contract(
-        self, kwargs: dict[str, Any], contract: AbstractTransaction
-    ) -> None:
-        """Executes a contract within the current application context."""
-        signature = inspect.signature(contract.do)
-        valid_parameters = signature.parameters.keys()
-        filtered_parameters = {
-            key: value for key, value in kwargs.items() if key in valid_parameters
-        }
-
-        # The contracts are technical guardrails that does have the same semantic
-        # of business transactions. The current Transaction class, and not new Contract class,
-        # is used for simplicity
-        Application().execute(contract, **filtered_parameters)
-
     def _execute_contract_ensures(self, contract):
         Application(self._driver).execute(contract, result=self.result)
 
@@ -672,15 +657,13 @@ class Application:
         # Validate transaction parameters before execute it
         try:
             # Retrieve the expected function signature
-            sig = inspect.signature(self._transaction.do)
+            sig = inspect.signature(transaction.do)
             # .bind() throws a TypeError immediately if parameters don't match
             bound_args = sig.bind(**kwargs)
             # (Optional) Apply default values to the bound arguments dictionary
             bound_args.apply_defaults()
         except TypeError as e:
-            raise TypeError(
-                f"Transaction '{self._transaction.__name__}' failed ({e!s})"
-            )
+            raise TypeError(f"Transaction '{transaction.__name__}' failed ({e!s})")
 
         self._dry_run = (
             transaction.execution_policy.dry_run
@@ -707,7 +690,7 @@ class Application:
             return self
 
         for required in transaction.requires:
-            self._execute_contract(kwargs, required)
+            self._execute_contract_requires(kwargs, required)
 
         if any(v for v in transaction.execution_policy.to_dict().values()):
             LOGGER.warning(
@@ -765,7 +748,7 @@ class Application:
                 self._execution_history.succeed()
 
                 for ensured in transaction.ensures:
-                    self._execute_contract(kwargs, ensured)
+                    self._execute_contract_ensures(ensured)
 
                 return self
 
