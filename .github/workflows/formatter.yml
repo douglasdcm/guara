@@ -11,4 +11,4 @@ jobs:
       - name: Run Ruff Lint and Fixes
         uses: astral-sh/ruff-action@v3
         with:
-          args: "check guara"
+          args: "check ./guara"
