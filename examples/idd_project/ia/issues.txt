@@ -1,0 +1,54 @@
+You: list the existing issues classified in CRITICAL, MEDIUM, LOW so that I can fix them later
+ 
+
+---
+To provide an accurate assessment of the project's current state, I have analyzed the codebase structure, the ARCHITECTURE.md          
+requirements, and the existing implementation.                                                                                         
+
+Here is the classification of issues and technical debt that should be addressed to move the project toward a production-ready state.  
+
+CRITICAL (Blockers for Stability & Security)                                                                                           
+
+ • Lack of Input Validation in UI: The current UI implementation (e.g., CreateProductPage) passes raw user input directly to the       
+   Application layer. While the backend uses preconditions, there is no client-side validation for data types (e.g., negative prices,  
+   empty strings), which could lead to unhandled exceptions.                                                                           
+ • Hardcoded User Context: In CreateProductPage, the user is hardcoded as User("usuario", "Gerente"). This bypasses the authentication 
+   system and makes the application insecure.                                                                                          
+ • Database Migration Management: The project uses alembic, but there is no automated check to ensure the database schema is up-to-date
+   before the application launches. This will cause runtime crashes for users if the schema changes.                                   
+ • Error Handling Strategy: The current implementation uses try...except Exception and displays the raw error string to the user via   
+   QMessageBox. This violates the architectural rule: "Never display a stack trace to the user."                                       
+
+MEDIUM (Architectural & Maintainability Debt)                                                                                          
+
+ • Tight Coupling between UI and Backend: The UI components are directly importing guara.transaction.Application and                   
+   bakery.transactions. This makes the UI difficult to test in isolation and tightly couples the view layer to the business logic.     
+ • Missing Unit Tests for UI: While there are integration tests (tests/test_integration_cli.py), there are no unit tests for the UI    
+   components. Testing PySide6 widgets is essential to ensure the "10-second sale" UX requirement is met.                              
+ • Inconsistent State Management: The application lacks a centralized state manager. The UI components are manually querying the       
+   repository, which can lead to "stale data" issues where the UI shows an old stock count after a sale.                               
+ • Lack of Logging: There is no logging infrastructure. If a user encounters a bug, there is no way to audit what happened, making     
+   debugging in a production environment impossible.                                                                                   
+
+LOW (UX & Polish)                                                                                                                      
+
+ • Missing Keyboard Shortcuts: The architecture specifies F2, F3, and ESC for the sales flow, but these are not yet implemented in the 
+   SalesPage.                                                                                                                          
+ • Visual Style Inconsistency: The PRIMARY_COLOR, SUCCESS_COLOR, etc., are defined in the architecture but are not implemented as a    
+   global stylesheet (QSS) in the application, leading to potential visual drift.                                                      
+ • Responsive Design: The UI is not yet tested for the 1366x768 resolution requirement. Some layouts (like the CreateProductPage) may  
+   overflow on smaller screens.                                                                                                        
+ • Missing "Success" Feedback: The architecture requires visual confirmation for every action. Currently, some actions may perform the 
+   task but provide no visual feedback to the user other than the absence of an error.                                                 
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Recommended Action Plan                                                                                                                
+
+ 1 Immediate (Critical): Implement a global error handler that maps backend exceptions to user-friendly messages (e.g.,                
+   InsufficientStockError -> "Estoque insuficiente").                                                                                  
+ 2 Short-term (Medium): Introduce a Service Layer or ViewModel pattern to decouple the PySide6 widgets from the guara transaction      
+   logic.                                                                                                                              
+ 3 Long-term (Low): Implement a QSS (Qt Style Sheet) file to enforce the visual style guide across all components.                     
+
+Would you like me to help you refactor the CreateProductPage to address the hardcoded user and the error handling issues? 

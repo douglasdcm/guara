@@ -1,0 +1,50 @@
+Based on the provided code from the specified files, here are the identified issues classified as CRITICAL, MEDIUM, or LOW, along with 
+suggested fixes:                                                                                                                       
+
+1. guara/utils.py                                                                                                                      
+
+ • Issue: The function get_transaction_info uses transaction.__name__ which might not be a valid attribute for non-class objects.      
+    • Classification: CRITICAL                                                                                                         
+    • Fix: Use getattr(transaction, '__name__', 'unknown') or define a more robust method to retrieve transaction names.               
+ • Issue: The convert_variable_to_integer function lacks input type validation and error-specific exception handling.                  
+    • Classification: MEDIUM                                                                                                           
+    • Fix: Add type hints to ensure the input variable is of str type and improve exception handling for ValueError and TypeError      
+      separately.                                                                                                                      
+
+2. guara/core.py                                                                                                                       
+
+ • Issue: The method _execute_contract_sync and _execute_contract_async are defined but lack implementation.                           
+    • Classification: LOW                                                                                                              
+    • Fix: Implement these methods or raise NotImplementedError if they're meant to be overridden.                                     
+ • Issue: The logger does not define potential exception handlers in execute_sync and execute_async, resulting in possible             
+   unintentional log silencing in production.                                                                                          
+    • Classification: MEDIUM                                                                                                           
+    • Fix: Ensure handling or delegation of exceptions through logging.exception for context.                                          
+
+3. guara/asynchronous/transaction.py                                                                                                   
+
+ • Issue: The use of __del__ in Application class for logging final states might inadvertently catch active resources due to           
+   unpredictable garbage collection.                                                                                                   
+    • Classification: MEDIUM                                                                                                           
+    • Fix: Use context managers or explicit cleanup methods instead of relying on __del__.                                             
+ • Issue: Assertions and error handling in get_transaction and get_assertion methods use exception swallowing that can obscure log     
+   messages.                                                                                                                           
+    • Classification: LOW                                                                                                              
+    • Fix: Refactor to provide more explicit exception handling with context-aware messages.                                           
+
+4. tests/unit_test/test_transaction_policy_abort_on_exceptions.py                                                                      
+
+ • Issue: The test class ValidateLocal does not test if changing abort_on_exceptions influences behavior correctly.                    
+    • Classification: LOW                                                                                                              
+    • Fix: Add assertions for behavior before and after abort_on_exceptions modification.                                              
+
+5. tests/unit_test/test_async_transaction.py                                                                                           
+
+ • Issue: Potential incorrect usage of exceptions in asynchronous context—AsyncMyFailedTransaction raises PermissionError without full 
+   message output testing.                                                                                                             
+    • Classification: MEDIUM                                                                                                           
+    • Fix: Use assertion message matching to confirm proper exception text with pytest.raises.                                         
+
+These classifications and fixes are proposed to enhance the code's resiliency, correctness, and maintainability. Implementing these    
+changes would help mitigate potential execution risks and improve the overall codebase quality.                                        
+---

@@ -1,0 +1,63 @@
+You: read the proejct and list all features that are mapped in teh READMD.md but that are not implemented. Classify the missing feature
+     s by MUST HAVE, SHOULD HAVE, NICE TO HAVE
+
+---
+Based on the project structure and the requirements defined in ARCHITECTURE.md, here is the classification of missing features.        
+
+The project currently has a functional CLI (as seen in cli.py and the bakery/ backend modules), but the UI layer (PySide6) is largely  
+unimplemented or incomplete compared to the architectural vision.                                                                      
+
+Classification of Missing Features                                                                                                     
+
+                                                                                                                                       
+ Feature                                            Category      Status/Notes                                                         
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ Full UI Integration (Main Window & Navigation)     MUST HAVE     The ui/ directory exists, but the main application loop and          
+                                                                  navigation are not fully wired to the backend.                       
+ Sales Screen (UX/Flow)                             MUST HAVE     The most critical screen. Needs the specific layout, keyboard        
+                                                                  shortcuts (F2, F3, ESC), and payment handling logic.                 
+ Dashboard Screen                                   MUST HAVE     The entry point for the user. Needs to aggregate data (cash status,  
+                                                                  low stock, etc.).                                                    
+ Product Management UI                              MUST HAVE     Needs the search, list, and edit/create dialogs as specified in the  
+                                                                  architecture.                                                        
+ Inventory & Expiration Panels                      SHOULD HAVE   Backend logic exists, but the visual tables with color-coded status  
+                                                                  (red/yellow) are not implemented.                                    
+ Cash Register UI                                   SHOULD HAVE   Needs the specific flow for opening, sangria (withdrawal), and       
+                                                                  closing.                                                             
+ Reports (Visual)                                   NICE TO HAVE  Backend logic for data exists, but the visual rendering of           
+                                                                  charts/lists is missing.                                             
+ Advanced Customization (Delivery/Tabs/Production)  NICE TO HAVE  These are "client-specific" features mentioned in the architecture   
+                                                                  but not yet prioritized for the core pilot.                          
+                                                                                                                                       
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Detailed Analysis                                                                                                                      
+
+1. MUST HAVE (Critical for Pilot)                                                                                                      
+
+ • UI Shell: The app.py and ui/main_window.py need to be fully implemented to provide the navigation menu described in the             
+   architecture.                                                                                                                       
+ • Sales Flow: The ui/pages/sales_page.py is the heart of the bakery. Without the ability to process a sale via the GUI, the system is 
+   not usable for the target audience.                                                                                                 
+ • Dashboard: The user needs an immediate overview of the bakery's health (stock, cash, expiration) upon login.                        
+
+2. SHOULD HAVE (Core Functionality)                                                                                                    
+
+ • Inventory/Expiration Visuals: While the CLI can list these, the architecture explicitly calls for a visual "panel" with color-coded 
+   alerts (red/yellow). This is essential for the "fast, easy-to-use" requirement.                                                     
+ • Cash Register UI: The ui/pages/cash_page.py needs to be connected to the transactions.CloseCash and transactions.OpenCash logic to  
+   ensure financial integrity.                                                                                                         
+
+3. NICE TO HAVE (Extended Features)                                                                                                    
+
+ • Reports: The architecture defines specific reports (Best-selling, Financial, Low Stock). These can be implemented after the core    
+   operational screens (Sales, Inventory, Cash) are stable.                                                                            
+ • Customization (Delivery/Tabs/Production): These are listed as "Customization Scenarios." They should be treated as plugins or future
+   iterations once the base bakery system is fully functional.                                                                         
+
+Recommendation                                                                                                                         
+
+Focus your next development sprint on connecting the existing bakery/backend logic to the ui/ components. The backend appears to have  
+most of the necessary transactions and preconditions already written; the primary task is now building the PySide6 view layer to       
+consume these services.
