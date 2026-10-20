@@ -36,6 +36,14 @@ class ApplicationPolicy:
     dry_run: bool | None = None
     """(bool) Wheter the executions of the application hits the driver (False) or not (True)."""
 
+    pacing_time: int | None = None
+    """(int) Local value in seconds to wait between retries.
+     Overrides the global variable `GUARA_PACING_TIME`."""
+
+    retries_on_failure: int | None = None
+    """(int) Local value to retry failed executions. Need to be a positive integer.
+     Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
+
     def __post_init__(self):
         """Validates the class attributes assigned in the subclass."""
         self._validate_continue_on_exceptions()
@@ -44,6 +52,8 @@ class ApplicationPolicy:
         self._validate_rollback_on_failure()
         self._validate_disable()
         self._validate_dry_run()
+        self._validate_pacing_time()
+        self._validate_retries_on_failure()
 
     @property
     def __name__(self) -> property:
@@ -157,66 +167,6 @@ class ApplicationPolicy:
         except TypeError:
             self.retry_on_exceptions = None
 
-    def to_dict(self) -> dict[str, Any]:
-        """Returns the transaction execution as a dictionary."""
-        return asdict(self)
-
-
-@dataclass
-class TransactionPolicy(ApplicationPolicy):
-    pacing_time: int | None = None
-    """(int) Local value in seconds to wait between retries.
-     Overrides the global variable `GUARA_PACING_TIME`."""
-
-    retries_on_failure: int | None = None
-    """(int) Local value to retry failed executions. Need to be a positive integer.
-     Overrides the global variable `GUARA_RETRIES_ON_FAILURE`."""
-
-    return_on_dry_run: Any | None = None
-    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
-
-    def __post_init__(self):
-        """Validates the class attributes assigned in the subclass."""
-        super().__post_init__()
-        self._validate_pacing_time()
-        self._validate_retries_on_failure()
-
-    @property
-    def __name__(self) -> property:
-        """
-        The name of the policy
-
-        Returns:
-            (str) The name of the policy being implemented.
-        """
-        return self.__class__.__name__
-
-    def _validate_disable(self):
-        if self.disable is None:
-            return
-
-        if isinstance(self.disable, bool):
-            return
-
-        LOGGER.warning(
-            f"Invalid value in 'disable' in policy '{self.__name__}'."
-            " Resetting to 'None'."
-        )
-        self.disable = None
-
-    def _validate_rollback_on_failure(self):
-        if self.rollback_on_failure is None:
-            return
-
-        if isinstance(self.rollback_on_failure, bool):
-            return
-
-        LOGGER.warning(
-            f"Invalid value in 'rollback_on_failure' in policy '{self.__name__}'."
-            " Resetting to 'None'."
-        )
-        self.rollback_on_failure = None
-
     def _validate_retries_on_failure(self):
         if self.retries_on_failure is None:
             return
@@ -242,6 +192,26 @@ class TransactionPolicy(ApplicationPolicy):
             " Resetting to 'None'."
         )
         self.pacing_time = None
+
+    def to_dict(self) -> dict[str, Any]:
+        """Returns the transaction execution as a dictionary."""
+        return asdict(self)
+
+
+@dataclass
+class TransactionPolicy(ApplicationPolicy):
+    return_on_dry_run: Any | None = None
+    """(Any) Value returned in case dry run is enabled. Prevents break the execution."""
+
+    @property
+    def __name__(self) -> property:
+        """
+        The name of the policy
+
+        Returns:
+            (str) The name of the policy being implemented.
+        """
+        return self.__class__.__name__
 
     def to_dict(self) -> dict[str, Any]:
         """Returns the transaction execution as a dictionary."""

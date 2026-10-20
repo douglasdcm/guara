@@ -73,9 +73,6 @@ class AbstractTransaction:
         """
         raise NotImplementedError
 
-    def act(self, **kwargs: dict[str, Any]) -> Any:
-        return self.do(**kwargs)
-
     def undo(self):
         """
         Reverts the actions performed by the method `do`

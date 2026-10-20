@@ -10,7 +10,7 @@ Instead of separating requirements, application logic, and tests, Guará allows 
 ```{toctree}
 :maxdepth: 1
 
-DDD
+IDD
 COMPOSITE_TRANSACTION
 MIGRATE_CODE
 ```

@@ -28,7 +28,7 @@ UI automation, including APIs and asynchronous workflows.
 ----
 
 Guará is a lightweight Python framework that bridges the gap between
-technical execution and Domain-Driven Design (DDD) by using a fluent
+technical execution and Intent-Driven Design (IDD) by using a fluent
 interface for creating executable, "living documentation" that mirrors
 business workflows. It employs an execution engine based on semantic
 keywords—given, when, then—to orchestrate small, reusable transactions,

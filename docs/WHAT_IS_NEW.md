@@ -1,4 +1,7 @@
 # What's New
+## 0.0.26rc4
+TBD
+
 ## 0.0.26rc3
 In this release the `requires` contracts raise exception when receives undefined parameters.
 Tip: Add `**kwargs` to `do` method to allow an arbitrary number of parameters. Example:
@@ -39,6 +42,7 @@ class MainTransaction(AbstractTransaction):
 ```
 
 If the contract is violated then a `ContractError` exception is raised.
+
 
 ## 0.0.25
 
