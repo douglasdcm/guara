@@ -26,4 +26,4 @@ jobs:
     - name: Run tests
       run: |
         pip install tox
-        tox
+        make test
