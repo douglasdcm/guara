@@ -8,10 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Ruff
-        uses: astral-sh/setup-ruff@v3
-        with:
-          version: "0.17.1"
-
-      - name: Run Ruff Lint
-        run: ruff check ./guara
+      - name: Lint
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+          ruff check guara
