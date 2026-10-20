@@ -1,865 +1,679 @@
-# Cenários Gherkin para um Piloto de Sistema de Padaria usando Guará
+# Gherkin Scenarios for a Bakery System Pilot using Guará
 
-## Objetivo
+## Objective
 
-Criar um núcleo reutilizável para padarias que possa ser customizado para diferentes clientes.
+Create a reusable core for bakeries that can be customized for different clients.
 
-Os módulos principais do piloto devem ser:
+The main modules of the pilot should be: 
 
-* Cadastro de produtos
-* Controle de estoque
-* Vendas no balcão
-* Caixa
-* Clientes
-* Relatórios
-* Compras e reposição
-* Controle de validade
-* Usuários e permissões
-
-
-# Cadastro de Produtos
+- Product registration
+- Inventory control 
+- Counter sales 
+- Cash register 
+- Customers 
+- Reports 
+- Purchasing and replenishment
+- Expiration control
+- Users and permissions 
 
 ```gherkin
-Feature: Cadastro de produtos
+Product Registration
 
-  Scenario: Cadastrar um novo produto de padaria
-    Given que estou na tela de cadastro de produtos
-    When informo:
-      | nome           | Pão Francês |
-      | categoria      | Padaria     |
-      | preço          | 0.90        |
-      | estoque mínimo | 100         |
-    And clico em salvar
-    Then o produto deve ser cadastrado com sucesso
+Feature: Product registration 
+
+Scenario: Register a new bakery product 
+Given I am on the product registration screen 
+When I enter: 
+| name | French Bread | 
+| category | Bakery | 
+| price| 0.90 | 
+| minimum stock| 100| 
+And I click save
+Then the product should be registered successfully
 ```
 
 ```gherkin
-Scenario: Impedir cadastro de produto duplicado
-  Given que já existe um produto chamado "Pão Francês"
-  When tento cadastrar outro produto com o mesmo nome
-  Then devo ver a mensagem "Produto já cadastrado"
+Scenario: Prevent duplicate product registration
+Given a product named "French Bread" already exists 
+When I try to register another product with the same name 
+Then I should see the message "Product already registered"
 ```
 
 ```gherkin
-Scenario: Alterar preço de um produto
-  Given que existe o produto "Bolo de Cenoura"
-  When altero o preço para "32.00"
-  Then o novo preço deve ser salvo
-```
-
-
-# Controle de Estoque
-
-```gherkin
-Feature: Controle de estoque
-
-  Scenario: Dar entrada em estoque
-    Given que existe o produto "Leite"
-    And o estoque atual é 10
-    When registro entrada de 20 unidades
-    Then o estoque deve passar para 30
+Scenario: Change a product's price
+Given the product "Carrot Cake" exists
+When I change the price to "32.00"
+Then the new price should be saved
 ```
 
 ```gherkin
-Scenario: Dar baixa no estoque após venda
-  Given que existe o produto "Pão Francês"
-  And o estoque atual é 200
-  When realizo a venda de 15 unidades
-  Then o estoque deve passar para 185
+Inventory Control 
+
+
+Feature: Inventory control
+
+Scenario: Add stock 
+Given the product "Milk" exists 
+And the current stock is 10 
+When I register an entry of 20 units
+Then the stock should become 30 
 ```
 
 ```gherkin
-Scenario: Alertar estoque abaixo do mínimo
-  Given que o produto "Café" possui estoque mínimo de 10
-  And o estoque atual é 8
-  When acesso o painel de estoque
-  Then o produto deve aparecer como "Estoque Baixo"
+Scenario: Deduct stock after sale 
+Given the product "French Bread" exists 
+And the current stock is 200
+When I sell 15 units
+Then the stock should become 185
 ```
 
 ```gherkin
-Scenario: Impedir venda sem estoque suficiente
-  Given que o produto "Refrigerante" possui 2 unidades em estoque
-  When tento vender 3 unidades
-  Then devo ver a mensagem "Estoque insuficiente"
-```
-
-
-# Controle de Validade
-
-```gherkin
-Feature: Controle de validade
-
-  Scenario: Registrar lote com data de validade
-    Given que existe o produto "Presunto"
-    When registro um lote com validade em "2026-05-01"
-    Then o lote deve ficar associado ao produto
+Scenario: Alert when stock is below minimum 
+Given the product "Coffee" has a minimum stock of 10
+And the current stock is 8
+When I access the inventory panel 
+Then the product should appear as "Low Stock" 
 ```
 
 ```gherkin
-Scenario: Alertar produtos próximos do vencimento
-  Given que existe um lote de "Queijo" vencendo em 3 dias
-  When acesso o painel de validade
-  Then o lote deve aparecer na lista de vencimento próximo
+Scenario: Prevent sale without sufficient stock 
+Given the product "Soda" has 2 units in stock 
+When I try to sell 3 units
+Then I should see the message "Insufficient stock"
 ```
 
 ```gherkin
-Scenario: Impedir venda de produto vencido
-  Given que existe um lote de "Iogurte" vencido
-  When tento realizar a venda
-  Then devo ver a mensagem "Produto vencido"
-```
+Expiration Control 
 
 
-# Venda no Balcão
+Feature: Expiration control 
 
-```gherkin
-Feature: Venda no balcão
-
-  Scenario: Realizar venda simples
-    Given que existe o produto "Pão Francês"
-    When adiciono 10 unidades ao carrinho
-    And finalizo a venda
-    Then a venda deve ser registrada
-    And o estoque deve ser atualizado
+Scenario: Register a batch with an expiration date
+Given the product "Ham" exists
+When I register a batch expiring on "2026-05-01"
+Then the batch should be associated with the product
 ```
 
 ```gherkin
-Scenario: Aplicar desconto na venda
-  Given que existe uma venda no valor de 100.00
-  When aplico desconto de 10%
-  Then o valor final deve ser 90.00
+Scenario: Alert for products nearing expiration 
+Given a batch of "Cheese" expires in 3 days 
+When I access the expiration panel
+Then the batch should appear in the near-expiration list
 ```
 
 ```gherkin
-Scenario: Cancelar item da venda
-  Given que existe uma venda com:
-    | item         | quantidade |
-    | Refrigerante | 2          |
-    | Salgado      | 3          |
-  When removo o item "Refrigerante"
-  Then a venda deve permanecer apenas com "Salgado"
+Scenario: Prevent sale of expired product 
+Given a batch of "Yogurt" is expired
+When I try to make a sale 
+Then I should see the message "Expired product" 
+```
+```gherkin
+Counter Sales 
+
+
+Feature: Counter sales
+
+Scenario: Perform a simple sale 
+Given the product "French Bread" exists 
+When I add 10 units to the cart 
+And I finalize the sale 
+Then the sale should be registered
+And the stock should be updated 
 ```
 
 ```gherkin
-Scenario: Finalizar venda em dinheiro
-  Given que a venda totaliza 25.00
-  When o cliente paga 30.00 em dinheiro
-  Then o troco deve ser 5.00
+Scenario: Apply discount to a sale
+Given a sale totaling 100.00
+When I apply a 10% discount 
+Then the final value should be 90.00
 ```
 
 ```gherkin
-Scenario: Finalizar venda com múltiplas formas de pagamento
-  Given que a venda totaliza 100.00
-  When o cliente paga:
-    | forma      | valor |
-    | Dinheiro   | 40.00 |
-    | Cartão     | 60.00 |
-  Then a venda deve ser finalizada com sucesso
-```
-
-
-# Caixa
-
-```gherkin
-Feature: Caixa
-
-  Scenario: Abrir caixa
-    Given que não existe caixa aberto
-    When abro o caixa com valor inicial de 200.00
-    Then o caixa deve ficar disponível para vendas
+Scenario: Cancel an item from the sale
+Given a sale with:
+| item | quantity | 
+| Soda | 2| 
+| Snack| 3| 
+When I remove the item "Soda" 
+Then the sale should remain with only "Snack" 
 ```
 
 ```gherkin
-Scenario: Impedir abrir dois caixas simultaneamente
-  Given que já existe um caixa aberto
-  When tento abrir outro caixa
-  Then devo ver a mensagem "Já existe um caixa aberto"
+Scenario: Finalize cash sale
+Given the sale totals 25.00 
+When the customer pays 30.00 in cash
+Then the change should be 5.00
 ```
 
 ```gherkin
-Scenario: Registrar sangria
-  Given que existe um caixa aberto
-  When retiro 100.00 do caixa
-  Then a movimentação deve ser registrada
+Scenario: Finalize sale with multiple payment methods 
+Given the sale totals 100.00
+When the customer pays: 
+| method | value |
+| Cash | 40.00 |
+| Card | 60.00 |
+Then the sale should be finalized successfully
 ```
 
 ```gherkin
-Scenario: Fechar caixa
-  Given que existe um caixa aberto
-  And o total vendido no dia foi 1500.00
-  When fecho o caixa
-  Then o sistema deve gerar o resumo do dia
-```
+Cash Register 
 
 
-# Clientes
+Feature: Cash register
 
-```gherkin
-Feature: Clientes
-
-  Scenario: Cadastrar cliente
-    Given que estou na tela de clientes
-    When cadastro:
-      | nome      | João da Silva |
-      | telefone  | 31999999999   |
-    Then o cliente deve ser salvo
+Scenario: Open cash register
+Given no cash register is open
+When I open the cash register with an initial value of 200.00 
+Then the cash register should be available for sales
 ```
 
 ```gherkin
-Scenario: Vincular venda a cliente
-  Given que existe o cliente "João da Silva"
-  When realizo uma venda para esse cliente
-  Then a venda deve ficar associada ao cliente
+Scenario: Prevent opening two cash registers simultaneously 
+Given a cash register is already open 
+When I try to open another cash register
+Then I should see the message "A cash register is already open" 
 ```
 
 ```gherkin
-Scenario: Consultar histórico de compras do cliente
-  Given que o cliente "João da Silva" possui compras registradas
-  When acesso o histórico do cliente
-  Then devo visualizar todas as compras realizadas
-```
-
-
-# Compras e Reposição
-
-```gherkin
-Feature: Compras e reposição
-
-  Scenario: Gerar sugestão automática de compra
-    Given que o produto "Farinha" está abaixo do estoque mínimo
-    When acesso o relatório de reposição
-    Then o produto deve aparecer como sugestão de compra
+Scenario: Register a cash withdrawal (sangria)
+Given a cash register is open 
+When I withdraw 100.00 from the register
+Then the transaction should be recorded 
 ```
 
 ```gherkin
-Scenario: Registrar compra de fornecedor
-  Given que existe o fornecedor "Distribuidora Minas"
-  When registro uma compra de 50 unidades de "Farinha"
-  Then o estoque deve ser atualizado
-```
-
-
-# Relatórios
-
-```gherkin
-Feature: Relatórios
-
-  Scenario: Consultar produtos mais vendidos
-    Given que existem vendas registradas no mês
-    When acesso o relatório de produtos mais vendidos
-    Then devo visualizar os produtos ordenados pela quantidade vendida
+Scenario: Close cash register 
+Given a cash register is open 
+And the total sold for the day was 1500.00
+When I close the cash register
+Then the system should generate the daily summary 
 ```
 
 ```gherkin
-Scenario: Consultar faturamento diário
-  Given que existem vendas realizadas hoje
-  When acesso o relatório financeiro do dia
-  Then devo visualizar o total vendido
+Customers 
+
+
+Feature: Customers
+
+Scenario: Register a customer 
+Given I am on the customers screen
+When I register:
+| name| John Doe| 
+| phone | 31999999999 | 
+Then the customer should be saved 
 ```
 
 ```gherkin
-Scenario: Consultar lucro por produto
-  Given que os produtos possuem preço de custo e venda
-  When acesso o relatório de lucro
-  Then devo visualizar a margem de cada produto
-```
-
-
-# Usuários e Permissões
-
-```gherkin
-Feature: Usuários e permissões
-
-  Scenario: Permitir apenas gerente alterar preços
-    Given que existe um usuário com perfil "Atendente"
-    When tento alterar o preço de um produto
-    Then devo ver a mensagem "Acesso negado"
+Scenario: Link sale to a customer 
+Given the customer "John Doe" exists
+When I perform a sale for this customer 
+Then the sale should be associated with the customer
 ```
 
 ```gherkin
-Scenario: Permitir gerente fechar caixa
-  Given que existe um usuário com perfil "Gerente"
-  When o gerente fecha o caixa
-  Then o fechamento deve ser realizado com sucesso
-```
-
-
-# Cenários de Customização por Cliente
-
-```gherkin
-Scenario: Padaria que vende por peso
-  Given que o produto "Pão de Queijo" é vendido por peso
-  When informo 0.350 kg
-  Then o sistema deve calcular o valor proporcional
+Scenario: Consult customer purchase history 
+Given the customer "John Doe" has registered purchases
+When I access the customer's history
+Then I should see all purchases made
 ```
 
 ```gherkin
-Scenario: Padaria com entrega
-  Given que existe uma venda para entrega
-  When informo o endereço do cliente
-  Then a venda deve ser marcada como "Entrega"
+
+Purchasing and Replenishment
+
+
+Feature: Purchasing and replenishment 
+
+Scenario: Generate automatic purchase suggestion
+Given the product "Flour" is below minimum stock
+When I access the replenishment report
+Then the product should appear as a purchase suggestion 
 ```
 
 ```gherkin
-Scenario: Padaria com comanda
-  Given que existe uma comanda aberta para a mesa 10
-  When adiciono um item na comanda
-  Then o item deve ficar pendente até o fechamento
+Scenario: Register purchase from supplier 
+Given the supplier "Distribuidora Minas" exists 
+When I register a purchase of 50 units of "Flour" 
+Then the stock should be updated
+```
+```gherkin
+Reports
+
+
+Feature: Reports
+
+Scenario: Consult best-selling products 
+Given there are sales registered for the month
+When I access the best-selling products report
+Then I should see the products ordered by quantity sold 
 ```
 
 ```gherkin
-Scenario: Padaria com produção própria
-  Given que existe a receita do produto "Pão Francês"
-  When produzo 100 unidades
-  Then os ingredientes devem ser baixados do estoque
+Scenario: Consult daily revenue 
+Given there are sales made today
+When I access the daily financial report
+Then I should see the total sold
 ```
 
-
-# UI
-
-# Sistema Desktop de Padaria usando Python + Guará + PySide6
-
-## Objetivo
-
-Transformar os cenários existentes da CLI em uma aplicação desktop simples, rápida e fácil de usar por uma padaria de bairro.
-
-A prioridade de UX é:
-
-* poucas telas
-* botões grandes
-* fluxo rápido de venda
-* pouco texto
-* mensagens claras
-* operação possível com mouse ou teclado
-* instalação local sem internet
+```gherkin
+Scenario: Consult profit per product
+Given products have cost and sale prices
+When I access the profit report 
+Then I should see the margin for each product 
+```
+```gherkin
+Users and Permissions 
 
 
-# Estrutura do Projeto
+Feature: Users and permissions
 
-```text
-bakery_app/
-│
-├── bakery/
-│   ├── entities.py
-│   ├── repository.py
-│   ├── transactions.py
-│   ├── preconditions.py
-│   ├── helpers.py
-│   └── exceptions.py
-│
-├── ui/
-│   ├── main_window.py
-│   ├── dashboard_page.py
-│   ├── products_page.py
-│   ├── sales_page.py
-│   ├── stock_page.py
-│   ├── customers_page.py
-│   ├── cash_page.py
-│   ├── expiration_page.py
-│   ├── dialogs/
-│   │   ├── create_product_dialog.py
-│   │   ├── sell_dialog.py
-│   │   ├── customer_dialog.py
-│   │   └── batch_dialog.py
-│   └── components/
-│       ├── menu_card.py
-│       ├── notification.py
-│       └── table_widget.py
-│
+Scenario: Allow only manager to change prices 
+Given a user with the "Attendant" profile 
+When I try to change a product's price
+Then I should see the message "Access denied" 
+```
+
+```gherkin
+Scenario: Allow manager to close cash register
+Given a user with the "Manager" profile 
+When the manager closes the cash register 
+Then the closing should be performed successfully 
+```
+
+```gherkin
+Customization Scenarios per Client 
+
+
+Scenario: Bakery that sells by weight 
+Given the product "Cheese Bread" is sold by weight
+When I enter 0.350 kg 
+Then the system should calculate the proportional value 
+```
+
+```gherkin
+Scenario: Bakery with delivery
+Given a sale for delivery exists
+When I enter the customer's address 
+Then the sale should be marked as "Delivery"
+```
+
+```gherkin
+Scenario: Bakery with tabs (comanda)
+Given an open tab for table 10
+When I add an item to the tab 
+Then the item should remain pending until the tab is closed 
+```
+
+```gherkin
+Scenario: Bakery with in-house production 
+Given the recipe for "French Bread" exists
+When I produce 100 units
+Then the ingredients should be deducted from stock
+```
+
+## UI 
+
+Desktop Bakery System using Python + Guará + PySide6
+
+Objective
+
+Transform the existing CLI scenarios into a simple, fast, and easy-to-use desktop application for a neighborhood bakery. 
+
+### UX priority: 
+
+- Few screens 
+- Large buttons 
+- Fast sales flow 
+- Minimal text
+- Clear messages
+- Operation possible with mouse or keyboard 
+- Local installation without internet 
+
+### Project Structure 
+
+```bash
+bakery_app/ 
+│ 
+├── bakery/ 
+│ ├── entities.py 
+│ ├── repository.py 
+│ ├── transactions.py 
+│ ├── preconditions.py
+│ ├── helpers.py
+│ └── exceptions.py 
+│ 
+├── ui/ 
+│ ├── main_window.py
+│ ├── dashboard_page.py 
+│ ├── products_page.py
+│ ├── sales_page.py 
+│ ├── stock_page.py 
+│ ├── customers_page.py 
+│ ├── cash_page.py
+│ ├── expiration_page.py
+│ ├── dialogs/
+│ │ ├── create_product_dialog.py
+│ │ ├── sell_dialog.py
+│ │ ├── customer_dialog.py
+│ │ └── batch_dialog.py 
+│ └── components/ 
+│ ├── menu_card.py
+│ ├── notification.py 
+│ └── table_widget.py 
+│ 
 ├── app.py
 └── requirements.txt
 ```
 
+### Main Navigation
 
-# Navegação Principal
+The application opens in a single window with a side menu. 
 
-A aplicação abre em uma única janela com menu lateral.
-
-```text
+```bash
 +------------------------------------------------+
-| Padaria São José                               |
+| St. Joseph's Bakery|
 +----------------------+-------------------------+
-| Dashboard            |                         |
-| Produtos             |     Conteúdo            |
-| Estoque              |                         |
-| Vendas               |                         |
-| Clientes             |                         |
-| Caixa                |                         |
-| Validade             |                         |
-| Relatórios           |                         |
+| Dashboard| |
+| Products | Content |
+| Inventory| |
+| Sales| |
+| Customers| |
+| Cash Register| |
+| Expiration | |
+| Reports| |
 +----------------------+-------------------------+
 ```
 
+### Initial Screen (Dashboard) 
 
-# Tela Inicial (Dashboard)
+The first screen should show only the most important information:
 
-A primeira tela deve mostrar apenas as informações mais importantes:
+- Cash register open/closed 
+- Number of products with low stock 
+- Products nearing expiration 
+- Total sold today
+- Quick shortcuts 
 
-* Caixa aberto / fechado
-* Quantidade de produtos com estoque baixo
-* Produtos próximos do vencimento
-* Total vendido hoje
-* Atalhos rápidos
+Example: 
 
-Exemplo:
+```bash
+[ Cash Register Open ] [ R$ 1,250 sold today ]
 
-```text
-[ Caixa Aberto ]     [ R$ 1.250 vendidos hoje ]
+[ 3 products with low stock ] 
+[ 2 products expiring today ] 
 
-[ 3 produtos com estoque baixo ]
-[ 2 produtos vencendo hoje ]
-
-[ Novo Produto ] [ Nova Venda ] [ Abrir Caixa ]
+[ New Product ] [ New Sale ] [ Open Cash Register ] 
 ```
 
+### Products Screen
 
-# Tela de Produtos
+## UX 
 
-## UX
+- Product list on the left
+- Search field at the top 
+- "New Product" button highlighted
+- Clicking a product opens editing on the side
 
-* Lista de produtos à esquerda
-* Campo de busca no topo
-* Botão “Novo Produto” destacado
-* Ao clicar no produto, abre edição na lateral
+Fields:
 
-Campos:
+- Name
+- Category
+- Price 
+- Minimum stock 
+- Sold by weight
 
-* Nome
-* Categoria
-* Preço
-* Estoque mínimo
-* Vendido por peso
+Visual Example 
 
-## Exemplo visual
-
-```text
-Buscar produto: [____________]
+```bash
+Search product: [____________]
 
 +----------------------------------------------+
-| Pão Francês       R$ 0,90     Estoque: 200   |
-| Bolo de Cenoura   R$ 32,00    Estoque: 5     |
-| Café              R$ 18,00    Estoque: 8     |
+| French BreadR$ 0.90 Stock: 200 |
+| Carrot Cake R$ 32.00Stock: 5 |
+| CoffeeR$ 18.00Stock: 8 |
 +----------------------------------------------+
 
-[ Novo Produto ]
+[ New Product ] 
 ```
 
+Example of Product Registration Screen 
 
-# Exemplo de Tela de Cadastro de Produto
 
 ```python
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QDoubleSpinBox,
-    QCheckBox,
-    QMessageBox,
-)
+from PySide6.QtWidgets import ( 
+QWidget,
+QVBoxLayout,
+QLabel, 
+QLineEdit,
+QPushButton,
+QDoubleSpinBox, 
+QCheckBox,
+QMessageBox,
+) 
 
-from guara.transaction import Application
+from guara.transaction import Application 
 from bakery import transactions, preconditions
 from bakery.entities import User
 
 
-class CreateProductPage(QWidget):
-    def __init__(self):
-        super().__init__()
+class CreateProductPage(QWidget): 
+def __init__(self): 
+super().__init__()
 
-        self.app = Application()
+self.app = Application()
 
-        layout = QVBoxLayout()
+layout = QVBoxLayout()
 
-        self.name = QLineEdit()
-        self.name.setPlaceholderText("Nome do produto")
+self.name = QLineEdit() 
+self.name.setPlaceholderText("Product name")
 
-        self.price = QDoubleSpinBox()
-        self.price.setMaximum(9999)
-        self.price.setPrefix("R$ ")
+self.price = QDoubleSpinBox() 
+self.price.setMaximum(9999) 
+self.price.setPrefix("R$ ") 
 
-        self.minimum_stock = QDoubleSpinBox()
-        self.minimum_stock.setMaximum(9999)
+self.minimum_stock = QDoubleSpinBox() 
+self.minimum_stock.setMaximum(9999) 
 
-        self.by_weight = QCheckBox("Vendido por peso")
+self.by_weight = QCheckBox("Sold by weight")
 
-        save_button = QPushButton("Salvar Produto")
-        save_button.clicked.connect(self.create_product)
+save_button = QPushButton("Save Product") 
+save_button.clicked.connect(self.create_product)
 
-        layout.addWidget(QLabel("Nome"))
-        layout.addWidget(self.name)
-        layout.addWidget(QLabel("Preço"))
-        layout.addWidget(self.price)
-        layout.addWidget(QLabel("Estoque mínimo"))
-        layout.addWidget(self.minimum_stock)
-        layout.addWidget(self.by_weight)
-        layout.addWidget(save_button)
+layout.addWidget(QLabel("Name"))
+layout.addWidget(self.name) 
+layout.addWidget(QLabel("Price")) 
+layout.addWidget(self.price)
+layout.addWidget(QLabel("Minimum stock")) 
+layout.addWidget(self.minimum_stock)
+layout.addWidget(self.by_weight)
+layout.addWidget(save_button) 
 
-        self.setLayout(layout)
+self.setLayout(layout)
 
-    def create_product(self):
-        try:
-            user = User("usuario", "Gerente")
+def create_product(self): 
+try:
+user = User("user", "Manager")
 
-            (
-                self.app.given(preconditions.HasManagerAccess, user=user)
-                .and_(preconditions.HasNotRegistredProduct, name=self.name.text())
-                .execute(
-                    transactions.CreateProduct,
-                    name=self.name.text(),
-                    price=self.price.value(),
-                    minimum_stock=self.minimum_stock.value(),
-                    sold_by_weight=self.by_weight.isChecked(),
-                )
-            )
+( 
+self.app.given(preconditions.HasManagerAccess, user=user) 
+.and_(preconditions.HasNotRegistredProduct, name=self.name.text())
+.execute( 
+transactions.CreateProduct, 
+name=self.name.text(),
+price=self.price.value(), 
+minimum_stock=self.minimum_stock.value(), 
+sold_by_weight=self.by_weight.isChecked(),
+) 
+) 
 
-            QMessageBox.information(self, "Sucesso", "Produto criado com sucesso")
+QMessageBox.information(self, "Success", "Product created successfully")
 
-        except Exception as error:
-            QMessageBox.warning(self, "Erro", str(error))
+except Exception as error:
+QMessageBox.warning(self, "Error", str(error))
 ```
 
+### Sales Screen
 
-# Tela de Venda
+This is the most important screen in the application.
 
-Esta é a tela mais importante da aplicação.
+Recommended UX 
 
-## UX recomendado
+- Large search field
+- List of sale items
+- Total highlighted in large font 
+- Keyboard shortcuts: 
+- F2 = finalize
+- ESC = cancel 
+- F3 = add customer
 
-* Campo de busca grande
-* Lista de itens da venda
-* Total destacado em fonte grande
-* Atalhos de teclado:
-
-  * F2 = finalizar
-  * ESC = cancelar
-  * F3 = adicionar cliente
-
-```text
-Produto: [ Pão Francês_________________ ]
-Quantidade: [10]
+```bash
+Product: [ French Bread_________________ ]
+Quantity: [10]
 
 +--------------------------------------+
-| Produto         Qtde      Valor      |
-| Pão Francês      10       R$ 9,00    |
+| Product Qty Value|
+| French Bread 10 R$ 9.00|
 +--------------------------------------+
 
-Desconto: [ 10% ]
+Discount: [ 10% ] 
 
-TOTAL: R$ 8,10
+TOTAL: R$ 8.10
 
-Pagamento:
-[ Dinheiro ] [ Cartão ] [ PIX ]
+Payment:
+[ Cash ] [ Card ] [ PIX ] 
 
-[ Finalizar Venda ]
+[ Finalize Sale ] 
 ```
 
-
-# Fluxo Interno da Tela de Venda
+### Internal Flow of the Sales Screen 
 
 ```python
-Application()
-    .given(preconditions.HasStock, product_name=produto, quantity=quantidade)
-    .and_(preconditions.IsProductInValidExpirationDate, product_name=produto)
-    .execute(
-        transactions.RegisterSale,
-        items=[(produto, quantidade)],
-        customer_name=cliente,
-        discount=desconto,
-        payments={
-            "Dinheiro": dinheiro,
-            "Cartão": cartao,
-        },
-        delivery=endereco,
-    )
+Application() 
+.given(preconditions.HasStock, product_name=product, quantity=quantity) 
+.and_(preconditions.IsProductInValidExpirationDate, product_name=product) 
+.execute( 
+transactions.RegisterSale,
+items=[(product, quantity)],
+customer_name=customer, 
+discount=discount,
+payments={
+"Cash": cash, 
+"Card": card, 
+},
+delivery=address, 
+) 
 ```
 
+### Inventory Screen
 
-# Tela de Estoque
+Show simple table: 
 
-Mostrar tabela simples:
-
-| Produto | Estoque | Mínimo | Situação      |
-| ------- | ------- | ------ | ------------- |
-| Café    | 8       | 10     | Estoque baixo |
-| Pão     | 200     | 100    | OK            |
-
-A linha deve ficar:
-
-* vermelha se estoque < mínimo
-* amarela se próximo do mínimo
-
-Botão:
-
-* Adicionar Estoque
-
-
-# Tela de Validade
-
-Tabela:
-
-| Produto  | Quantidade | Vence em |
-| -------- | ---------- | -------- |
-| Queijo   | 5          | 3 dias   |
-| Presunto | 10         | Amanhã   |
-
-Linhas:
-
-* vermelha: vencido
-* amarela: vence em até 3 dias
-
-
-# Tela de Caixa
-
-Fluxo:
-
-1. Abrir caixa
-2. Registrar sangria
-3. Fechar caixa
-
-Tela:
-
-```text
-Caixa Atual: Aberto
-Valor Inicial: R$ 200,00
-
-Total Vendido: R$ 1.500,00
-
-[ Registrar Sangria ]
-[ Fechar Caixa ]
+```bash
+ProductStockMinimumStatus
+────────────────────────────────── 
+Coffee 810 Low stock 
+Bread200100OK
 ```
 
+The row should be: 
 
-# Relatórios
+- Red if stock < minimum
+- Yellow if near minimum
 
-Os relatórios devem ser simples e visualmente claros.
+Button:
 
-## Relatório de Produtos Mais Vendidos
+- Add Stock 
 
-```text
-1. Pão Francês - 1200
-2. Café - 340
-3. Bolo de Cenoura - 180
+### Expiration Screen 
+
+Table: 
+
+```bash
+ProductQuantityExpires in 
+───────────────────────────── 
+Cheese 5 3 days 
+Ham10Tomorrow 
 ```
 
-## Relatório Financeiro
+Rows:
 
-```text
-Hoje:
-R$ 1.250,00
+- Red: expired
+- Yellow: expires in up to 3 days 
 
-Mês:
-R$ 21.000,00
+### Cash Register Screen
+
+Flow:
+
+1 Open cash register
+2 Register withdrawal 
+3 Close cash register 
+
+Screen:
+
+```bash
+Current Register: Open
+Initial Value: R$ 200.00
+
+Total Sold: R$ 1,500.00 
+
+[ Register Withdrawal ] 
+[ Close Cash Register ] 
 ```
 
-## Relatório de Estoque Baixo
+### Reports
 
-```text
-- Café
-- Leite
-- Farinha
+Reports should be simple and visually clear. 
+```bash
+Best-Selling Products Report 
+
+
+1. French Bread - 1200
+2. Coffee - 340 
+3. Carrot Cake - 180
 ```
 
+### Financial Report 
 
-# Regras de UX importantes
+```bash
+Today:
+R$ 1,250.00 
 
-1. Nunca exibir stack trace para o usuário.
-2. Toda mensagem de erro deve ser simples:
+Month:
+R$ 21,000.00
+```
 
-   * “Produto já cadastrado”
-   * “Estoque insuficiente”
-   * “Produto vencido”
-3. Toda ação deve confirmar visualmente o sucesso.
-4. O operador deve conseguir concluir uma venda em menos de 10 segundos.
-5. O sistema deve continuar utilizável em tela 1366x768.
-6. Usar fonte grande (mínimo 12pt).
-7. Botões principais devem ter no mínimo 44px de altura.
+### Low Stock Report 
 
 
-# Sugestão de Estilo Visual
+- Coffee
+- Milk
+- Flour 
 
-* Fundo: cinza claro
-* Cor principal: laranja escuro
-* Cor de sucesso: verde
-* Cor de alerta: amarelo
-* Cor de erro: vermelho
 
-```python
-PRIMARY_COLOR = "#C96A00"
-SUCCESS_COLOR = "#2E7D32"
-WARNING_COLOR = "#F9A825"
+## Important UX Rules 
+
+1 Never display a stack trace to the user.
+2 Every error message must be simple: 
+- "Product already registered" 
+- "Insufficient stock" 
+- "Expired product"
+3 Every action must visually confirm success. 
+4 The operator must be able to complete a sale in less than 10 seconds. 
+5 The system must remain usable on a 1366x768 screen. 
+6 Use large font (minimum 12pt).
+7 Main buttons must be at least 44px high.
+
+## Visual Style Suggestion
+
+- Background: light gray
+- Primary color: dark orange
+- Success color: green
+- Warning color: yellow 
+- Error color: red
+
+```bash
+PRIMARY_COLOR = "#C96A00" 
+SUCCESS_COLOR = "#2E7D32" 
+WARNING_COLOR = "#F9A825" 
 ERROR_COLOR = "#C62828"
-BACKGROUND = "#F5F5F5"
 ```
-
-
-# Inicialização da Aplicação
-
-```python
-from PySide6.QtWidgets import QApplication
-from ui.main_window import MainWindow
-
-
-if __name__ == "__main__":
-    qt = QApplication([])
-
-    window = MainWindow()
-    window.showMaximized()
-
-    qt.exec()
-```
-
-
-# Próximo Passo Recomendado
-
-Implementar primeiro apenas 4 telas:
-
-1. Produtos
-2. Vendas
-3. Estoque
-4. Caixa
-
-Com isso já é possível fazer um piloto utilizável em uma padaria real.
-
-Depois adicionar:
-
-* clientes
-* validade
-* relatórios
-* comanda
-* produção própria
-* licenciamento por cliente
-
-
-Recommendation
-
-sqlite3 bakery.db ".read /home/douglas/repo/padaria/bakery/plugins/recomendation/data-demo.sql"
-
-Plan
-- save data to vector database (faiss)
-    - which data is important to vectorize?
-    - it is expensive
-- before complete the sales get recomendations (raw)
-- build the prompt to LLM
-- validate the prompt manually in chatgpt
-- feed LLM
-- validate LLM output using rules
-- fallback
-
-
-
-Feature: Access control based on user roles
-  In order to protect critical operations
-  As a system
-  I want to restrict actions based on user roles (Cashier and Manager)
-
-
-  # ==========================================================
-  # MANAGER PERMISSIONS
-  # ==========================================================
-
-  Scenario: Manager creates a new product
-    Given a user with role "Gerente"
-    And the product "Pão Francês" is not registered
-    When the user creates a product with name "Pão Francês" and price 0.90
-    Then the product should be successfully created
-
-  Scenario: Manager updates product price
-    Given a user with role "Gerente"
-    And a product "Bolo" with price 20.00 exists
-    When the user updates the price to 32.00
-    Then the product price should be updated to 32.00
-
-  Scenario: Manager closes the cash register
-    Given a user with role "Gerente"
-    And the cash register is open
-    When the user closes the cash register
-    Then the cash register should be closed
-
-
-  # ==========================================================
-  # CASHIER (ATENDENTE) RESTRICTIONS
-  # ==========================================================
-
-  Scenario: Cashier tries to create a product
-    Given a user with role "Atendente"
-    When the user tries to create a product "Pão Francês"
-    Then the operation should be denied
-    And an "Acesso negado" message should be shown
-
-  Scenario: Cashier tries to update product price
-    Given a user with role "Atendente"
-    And a product "Bolo" with price 20.00 exists
-    When the user tries to update the price to 30.00
-    Then the operation should be denied
-    And an "Acesso negado" message should be shown
-
-  Scenario: Cashier tries to close cash register
-    Given a user with role "Atendente"
-    And the cash register is open
-    When the user tries to close the cash register
-    Then the operation should be denied
-    And an "Acesso negado" message should be shown
-
-
-  # ==========================================================
-  # SHARED PERMISSIONS
-  # ==========================================================
-
-  Scenario Outline: User registers a sale
-    Given a user with role "<role>"
-    And a product "Pão" with price 1.00 and stock 10
-    When the user sells 2 units of "Pão"
-    Then the sale should be registered
-    And the stock should be reduced to 8
-
-    Examples:
-      | role       |
-      | Gerente    |
-      | Atendente  |
-
-  Scenario Outline: User opens cash register
-    Given a user with role "<role>"
-    And there is no open cash register
-    When the user opens the cash register with initial value 200
-    Then the cash register should be opened
-
-    Examples:
-      | role       |
-      | Gerente    |
-      | Atendente  |
-
-  Scenario Outline: User adds stock to product
-    Given a user with role "<role>"
-    And a product "Leite" exists
-    When the user adds 20 units to stock
-    Then the product stock should be 20
-
-    Examples:
-      | role       |
-      | Gerente    |
-      | Atendente  |
-
-
-  # ==========================================================
-  # SECURITY / EDGE CASES
-  # ==========================================================
-
-  Scenario: User cannot escalate privileges
-    Given a user with role "Atendente"
-    When the user attempts to perform a manager-only action
-    Then the operation should be denied
-
-  Scenario: System validates role before executing restricted actions
-    Given a restricted operation
-    When a user without permission executes it
-    Then the system must block the execution
-
-
-create database
-# run once
-from bakery.backend.database import engine
-from bakery.backend.models import Base
-
-Base.metadata.create_all(bind=engine)

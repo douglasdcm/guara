@@ -1,6 +1,21 @@
 # What's New
+## 0.0.26rc5
+- Integrate Bakery example with LLM
+- Add examples of Beautiful Soup 
 ## 0.0.26rc4
-TBD
+* Fix issues in undo logic
+* convert Application to context manager
+* Improve _execute_contract method
+* Refactor _get_module_path to fix issue:
+* _get_module_path fragility: This function relies on sys.path and inspect.getfile. If the project is packaged or run in certain
+   virtual environments, this can return incorrect paths or fail to resolve the module, breaking the replay functionality.
+* Remove self._transaction state from Application
+* Reduce log verbosity
+* Fix issues
+* _serialize_value exception handling: The try-except block around json.dumps is a performance bottleneck if called frequently. It is
+   better to check for common types (int, str, dict, list) before falling back to repr().
+* Remove unnecessary 'act' method from sync/AbstractTransaction
+* Add tests to hide sensitive data
 
 ## 0.0.26rc3
 In this release the `requires` contracts raise exception when receives undefined parameters.
