@@ -5,7 +5,7 @@ Revises:
 Create Date: 2026-08-15 01:11:55.344091
 
 """
-
+from __future__ import annotations
 from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.

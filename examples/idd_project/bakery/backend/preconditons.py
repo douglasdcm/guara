@@ -17,6 +17,7 @@ from bakery.backend.exceptions import (
 )
 from bakery.backend.repository import DB
 from guara.abstract_transaction import LOGGER, AbstractTransaction
+from __future__ import annotations
 
 # from bakery.backend.transactions import UserSession
 
