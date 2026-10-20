@@ -8,7 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Ruff Lint
-        uses: astral-sh/ruff-action@v3
+      - name: Install Ruff
+        uses: astral-sh/setup-ruff@v3
         with:
-          args: "check ./guara"
+          version: "0.17.1"
+
+      - name: Run Ruff Lint
+        run: ruff check ./guara
